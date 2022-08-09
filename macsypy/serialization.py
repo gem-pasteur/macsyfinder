@@ -374,26 +374,27 @@ class TsvSpecialHitSerializer:
         return s
 
 
-class TsvRejectedCluster:
+class TsvRejectedCandidatesSerializer:
     """
     Serialize Rejected Cluster in tsv format
     """
 
-    def serialize(self, clusters):
+    def serialize(self, candidates):
         """
-        :param clusters: list of rejected cluster to serialize
-        :type clusters: [ :class:`macsypy.system.RejectedClusters` object, ...]
+        :param candidates: list of rejected candidates to serialize
+        :type candidates: [ :class:`macsypy.system.RejectedCandidate` object, ...]
         """
         s = ""
-        if clusters:
-            header = "cluster_id\treplicon\tmodel_fqn\thit_id\thit_pos\tgene_name\tfunction\treasons\n"
+        if candidates:
+            header = "candidate_id\treplicon\tmodel_fqn\tcluster_id\thit_id\thit_pos\tgene_name\tfunction\treasons\n"
             s += header
-            for cluster in clusters:
-                reasons = '/'.join(cluster.reasons)
-                for hit in cluster.hits:
-                    row = f"{cluster.id}\t{cluster.replicon_name}\t{cluster.model.fqn}\t" \
-                          f"{hit.id}\t{hit.position}\t{hit.gene_ref.name}\t{hit.gene_ref.alternate_of().name}\t" \
-                          f"{reasons}\n"
-                    s += row
+            for candidate in candidates:
+                reasons = '/'.join(candidate.reasons)
+                for cluster in candidate.clusters:
+                    for hit in cluster.hits:
+                        row = f"{candidate.id}\t{candidate.replicon_name}\t{candidate.model.fqn}\t" \
+                              f"{cluster.id}\t{hit.id}\t{hit.position}\t{hit.gene_ref.name}\t{hit.gene_ref.alternate_of().name}\t" \
+                              f"{reasons}\n"
+                        s += row
                 s += '\n'
         return s

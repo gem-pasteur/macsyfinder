@@ -33,7 +33,7 @@ from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
 from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker
-from macsypy.system import System, RejectedClusters, LikelySystem, UnlikelySystem
+from macsypy.system import System, RejectedCandidate, LikelySystem, UnlikelySystem
 from macsypy.error import MacsypyError
 
 from tests import MacsyTest
@@ -177,7 +177,7 @@ class MatchMakerTest(MacsyTest):
         c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_gspd']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
-        self.assertIsInstance(res, RejectedClusters)
+        self.assertIsInstance(res, RejectedCandidate)
         self.assertEqual(res.reasons,
                          ["The quorum of mandatory genes required (2) is not reached: 1",
                           "The quorum of genes required (3) is not reached: 2"])
@@ -212,7 +212,7 @@ class MatchMakerTest(MacsyTest):
         c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_sctn_flg'], self.m_hits['mh_gspd']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
-        self.assertIsInstance(res, RejectedClusters)
+        self.assertIsInstance(res, RejectedCandidate)
         self.assertListEqual(res.reasons,
                              ["The quorum of genes required (4) is not reached: 3"])
 
@@ -223,7 +223,7 @@ class MatchMakerTest(MacsyTest):
                      self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
-        self.assertIsInstance(res, RejectedClusters)
+        self.assertIsInstance(res, RejectedCandidate)
         self.assertEqual(res.reasons,
                          ["The quorum of genes required (4) is not reached: 3"])
 
@@ -233,7 +233,7 @@ class MatchMakerTest(MacsyTest):
                      self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
-        self.assertIsInstance(res, RejectedClusters)
+        self.assertIsInstance(res, RejectedCandidate)
         self.assertEqual(res.reasons,
                          ["The quorum of genes required (4) is not reached: 3"])
 
@@ -244,7 +244,7 @@ class MatchMakerTest(MacsyTest):
                      self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
-        self.assertIsInstance(res, RejectedClusters)
+        self.assertIsInstance(res, RejectedCandidate)
         self.assertEqual(res.reasons, ["There is 1 forbidden genes occurrence(s): abc"])
 
         # the cluster contain a forbidden gene homolog
@@ -254,7 +254,7 @@ class MatchMakerTest(MacsyTest):
                      self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
-        self.assertIsInstance(res, RejectedClusters)
+        self.assertIsInstance(res, RejectedCandidate)
         self.assertEqual(res.reasons, ["There is 1 forbidden genes occurrence(s): tadZ"])
 
         #####################

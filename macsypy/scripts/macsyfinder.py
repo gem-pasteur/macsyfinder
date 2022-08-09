@@ -58,7 +58,7 @@ from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
 from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
-    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCluster
+    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCandidatesSerializer
 
 
 def get_version_message():
@@ -469,7 +469,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
                    It must be initialized. see :func:`macsypy.init_logger`
     :type logger: :class:`colorlog.Logger` object
     :return: the systems and rejected clusters found
-    :rtype: ([:class:`macsypy.system.System`, ...], [:class:`macsypy.cluster.RejectedCluster`, ...])
+    :rtype: ([:class:`macsypy.system.System`, ...], [:class:`macsypy.cluster.RejectedCAndidate`, ...])
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
@@ -532,9 +532,9 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
         db_type = config.db_type()
         if db_type in ('ordered_replicon', 'gembase'):
-            systems, rejected_clusters = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
+            systems, rejected_candidates = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
                                                                                        config, logger)
-            return systems, rejected_clusters
+            return systems, rejected_candidates
         elif db_type == "unordered":
             likely_systems, rejected_hits = _search_in_unordered_replicon(hits_by_replicon, models_to_detect,
                                                                           logger)
@@ -556,7 +556,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
     :return:
     """
     all_systems = []
-    all_rejected_clusters = []
+    all_rejected_candidates = []
     rep_db = RepliconDB(config)
     
     for rep_name in hits_by_replicon:
@@ -564,7 +564,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
         rep_info = rep_db[rep_name]
         for model in models_to_detect:
             one_model_systems = []
-            one_model_rejected_clusters = []
+            one_model_rejected_candidates = []
             logger.info(f"Check model {model.fqn}")
             # model.filter filter hit but also cast them in ModelHit
             mhits_related_one_model = model.filter(hits_by_replicon[rep_name])
@@ -591,7 +591,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
                 if isinstance(res, System):
                     one_model_systems.append(res)
                 else:
-                    one_model_rejected_clusters.append(res)
+                    one_model_rejected_candidates.append(res)
 
             ###############################
             # MultiSystem Hits Management #
@@ -615,23 +615,23 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             best_ms = compute_best_MSHit(ms_per_function)
             # check if among rejected clusters with the MS, they can be created a new system
             best_ms = [Cluster([ms], model, hit_weights) for ms in best_ms]
-            new_clst_combination = combine_multisystems(one_model_rejected_clusters, best_ms)
+            new_clst_combination = combine_multisystems(one_model_rejected_candidates, best_ms)
             for one_clust_combination in new_clst_combination:
                 ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
                 res = ordered_matcher.match(one_clust_combination)
                 if isinstance(res, System):
                     one_model_systems.append(res)
                 else:
-                    one_model_rejected_clusters.append(res)
+                    one_model_rejected_candidates.append(res)
             all_systems.extend(one_model_systems)
-            all_rejected_clusters.extend(one_model_rejected_clusters)
+            all_rejected_candidates.extend(one_model_rejected_candidates)
     if all_systems:
         all_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
 
     if not rep_db.guess_if_really_gembase():
         _log.warning(
             f"Most of replicons contains only ONE sequence are you sure that '{config.sequence_db()}' is a 'gembase'.")
-    return all_systems, all_rejected_clusters
+    return all_systems, all_rejected_candidates
 
 
 def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
@@ -898,38 +898,38 @@ def multisystems_to_tsv(models_fam_name, models_version, systems, sys_file):
         print("# No Multisystems found", file=sys_file)
 
 
-def rejected_clst_to_txt(models_fam_name, models_version, rejected_clusters, clst_file):
+def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candidates, cand_file):
     """
     print rejected clusters in a file
 
-    :param rejected_clusters: list of clusters which does not contitute a system
-    :type rejected_clusters: list of :class:`macsypy.cluster.RejectedClusters` objects
-    :param clst_file: The file where to write down the rejected clusters
-    :type clst_file: file object
+    :param rejected_candidates: list of candidates which does not contitute a system
+    :type rejected_candidates: list of :class:`macsypy.system.RejectedCandidate` objects
+    :param cand_file: The file where to write down the rejected candidates
+    :type cand_file: file object
     :return: None
     """
-    print(_outfile_header(models_fam_name, models_version), file=clst_file)
-    if rejected_clusters:
-        print("# Rejected clusters:\n", file=clst_file)
-        for rej_clst in rejected_clusters:
-            print(rej_clst, file=clst_file, end='')
-            print("=" * 60, file=clst_file)
+    print(_outfile_header(models_fam_name, models_version), file=cand_file)
+    if rejected_candidates:
+        print("# Rejected candidates:\n", file=cand_file)
+        for rej_cand in rejected_candidates:
+            print(rej_cand, file=cand_file, end='')
+            print("=" * 60, file=cand_file)
     else:
-        print("# No Rejected clusters", file=clst_file)
+        print("# No Rejected candidates", file=cand_file)
 
 
-def rejected_clst_to_tsv(models_fam_name, models_version, rejected_clusters, clst_file):
+def rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candidates, cand_file):
     """
 
     """
-    print(_outfile_header(models_fam_name, models_version), file=clst_file)
-    if rejected_clusters:
-        serializer = TsvRejectedCluster()
-        rej_clst = serializer.serialize(rejected_clusters)
-        print("# Rejected Clusters found:", file=clst_file)
-        print(rej_clst, file=clst_file, end='')
+    print(_outfile_header(models_fam_name, models_version), file=cand_file)
+    if rejected_candidates:
+        serializer = TsvRejectedCandidatesSerializer()
+        rej_candidates = serializer.serialize(rejected_candidates)
+        print("# Rejected candidates found:", file=cand_file)
+        print(rej_candidates, file=cand_file, end='')
     else:
-        print("# No Rejected clusters", file=clst_file)
+        print("# No Rejected candidates", file=cand_file)
 
 
 def likely_systems_to_txt(models_fam_name, models_version, likely_systems, hit_system_tracker, sys_file):
@@ -1087,7 +1087,7 @@ def main(args=None, loglevel=None):
         sys.exit(f"macsyfinder: {err}")
     _log.info(f"\nmodels used: {models_fam_name}-{models_version}")
     logger.info(f"\n{f' Searching systems ':#^70}")
-    all_systems, rejected_clusters = search_systems(config, model_registry, models_def_to_detect, logger)
+    all_systems, rejected_candidates = search_systems(config, model_registry, models_def_to_detect, logger)
     track_multi_systems_hit = HitSystemTracker(all_systems)
     if config.db_type() in ('gembase', 'ordered_replicon'):
         #############################
@@ -1131,16 +1131,16 @@ def main(args=None, loglevel=None):
         with open(tsv_filename, "w") as tsv_file:
             systems_to_tsv(models_fam_name, models_version, all_systems, track_multi_systems_hit, tsv_file)
 
-        cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
+        cluster_filename = os.path.join(config.working_dir(), "rejected_candidates.txt")
         with open(cluster_filename, "w") as clst_file:
-            rejected_clusters.sort(key=lambda clst: (clst.replicon_name, clst.model, clst.hits))
-            rejected_clst_to_txt(models_fam_name, models_version, rejected_clusters, clst_file)
-        if not (all_systems or rejected_clusters):
+            rejected_candidates.sort(key=lambda clst: (clst.replicon_name, clst.model, clst.hits))
+            rejected_candidates_to_txt(models_fam_name, models_version, rejected_candidates, clst_file)
+        if not (all_systems or rejected_candidates):
             logger.info("No Systems found in this dataset.")
 
-        cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.tsv")
+        cluster_filename = os.path.join(config.working_dir(), "rejected_candidates.tsv")
         with open(cluster_filename, "w") as clst_file:
-            rejected_clst_to_tsv(models_fam_name, models_version, rejected_clusters, clst_file)
+            rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candidates, clst_file)
 
         tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
         with open(tsv_filename, "w") as tsv_file:
@@ -1195,9 +1195,9 @@ def main(args=None, loglevel=None):
 
         cluster_filename = os.path.join(config.working_dir(), "uncomplete_systems.txt")
         with open(cluster_filename, "w") as clst_file:
-            unlikely_systems_to_txt(models_fam_name, models_version, rejected_clusters, clst_file)
+            unlikely_systems_to_txt(models_fam_name, models_version, rejected_candidates, clst_file)
 
-        if not (all_systems or rejected_clusters):
+        if not (all_systems or rejected_candidates):
             logger.info("No Systems found in this dataset.")
 
     logger.info("END")
