@@ -280,6 +280,32 @@ class RepliconDB:
         else:
             self._fill_ordered_min_max(self.cfg.replicon_topology())
 
+    def guess_if_really_gembase(self):
+        """
+        Count the number of replicon with only on sequence
+        if this number is above a threshold may be it's not gembase. for instance the folowing sequence
+        have id compliant with the gembase id syntax but it's not it only contains one replicon ('ordered replicon')
+
+        | >1E10S0A0cP00_0010 D GTG TGA 483 2027 Valid dnaA 1545 _PA0001_NP_064721.1_ PA0001 1 483 2027
+        | MSVELWQQCVDLLRDELPSQQFNTWIRPLQVEAEGDELRVYAPNRFVLDW
+        | >0200S001A0c_0P1E0 D ATG TAA 2056 3159 Valid dnaN 1104 _PA0002_NP_064722.1_ PA0002 1 2056 3159
+        | MHFTIQREALLKPLQLVAGVVERRQTLPVLSNVLLVVEGQQLSLTGTDLE
+        | >0000310E00S0c_1PA D ATG TGA 3169 4278 Valid recF 1110 _PA0003_NP_064723.1_ PA0003 1 3169 4278
+        | MSLTRVSVTAVRNLHPVTLSPSPRINILYGDNGSGKTSVLEAIHLLGLAR
+        | >c_01000A0PS00014E D ATG TGA 4275 6695 Valid gyrB 2421 _PA0004_NP_064724.1_ PA0004 1 4275 6695
+        | MSENNTYDSSSIKVLKGLDAVRKRPGMYIGDTDDGTGLHHMVFEVVDNSI
+        | >07700ES100A0cP01_ C ATG TGA 91521 94826 Valid icmF1 3306 _PA0077_NP_248767.1_ PA0077 1 91521 94826
+        | MQSLAEVSAPDAASVAT
+
+        :return: False if most of replicon contains only one seaquence, True otherwise
+        :rtype: bool
+        """
+        all_len = [rep.max - rep.min for rep in self._DB.values()]
+        replicon_with_one_seq = all_len.count(0)
+        if replicon_with_one_seq > len(all_len) * 0.8:
+            return False
+        else:
+            return True
 
     def _fill_topology(self):
         """
@@ -346,7 +372,7 @@ class RepliconDB:
         for replicon in replicons:
             genes = []
             seq_id, seq_length, _min = next(replicon)
-
+            
             replicon_name, seq_name = parse_seq_id(seq_id)
             genes.append((seq_name, seq_length))
             for seq_id, seq_length, rank in replicon:
@@ -357,9 +383,8 @@ class RepliconDB:
             try:
                 _max = rank
             except UnboundLocalError:
-                msg = f"Error during sequence-db '{self.cfg.sequence_db()}' parsing. Are you sure db-type is 'gembase'?"
-                _log.critical(msg)
-                raise MacsypyError(msg) from None
+                # there is only one sequence for this replicon
+                _max = _min
             genes.append((seq_name, seq_length))
             if replicon_name in topology:
                 self._DB[replicon_name] = RepliconInfo(topology[replicon_name], _min, _max, genes)

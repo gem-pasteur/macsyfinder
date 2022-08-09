@@ -1265,6 +1265,35 @@ Use ordered replicon to have better prediction.
         self.assertEqual([r.id for r in rejected_clst],
                          ['VICH001.B.00001.C001_T12SS-multisystem_1'])
 
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_db_type_set_to_gembase(self):
+        logger = logging.getLogger('macsypy.macsyfinder')
+        macsypy.logger_set_level(level='WARNING')
+        defaults = MacsyDefaults()
+
+        out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
+        os.mkdir(out_dir)
+
+        # test gembase replicon
+        seq_db = self.find_data('base', 'ordered_replicon_base.fasta')
+        model_dir = self.find_data('data_set', 'models')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 T4P -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
+
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
+
+        self._reset_id()
+        with self.catch_log() as log:
+            systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
+            log_msg = log.get_value().split('\n')[-2] # the message finish with empty line
+        self.assertEqual(log_msg,
+                         f"Most of replicons contains only ONE sequence are you sure that '{seq_db}' is a 'gembase'.")
+
+
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search_systems_unordered(self):
         logger = logging.getLogger('macsypy.macsyfinder')
         macsypy.logger_set_level(level='ERROR')

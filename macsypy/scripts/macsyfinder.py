@@ -558,6 +558,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
     all_systems = []
     all_rejected_clusters = []
     rep_db = RepliconDB(config)
+    
     for rep_name in hits_by_replicon:
         logger.info(f"\n{f' Hits analysis for replicon {rep_name} ':#^60}")
         rep_info = rep_db[rep_name]
@@ -627,6 +628,9 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
     if all_systems:
         all_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
 
+    if not rep_db.guess_if_really_gembase():
+        _log.warning(
+            f"Most of replicons contains only ONE sequence are you sure that '{config.sequence_db()}' is a 'gembase'.")
     return all_systems, all_rejected_clusters
 
 
