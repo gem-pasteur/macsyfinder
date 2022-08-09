@@ -34,7 +34,7 @@ import itertools
 from tests import MacsyTest, which
 from macsypy.scripts import macsyfinder
 from macsypy.error import OptionError
-from macsypy.system import System, AbstractUnordered, RejectedClusters
+from macsypy.system import System, AbstractUnordered, RejectedCandidate
 
 
 class Test(MacsyTest):
@@ -65,7 +65,8 @@ class Test(MacsyTest):
         self.all_best_solutions = "all_best_solutions.tsv"
         self.best_solution = "best_solution.tsv"
         self.summary = "best_solution_summary.tsv"
-        self.rejected_clusters = "rejected_clusters.txt"
+        self.rejected_candidates_txt = "rejected_candidates.txt"
+        self.rejected_candidates_tsv = "rejected_candidates.tsv"
         self.uncomplete_systems = "uncomplete_systems.txt"
         self.loners = "best_solution_loners.tsv"
         self.multisystems = "best_solution_multisystems.tsv"
@@ -107,14 +108,15 @@ class Test(MacsyTest):
                           # self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        expected_result = self.find_data(expected_result_dir, self.rejected_clusters)
-        get_results = os.path.join(self.out_dir, self.rejected_clusters)
+        expected_result = self.find_data(expected_result_dir, self.rejected_candidates_txt)
+        get_results = os.path.join(self.out_dir, self.rejected_candidates_txt)
         self.assertFileEqual(expected_result, get_results, comment="#")
 
 
@@ -140,14 +142,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_circular(self):
@@ -175,14 +178,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_linear(self):
@@ -209,14 +213,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_1_cluster_3_loners(self):
@@ -246,14 +251,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_2_clusters_3_loners(self):
@@ -284,14 +290,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_2_clusters_1_loner(self):
@@ -322,14 +329,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_1_loner_in_clust(self):
@@ -358,14 +366,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_1_loner_exch_in_clust(self):
@@ -394,14 +403,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_1_clusters_3_loners_w_exchangeable(self):
@@ -431,14 +441,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_multi_loci(self):
@@ -470,14 +481,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_single_loci(self):
@@ -506,14 +518,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_multi_system(self):
@@ -548,14 +561,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_multi_system_out_system(self):
@@ -586,14 +600,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_multi_model(self):
@@ -625,14 +640,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_ordered_only_one_multi_model(self):
@@ -665,14 +681,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_degenerated_systems(self):
@@ -700,14 +717,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_uncomplete_degenerated_systems(self):
@@ -735,14 +753,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
     def test_2_systems_not_compatible(self):
         # genetic organization of test_9.fasta
@@ -775,14 +794,15 @@ class Test(MacsyTest):
                           self.best_solution,
                           self.loners,
                           self.multisystems,
-                          self.summary):
+                          self.summary,
+                          self.rejected_candidates_tsv):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
     def test_unordered(self):
@@ -1015,7 +1035,7 @@ class Test(MacsyTest):
             # print(args)
             # print("##############################################")
             System._id = itertools.count(1)
-            RejectedClusters._id = itertools.count(1)
+            RejectedCandidate._id = itertools.count(1)
             macsyfinder.main(args=args.split(),
                              loglevel='ERROR'
                              )

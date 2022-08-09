@@ -1,0 +1,12 @@
+# macsyfinder 20211008.dev
+# models : functional-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional uncomplete_degenerated_systems --relative-path --sequence-db tests/data/base/test_4.fasta -o functional_test_uncomplete_degenerated_systems
+# Rejected candidates:
+
+Cluster:
+- model = uncomplete_degenerated_systems
+- replicon = UserReplicon
+- hits = (VICH001.B.00001.C001_01400, T2SS_gspD, 15)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (1) is not reached: 0
+============================================================

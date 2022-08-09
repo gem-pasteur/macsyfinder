@@ -167,12 +167,12 @@ class OrderedMatchMaker(MatchMaker):
         """
         Check a set of clusters fill model constraints.
         If yes create a :class:`macsypy.system.System` otherwise create
-        a :class:`macsypy.cluster.RejectedClusters`.
+        a :class:`macsypy.cluster.RejectedCandidate`.
 
         :param clusters: The list of cluster to check if fit the model
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
-        :return: either a System or a RejectedClusters
-        :rtype: :class:`macsypy.system.System` or :class:`macsypy.cluster.RejectedClusters` object
+        :return: either a System or a RejectedCandidates
+        :rtype: :class:`macsypy.system.System` or :class:`macsypy.system.RejectedCandidate` object
         """
         # count the hits
         # and track for each hit for which gene it counts for
@@ -227,7 +227,7 @@ class OrderedMatchMaker(MatchMaker):
             res = System(self._model, valid_clusters, self._redundancy_penalty)
             _log.debug("is a system")
         else:
-            res = RejectedClusters(self._model, valid_clusters, reasons)
+            res = RejectedCandidate(self._model, valid_clusters, reasons)
         _log.debug("#" * 50)
         return res
 
@@ -357,7 +357,7 @@ class MetaSetOfHits(abc.ABCMeta):
 
 class AbstractSetOfHits(metaclass=MetaSetOfHits):
     """
-    Is the mother class of  System, RejectedCluster, LikelySystems UnlikelySystem, ...
+    Is the mother class of  System, RejectedCandidates, LikelySystems UnlikelySystem, ...
     """
 
     def __init__(self, model):
@@ -726,7 +726,7 @@ class System(AbstractClusterizedHits):
         return {mh for mh in self.hits if mh.multi_system}
 
 
-class RejectedClusters(AbstractClusterizedHits):
+class RejectedCandidate(AbstractClusterizedHits):
     """
     Handle a set of clusters which has been rejected during the :func:`macsypy.system.match`  step
     This clusters (can be one) does not fill the requirements or contains forbidden genes.
@@ -756,13 +756,13 @@ class RejectedClusters(AbstractClusterizedHits):
     def __str__(self):
         """
 
-        :return: a string representation of this RejectedCluster
+        :return: a string representation of this RejectedCandidates
         """
         s = ''
         for c in self.clusters:
             s += str(c)
             s += '\n'
-        s += "These clusters have been rejected because:\n"
+        s += "This candidate has been rejected because:\n"
         for r in self.reasons:
             s += f"\t- {r}\n"
         return s
