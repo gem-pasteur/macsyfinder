@@ -503,6 +503,7 @@ To cite MacSyFinder:
 
 <!-- fake_1/sub_fam_2/model_2 {fake_pack_path}/definitions/sub_fam_2/model_2.xml -->
 {self.definition_2}"""
+        self.maxDiff = None
         self.assertEqual(expected_output,
                          stdout)
 
