@@ -4,6 +4,6 @@ MAINTAINER Bertrand Neron <bneron@pasteur.fr>
 
 USER root
 
-RUN python3 -m pip install coverage==5.3
+RUN python3 -m pip install coverage
 
 CMD ["/bin/bash"]
