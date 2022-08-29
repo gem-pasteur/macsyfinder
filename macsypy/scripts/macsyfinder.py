@@ -111,7 +111,7 @@ def parse_args(args):
     :param args: The arguments provided on the command line
     :type args: List of strings [without the program name]
     :return: The arguments parsed
-    :rtype: :class:`aprgparse.Namespace` object.
+    :rtype: :class:`argparse.Namespace` object.
     """
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
