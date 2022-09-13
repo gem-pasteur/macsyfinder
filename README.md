@@ -40,7 +40,13 @@ you can install macsyfinder as describe below.
     
 ### from pypi
 
-    pip3 install macsyfinder==x.x
+    python3 -m pip install macsyfinder==x.x
+
+where `x.x` is the version number
+
+### from conda/mamba
+
+    mamba install -c bioconda macsyfinder=x.x
 
 where `x.x` is the version number
 
@@ -48,13 +54,13 @@ where `x.x` is the version number
 
     git clone https://github.com/gem-pasteur/macsyfinder.git
     cd macsyfinder
-    pip3 install .
+    python3 -m pip install .
     
 ### for developers
 
     git clone https://github.com/gem-pasteur/macsyfinder.git
     cd macsyfinder
-    pip3 install .[dev]
+    python3 -m pip install .[dev]
  
 ## Unit tests 
 
