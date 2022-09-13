@@ -9,7 +9,7 @@
 [![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
 [![PyPI](https://img.shields.io/pypi/v/macsyfinder)](https://pypi.org/project/macsyfinder/)
 [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/gempasteur/macsyfinder?label=docker&sort=semver)](https://hub.docker.com/r/gempasteur/macsyfinder)
-![Conda](https://img.shields.io/conda/pn/bioconda/macsyfinder)
+[![Conda](https://img.shields.io/conda/vn/bioconda/macsyfinder?style=plastic)](https://github.com/bioconda/bioconda-recipes/tree/master/recipes/macsyfinder)
 [![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/gem-pasteur/macsyfinder/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/gem-pasteur/macsyfinder)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6010/badge)](https://bestpractices.coreinfrastructure.org/projects/6010)
 
