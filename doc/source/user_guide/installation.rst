@@ -81,9 +81,9 @@ If the tools are not in the path, some test will be skipped and a warning will b
 Perform the installation.
 -------------------------
 
-::
+.. code-block:: text
 
-    pip install macsyfinder
+    python3 -m pip install macsyfinder
 
 
 If you do not have the privileges to perform a system-wide installation,
@@ -93,23 +93,25 @@ use a `virtual environment <https://virtualenv.pypa.io/en/stable/>`_.
 installation in your home directory
 """""""""""""""""""""""""""""""""""
 
-::
+.. code-block:: text
 
-    pip install --user macsyfinder
+    python3 -m pip install --user macsyfinder
 
 
 installation in a virtualenv
 """"""""""""""""""""""""""""
 
-::
+.. code-block:: text
 
     python3 -m venv macsyfinder
     cd macsyfinder
     source bin/activate
-    pip install macsyfinder
+    python3 -m pip install macsyfinder
 
 To exit the virtualenv just execute the `deactivate` command.
-To run `macsyfinder`, you need to activate the virtualenv: ::
+To run `macsyfinder`, you need to activate the virtualenv:
+
+.. code-block:: text
 
     source macsyfinder/bin/activate
 
@@ -131,18 +133,35 @@ Then run `macsyfinder` or `macsydata`.
 Uninstalling MacSyFinder
 ========================
 
-To uninstall MacSyFinder (the last version installed), run::
+To uninstall MacSyFinder (the last version installed), run
+
+.. code-block:: text
 
   (sudo) pip uninstall macsyfinder
 
 If you install it in a virtualenv, just delete the virtual environment.
-For instance if you create a virtualenv name macsyfinder::
+For instance if you create a virtualenv name macsyfinder
+
+.. code-block:: text
 
     python3 -m venv macsyfinder
 
-To delete it, remove the directory::
+To delete it, remove the directory
+
+.. code-block:: text
 
     rm -R macsyfinder
+
+From Conda/Mamba
+================
+
+From version 2.0, MacSyFinder is packaged for Conda/Mamba
+
+.. code-block:: text
+
+    mamba install -c macsyfinder=x.x
+
+Where `x.x` is the macsyfinder version you want to install
 
 From container
 ==============
