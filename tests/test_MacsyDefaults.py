@@ -109,13 +109,13 @@ class TestMacsyDefaults(MacsyTest):
     def test_MacsyDefaults_no_virtual_env(self):
 
         virtual_env = os.environ.get('VIRTUAL_ENV')
-        common_path = os.path.join('share', 'macsyfinder')
+        common_path = os.path.join('share', 'macsyfinder', 'models')
         prefixes = ('/', os.path.join('/', 'usr', 'local'))
         system_models_dir = [os.path.join(root, common_path) for root in prefixes]
         system_models_dir.append(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
         self.defaults['system_models_dir'] = [path for path in system_models_dir if os.path.exists(path)]
-
-        del os.environ['VIRTUAL_ENV']
+        if virtual_env:
+            del os.environ['VIRTUAL_ENV']
         try:
             defaults = MacsyDefaults()
             self.maxDiff = None

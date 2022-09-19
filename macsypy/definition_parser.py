@@ -327,7 +327,7 @@ class DefinitionParser:
             try:
                 attrs = self._parse_gene_attrs(gene_node)
             except SyntaxError as err:
-                msg = f"Invalid model definition '{model.name}': {err}"
+                msg = f"Invalid model definition '{model.fqn}': {err}"
                 _log.critical(msg)
                 raise SyntaxError(msg)
             new_gene = ModelGene(self.gene_bank[(model.family_name, name)], model, **attrs)
@@ -344,7 +344,7 @@ class DefinitionParser:
             if presence in model.gene_category:
                 getattr(model, f'add_{presence}_gene')(new_gene)
             else:
-                msg = f"Invalid model '{model.name}' definition: presence value must be either: " \
+                msg = f"Invalid model '{model.fqn}' definition: presence value must be either: " \
                       f"""{', '.join(["'{}'".format(c) for c in model.gene_category])} not {presence}"""
                 _log.error(msg)
                 raise SyntaxError(msg)
@@ -364,11 +364,11 @@ class DefinitionParser:
         :rtype: :class:`macsypy.gene.Exchangeable` object
         """
         name = gene_node.get("name")
-        family_name, model_name = split_def_name(curr_model.fqn)
+        family_name = curr_model.family_name
         try:
             attrs = self._parse_gene_attrs(gene_node)
         except SyntaxError as err:
-            msg = f"Invalid model definition '{model_name}': {err}"
+            msg = f"Invalid model definition '{curr_model.fqn}': {err}"
             _log.critical(msg)
             raise SyntaxError(msg)
 

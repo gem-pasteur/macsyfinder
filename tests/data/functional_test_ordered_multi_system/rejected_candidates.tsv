@@ -1,0 +1,8 @@
+# macsyfinder 20220805.dev
+# models : functional-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-multisystem --relative-path --sequence-db tests/data/base/test_13.fasta -w 15
+# Rejected candidates found:
+candidate_id	replicon	model_fqn	cluster_id	hit_id	hit_pos	gene_name	function	reasons
+UserReplicon_T12SS-multisystem_1	UserReplicon	functional/T12SS-multisystem	c4	VICH001.B.00001.C001_01397	8	T1SS_abc	T1SS_abc	The quorum of mandatory genes required (2) is not reached: 1/The quorum of genes required (3) is not reached: 2
+UserReplicon_T12SS-multisystem_1	UserReplicon	functional/T12SS-multisystem	c4	VICH001.B.00001.C001_01398	9	T1SS_mfp	T1SS_mfp	The quorum of mandatory genes required (2) is not reached: 1/The quorum of genes required (3) is not reached: 2
+

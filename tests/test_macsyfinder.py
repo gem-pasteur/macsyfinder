@@ -38,14 +38,14 @@ from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelLocation, ModelRegistry, scan_models_dir
 from macsypy.hit import CoreHit, ModelHit, HitWeight, Loner, MultiSystem
 from macsypy.model import Model
-from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractUnordered, LikelySystem, UnlikelySystem
+from macsypy.system import System, HitSystemTracker, RejectedCandidate, AbstractUnordered, LikelySystem, UnlikelySystem
 from macsypy.solution import Solution
 from macsypy.cluster import Cluster
 from macsypy.utils import get_def_to_detect
 
-from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv, \
+from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_candidates_to_txt, solutions_to_tsv, \
      summary_best_solution, likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt, \
-     loners_to_tsv, multisystems_to_tsv
+     loners_to_tsv, multisystems_to_tsv, rejected_candidates_to_tsv
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
@@ -83,7 +83,7 @@ class TestMacsyfinder(MacsyTest):
         reset System._id and RejectedCluster._id to get predictable ids
         """
         System._id = itertools.count(1)
-        RejectedClusters._id = itertools.count(1)
+        RejectedCandidate._id = itertools.count(1)
 
 
     def test_list_models(self):
@@ -697,7 +697,7 @@ neutral genes:
         self.assertMultiLineEqual(sol_tsv, f_out.getvalue())
 
 
-    def test_rejected_clst_to_txt(self):
+    def test_rejected_candidates_to_txt(self):
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
@@ -733,14 +733,14 @@ neutral genes:
         hit_weights = HitWeight(**cfg.hit_weights())
         c1 = Cluster([v_h10, v_h20], model, hit_weights)
         c2 = Cluster([v_h40, v_h50], model, hit_weights)
-        r_c = RejectedClusters(model, [c1, c2], ["The reasons to reject this clusters"])
+        r_c = RejectedCandidate(model, [c1, c2], ["The reasons to reject this candidate"])
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
-# Rejected clusters:
+# Rejected candidates:
 
 Cluster:
 - model = T2SS
@@ -750,24 +750,96 @@ Cluster:
 - model = T2SS
 - replicon = replicon_1
 - hits = (h10, gspD, 40), (h20, sctC, 50)
-These clusters have been rejected because:
-\t- The reasons to reject this clusters
+This candidate has been rejected because:
+\t- The reasons to reject this candidate
 ============================================================
 """
 
         f_out = StringIO()
-        rejected_clst_to_txt(model_fam_name, model_vers, [r_c], f_out)
+        rejected_candidates_to_txt(model_fam_name, model_vers, [r_c], f_out)
         self.maxDiff = None
-        self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
+        self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
-        rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
-# No Rejected clusters
+# No Rejected candidates
 """
         f_out = StringIO()
-        rejected_clst_to_txt(model_fam_name, model_vers, [], f_out)
-        self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
+        rejected_candidates_to_txt(model_fam_name, model_vers, [], f_out)
+        self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
+
+
+    def test_rejected_candidates_to_tsv(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_1.fasta")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.res_search_dir = "blabla"
+
+        cfg = Config(MacsyDefaults(), args)
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+        profile_factory = ProfileFactory(cfg)
+
+        model = Model("foo/T2SS", 11)
+
+        gene_name = "gspD"
+        c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
+        gene_1 = ModelGene(c_gene_gspd, model)
+        gene_name = "sctC"
+        c_gene_sctc = CoreGene(models_location, gene_name, profile_factory)
+        gene_2 = ModelGene(c_gene_sctc, model)
+        model.add_mandatory_gene(gene_1)
+        model.add_accessory_gene(gene_2)
+
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        h10 = CoreHit(c_gene_gspd, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_sctc, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h20 = ModelHit(h20, gene_2, GeneStatus.ACCESSORY)
+        h40 = CoreHit(c_gene_gspd, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h40 = ModelHit(h40, gene_1, GeneStatus.MANDATORY)
+        h50 = CoreHit(c_gene_sctc, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h50 = ModelHit(h50, gene_2, GeneStatus.ACCESSORY)
+        hit_weights = HitWeight(**cfg.hit_weights())
+        c1 = Cluster([v_h10, v_h20], model, hit_weights)
+        c2 = Cluster([v_h40, v_h50], model, hit_weights)
+        r_c = RejectedCandidate(model, [c1, c2], ["The reasons to reject these candidate"])
+
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
+# {' '.join(sys.argv)}
+# Rejected candidates found:
+"""
+        rej_cand_str += '\t'.join(['candidate_id', 'replicon', 'model_fqn', 'cluster_id', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c1.id, 'h10', '10', 'gspD', 'gspD', 'The reasons to reject these candidate'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c1.id, 'h20', '20', 'sctC', 'sctC', 'The reasons to reject these candidate'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c2.id, 'h10', '40', 'gspD', 'gspD', 'The reasons to reject these candidate'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c2.id, 'h20', '50', 'sctC', 'sctC', 'The reasons to reject these candidate'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\n'
+
+        f_out = StringIO()
+        rejected_candidates_to_tsv(model_fam_name, model_vers, [r_c], f_out)
+        self.maxDiff = None
+        self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
+
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
+# {' '.join(sys.argv)}
+# No Rejected candidates
+"""
+        f_out = StringIO()
+        rejected_candidates_to_tsv(model_fam_name, model_vers, [], f_out)
+        self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
 
     def test_likely_systems_to_txt(self):
@@ -1192,6 +1264,35 @@ Use ordered replicon to have better prediction.
         self.assertEqual([r.id for r in rejected_clst],
                          ['VICH001.B.00001.C001_T12SS-multisystem_1'])
 
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_db_type_set_to_gembase(self):
+        logger = logging.getLogger('macsypy.macsyfinder')
+        macsypy.logger_set_level(level='WARNING')
+        defaults = MacsyDefaults()
+
+        out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
+        os.mkdir(out_dir)
+
+        # test gembase replicon
+        seq_db = self.find_data('base', 'ordered_replicon_base.fasta')
+        model_dir = self.find_data('data_set', 'models')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 T4P -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
+
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
+
+        self._reset_id()
+        with self.catch_log() as log:
+            systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
+            log_msg = log.get_value().split('\n')[-2] # the message finish with empty line
+        self.assertEqual(log_msg,
+                         f"Most of replicons contains only ONE sequence are you sure that '{seq_db}' is a 'gembase'.")
+
+
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search_systems_unordered(self):
         logger = logging.getLogger('macsypy.macsyfinder')
         macsypy.logger_set_level(level='ERROR')

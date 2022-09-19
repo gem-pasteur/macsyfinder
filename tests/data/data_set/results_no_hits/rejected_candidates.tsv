@@ -1,0 +1,4 @@
+# macsyfinder 20220804.dev
+# models : set_1-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --sequence-db tests/data/base/test_1.fasta --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 --relative-path
+# No Rejected candidates

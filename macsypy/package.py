@@ -28,6 +28,7 @@ This module allow to manage Packages of MacSyFinder models
 
 import os
 import abc
+import ssl
 import tempfile
 import urllib.request
 import urllib.parse
@@ -37,6 +38,7 @@ import tarfile
 import copy
 from typing import List, Dict, Tuple, Optional
 
+import certifi
 import yaml
 import colorlog
 _log = colorlog.getLogger(__name__)
@@ -129,6 +131,7 @@ class RemoteModelIndex(AbstractModelIndex):
         super().__init__(cache=cache)
         self.org_name = urllib.parse.quote(org)
         self.base_url: str = "https://api.github.com"
+        self._context = ssl.create_default_context(cafile=certifi.where())
         if not self.remote_exists():
             raise ValueError(f"the '{self.org_name}' organization does not exist.")
 
@@ -141,7 +144,7 @@ class RemoteModelIndex(AbstractModelIndex):
         :return: the json corresponding to the response url
         """
         try:
-            req = urllib.request.urlopen(url).read()
+            req = urllib.request.urlopen(url, context=self._context).read()
         except urllib.error.HTTPError as err:
             if err.code == 403:
                 raise MacsyDataLimitError("You reach the maximum number of request per hour to github.\n"
@@ -193,7 +196,7 @@ class RemoteModelIndex(AbstractModelIndex):
         vers = urllib.parse.quote(vers)
         metadata_url = f"https://raw.githubusercontent.com/{self.org_name}/{pack_name}/{vers}/metadata.yml"
         try:
-            with urllib.request.urlopen(metadata_url) as response:
+            with urllib.request.urlopen(metadata_url, context=self._context) as response:
                 metadata = response.read().decode("utf-8")
         except urllib.error.HTTPError as err:
             if 400 < err.code < 500:
@@ -264,7 +267,7 @@ class RemoteModelIndex(AbstractModelIndex):
         else:
             tmp_archive_path = os.path.join(dest, f"{pack_name}-{vers}.tar.gz")
         try:
-            with urllib.request.urlopen(url) as response, open(tmp_archive_path, 'wb') as out_file:
+            with urllib.request.urlopen(url, context=self._context) as response, open(tmp_archive_path, 'wb') as out_file:
                 shutil.copyfileobj(response, out_file)
         except urllib.error.HTTPError as err:
             if 400 <= err.code < 500:

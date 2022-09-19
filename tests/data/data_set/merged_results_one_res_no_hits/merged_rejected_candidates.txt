@@ -1,0 +1,125 @@
+# parallel_msf 20220414.dev
+# merged rejected_clusters.txt
+# Rejected candidates found:
+Cluster:
+- model = ComM
+- replicon = GCF_000006845
+- hits = (GCF_000006845_002590, ComM_comEC, 259)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (4) is not reached: 1
+============================================================
+- model = ComM
+- replicon = GCF_000006845
+- hits = (GCF_000006845_002590, ComM_comEC, 259)
+- model = ComM
+- replicon = GCF_000006845
+- hits = (GCF_000006845_008360, ComM_comEB, 836)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (4) is not reached: 2
+============================================================
+- model = ComM
+- replicon = GCF_000006845
+- hits = (GCF_000006845_008360, ComM_comEB, 836)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 0
+	- The quorum of genes required (4) is not reached: 1
+============================================================
+- model = T2SS
+- replicon = GCF_000006845
+- hits = (GCF_000006845_014280, T4P_pilD, 1428)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (6) is not reached: 1
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_001030, T4P_pilQ, 103), (GCF_000006845_001040, T4P_pilP, 104), (GCF_000006845_001050, T4P_pilO, 105), (GCF_000006845_001060, T4P_pilN, 106), (GCF_000006845_001070, T4P_pilM, 107)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 3
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_001030, T4P_pilQ, 103), (GCF_000006845_001040, T4P_pilP, 104), (GCF_000006845_001050, T4P_pilO, 105), (GCF_000006845_001060, T4P_pilN, 106), (GCF_000006845_001070, T4P_pilM, 107)
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_004190, T4P_fimT, 419), (GCF_000006845_004200, T4P_pilV, 420), (GCF_000006845_004210, T4P_pilW, 421), (GCF_000006845_004220, T4P_pilX, 422), (GCF_000006845_004230, T4P_pilA, 423)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 3
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_001030, T4P_pilQ, 103), (GCF_000006845_001040, T4P_pilP, 104), (GCF_000006845_001050, T4P_pilO, 105), (GCF_000006845_001060, T4P_pilN, 106), (GCF_000006845_001070, T4P_pilM, 107)
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_012440, T4P_pilA, 1244)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 3
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_004190, T4P_fimT, 419), (GCF_000006845_004200, T4P_pilV, 420), (GCF_000006845_004210, T4P_pilW, 421), (GCF_000006845_004220, T4P_pilX, 422), (GCF_000006845_004230, T4P_pilA, 423)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 0
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_004190, T4P_fimT, 419), (GCF_000006845_004200, T4P_pilV, 420), (GCF_000006845_004210, T4P_pilW, 421), (GCF_000006845_004220, T4P_pilX, 422), (GCF_000006845_004230, T4P_pilA, 423)
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_014270, T4P_pilC, 1427), (GCF_000006845_014280, T4P_pilD, 1428), (GCF_000006845_014310, T4P_pilB, 1431)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 3
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_004190, T4P_fimT, 419), (GCF_000006845_004200, T4P_pilV, 420), (GCF_000006845_004210, T4P_pilW, 421), (GCF_000006845_004220, T4P_pilX, 422), (GCF_000006845_004230, T4P_pilA, 423)
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_016430, T4P_pilT, 1643), (GCF_000006845_016440, T4P_pilU, 1644)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_012440, T4P_pilA, 1244)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 0
+	- The quorum of genes required (5) is not reached: 1
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_014270, T4P_pilC, 1427), (GCF_000006845_014280, T4P_pilD, 1428), (GCF_000006845_014310, T4P_pilB, 1431)
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_012440, T4P_pilA, 1244)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 3
+	- The quorum of genes required (5) is not reached: 4
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_016430, T4P_pilT, 1643), (GCF_000006845_016440, T4P_pilU, 1644)
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_012440, T4P_pilA, 1244)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (5) is not reached: 3
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_014270, T4P_pilC, 1427), (GCF_000006845_014280, T4P_pilD, 1428), (GCF_000006845_014310, T4P_pilB, 1431)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 3
+	- The quorum of genes required (5) is not reached: 3
+============================================================
+- model = T4P
+- replicon = GCF_000006845
+- hits = (GCF_000006845_016430, T4P_pilT, 1643), (GCF_000006845_016440, T4P_pilU, 1644)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (5) is not reached: 2
+============================================================
+

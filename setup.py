@@ -68,7 +68,8 @@ def expand_data(data_to_expand):
 if __name__ == "__main__":
     setuptools.setup(
         data_files=expand_data([('share/macsyfinder/doc/html', ['doc/build/html']),
-                                ('share/macsyfinder/doc/pdf', ['doc/build/latex/macsyfinder.pdf'])
+                                ('share/macsyfinder/doc/pdf', ['doc/build/latex/macsyfinder.pdf']),
+                                ('share/macsyfinder/models', ['data/models/README'])
                                ]),
         test_suite='tests.run_tests.discover',
     )

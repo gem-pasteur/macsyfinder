@@ -182,8 +182,8 @@ class Profile:
                     _log.warning(f"GA bit thresholds unavailable on profile {self.gene.name}. "
                                  f"Switch to e-value threshold ({hmmer_threshold})")
 
-                command = f"{self.cfg.hmmer()} --cpu 0 -o '{output_path}' {hmmer_threshold} " \
-                          f"'{self.path}' '{self.cfg.sequence_db()}' "
+                command = f'"{self.cfg.hmmer()}" --cpu 1 -o "{output_path}" {hmmer_threshold} ' \
+                          f'"{self.path}" "{self.cfg.sequence_db()}" '
                 _log.debug(f"{self.gene.name} Hmmer command line : {command}")
                 try:
                     hmmer = Popen(command,

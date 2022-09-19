@@ -33,7 +33,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
-from macsypy.system import System, RejectedClusters
+from macsypy.system import System, RejectedCandidate
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems, Solution
 from tests import MacsyTest
 
@@ -847,7 +847,7 @@ class SolutionExplorerTest(MacsyTest):
         # c25    c51    MS sctn
         # c26    c52    MS sctj_flg
 
-        rejected_clst = RejectedClusters(self.models['O'],
+        rejected_clst = RejectedCandidate(self.models['O'],
                                          [self.clusters['c21']],
                                          'fake_reason')
         combinations = combine_multisystems(rejected_clst,
@@ -860,7 +860,7 @@ class SolutionExplorerTest(MacsyTest):
             ]
         self.assertEqual(combinations, exp_combs)
 
-        rejected_clst = RejectedClusters(self.models['O'],
+        rejected_clst = RejectedCandidate(self.models['O'],
                                          [self.clusters['c22']],
                                          'fake_reason')
         combinations = combine_multisystems([rejected_clst],
@@ -871,7 +871,7 @@ class SolutionExplorerTest(MacsyTest):
             ]
         self.assertEqual(combinations, exp_combs)
 
-        rejected_clst = RejectedClusters(self.models['O'],
+        rejected_clst = RejectedCandidate(self.models['O'],
                                          [self.clusters['c21'], self.clusters['c23']],
                                          'fake_reason')
         combinations = combine_multisystems([rejected_clst],
