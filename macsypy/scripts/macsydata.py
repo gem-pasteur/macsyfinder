@@ -353,6 +353,8 @@ def do_install(args: argparse.Namespace) -> None:
             os.makedirs(dest)
     elif args.target:
         dest = args.target
+    elif 'VIRTUAL_ENV' in os.environ:
+        dest = os.path.join(os.environ['VIRTUAL_ENV'], 'share', 'macsyfinder', 'models')
     else:
         defaults = MacsyDefaults()
         config = Config(defaults, argparse.Namespace())
@@ -372,6 +374,7 @@ for the system wide models installation please refer to the documentation.
             raise ValueError() from None
         else:
             dest = config.models_dir()[0]
+    
     if inst_pack_loc:
         old_pack_path = f"{inst_pack_loc.path}.old"
         shutil.move(inst_pack_loc.path, old_pack_path)
@@ -732,14 +735,16 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                    help="The name of Model orgagnization"
                                         "(default 'macsy-models'))"
                                    )
-    install_subparser.add_argument('-u', '--user',
-                                   action='store_true',
-                                   default=False,
-                                   help='Install to the MacSYFinder user install directory for your platform. '
-                                        'Typically ~/.macsyfinder/data')
-    install_subparser.add_argument('-t', '--target', '--models-dir',
-                                   dest='target',
-                                   help='Install packages into <TARGET> dir instead in canonical location')
+    install_dest = install_subparser.add_mutually_exclusive_group()
+    install_dest.add_argument('-u', '--user',
+                              action='store_true',
+                              default=False,
+                              help='Install to the MacSYFinder user install directory for your platform. '
+                                   'Typically ~/.macsyfinder/data')
+    install_dest.add_argument('-t', '--target', '--models-dir',
+                              dest='target',
+                              help='Install packages into <TARGET> dir instead in canonical location')
+
     install_subparser.add_argument('-U', '--upgrade',
                                    action='store_true',
                                    default=False,

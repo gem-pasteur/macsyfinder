@@ -25,7 +25,7 @@
 import itertools
 import networkx as nx
 
-from macsypy.system import RejectedClusters
+from macsypy.system import RejectedCandidate
 
 
 class Solution:
@@ -89,7 +89,7 @@ class Solution:
 
     @property
     def hits_positions(self):
-        """The list of position of all hits of the soltution"""
+        """The list of position of all hits of the solution"""
         return self._hits_positions
 
     def __len__(self):
@@ -207,10 +207,10 @@ def combine_clusters(clusters, true_loners, multi_loci=False):
     return cluster_combinations
 
 
-def combine_multisystems(rejected_clusters, multi_systems):
+def combine_multisystems(rejected_candidates, multi_systems):
     """
 
-    :param rejected_clusters:
+    :param rejected_candidates:
     :param multi_systems: sequence of :class:`macsypy.cluster.Cluster`
                           each cluster must be composed of only one :class:`macsypy.hit.MultiSystem` object
     :return: list of cluster combination with teh multisystem
@@ -220,16 +220,16 @@ def combine_multisystems(rejected_clusters, multi_systems):
     # instead as clusters with loners
     # we have not to take in account rejected_cluster in new_comb
     # as they already have been challenged and rejected
-    if isinstance(rejected_clusters, RejectedClusters):
-        rejected_clusters = [rejected_clusters]
+    if isinstance(rejected_candidates, RejectedCandidate):
+        rejected_candidates = [rejected_candidates]
     new_comb = []
     ms_combinations = [itertools.combinations(multi_systems, i) for i in range(1, len(multi_systems) + 1)]
     ms_combinations = list(itertools.chain(*ms_combinations))  # tuple of MultiSystem
-    for rej_clust in rejected_clusters:
+    for rej_cand in rejected_candidates:
         for one_ms_combination in ms_combinations:
             combination_hits = {h for clst in one_ms_combination for h in clst.hits}
             functions = [h.gene_ref.alternate_of().name for h in combination_hits]
-            if not rej_clust.fulfilled_function(*functions):
-                new_comb.append(tuple(rej_clust.clusters + list(one_ms_combination)))
+            if not rej_cand.fulfilled_function(*functions):
+                new_comb.append(tuple(rej_cand.clusters + list(one_ms_combination)))
     return new_comb
 

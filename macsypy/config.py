@@ -52,17 +52,17 @@ class MacsyDefaults(dict):
         super().__init__()
         self.__dict__ = self
 
-        common_path = os.path.join('share', 'macsyfinder')
+        common_path = os.path.join('share', 'macsyfinder', 'models')
         virtual_env = os.environ.get('VIRTUAL_ENV')
         if virtual_env:
-            system_models_dir = os.path.join(virtual_env, common_path, 'models')
+            system_models_dir = os.path.join(virtual_env, common_path)
         else:
             system_models_dir = ''  # os.path.exists('') -> False
             prefixes = ('/', os.path.join('/', 'usr', 'local'))
             for root_prefix in prefixes:
                 root_path = os.path.join(root_prefix, common_path)
                 if os.path.exists(root_path) and os.path.isdir(root_path):
-                    system_models_dir = os.path.join(root_path, 'models')
+                    system_models_dir = root_path
 
             # depending on distrib it's installed in /share or /usr/local/share
             # if it's installed with --user

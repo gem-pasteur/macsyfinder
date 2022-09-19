@@ -21,7 +21,7 @@ which have 2 sub-classes for ordered and unordered replicons
 MatchMaker.match method link hit to a model (:class:`macsypy.hit.ValidHit`)
 and then check if these valid hit satisfy the quorum constraints defined
 in the model. According this it instanciate a :class:`macsypy.system.System`
-or :class:`macsypy.system.RejectedClusters` for ordered replicons
+or :class:`macsypy.system.RejectedCandidate` for ordered replicons
 or :class:`macsypy.system.LikelySystem` or :class:`macsypy.system.UnlikelySystem`
 for unordered replicons
 
@@ -31,7 +31,7 @@ below the inheritance diagram:
       macsypy.system.AbstractSetOfHits
       macsypy.system.AbstractClusterizedHits
       macsypy.system.System
-      macsypy.system.RejectedClusters
+      macsypy.system.RejectedCandidate
       macsypy.system.AbstractUnordered
       macsypy.system.LikelySystem
       macsypy.system.UnlikelySystem
@@ -111,9 +111,9 @@ System
    :private-members:
    :special-members:
 
-RejectedClusters
-================
-.. autoclass:: macsypy.system.RejectedClusters
+RejectedCandidate
+=================
+.. autoclass:: macsypy.system.RejectedCandidate
    :members:
    :private-members:
    :special-members:

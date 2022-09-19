@@ -186,7 +186,7 @@ class TestModelParser(MacsyTest):
             with self.catch_log():
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
-                         "Invalid model 'fail_invalid_presence' definition: presence value must be either: "
+                         "Invalid model 'foo/fail_invalid_presence' definition: presence value must be either: "
                          "'mandatory', 'accessory', 'neutral', 'forbidden' not foo_bar")
 
     def test_gene_no_name(self):
@@ -524,7 +524,7 @@ class TestModelParser(MacsyTest):
             with self.catch_log():
                 self.parser.parse(models_2_detect)
 
-        self.assertEqual(str(ctx.exception), "Invalid model definition 'bad_inter_gene_max_space_2': "
+        self.assertEqual(str(ctx.exception), "Invalid model definition 'foo/bad_inter_gene_max_space_2': "
                                              "inter_gene_max_space must be an integer: 2.5")
 
 
@@ -535,7 +535,7 @@ class TestModelParser(MacsyTest):
             with self.catch_log():
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
-                         "Invalid model definition 'bad_exchangeable_inter_gene_max_space': "
+                         "Invalid model definition 'foo/bad_exchangeable_inter_gene_max_space': "
                          "inter_gene_max_space must be an integer: 1.5")
 
 

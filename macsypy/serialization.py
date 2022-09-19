@@ -344,7 +344,7 @@ wholeness = {system.wholeness:.3f}
 
 class TsvSpecialHitSerializer:
     """
-    Seraialize special hits: :class:`macsypy.hit.Loner` and :class:`macsypy.hit.MultiSystem` in tsv format
+    Serialize special hits: :class:`macsypy.hit.Loner` and :class:`macsypy.hit.MultiSystem` in tsv format
     """
 
     def serialize(self, best_hits):
@@ -371,4 +371,30 @@ class TsvSpecialHitSerializer:
                       f"{one_hit.profile_coverage:.3f}\t{one_hit.sequence_coverage:.3f}\t" \
                       f"{one_hit.begin_match:d}\t{one_hit.end_match:d}\n"
                 s += row
+        return s
+
+
+class TsvRejectedCandidatesSerializer:
+    """
+    Serialize Rejected Cluster in tsv format
+    """
+
+    def serialize(self, candidates):
+        """
+        :param candidates: list of rejected candidates to serialize
+        :type candidates: [ :class:`macsypy.system.RejectedCandidate` object, ...]
+        """
+        s = ""
+        if candidates:
+            header = "candidate_id\treplicon\tmodel_fqn\tcluster_id\thit_id\thit_pos\tgene_name\tfunction\treasons\n"
+            s += header
+            for candidate in candidates:
+                reasons = '/'.join(candidate.reasons)
+                for cluster in candidate.clusters:
+                    for hit in cluster.hits:
+                        row = f"{candidate.id}\t{candidate.replicon_name}\t{candidate.model.fqn}\t" \
+                              f"{cluster.id}\t{hit.id}\t{hit.position}\t{hit.gene_ref.name}\t{hit.gene_ref.alternate_of().name}\t" \
+                              f"{reasons}\n"
+                        s += row
+                s += '\n'
         return s
