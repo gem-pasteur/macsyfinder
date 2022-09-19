@@ -17,13 +17,19 @@ MacSyFinder - Detection of macromolecular systems in protein datasets using syst
 
 
 
-## Citation
+## Citations
+
+MacSyFinder v2:
+Néron B, Denise R, Coluzzi C, Touchon M, Rocha EPC, Abby SS (2022). MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. Preprint available: doi:10.1101/2022.09.02.506364
+https://www.biorxiv.org/content/10.1101/2022.09.02.506364v1
+
+MacSyFinder v1:
 Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014). MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems. PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726
 http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
 
 
 ## MacSyFinder is available on pypi
- 
+
 [![PyPI](https://img.shields.io/pypi/v/macsyfinder)](https://pypi.org/project/macsyfinder/)
 
 ## Installation from distribution
@@ -37,7 +43,7 @@ After creating a virtualenv dedicated to macsyfinder and activating it
     source bin/activate
 
 you can install macsyfinder as describe below.
-    
+
 ### from pypi
 
     pip3 install macsyfinder==x.x
@@ -49,26 +55,26 @@ where `x.x` is the version number
     git clone https://github.com/gem-pasteur/macsyfinder.git
     cd macsyfinder
     pip3 install .
-    
+
 ### for developers
 
     git clone https://github.com/gem-pasteur/macsyfinder.git
     cd macsyfinder
     pip3 install .[dev]
- 
-## Unit tests 
+
+## Unit tests
 
     python3 setup.py test
-    
-or 
-    
+
+or
+
     python3 tests/run_tests.py -vv
-    
+
 or to run a specific test
 
     python3 tests/run_tests.py -vv tests/test_xxx.py
-        
-     
+
+
 ### with github actions / coverage / codecov
 
 [![Build Status](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master)](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml)
@@ -77,7 +83,7 @@ or to run a specific test
 ## Models installation
 
 Models are no longer shipped along macsyfinder package. To install Models you can use `macsydata`.
-*macsydata* allow to manage models stored in [macsy-models](https://github.com/macsy-models). 
+*macsydata* allow to manage models stored in [macsy-models](https://github.com/macsy-models).
 Below some most useful commands.
 
   * available: List Models available on macsy-models.
@@ -87,13 +93,13 @@ Below some most useful commands.
   * cite: How to cite a package.
   * ...
 
-For complete documentation see 
+For complete documentation see
 [macsydata section on readthedoc](https://macsyfinder.readthedocs.io/en/latest/user_guide/installation.html#models-installation-with-macsydata)
 
-For models not stored in macsy-models the commands *available*, *search*, *installation from remote* or *upgrade from remote* 
+For models not stored in macsy-models the commands *available*, *search*, *installation from remote* or *upgrade from remote*
 are **NOT** available.
 
-For models **Not** stored in *macsy-models*, you have to manage them semi-manually. 
+For models **Not** stored in *macsy-models*, you have to manage them semi-manually.
 Download the archive (do not unarchive it), then use *macsydata* for the installation.
 
 ## Documentation
@@ -141,9 +147,9 @@ Unlike docker you have not to worry about shared directory, your `home` and `/tm
 
 MacSyFinder is developed and released under [![Open Source License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://opensource.org/licenses/GPL-3.0)
 
-## Contributing 
+## Contributing
 
-We encourage contributions, bug report, enhancement ... 
+We encourage contributions, bug report, enhancement ...
 
 But before to do that, we encourage to read [the contributing guide](CONTRIBUTING.md).
 
@@ -153,5 +159,5 @@ But before to do that, we encourage to read [the contributing guide](CONTRIBUTIN
 
 ## Note
 
-The `setsid` binary in *utils* directory is used only for functional tests on macosx. 
+The `setsid` binary in *utils* directory is used only for functional tests on macosx.
 The binary has been build using the [setsid-macosx](https://github.com/tzvetkoff/setsid-macosx) project.
