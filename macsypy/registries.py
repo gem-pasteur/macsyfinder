@@ -157,14 +157,8 @@ class ModelLocation:
     def __init__(self, path=None, profile_suffix='.hmm', relative_path=False):
         """
         :param str path: if it's an installed model, path is the absolute path to a model family.
-                     otherwise path is None, and profile_dir and def_dir must be specified.
-        :param str profile_dir: the absolute path to the directory which contains the hmm profiles files.
-        :param str def_dir: The absolute path to the directory which contains the models definitions (xml files)
-                            or submodels.
         :param str profile_suffix: the suffix of hmm files
         :param bool relative_path: True if you want to work with relative path, False to work with absolute path.
-        :raise: MacsypyError if path is set and profile_dir or def_dir is set
-        :raise: MacsypyError if profile_dir is set but not def_dir and vice versa
         """
         self._path = path
         self.name = os.path.basename(path)
