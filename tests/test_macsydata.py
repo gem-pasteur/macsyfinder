@@ -240,14 +240,52 @@ copyright: 2019, Institut Pasteur, CNRS"""
         self.args.outdated = False
         self.args.uptodate = False
         self.args.models_dir = None
+        self.args.long = False
         try:
             with self.catch_io(out=True):
                 macsydata.do_list(self.args)
                 packs = sys.stdout.getvalue().strip()
         finally:
             macsydata._find_all_installed_packages = find_all_packages
+        expected_output = "fake_1-0.0b2\nfake_2-0.0b2"
         self.assertEqual(packs,
-                         "fake_1-0.0b2\nfake_2-0.0b2")
+                         expected_output)
+
+
+    def test_list_long(self):
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name, dest=self.models_dir[0])
+        model_dir = self.tmpdir
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(self.models_dir[0]):
+            registry.add(model_loc)
+
+
+        def fake_find_all_installed_package(models_dir=None):
+            return registry
+
+
+        find_all_packages = macsydata._find_all_installed_packages
+        macsydata._find_all_installed_packages = fake_find_all_installed_package
+
+        self.args.verbose = 1
+        self.args.outdated = False
+        self.args.uptodate = False
+        self.args.models_dir = None
+        self.args.long = True
+
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_list(self.args)
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_installed_packages = find_all_packages
+        expected_output  = f"""fake_1-0.0b2   ({os.path.join(model_dir, 'models', fake_packs[0])})
+fake_2-0.0b2   ({os.path.join(model_dir, 'models', fake_packs[1])})"""
+
+        self.assertEqual(packs,
+                         expected_output)
 
 
     def test_list_outdated(self):
@@ -271,7 +309,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
         self.args.outdated = True
         self.args.uptodate = False
         self.args.models_dir = None
-
+        self.args.long = False
         try:
             with self.catch_io(out=True):
                 macsydata.do_list(self.args)
@@ -279,7 +317,10 @@ copyright: 2019, Institut Pasteur, CNRS"""
         finally:
             macsydata._find_all_installed_packages = find_all_packages
             macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
-        self.assertEqual(packs, 'fake_1-1.0 [0.0b2]')
+
+        expected_output = 'fake_1-1.0 [0.0b2]'
+        self.assertEqual(packs,
+                         expected_output)
 
 
     def test_list_uptodate(self):
@@ -302,6 +343,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
         self.args.outdated = False
         self.args.uptodate = True
         self.args.models_dir = None
+        self.args.long = False
 
         try:
             with self.catch_io(out=True):
@@ -310,7 +352,8 @@ copyright: 2019, Institut Pasteur, CNRS"""
         finally:
             macsydata._find_all_installed_packages = find_all_packages
             macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
-        self.assertEqual(packs, 'fake_2-0.0b2')
+        expected_output = 'fake_2-0.0b2'
+        self.assertEqual(packs, expected_output)
 
 
     def test_list_verbose(self):
@@ -333,6 +376,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
         self.args.outdated = False
         self.args.uptodate = False
         self.args.models_dir = None
+        self.args.long = False
 
         try:
             with self.catch_io(out=True):
