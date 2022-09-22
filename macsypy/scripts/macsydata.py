@@ -460,17 +460,18 @@ def do_list(args: argparse.Namespace) -> None:
         try:
             pack = Package(model_loc.path)
             pack_vers = pack.metadata['vers']
+            model_path = f"   ({model_loc.path})" if args.long else ""
             if args.outdated or args.uptodate:
                 remote = RemoteModelIndex(org=args.org)
                 all_versions = remote.list_package_vers(pack.name)
                 specifier = specifiers.SpecifierSet(f">{pack_vers}")
                 update_vers = list(specifier.filter(all_versions))
                 if args.outdated and update_vers:
-                    print(f"{model_loc.name}-{update_vers[0]} [{pack_vers}]")
+                    print(f"{model_loc.name}-{update_vers[0]} [{pack_vers}]{model_path}")
                 if args.uptodate and not update_vers:
-                    print(f"{model_loc.name}-{pack_vers}")
+                    print(f"{model_loc.name}-{pack_vers}{model_path}")
             else:
-                print(f"{model_loc.name}-{pack_vers}")
+                print(f"{model_loc.name}-{pack_vers}{model_path}")
         except Exception as err:
             if args.verbose > 1:
                 _log.warning(str(err))
@@ -819,6 +820,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     list_subparser.add_argument('--models-dir',
                                 help='the path of the alternative root directory containing package instead used '
                                      'canonical locations')
+    list_subparser.add_argument('--long', '-l',
+                                action='store_true',
+                                default=False,
+                                help="in addition displays the path where is store each package"
+                                )
     ##########
     # freeze #
     ##########
