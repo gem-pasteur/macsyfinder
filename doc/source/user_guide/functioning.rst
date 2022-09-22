@@ -106,7 +106,7 @@ The following two steps are reiterated for each model being searched.
 Once performed for each model searched, the :ref:`next step <combinatorial-exploration>` is performed.
 
 .. note::
-    The clusters that do not fulfill the quorum requirements are stored in the :ref:`rejected_candidates.txt <rejected_candidates_file>` file.
+    The clusters that do not fulfill the quorum requirements are stored in the :ref:`rejected_candidates.txt/tsv <rejected_candidates_txt>` file.
 
 
 For *unordered* datasets: 
@@ -127,7 +127,6 @@ For unordered datasets, the **search so ends**, and MacSyFinder generates the fi
 
 
 .. _combinatorial-exploration:
-
 
 *****************************************************
 C. Computing candidate Systems' scores (ordered mode)
