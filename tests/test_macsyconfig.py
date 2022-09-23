@@ -434,7 +434,7 @@ class TestMacsyconfig(MacsyTest):
         defaults = MacsyDefaults()
         resp = ["Yes",           # enter section ?
                 defaults.hmmer,  # hmmer exe
-                True,            # no_cut_ga the fake_ask do not perform casting
+                False,           # cut_ga the fake_ask do not perform casting
                 0.002,           # e_value_search,
                 0.003,           # i_evalue_sel,
                 0.004            # coverage_profile
@@ -454,7 +454,7 @@ class TestMacsyconfig(MacsyTest):
             self.assertTrue(cp.has_section("hmmer"))
             self.assertFalse(cp.has_option("hmmer", "hmmer"))
             # all values are casted in str before inserting in ConfigParser
-            self.assertEqual(cp.get("hmmer", "no_cut_ga"), 'True')
+            self.assertEqual(cp.get("hmmer", "cut_ga"), 'False')
             self.assertEqual(cp.get("hmmer", "e_value_search"), '0.002')
             self.assertEqual(cp.get("hmmer", "i_evalue_sel"), '0.003')
             self.assertEqual(cp.get("hmmer", "coverage_profile"), '0.004')

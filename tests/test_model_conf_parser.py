@@ -64,7 +64,7 @@ class TestModelConfParser(MacsyTest):
                          'e_value_search': 0.12,
                          'i_evalue_sel': 0.012,
                          'coverage_profile': 0.55,
-                         'no_cut_ga': True}
+                         'cut_ga': False}
         conf_file = self.find_data('conf_files', 'model_conf.xml')
         mcp = ModelConfParser(conf_file)
         test_conf = mcp.parse()
@@ -90,7 +90,7 @@ class TestModelConfParser(MacsyTest):
         expected_conf = {'e_value_search': 0.12,
                          'i_evalue_sel': 0.012,
                          'coverage_profile': 0.55,
-                         'no_cut_ga': True}
+                         'cut_ga': False}
         conf_file = self.find_data('conf_files', 'model_conf_wo_weights.xml')
         mcp = ModelConfParser(conf_file)
         test_conf = mcp.parse()
@@ -131,7 +131,7 @@ class TestModelConfParser(MacsyTest):
         expected_filters = {'e_value_search': 0.12,
                             'i_evalue_sel': 0.012,
                             'coverage_profile': 0.55,
-                            'no_cut_ga': True
+                            'cut_ga': False
                             }
         conf_file = self.find_data('conf_files', 'model_conf.xml')
         tree = Et.parse(conf_file)
@@ -145,7 +145,7 @@ class TestModelConfParser(MacsyTest):
         cut_ga_node = filtering_node.find('cut_ga')
         cut_ga_node.text = 'True'
         recieved_filters = mcp.parse_filtering(filtering_node)
-        self.assertFalse('no_cut_ga' in recieved_filters)
+        self.assertTrue('cut_ga' in recieved_filters)
 
         # test bad value for cut_ga
         cut_ga_node.text = 'FOO'
@@ -160,7 +160,7 @@ class TestModelConfParser(MacsyTest):
         # test no cut_ga element
         filtering_node.remove(cut_ga_node)
         recieved_filters = mcp.parse_filtering(filtering_node)
-        del(expected_filters['no_cut_ga'])
+        del(expected_filters['cut_ga'])
         self.assertDictEqual(expected_filters, recieved_filters)
 
 
@@ -168,7 +168,7 @@ class TestModelConfParser(MacsyTest):
         expected_filters = {'e_value_search': 0.12,
                             'i_evalue_sel': 0.012,
                             'coverage_profile': 0.55,
-                            'no_cut_ga': True
+                            'cut_ga': False
                             }
         conf_file = self.find_data('conf_files', 'model_conf.xml')
         tree = Et.parse(conf_file)

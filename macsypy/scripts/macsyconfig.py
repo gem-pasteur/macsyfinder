@@ -461,15 +461,15 @@ def set_hmmer_options(config, defaults, use_defaults=False):
                          'validator': check_exe,
                          'default': defaults.hmmer,
                          'explanation': "If the binary is not on the PATH specify the full path"},
-               'no_cut_ga': {'question': "Do not use the GA score when search with hmmsearch",
+               'cut_ga': {'question': "Use the GA score when search with hmmsearch",
                              'validator': check_bool,
-                             'default': 'No',
+                             'default': 'Yes',
                              'expected': ['Yes', 'No'],
                              'explanation':
-"""By default the MSF try to applied a threshold per profile by using the
+"""By default MSF try to applied a threshold per profile by using the
 hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise
-MF switch to use the --e-value-search (-E in hmmsearch).
-If this option is set the --e-value-search option is used for all profiles regardless the presence of
+MSF switch to use the --e-value-search (-E in hmmsearch).
+If this option is not set the --e-value-search option is used for all profiles regardless the presence of
 the a GA bit score in the profiles."""},
 
                'e_value_search': {'question': "Maximal e-value for hits to be reported during hmmsearch search.",

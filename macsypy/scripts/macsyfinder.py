@@ -272,15 +272,25 @@ If a profile does not contains the GA bit score the --e-value-search (-E in hmms
 To applied the --e-value-search to all profiles use the --no-cut-ga option. 
 (default: {msf_def['e_value_search']})
 """)
-    hmmer_options.add_argument('--no-cut-ga',
+    cut_ga_group = hmmer_options.add_mutually_exclusive_group()
+    cut_ga_group.add_argument('--no-cut-ga',
                                action='store_true',
-                               default=False,
+                               default=None,
                                help=f"""By default the MSF try to applied a threshold per profile by using the
 hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
 MF switch to use the --e-value-search (-E in hmmsearch). 
 If this option is set the --e-value-search option is used for all profiles regardless the presence of 
 the a GA bit score in the profiles.
-(default: {msf_def['no_cut_ga']})""")
+(default: {not msf_def['cut_ga']})""")
+    cut_ga_group.add_argument('--cut-ga',
+                               action='store_true',
+                               default=None,
+                               help=f"""By default the MSF try to applied a threshold per profile by using the
+    hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
+    MSF switch to use the --e-value-search (-E in hmmsearch). 
+    But the modeler can override this default behavior to do not use cut_ga but --e-value-search instead (-E in hmmsearch).
+    The user can reestablish the general MSF behavior, be sure the profiles contain the GA bit score.
+    (default: {msf_def['cut_ga']})""")
 
     hmmer_options.add_argument('--i-evalue-sel',
                                action='store',
@@ -445,6 +455,7 @@ Conflicts with options:
         parser.print_usage()
         print("macsyfinder: error: argument --previous-run: not allowed with argument --cfg-file")
         sys.exit(2)
+
     return parser, parsed_args
 
 

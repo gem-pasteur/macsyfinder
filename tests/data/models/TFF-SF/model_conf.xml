@@ -1,0 +1,5 @@
+<model_config>
+    <filtering>
+        <cut_ga>False</cut_ga>
+    </filtering>
+</model_config>

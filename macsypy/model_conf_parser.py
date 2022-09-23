@@ -128,16 +128,6 @@ class ModelConfParser:
                     'cut_ga': parse_cut_ga,
                     }
         fiter_conf = self._parse_section(filtering_node, elements)
-        # in the general config the cut_ga option is no_cut_ga
-        # so rename and convert it
-        if 'cut_ga' in fiter_conf:
-            cut_ga = fiter_conf['cut_ga']
-            del fiter_conf['cut_ga']
-            if cut_ga:
-                pass
-                # this is the default
-            else:
-                fiter_conf['no_cut_ga'] = True
         return fiter_conf
 
 
