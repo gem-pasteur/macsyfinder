@@ -37,7 +37,7 @@ from macsypy.hit import CoreHit
 from macsypy.registries import ModelLocation
 from macsypy.profile import ProfileFactory
 from macsypy.database import Indexes
-from macsypy.search_genes import search_genes
+from macsypy.search_genes import search_genes, worker_cpu
 from tests import MacsyTest, which
 
 
@@ -80,6 +80,31 @@ class TestSearchGenes(MacsyTest):
         except:
             pass
 
+
+    def test_worker_cpu(self):
+        worker_meth = self.cfg.worker
+        from macsypy import search_genes
+        threads_available_ori = search_genes.threads_available
+        try:
+            self.cfg.worker = lambda: 5
+            worker, cpu = worker_cpu(10, self.cfg)
+            self.assertEqual(worker, 5)
+            self.assertEqual(cpu, 1)
+
+            self.cfg.worker = lambda: 11
+            worker, cpu = worker_cpu(5, self.cfg)
+            self.assertEqual(worker, 11)
+            self.assertEqual(cpu, 2)
+
+            self.cfg.worker = lambda: 0
+            search_genes.threads_available = lambda: 12
+            worker, cpu = worker_cpu(5, self.cfg)
+            self.assertEqual(worker, 12)
+            self.assertEqual(cpu, 2)
+
+        finally:
+            self.cfg.worker = worker_meth
+            search_genes.threads_available = threads_available_ori
 
     def test_search_fail(self):
         gene_name = "abc"

@@ -28,14 +28,38 @@ Manage the hmm step (hmmsearch or recover results from previous run) in parallel
 
 import concurrent.futures
 import logging
-_log = logging.getLogger(__name__)
 import signal
 import sys
 import shutil
 import os.path
+import math
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 from .utils import threads_available
 from .database import Indexes
+
+_log = logging.getLogger(__name__)
+
+
+def worker_cpu(genes_nb, cfg):
+    """
+    Compute the optimum number of worker and cpu per worker
+    The number of worker is set by the user (1 by default 0 means all worker available)
+
+    we use one worker per gene
+    if number of workers is greater than number of genes then several cpu can be use by
+    hmsearch to speed up the search step
+
+    :param int genes_nb: the number of genes to search
+    :param cfg: The macsyfinder configuration
+    :type cfg: :class:`macsypy.config.Config` object
+    :return: the number of worker and cpu_per_worker to use
+    :rtype: tuple (int worker_nb, int cpu_per_worker)
+    """
+    worker_nb = cfg.worker()
+    if not worker_nb:
+        worker_nb = threads_available()
+    cpu_per_worker = max(1, math.floor(worker_nb / genes_nb))
+    return worker_nb, cpu_per_worker
 
 
 def search_genes(genes, cfg):
@@ -51,10 +75,8 @@ def search_genes(genes, cfg):
     :param cfg: the configuration object
     :type cfg: :class:`macsypy.config.Config` object
     """
-    worker_nb = cfg.worker()
-    if not worker_nb:
-        worker_nb = min(len(genes), threads_available())
-    _log.debug(f"worker_nb = {worker_nb:d}")
+    worker_nb, cpu_per_worker = worker_cpu(len(genes), cfg)
+    _log.debug(f"worker_nb = {worker_nb:d}\tcpu per worker = {cpu_per_worker}")
     all_reports = []
 
     def stop(signum, frame):
@@ -66,17 +88,19 @@ def search_genes(genes, cfg):
 
     signal.signal(signal.SIGTERM, stop)
 
-    def search(gene):
+
+    def search(gene, cpu):
         """
         Search gene in the database built from the input sequence file (execute \"hmmsearch\"), and produce a HMMReport
 
         :param gene: the gene to search
         :type gene: a :class:`macsypy.gene.CoreGene` object
+        :param int cpu: the number of cpu to use (per worker)
         """
         _log.info(f"search gene {gene.name}")
         profile = gene.profile
         try:
-            report = profile.execute()
+            report = profile.execute(cpu=cpu)
         except Exception as err:
             _log.critical(err)
             stop(signal.SIGKILL, None)
@@ -139,7 +163,7 @@ def search_genes(genes, cfg):
                                                             gene.name + cfg.res_search_suffix())):
                 future_search.append(executor.submit(recover, gene, cfg))
             else:
-                future_search.append(executor.submit(search, gene))
+                future_search.append(executor.submit(search, gene, cpu_per_worker))
         for future in concurrent.futures.as_completed(future_search):
             report = future.result()
             if report:
