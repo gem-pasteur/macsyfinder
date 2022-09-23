@@ -148,7 +148,7 @@ Options for Hmmer execution and hits filtering:
   --hmmer HMMER         Path to the hmmsearch program.
                         If it is not specify rely on the PATH
                         (default: hmmsearch)
- --e-value-search E_VALUE_SEARCH
+  --e-value-search E_VALUE_SEARCH
                         Maximal e-value for hits to be reported during hmmsearch search.
                         By default MF set per profile threshold for hmmsearch run (--cut_ga option)
                         for profiles containing the GA bit score threshold.
@@ -156,12 +156,19 @@ Options for Hmmer execution and hits filtering:
                         is applied to this profile.
                         To applied the --e-value-search to all profiles use the --no-cut-ga option.
                         (default: 0.1)
-  --no-cut-ga           By default the Mf try to applied a threshold per profile by using the
-                        hmmer -cut-ga option. This is possible only if the Ga bit score is present in the profile otherwise MF switch to use the
-                        the --e-value-search (-E in hmmsearch).
-                        If this option is set the --e-value-search option is used for all profiles regardless
-                        the presence of the a GA bit score in the profiles.
+  --no-cut-ga           By default the MSF try to applied a threshold per profile by using the
+                        hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise
+                        MF switch to use the --e-value-search (-E in hmmsearch).
+                        If this option is set the --e-value-search option is used for all profiles regardless the presence of
+                        the a GA bit score in the profiles.
                         (default: False)
+  --cut-ga              By default the MSF try to applied a threshold per profile by using the
+                        hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise
+                        MSF switch to use the --e-value-search (-E in hmmsearch).
+                        But the modeler can override this default behavior to do not use cut_ga but --e-value-search instead (-E in hmmsearch).
+                        The user can reestablish the general MSF behavior, be sure the profiles contain the GA bit score.
+                        (default: True)
+
   --i-evalue-sel I_EVALUE_SEL
                         Maximal independent e-value for Hmmer hits to be selected for system detection.
                         (default:0.001)
