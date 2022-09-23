@@ -149,10 +149,11 @@ class Profile:
         return f"{self.gene.name} : {self.path}"
 
 
-    def execute(self):
+    def execute(self, cpu=1):
         """
         Launch the Hmmer search (hmmsearch executable) with this profile
 
+        :param int cpu: the number of cpu to use for hmmsearch (must be >= 1)
         :return: an object storing information on the results of the HMM search (HMMReport)
         :rtype:  :class:`macsypy.report.HMMReport` object
         """
@@ -182,7 +183,7 @@ class Profile:
                     _log.warning(f"GA bit thresholds unavailable on profile {self.gene.name}. "
                                  f"Switch to e-value threshold ({hmmer_threshold})")
 
-                command = f'"{self.cfg.hmmer()}" --cpu 1 -o "{output_path}" {hmmer_threshold} ' \
+                command = f'"{self.cfg.hmmer()}" --cpu {cpu} -o "{output_path}" {hmmer_threshold} ' \
                           f'"{self.path}" "{self.cfg.sequence_db()}" '
                 _log.debug(f"{self.gene.name} Hmmer command line : {command}")
                 try:
