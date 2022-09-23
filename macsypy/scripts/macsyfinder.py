@@ -286,11 +286,11 @@ the a GA bit score in the profiles.
                                action='store_true',
                                default=None,
                                help=f"""By default the MSF try to applied a threshold per profile by using the
-    hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
-    MSF switch to use the --e-value-search (-E in hmmsearch). 
-    But the modeler can override this default behavior to do not use cut_ga but --e-value-search instead (-E in hmmsearch).
-    The user can reestablish the general MSF behavior, be sure the profiles contain the GA bit score.
-    (default: {msf_def['cut_ga']})""")
+hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
+MSF switch to use the --e-value-search (-E in hmmsearch). 
+But the modeler can override this default behavior to do not use cut_ga but --e-value-search instead (-E in hmmsearch).
+The user can reestablish the general MSF behavior, be sure the profiles contain the GA bit score.
+(default: {msf_def['cut_ga']})""")
 
     hmmer_options.add_argument('--i-evalue-sel',
                                action='store',
