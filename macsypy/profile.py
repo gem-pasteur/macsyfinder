@@ -173,12 +173,12 @@ class Profile:
                                     self.gene.name + os.path.splitext(self.cfg.res_search_suffix())[0] + ".err")
 
             with open(err_path, 'w') as err_file:
-                if self.cfg.no_cut_ga():
+                if not self.cfg.cut_ga():
                     hmmer_threshold = f"-E {self.cfg.e_value_search():f}"
-                elif not self.cfg.no_cut_ga() and self.ga_threshold:
+                elif self.cfg.cut_ga() and self.ga_threshold:
                     hmmer_threshold = "--cut_ga"
                 else:
-                    # no_cut_ga is not set but there is not self.ga_threshold:
+                    # cut_ga is True set but there is not self.ga_threshold:
                     hmmer_threshold = f"-E {self.cfg.e_value_search():f}"
                     _log.warning(f"GA bit thresholds unavailable on profile {self.gene.name}. "
                                  f"Switch to e-value threshold ({hmmer_threshold})")

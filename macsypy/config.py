@@ -71,7 +71,7 @@ class MacsyDefaults(dict):
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
         self.e_value_search = kwargs.get('e_value_search', 0.1)
-        self.no_cut_ga = kwargs.get('no_cut_ga', False)
+        self.cut_ga = kwargs.get('cut_ga', True)
         self.db_type = kwargs.get('db_type', None)
         self.hmmer = kwargs.get('hmmer', 'hmmsearch')
         self.i_evalue_sel = kwargs.get('i_evalue_sel', 0.001)
@@ -115,7 +115,6 @@ class MacsyDefaults(dict):
         self.redundancy_penalty = kwargs.get('redundancy_penalty', 1.5)
 
 
-
 class Config:
     """
     Handle configuration values for macsyfinder.
@@ -126,7 +125,7 @@ class Config:
                 ('models_opt', ('inter_gene_max_space', 'max_nb_genes', 'min_mandatory_genes_required',
                                 'min_genes_required', 'multi_loci')),
                 ('models', tuple()),
-                ('hmmer', ('coverage_profile', 'e_value_search', 'no_cut_ga', 'i_evalue_sel', 'hmmer')),
+                ('hmmer', ('coverage_profile', 'e_value_search', 'cut_ga', 'i_evalue_sel', 'hmmer')),
                 ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight',
                                'itself_weight', 'redundancy_penalty', 'out_of_cluster_weight')),
                 ('directories', ('models_dir', 'system_models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
@@ -327,6 +326,7 @@ class Config:
                 self._tmp_opts[opt] = user_config[opt]
                 del user_config[opt]
         self._set_options(user_config)
+
 
     def _set_previous_run_config(self, prev_config_path):
         """
@@ -771,6 +771,17 @@ class Config:
         """
 
         self._options['log_level'] = self._convert_log_level(value)
+
+
+    def _set_no_cut_ga(self, value):
+        """
+
+        :param value:
+        :type value:
+        :return:
+        :rtype:
+        """
+        self._options['cut_ga'] = not value
 
 
     def models_dir(self):

@@ -428,7 +428,7 @@ class TestConfig(MacsyTest):
         self.assertEqual(cfg.i_evalue_sel(), 0.012)
         self.assertEqual(cfg.e_value_search(), 0.12)
         self.assertEqual(cfg.coverage_profile(), 0.55)
-        self.assertTrue(cfg.no_cut_ga())
+        self.assertFalse(cfg.cut_ga())
 
 
     def test_bad_values(self):
@@ -561,12 +561,33 @@ class TestConfig(MacsyTest):
         self.assertEqual(str(ctx.exception),
                          f"No config file found in dir {self.parsed_args.previous_run}")
 
-    def test_no_cut_ga(self):
+    def test_cut_ga(self):
+        # default value
         cfg = Config(self.defaults, self.parsed_args)
-        self.assertFalse(cfg.no_cut_ga())
+        self.assertTrue(cfg.cut_ga())
+        # user specify --no-cu-ga
         self.parsed_args.no_cut_ga = True
         cfg = Config(self.defaults, self.parsed_args)
-        self.assertTrue(cfg.no_cut_ga())
+        self.assertFalse(cfg.cut_ga())
+
+        # the user does not specify anything
+        # the modeler set cut-ga false in model_conf
+        self.parsed_args.cut_ga = None
+        self.parsed_args.no_cut_ga = None
+        self.parsed_args.models_dir = self.find_data('models')
+        self.parsed_args.models = ['TFF-SF', 'all']
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertFalse(cfg.cut_ga())
+
+        # the user specify --cut-ga
+        # the modeler set cut-ga false in model_conf
+        self.parsed_args.cut_ga = True
+        self.parsed_args.no_cut_ga = None
+        self.parsed_args.models_dir = self.find_data('models')
+        self.parsed_args.models = ['TFF-SF', 'all']
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertTrue(cfg.cut_ga())
+
 
     def test_e_value_search(self):
         cfg = Config(self.defaults, self.parsed_args)
