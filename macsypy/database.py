@@ -52,7 +52,14 @@ def fasta_iter(fasta_file):
         header = header.split()
         _id = header[0]
         comment = ' '.join(header[1:])
-        seq = ''.join(s.strip() for s in next(faiter))
+        try:
+            seq = ''.join(s.strip() for s in next(faiter))
+        except StopIteration:
+            # the sequence was not start by '>'
+            # bad fasta format
+            msg = f"Error during sequence '{fasta_file.name}' parsing: Check the fasta format."
+            _log.critical(msg)
+            raise MacsypyError(msg)
         length = len(seq)
         yield _id, comment, length
 

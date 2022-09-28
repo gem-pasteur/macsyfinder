@@ -32,10 +32,60 @@ import tempfile
 import argparse
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.database import Indexes
+from macsypy.database import Indexes, fasta_iter
 from macsypy.error import MacsypyError
 from tests import MacsyTest
 
+class TestFastaIter(MacsyTest):
+
+    def setUp(self) -> None:
+        self.sequences = [
+            ('seq1', 'comment 1', 'ATGCATGC' ),
+            ('seq2', 'comment 2', 'GGGGCCCCTT')
+        ]
+        self.tmpdir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_fasta_iter')
+        if os.path.exists(self.tmpdir):
+            shutil.rmtree(self.tmpdir)
+        os.makedirs(self.tmpdir)
+
+    def tearDown(self):
+        try:
+            shutil.rmtree(self.tmpdir)
+        except:
+            pass
+
+    def test_fasta_iter(self):
+        fasta_path = os.path.join(self.tmpdir, "sequence.fa")
+        with open(fasta_path, 'w') as fasta:
+            for id_, comment, seq in self.sequences:
+                fasta.write(f">{id_} {comment}\n{seq}\n")
+
+        with open(fasta_path) as fasta:
+            f_iter = fasta_iter(fasta)
+            for seq_read, seq_expected in zip(f_iter, self.sequences):
+                self.assertEqual(seq_read[0], seq_expected[0])
+                self.assertEqual(seq_read[1], seq_expected[1])
+                self.assertEqual(seq_read[2], len(seq_expected[2]))
+
+    def test_fasta_iter_bad_fasta(self):
+        fasta_path = os.path.join(self.tmpdir, "sequence.fa")
+        with open(fasta_path, 'w') as fasta:
+            first = True
+            for id_, comment, seq in self.sequences:
+                if first:
+                    fasta.write(f" >{id_} {comment}\n{seq}\n")
+                    first = False
+                else:
+                    fasta.write(f">{id_} {comment}\n{seq}\n")
+
+        with open(fasta_path) as fasta:
+            f_iter = fasta_iter(fasta)
+            with self.assertRaises(MacsypyError) as ctx:
+                with self.catch_log():
+                    for seq in f_iter:
+                        pass
+            self.assertEqual(str(ctx.exception),
+                             f"Error during sequence '{fasta_path}' parsing: Check the fasta format.")
 
 class TestIndex(MacsyTest):
 
@@ -45,7 +95,7 @@ class TestIndex(MacsyTest):
         args.models_dir = self.find_data('models')
         args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
         if os.path.exists(args.out_dir):
-            shutil.rmtree(os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes'))
+            shutil.rmtree(args.out_dir)
         os.makedirs(args.out_dir)
         seq_db = self.find_data("base", "test_1.fasta")
         shutil.copy(seq_db, args.out_dir)
