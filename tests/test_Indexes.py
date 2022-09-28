@@ -25,6 +25,7 @@
 
 import os
 import platform
+import time
 import unittest
 import shutil
 import tempfile
@@ -74,6 +75,48 @@ class TestIndex(MacsyTest):
         idx = Indexes(self.cfg)
         my_idx =idx.build()
         self.assertEqual(my_idx, os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"))
+
+    def test_build_idx_older_than_fasta(self):
+        # test if idx.build
+        # if index is present and newer than fasta the index are not rebuild
+        # if index is present but older than fasta the index is rebuild
+        fasta_path = self.cfg.sequence_db()
+        idx = Indexes(self.cfg)
+        idx_path = idx.build()
+        first_build_stamp = os.path.getmtime(idx_path)
+        idx_path = idx.build()
+        second_build_stamp = os.path.getmtime(idx_path)
+        time.sleep(.2)
+        f = open(fasta_path, 'a')
+        f.write('\n')
+        f.close()
+        idx_path = idx.build()
+        third_build_stamp = os.path.getmtime(idx_path)
+        self.assertEqual(first_build_stamp, second_build_stamp)
+        self.assertGreater(third_build_stamp, second_build_stamp)
+
+    def test_build_idx_point_wrong_fasta(self):
+        # test if idx.build
+        # if index is present and newer than fasta the index are not rebuild
+        # if index is present but older than fasta the index is rebuild
+        fasta_path = self.cfg.sequence_db()
+        idx = Indexes(self.cfg)
+        idx_path = idx.build()
+        first_build_stamp = os.path.getmtime(idx_path)
+        with open(idx_path, 'r') as f:
+            idx_content = f.readlines()
+        first_header = idx_content[0]
+        bad_header = f"{first_header[:-1]}_fake\n"
+        idx_content[0] = bad_header
+        with open(idx_path, 'w') as f:
+            f.write(''.join(idx_content))
+        with self.catch_log():
+            idx_path = idx.build()
+        second_build_stamp = os.path.getmtime(idx_path)
+        self.assertGreater(second_build_stamp, first_build_stamp)
+        with open(idx_path, 'r') as f:
+            new_header = f.readline()
+        self.assertEqual(new_header, first_header)
 
 
     def test_build_with_idx(self):
