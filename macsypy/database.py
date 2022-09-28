@@ -222,7 +222,10 @@ class Indexes:
                 try:
                     seq_id, length, _rank = line.split(self._field_separator)
                 except Exception as err:
-                    raise MacsypyError(f"fail to parse database index {path} at line: {line}", err) from err
+                    raise MacsypyError(f"fail to parse database index {path} at line: {line}."
+                                       f"Try to rebuild index with --idx option or remove file."
+                                       f"If error persist feel free to submit an issue at"
+                                       f"https://github.com/gem-pasteur/macsyfinder/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D ", err) from err
                 length = int(length)
                 _rank = int(_rank)
                 yield seq_id, length, _rank
