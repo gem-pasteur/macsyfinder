@@ -158,6 +158,7 @@ class TestIndex(MacsyTest):
         first_header = idx_content[0]
         bad_header = f"{first_header[:-1]}_fake\n"
         idx_content[0] = bad_header
+        time.sleep(.2)
         with open(idx_path, 'w') as f:
             f.write(''.join(idx_content))
         with self.catch_log():
