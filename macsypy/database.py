@@ -116,6 +116,12 @@ class Indexes:
                     # the separator is different than the actual separator
                     _log.warning(f"The '{my_indexes}' index file is in old format. Force index building.")
                     force = True
+            # if fasta file is newer than idx
+            stamp_fasta = os.path.getmtime(self._fasta_path)
+            stamp_idx = os.path.getmtime(my_indexes)
+            if stamp_idx < stamp_fasta:
+                _log.debug("the sequence index is older than sequence file: rebuild the index.")
+                force = True
 
         if force or not my_indexes:
             try:
@@ -125,9 +131,7 @@ class Indexes:
                 _log.critical(msg)
                 raise IOError(msg) from None
 
-            index = self._build_my_indexes(index_dir)
-            my_indexes = index
-
+            my_indexes = self._build_my_indexes(index_dir)
         return my_indexes
 
 
