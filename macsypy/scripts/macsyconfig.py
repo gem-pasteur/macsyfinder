@@ -460,7 +460,8 @@ def set_hmmer_options(config, defaults, use_defaults=False):
     options = {'hmmer': {'question': "The binary used to search the data bank with the profiles.",
                          'validator': check_exe,
                          'default': defaults.hmmer,
-                         'explanation': "If the binary is not on the PATH specify the full path"},
+                         'explanation': """If hmmer is set to None, it means that 'hmmsearch' is not found on PATH.
+Ensure that 'hmmsearch' will be on the PATH at runtime or specify the 'hmmsearch' path here."""},
                'cut_ga': {'question': "Use the GA score when search with hmmsearch",
                              'validator': check_bool,
                              'default': 'Yes',
