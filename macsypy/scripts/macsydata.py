@@ -31,12 +31,15 @@ import sys
 import os
 import argparse
 import shutil
-from textwrap import dedent
+import textwrap
+import time
 from typing import List, Tuple, Dict, Optional
 import pathlib
 import logging
+import xml.etree.ElementTree as ET
 
 import colorlog
+import yaml
 from packaging import requirements, specifiers, version
 
 import macsypy
@@ -647,6 +650,185 @@ def do_show_definition(args: argparse.Namespace) -> None:
         raise ValueError() from None
 
 
+def do_init_package(args: argparse.Namespace) -> None:
+    """
+    Create a template for data package
+
+        - skeleton for metadata.yml
+        - definitions directory with a skeleton of models.xml
+        - profiles directory
+        - skeleton for README.md file
+        - COPYRIGHT file (if holders option is set)
+        - LICENSE file (if license option is set)
+    :param args:
+    :type args:
+    :return:
+    :rtype:
+    """
+
+    def create_package_dir(package_name, models_dir=None):
+        """
+
+        :param str package_name:
+        :return: the path of the package directory
+        :rtype: str
+        """
+        pack_path = package_name if not models_dir else os.path.join(models_dir, package_name)
+        if not os.path.exists(pack_path):
+            os.makedirs(pack_path)
+        else:
+            raise ValueError(f"{pack_path} already exist.")
+        return pack_path
+
+    def add_metadata(pack_dir, maintainer, email, desc=None, license=None, c_date=None, c_holders=None):
+        metadata = {
+            'maintainer': {
+                'name': maintainer,
+                'email': email
+            },
+            'short_desc': desc,
+            'cite': 'Place here how to cite this package, it can hold several citation',
+            'doc': 'where to find documentation about this package',
+            'vers': '0.1b1',
+        }
+
+        if copyright:
+            metadata['copyright'] = f"Copyright (c) {c_date} {copyright()}"
+
+        if license:
+            metadata['license'] = ""
+
+        with open(os.path.join('metadata.yml', 'w')) as metafile:
+            yaml.dump(metadata, metafile)
+
+    def add_def_skeleton():
+        pass
+
+    def add_license(name):
+        pass
+
+    def add_copyright(pack_dir, pack_name, date, holders, desc):
+        """
+
+        :param str pack_dir:
+        :param str pack_name:
+        :param str date:
+        :param str holders:
+        :param str desc:
+        :return: None
+        """
+        desc = desc if desc is not None else ''
+        head = textwrap.fill(f"{pack_name} - {desc}")
+        text = f"""{head}
+        
+Copyright (c) {date} {holders}        
+"""
+        with open(os.path.join(pack_dir, 'COPYRIGHT'), 'w') as copyright_file:
+            copyright_file.write(text)
+
+    def add_readme(pack_dir, pack_name, desc):
+        """
+
+        :param str pack_dir:
+        :param pack_name:
+        :type str pack_name:
+        :param str desc:
+        :return: None
+        """
+        desc = desc if desc is not None else ''
+        text = f"""
+# {pack_name}: {desc}
+
+Place here information about {pack_name}
+
+- how to use it
+- how to cite it
+- ...
+
+using markdown syntax
+https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
+"""
+        with open(os.path.join(pack_dir, 'README.md'), 'w') as readme_file:
+            readme_file.write(text)
+
+    def create_model_conf(pack_dir):
+        msf_defaults = MacsyDefaults()
+        model_conf = ET.Element('model_config')
+
+        weights = ET.SubElement(model_conf, 'weights')
+        mandatory = ET.SubElement(weights, 'mandatory')
+        mandatory.text = str(msf_defaults['mandatory_weight'])
+        accessory = ET.SubElement(weights, 'accessory')
+        accessory.text = str(msf_defaults['accessory_weight'])
+        exchangeable = ET.SubElement(weights, 'exchangeable')
+        exchangeable.text = str(msf_defaults['exchangeable_weight'])
+        redundancy_penalty = ET.SubElement(weights, 'redundancy_penalty')
+        redundancy_penalty.text = str(msf_defaults['redundancy_penalty'])
+        out_of_cluster = ET.SubElement(weights, 'out_of_cluster')
+        out_of_cluster.text = str(msf_defaults['out_of_cluster'])
+
+        filtering = ET.SubElement(model_conf, 'filtering')
+        e_value_search = ET.SubElement(filtering, 'e_value_search')
+        e_value_search.text = str(msf_defaults['e_value_search'])
+        i_evalue_sel = ET.SubElement(filtering, 'i_evalue_sel')
+        i_evalue_sel.text = str(msf_defaults['i_evalue_sel'])
+        coverage_profile = ET.SubElement(filtering, '')
+        coverage_profile.text = str(msf_defaults['coverage_profile'])
+        cut_ga = ET.SubElement(filtering, 'cut_ga')
+        cut_ga.text = str(msf_defaults['cut_ga'])
+
+        ET.indent(model_conf)
+        model_conf.write(os.path.join(pack_dir, 'modelconf.xml'))
+
+
+    ######################
+    # Initialize Package #
+    ######################
+    c_date = None
+    pack_dir = create_package_dir(args.package_name, models_dir=args.models_dir)
+
+    def_dir = os.path.join(pack_dir, 'definitions')
+    os.mkdir(def_dir)
+    profiles_dir = os.path.join(pack_dir, 'profiles')
+    os.mkdir(profiles_dir)
+
+    add_def_skeleton()
+
+    create_model_conf()
+
+    add_readme(pack_dir, args.package_name, args.desc)
+
+    if args.holders:
+        c_date = time.localtime().tm_year
+        add_copyright(pack_dir, args.package_name, c_date, args.holders, args.desc)
+
+    else:
+        _log.warning(f"Consider to add copyright to protect your rights.")
+
+    if args.license:
+        add_license(args.package_name, c_date, args.authors)
+    else:
+        _log.warning(f"Consider licensing {args.package_name} to give the end-user the right to use your package,"
+                     f"and protect your rights. https://data.europa.eu/elearning/en/module4/#/id/co-01")
+
+    add_metadata(pack_dir, args.maintainer, args.email, desc=args.desc, license=args.license,
+                 c_date=c_date, c_holders=args.holders)
+
+    _log.info(f"""The skeleton of {args.package_name} is ready.
+The package is located at {pack_dir}
+
+- Edit metadata.yml and fill how to cite your package and where to find documentation about it.
+- Add hmm profiles in {pack_dir}/profiles directory
+- A skeleton of model definitions has been added in {pack_dir}/definitions. 
+  For complete documentation about model grammar read https://macsyfinder.readthedocs.io/en/latest/modeler_guide/modeling.html
+- A configuration file has been added (model_conf.xml) with default value tweak this file if needed. 
+  (https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html#model-configuration)
+              
+Read macsyfinder modeler guide for further details (https://macsyfinder.readthedocs.io/en/latest/modeler_guide/index.html)
+
+Before to publish your package you can use `macsydata check` to verify it's integrity.  
+""")
+
 ##################################
 # parsing command line arguments #
 ##################################
@@ -662,7 +844,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=dedent(r'''
+        description=textwrap.dedent(r'''
 
          *            *               *                   * *       * 
     *           *               *   *   *  *    **                *  
@@ -879,6 +1061,32 @@ def build_arg_parser() -> argparse.ArgumentParser:
     def_subparser.add_argument('--models-dir',
                                help='the path to the alternative root directory containing packages instead to the '
                                     'canonical locations')
+    ########
+    # init #
+    ########
+    init_subparser = subparsers.add_parser('init',
+                                           help='Create a template for a new data package')
+    init_subparser.set_defaults(func=do_init_package)
+    init_subparser.add_argument('package_name',
+                                help='The name of the data package.')
+    init_subparser.add_argument('maintainer',
+                                help='The name of the package maintainer.')
+    init_subparser.add_argument('email',
+                                help='The email of the package maintainer.')
+    init_subparser.add_argument('authors',
+                                help="The authors of the package. Could be different that the maintainer."
+                                     "Could be several persons. Surround the names by quotes 'John Doe, Richard Miles'")
+    init_subparser.add_argument('--license',
+                                choices=['cc-by', 'cc-by-sa', 'cc-by-nc', 'cc-by-nc-sa', 'cc-by-nc-nd'],
+                                help="""The license under this work will be released.
+if the license you choice is not in the list, you can do it manually
+by adding the license file in package and add suitable headers in model definitions.""")
+    init_subparser.add_argument('--holders',
+                                help="The holders of the copyright")
+    init_subparser.add_argument('--desc',
+                                help="A short description (one line) of the package")
+    init_subparser.add_argument('--models-dir',
+                                help='The path of an alternative models directory by default the package will be created here.' )
     return parser
 
 
