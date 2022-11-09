@@ -1007,6 +1007,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                 default=False,
                                 help="in addition displays the path where is store each package"
                                 )
+    list_subparser.add_argument('-v',
+                                dest='long',
+                                action='store_true',
+                                default=False,
+                                help="alias for -l/--long option"
+                                )
     ##########
     # freeze #
     ##########
