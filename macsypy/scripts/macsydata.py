@@ -730,13 +730,13 @@ def do_init_package(args: argparse.Namespace) -> None:
                                    'vers': "2.0"
                                    }
         )
-        comment = ET.Comment('GENE_1 is a mandatory gene. GENE_1.hmm must exists in profiles directory')
+        comment = ET.Comment('GENE_1 is a mandatory gene. GENE_1.hmm must exist in profiles directory')
         model.append(comment)
         mandatory = ET.SubElement(model, 'gene',
                                   attrib={'name': 'GENE_1',
                                           'presence': 'mandatory'})
         comment = ET.Comment("GENE_2 is accessory and can be exchanged with GENE_3 which play a similar role in model.\n"
-                             "Both GENE_2.hmm and GENE_3.hmm must exists in profiles_directory")
+                             "Both GENE_2.hmm and GENE_3.hmm must exist in profiles_directory")
         model.append(comment)
         accessory = ET.SubElement(model, 'gene',
                                   attrib={'name': 'GENE_2',
