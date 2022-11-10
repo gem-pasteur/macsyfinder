@@ -28,5 +28,5 @@ jobs:
       - name: Test and Compute the code coverage
         run: coverage run --source macsypy tests/run_tests.py -vvv
       - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v2
-        if: matrix.python-version == '3.7'
+        uses: codecov/codecov-action@v3
+        if: matrix.python-version == '3.10'
