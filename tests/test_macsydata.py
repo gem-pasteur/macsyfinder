@@ -1535,6 +1535,9 @@ Maybe you can use --user option to install in your HOME.""")
 
         files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
         for f_name in files:
+            # ElementTree ensure order of attribute only from python3.9
+            if sys.version_info.minor < 9 and f_name.endswith('.xml'):
+                continue
             with self.subTest(file_name=f_name):
                 expected_file = self.find_data(self.args.pack_name, f_name)
                 got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
@@ -1555,6 +1558,9 @@ Maybe you can use --user option to install in your HOME.""")
 
         files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
         for f_name in files:
+            # ElementTree ensure order of attribute only from python3.9
+            if sys.version_info.minor < 9 and f_name.endswith('.xml'):
+                continue
             with self.subTest(file_name=f_name):
                 expected_file = self.find_data(self.args.pack_name, f_name)
                 got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
