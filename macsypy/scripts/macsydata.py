@@ -661,16 +661,16 @@ def do_init_package(args: argparse.Namespace) -> None:
         - skeleton for README.md file
         - COPYRIGHT file (if holders option is set)
         - LICENSE file (if license option is set)
-    :param args:
-    :type args:
-    :return:
-    :rtype:
+
+    :param args: The parsed commandline subcommand arguments
+    :return: None
     """
 
-    def create_package_dir(package_name, models_dir=None):
+    def create_package_dir(package_name: str, models_dir: str = None) -> str:
         """
 
         :param str package_name:
+        :param models_dir: the path where to create the new package
         :return: the path of the package directory
         :rtype: str
         """
@@ -681,7 +681,20 @@ def do_init_package(args: argparse.Namespace) -> None:
             raise ValueError(f"{pack_path} already exist.")
         return pack_path
 
-    def add_metadata(pack_dir, maintainer, email, desc=None, license=None, c_date=None, c_holders=None):
+    def add_metadata(pack_dir: str, maintainer: str, email: str,
+                     desc: str = None, license: str = None,
+                     c_date: str = None, c_holders: str = None) -> None:
+        """
+
+        :param pack_dir: the package directory path
+        :param maintainer: the maintainer name
+        :param email: the maintainer email
+        :param desc: a One line description of the package
+        :param license: the license choosed
+        :param c_date: the date of the copyright
+        :param c_holders: the holders of the copyright
+        :return: None
+        """
         metadata = {
             'maintainer': {
                 'name': maintainer,
@@ -703,7 +716,13 @@ def do_init_package(args: argparse.Namespace) -> None:
             yaml.dump(metadata, metafile)
 
 
-    def add_def_skeleton(license=None):
+    def add_def_skeleton(license: str =None) -> None:
+        """
+        Create a example of model definition
+
+        :param license: the text of the license
+        :return: None
+        """
         model = ET.Element('model',
                            attrib={'inter_gene_max_space': "5",
                                    'min_mandatory_genes_required': "2",
@@ -771,18 +790,26 @@ def do_init_package(args: argparse.Namespace) -> None:
                 def_path.writelines(definition)
 
 
-    def add_license(pack_dir, license_text):
+    def add_license(pack_dir: str, license_text: str):
+        """
+        Create a license file
+
+        :param pack_dir: the package directory path
+        :param license_text: the text of the license
+        :return: None
+        """
         with open(os.path.join(pack_dir, 'LICENSE'), 'w') as license_file:
             license_file.write(license_text)
 
-    def add_copyright(pack_dir, pack_name, date, holders, desc):
+
+    def add_copyright(pack_dir: str, pack_name: str, date: str, holders: str, desc: str):
         """
 
-        :param str pack_dir:
-        :param str pack_name:
-        :param str date:
-        :param str holders:
-        :param str desc:
+        :param str pack_dir: The path of package directory
+        :param str pack_name: The name of the package
+        :param str date: The date (year) of package creation
+        :param str holders: The copyright holders
+        :param str desc: One line description of the package
         :return: None
         """
         desc = desc if desc is not None else ''
@@ -794,13 +821,13 @@ Copyright (c) {date} {holders}
         with open(os.path.join(pack_dir, 'COPYRIGHT'), 'w') as copyright_file:
             copyright_file.write(text)
 
-    def add_readme(pack_dir, pack_name, desc):
+
+    def add_readme(pack_dir: str, pack_name: str, desc: str):
         """
 
-        :param str pack_dir:
-        :param pack_name:
-        :type str pack_name:
-        :param str desc:
+        :param str pack_dir: The path of package directory
+        :param str pack_name: The name of the package
+        :param str desc: One line description of the package
         :return: None
         """
         desc = desc if desc is not None else ''
@@ -819,7 +846,14 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
         with open(os.path.join(pack_dir, 'README.md'), 'w') as readme_file:
             readme_file.write(text)
 
-    def create_model_conf(pack_dir, license=None):
+
+    def create_model_conf(pack_dir: str, license: str = None):
+        """
+
+        :param pack_dir: The path of the package directory
+        :param license: The text of the chosen license
+        :return: None
+        """
         msf_defaults = MacsyDefaults()
         model_conf = ET.Element('model_config')
 
@@ -883,7 +917,12 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
         _log.warning(f"Consider to add copyright to protect your rights.")
 
     if args.license:
-        license_text = licenses.licence(args.license, args.pack_name, args.authors, c_date, args.holders, args.desc)
+        try:
+            license_text = licenses.licence(args.license, args.pack_name, args.authors, c_date, args.holders, args.desc)
+        except KeyError:
+            _log.error(f"The license {args.license} is not managed by init (see macsydata init help). "
+                       f"You will have to put the license by hand in package.")
+            license_text=None
         add_license(pack_dir, license_text)
     else:
         _log.warning(f"Consider licensing {args.pack_name} to give the end-user the right to use your package,"
