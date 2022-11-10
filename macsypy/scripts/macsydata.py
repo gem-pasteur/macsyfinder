@@ -47,6 +47,7 @@ from macsypy.error import MacsyDataLimitError
 from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry, ModelLocation, scan_models_dir
 from macsypy.package import RemoteModelIndex, LocalModelIndex, Package, parse_arch_path
+from macsypy import licenses
 
 # _log is set in main func
 _log = None
@@ -693,19 +694,86 @@ def do_init_package(args: argparse.Namespace) -> None:
         }
 
         if copyright:
-            metadata['copyright'] = f"Copyright (c) {c_date} {copyright()}"
+            metadata['copyright'] = f"Copyright (c) {c_date} {c_holders}"
 
         if license:
-            metadata['license'] = ""
+            metadata['license'] = licenses.name_2_url(license)
 
-        with open(os.path.join('metadata.yml', 'w')) as metafile:
+        with open(os.path.join(pack_dir, 'metadata.yml'), 'w') as metafile:
             yaml.dump(metadata, metafile)
 
-    def add_def_skeleton():
-        pass
 
-    def add_license(name):
-        pass
+    def add_def_skeleton(license=None):
+        model = ET.Element('model',
+                           attrib={'inter_gene_max_space': "5",
+                                   'min_mandatory_genes_required': "2",
+                                   'min_genes_required': "3",
+                                   'vers': "2.0"
+                                   }
+        )
+        comment = ET.Comment('GENE_1 is a mandatory gene. GENE_1.hmm must exists in profiles directory')
+        model.append(comment)
+        mandatory = ET.SubElement(model, 'gene',
+                                  attrib={'name': 'GENE_1',
+                                          'presence': 'mandatory'})
+        comment = ET.Comment("GENE_2 is accessory and can be exchanged with GENE_3 which play a similar role in model.\n"
+                             "Both GENE_2.hmm and GENE_3.hmm must exists in profiles_directory")
+        model.append(comment)
+        accessory = ET.SubElement(model, 'gene',
+                                  attrib={'name': 'GENE_2',
+                                          'presence': 'accessory',
+                                          })
+        exchangeables = ET.SubElement(accessory, 'exchangeables')
+        ex_gene = ET.SubElement(exchangeables, 'gene',
+                                attrib={'name': 'GENE_3'})
+        comment = ET.Comment("GENE_4 can be anywhere in the genome and not clusterized with some other model genes")
+        model.append(comment)
+        loner = ET.SubElement(model, 'gene',
+                              attrib={'name': 'GENE_4',
+                                      'presence': 'accessory',
+                                      'loner': 'true'}
+                              )
+        comment = ET.Comment("GENE_5 can be shared by several systems instance from different models.")
+        model.append(comment)
+        multi_model = ET.SubElement(model, 'gene',
+                                    attrib={'name': 'GENE_5',
+                                            'presence': 'accessory',
+                                            'multi_model': 'true'}
+                              )
+        comment = ET.Comment("GENE_6 have specific clusterisation rule")
+        model.append(comment)
+        inter = ET.SubElement(model, 'gene',
+                              attrib={'name': 'GENE_6',
+                                      'presence': 'accessory',
+                                      'inter_gene_max_space': '10'}
+                              )
+        comment = ET.Comment("\nFor exhaustive documentation about grammar visit \n"
+                             "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html\n")
+        model.append(comment)
+        ET.indent(model)
+        tree = ET.ElementTree(model)
+        def_path = os.path.join(pack_dir, 'definitions', 'model_example.xml')
+        tree.write(def_path,
+                   encoding='UTF-8',
+                   xml_declaration=True)
+
+        if license:
+            # Elementtree API does not allow to insert comment outside the tree (before root node)
+            # this is the reason of this workaround
+            # write the xml, read it as text, insert the comment, and write it again :-(
+            with open(def_path, 'r') as def_file:
+                definition = def_file.readlines()
+            license = f"""<!--
+{license}-->
+"""
+            definition.insert(1, license)
+            with open(def_path, 'w') as def_path:
+                def_path.writelines(definition)
+
+
+    def add_license(pack_dir, license_text):
+        with open(os.path.join(pack_dir, 'LICENSE'), 'w') as license_file:
+            license_file.write(license_text)
 
     def add_copyright(pack_dir, pack_name, date, holders, desc):
         """
@@ -751,7 +819,7 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
         with open(os.path.join(pack_dir, 'README.md'), 'w') as readme_file:
             readme_file.write(text)
 
-    def create_model_conf(pack_dir):
+    def create_model_conf(pack_dir, license=None):
         msf_defaults = MacsyDefaults()
         model_conf = ET.Element('model_config')
 
@@ -765,56 +833,72 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
         redundancy_penalty = ET.SubElement(weights, 'redundancy_penalty')
         redundancy_penalty.text = str(msf_defaults['redundancy_penalty'])
         out_of_cluster = ET.SubElement(weights, 'out_of_cluster')
-        out_of_cluster.text = str(msf_defaults['out_of_cluster'])
+        out_of_cluster.text = str(msf_defaults['out_of_cluster_weight'])
 
         filtering = ET.SubElement(model_conf, 'filtering')
         e_value_search = ET.SubElement(filtering, 'e_value_search')
         e_value_search.text = str(msf_defaults['e_value_search'])
         i_evalue_sel = ET.SubElement(filtering, 'i_evalue_sel')
         i_evalue_sel.text = str(msf_defaults['i_evalue_sel'])
-        coverage_profile = ET.SubElement(filtering, '')
+        coverage_profile = ET.SubElement(filtering, 'coverage_profile')
         coverage_profile.text = str(msf_defaults['coverage_profile'])
         cut_ga = ET.SubElement(filtering, 'cut_ga')
         cut_ga.text = str(msf_defaults['cut_ga'])
 
         ET.indent(model_conf)
-        model_conf.write(os.path.join(pack_dir, 'modelconf.xml'))
+        tree = ET.ElementTree(model_conf)
+        conf_path = os.path.join(pack_dir, 'model_conf.xml')
+        tree.write(conf_path,
+                   encoding='UTF-8',
+                   xml_declaration=True)
+        if license:
+            # Elementtree API does not allow to insert comment outside the tree (before root node)
+            # this is the reason of this workaround
+            # write the xml, read it as text, insert the comment, and write it again :-(
+
+            with open(conf_path, 'r') as conf_file:
+                conf = conf_file.readlines()
+            license = f"""<!--
+{license}-->
+"""
+            conf.insert(1, license)
+            with open(conf_path, 'w') as conf_file:
+                conf_file.writelines(conf)
 
 
     ######################
     # Initialize Package #
     ######################
-    c_date = None
-    pack_dir = create_package_dir(args.package_name, models_dir=args.models_dir)
-
+    c_date = time.localtime().tm_year
+    pack_dir = create_package_dir(args.pack_name, models_dir=args.models_dir)
     def_dir = os.path.join(pack_dir, 'definitions')
-    os.mkdir(def_dir)
     profiles_dir = os.path.join(pack_dir, 'profiles')
+    license_text = None
+    os.mkdir(def_dir)
     os.mkdir(profiles_dir)
 
-    add_def_skeleton()
-
-    create_model_conf()
-
-    add_readme(pack_dir, args.package_name, args.desc)
-
     if args.holders:
-        c_date = time.localtime().tm_year
-        add_copyright(pack_dir, args.package_name, c_date, args.holders, args.desc)
-
+        add_copyright(pack_dir, args.pack_name, c_date, args.holders, args.desc)
     else:
         _log.warning(f"Consider to add copyright to protect your rights.")
 
     if args.license:
-        add_license(args.package_name, c_date, args.authors)
+        license_text = licenses.licence(args.license, args.pack_name, args.authors, c_date, args.holders, args.desc)
+        add_license(pack_dir, license_text)
     else:
-        _log.warning(f"Consider licensing {args.package_name} to give the end-user the right to use your package,"
+        _log.warning(f"Consider licensing {args.pack_name} to give the end-user the right to use your package,"
                      f"and protect your rights. https://data.europa.eu/elearning/en/module4/#/id/co-01")
+
+    add_def_skeleton(license=license_text)
+
+    create_model_conf(pack_dir, license=license_text)
+
+    add_readme(pack_dir, args.pack_name, args.desc)
 
     add_metadata(pack_dir, args.maintainer, args.email, desc=args.desc, license=args.license,
                  c_date=c_date, c_holders=args.holders)
 
-    _log.info(f"""The skeleton of {args.package_name} is ready.
+    _log.info(f"""The skeleton of {args.pack_name} is ready.
 The package is located at {pack_dir}
 
 - Edit metadata.yml and fill how to cite your package and where to find documentation about it.
@@ -823,11 +907,12 @@ The package is located at {pack_dir}
   For complete documentation about model grammar read https://macsyfinder.readthedocs.io/en/latest/modeler_guide/modeling.html
 - A configuration file has been added (model_conf.xml) with default value tweak this file if needed. 
   (https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html#model-configuration)
-              
-Read macsyfinder modeler guide for further details (https://macsyfinder.readthedocs.io/en/latest/modeler_guide/index.html)
-
-Before to publish your package you can use `macsydata check` to verify it's integrity.  
-""")
+  
+Before to publish your package you can use `macsydata check` to verify it's integrity.
+"""
+              )
+    _log.warning("Read macsyfinder modeler guide for further details: "
+                 "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/index.html")
 
 ##################################
 # parsing command line arguments #
@@ -1073,13 +1158,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
     init_subparser = subparsers.add_parser('init',
                                            help='Create a template for a new data package')
     init_subparser.set_defaults(func=do_init_package)
-    init_subparser.add_argument('package_name',
+    init_subparser.add_argument('--pack-name',
+                                required=True,
                                 help='The name of the data package.')
-    init_subparser.add_argument('maintainer',
+    init_subparser.add_argument('--maintainer',
+                                required=True,
                                 help='The name of the package maintainer.')
-    init_subparser.add_argument('email',
+    init_subparser.add_argument('--email',
+                                required=True,
                                 help='The email of the package maintainer.')
-    init_subparser.add_argument('authors',
+    init_subparser.add_argument('--authors',
+                                required=True,
                                 help="The authors of the package. Could be different that the maintainer."
                                      "Could be several persons. Surround the names by quotes 'John Doe, Richard Miles'")
     init_subparser.add_argument('--license',
