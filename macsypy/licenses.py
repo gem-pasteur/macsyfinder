@@ -20,6 +20,8 @@
 #  along with MacSyFinder (COPYING).                                     #
 #  If not, see <https://www.gnu.org/licenses/>.                          #
 ##########################################################################
+from typing import Literal
+LN = Literal['cc-by', 'cc-by-sa', 'cc-by-nc', 'cc-by-nc-sa', 'cc-by-nc-nd']
 
 def _preambule(PN: str, authors: str, cr_date: str, cr_holders: str, short_desc: str) -> str:
     """
@@ -48,7 +50,7 @@ See COPYRIGHT file for details."""
     return preambule
 
 
-def licence(licence_name: str, PN: str, authors: str, cr_date: str, cr_holders: str, short_desc: str) -> str:
+def licence(licence_name: LN, PN: str, authors: str, cr_date: str, cr_holders: str, short_desc: str) -> str:
     """
     Create a text to put in the headers of all package file
 
@@ -99,7 +101,14 @@ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
     return licence[licence_name]
 
 
-def name_2_url(licence_name):
+def name_2_url(licence_name: LN):
+    """
+
+    :param licence_name:
+    :type licence_name:
+    :return:
+    :rtype:
+    """
     acronym = licence_name.strip('cc-')
     return f"http://creativecommons.org/licenses/{acronym}/4.0/"
 
