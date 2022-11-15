@@ -8,6 +8,7 @@ nextflow.enable.dsl = 2
 
 params['models'] = false
 params['sequence-db'] = false
+params['db-type'] = false
 params['replicon-topoloy']= false
 params['topology-file']= false
 params['inter-gene-max-space']= false
@@ -49,6 +50,7 @@ params.profile = false
 
 models = params.models ? " --models ${params['models']}" : ''
 sequence_db = params['sequence-db'] ? "${params['sequence-db']}": ''
+db_type = params['db-type']
 replicon_topology = params['replicon-topoloy'] ? " --replicon-topology ${params['replicon-topoloy']}" : ''
 topology_file = params['topology-file'] ? " --topology-file ${params['topology-file']}" : ''
 inter_gene_max_space = params['inter-gene-max-space'] ? " --inter-gene-max-space ${params['inter-gene-max-space']}" : ''
@@ -82,6 +84,7 @@ parallel_macsyfinder available options:
 
  --models
  --sequence-db
+ --db-type
  --replicon-topology
  --topology-file
  --inter-gene-max-space
@@ -111,15 +114,22 @@ Please refer to the MacSyFinder documentation (https://macsyfinder.readthedocs.i
     println(msg)
     System.exit(0)
 }
+
 if (params.profile){
     throw new Exception("The macsyfinder option '--profile' does not exists. May be you want to use the nextflow option '-profile'.")
 }
 
+if (!params['db-type']){
+    throw new Exception("The option '--db-type' is mandatory.")
+} else if (!params['db-type'] in ['gembase', 'ordered_replicon', 'unordered']) {
+    throw new Exception("The option '--db-type' accept only 'gembase', 'ordered_replicon', 'unordered' as value: get '${params['db-type']}'")
+}
+
 if (! params['sequence-db'] and ! params['cfg-file']){
-    throw new Exception("The option '--sequence-db' is mandatory.")
+    throw new Exception("The option '--sequence-db' is mandatory.");
 }
 if (! params['models'] and ! params['cfg-file']){
-    throw new Exception("The option '--models' is mandatory.")
+    throw new Exception("The option '--models' is mandatory.");
 }
 
 sequence_db = file(sequence_db)
@@ -147,6 +157,7 @@ process macsyfinder{
     input:
         path one_replicon
         val models
+        val db_type
         val replicon_topology
         val topology_file
         val inter_gene_max_space
@@ -176,7 +187,7 @@ process macsyfinder{
 
     script:
         """
-        macsyfinder --sequence-db ${one_replicon} --db-type gembase ${replicon_topology}${topology_file}${models_dir}${models}${inter_gene_max_space}${min_mandatory_genes_required}${min_genes_required}${max_nb_genes}${multi_loci} \
+        macsyfinder --sequence-db ${one_replicon} --db-type ${db_type} ${replicon_topology}${topology_file}${models_dir}${models}${inter_gene_max_space}${min_mandatory_genes_required}${min_genes_required}${max_nb_genes}${multi_loci} \
 ${hmmer}${e_value_search} ${no_cut_ga}${i_value_sel} ${coverage_profile}${mandatory_weight}${accessory_weight}${exchangeable_weight}${redundancy_penalty}${out_of_cluster} \
 ${index_dir}${res_search_suffix}${res_extract_suffix}${profile_suffix} --worker ${task.cpus} --mute${debug} --out-dir macsyfinder-${one_replicon.baseName}
 """
@@ -202,21 +213,27 @@ process merge_results{
 }
 
 
-
 workflow {
 
- gembase = Channel.fromPath(sequence_db)
+    if( params['db-type'] == 'gembase' ){
+        gembase = Channel.fromPath(sequence_db)
+        replicons = split(gembase)
+    } else {
+        if( params['sequence-db'].contains(',') ){
+            replicons = params['sequence-db'].tokenize(',')
+        } else {
+            replicons = Channel.fromPath(sequence_db)
+        }
+    }
 
- replicons = split(gembase)
+    results_per_replicon = macsyfinder(replicons.flatten(), models, db_type, replicon_topology, topology_file,
+    inter_gene_max_space, min_mandatory_genes_required, min_genes_required, max_nb_genes, multi_loci,
+    hmmer, e_value_search, no_cut_ga, i_value_sel, coverage_profile,
+    mandatory_weight, accessory_weight, exchangeable_weight, redundancy_penalty, out_of_cluster,
+    models_dir, index_dir, res_search_suffix, res_extract_suffix,profile_suffix,
+    cfg_file, debug)
 
- results_per_replicon = macsyfinder(replicons.flatten(), models, replicon_topology, topology_file,
- inter_gene_max_space, min_mandatory_genes_required, min_genes_required, max_nb_genes, multi_loci,
- hmmer, e_value_search, no_cut_ga, i_value_sel, coverage_profile,
- mandatory_weight, accessory_weight, exchangeable_weight, redundancy_penalty, out_of_cluster,
- models_dir, index_dir, res_search_suffix, res_extract_suffix,profile_suffix,
- cfg_file, debug)
-
- results = merge_results(results_per_replicon.toList())
+    results = merge_results(results_per_replicon.toList())
 }
 
 workflow.onComplete {
