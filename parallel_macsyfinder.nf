@@ -32,6 +32,7 @@ params['res-search-suffix']= false
 params['res-extract-suffix']= false
 params['profile-suffix']= false
 params['worker']= false
+params['outdir']= false
 params['cfg-file']= false
 params['debug'] = false
 
@@ -109,6 +110,7 @@ parallel_macsyfinder available options:
  --profile-suffix
  --cfg-file
  --worker
+ --outdir
 Please refer to the MacSyFinder documentation (https://macsyfinder.readthedocs.io) for the meaning of each options.
 '''
     println(msg)
@@ -132,7 +134,19 @@ if (! params['models'] and ! params['cfg-file']){
     throw new Exception("The option '--models' is mandatory.");
 }
 
+if ( params['db-type'] != 'gembase' && ! params['outdir'] ){
+    throw new Exception("The option 'outdir' is manadatory if db-type = '${params['db-type']}''")
+}
+
 sequence_db = file(sequence_db)
+
+if( params.outdir ){
+    outdir = params.outdir
+} else if ( params['db-type'] == 'gembase' ){
+    outdir = "merged_macsyfinder_results_${sequence_db.baseName}"
+} else {
+    throw new Exception("The option 'outdir' is manadatory if db-type != 'gembase'")
+}
 
 /****************************************
  *           The workflow               *
@@ -196,7 +210,7 @@ ${index_dir}${res_search_suffix}${res_extract_suffix}${profile_suffix} --worker 
 
 // merge the results of macsyfinder on each replicon.
 process merge_results{
-    publishDir "merged_macsyfinder_results_${sequence_db.baseName}", mode: 'copy'
+    publishDir outdir, mode: 'copy'
 
     input:
         path all_results_dirs
