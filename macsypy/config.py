@@ -27,6 +27,7 @@ Module to manage both default values and configuration needed by macsyfinder
 """
 
 import os
+import shutil
 from time import strftime
 import logging
 from configparser import ConfigParser, ParsingError
@@ -73,7 +74,7 @@ class MacsyDefaults(dict):
         self.e_value_search = kwargs.get('e_value_search', 0.1)
         self.cut_ga = kwargs.get('cut_ga', True)
         self.db_type = kwargs.get('db_type', None)
-        self.hmmer = kwargs.get('hmmer', 'hmmsearch')
+        self.hmmer = kwargs.get('hmmer', shutil.which('hmmsearch'))
         self.i_evalue_sel = kwargs.get('i_evalue_sel', 0.001)
         self.idx = kwargs.get('idx', False)
         self.index_dir = kwargs.get('index_dir', None)
@@ -232,6 +233,13 @@ class Config:
         # superseed options (potentially in model_conf)
         # by the values provided by previous-run, project conf, the users on the commandline
         self._options.update(self._tmp_opts)
+
+        # check that hmmsearch exists
+        if not self.hmmer():
+            msg = "'hmmsearch' NOT found in your PATH, Please specify hmmsearch path with --hmmer opt " \
+                  "or install 'hmmer' package."
+            _log.critical(msg)
+            raise ValueError(msg)
 
 
     def _set_options(self, options):
