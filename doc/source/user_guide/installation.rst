@@ -288,6 +288,15 @@ To show all models definitions in TXSS+/bacterial subpackage::
 
     macsydata definition TXSS+/bacterial
 
+To create a skeleton for your own model package::
+
+    macsydata init --pack-name <MY_PACK_NAME> --maintainer <mantainer name> --email <maintainer email> --authors <"author1, author2, ..">
+
+above macsydata with required options. Below I add optioanl but recommended options. ::
+
+    macsydata init --pack-name <MY_PACK_NAME> --maintainer <mantainer name> --email <maintainer email> --authors <"author1, author2, .."> \
+    --license cc-by-nc-sa --holders <"the copyright holders"> --desc <"one line package description">
+
 To list all `macsydata` subcommands::
 
     macsydata --help

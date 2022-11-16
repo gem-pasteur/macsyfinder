@@ -74,7 +74,6 @@ Models installation
 We now provide a new tool to manage the models. See :ref:`macsydata`.
 
 
-
 Models configuration
 ====================
 
@@ -86,3 +85,9 @@ Modeller helper tool
 
 To help modellers create new models we provide a new helper tool `macsyprofile`, which analyses HMMER raw output files from
 results of a previous MacSyFinder run, to provide information on all hits even if filtered out. See :ref:`macsyprofile`.
+
+:ref:`macsydata` provide also some options to help the modeller as
+
+* **macsydata init** to init a new model package.
+* **macsydata check** to check the integrity of a model package, before to use/publish it.
+
