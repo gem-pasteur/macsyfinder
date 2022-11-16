@@ -24,6 +24,7 @@
 
 import os
 import shutil
+import unittest
 from argparse import Namespace
 from configparser import ConfigParser, ParsingError
 import tempfile
@@ -588,6 +589,25 @@ class TestConfig(MacsyTest):
         cfg = Config(self.defaults, self.parsed_args)
         self.assertTrue(cfg.cut_ga())
 
+    @unittest.skipIf(not shutil.which('hmmsearch'), "'hmmsearch' not found in PATH")
+    def test_hmmsearch(self):
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertEqual(cfg.hmmer(), shutil.which('hmmsearch'))
+
+    def test_hmmsearch_set_by_user(self):
+        self.parsed_args.hmmer = 'nimportnaoik'
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertEqual(cfg.hmmer(), self.parsed_args.hmmer)
+
+    def test_no_hmmsearch(self):
+        # if hmmsearch is not found in path the default is set to None (shutil.which('hmmsearch'))
+        self.defaults.hmmer = None
+        with self.assertRaises(ValueError) as ctx:
+            with self.catch_log():
+                Config(self.defaults, self.parsed_args)
+        self.assertEqual(str(ctx.exception),
+                         "'hmmsearch' NOT found in your PATH, Please specify hmmsearch path with --hmmer opt or"
+                         " install 'hmmer' package.")
 
     def test_e_value_search(self):
         cfg = Config(self.defaults, self.parsed_args)
