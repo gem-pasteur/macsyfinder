@@ -30,6 +30,7 @@ import sys
 import tarfile
 import unittest
 import io
+import shlex
 
 import macsypy.registries
 from macsypy.registries import scan_models_dir, ModelRegistry
@@ -1520,6 +1521,52 @@ Maybe you can use --user option to install in your HOME.""")
             macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
 
 
+    def test_init_package_minimal(self):
+        self.args.pack_name = 'minimal_pack'
+        self.args.maintainer = 'John Doe'
+        self.args.email = 'john.doe@domain.org'
+        self.args.authors = 'Jim Doe, John Doe'
+        self.args.license = None
+        self.args.holders = None
+        self.args.desc = None
+        self.args.models_dir = self.models_dir[0]
+        with self.catch_log(log_name='macsydata') as log:
+            macsydata.do_init_package(self.args)
+
+        files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
+        for f_name in files:
+            # ElementTree ensure order of attribute only from python3.9
+            if sys.version_info.minor < 9 and f_name.endswith('.xml'):
+                continue
+            with self.subTest(file_name=f_name):
+                expected_file = self.find_data(self.args.pack_name, f_name)
+                got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
+                self.assertFileEqual(expected_file, got_file)
+
+
+    def test_init_package_complete(self):
+        self.args.pack_name = 'complete_pack'
+        self.args.maintainer = 'John Doe'
+        self.args.email = 'john.doe@domain.org'
+        self.args.authors = 'Jim Doe, John Doe'
+        self.args.license = 'cc-by-nc-sa'
+        self.args.holders = 'Pasteur'
+        self.args.desc = 'description in one line of this package'
+        self.args.models_dir = self.models_dir[0]
+        with self.catch_log(log_name='macsydata') as log:
+            macsydata.do_init_package(self.args)
+
+        files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
+        for f_name in files:
+            # ElementTree ensure order of attribute only from python3.9
+            if sys.version_info.minor < 9 and f_name.endswith('.xml'):
+                continue
+            with self.subTest(file_name=f_name):
+                expected_file = self.find_data(self.args.pack_name, f_name)
+                got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
+                self.assertFileEqual(expected_file, got_file)
+
+
     def test_build_argparser(self):
         parser = macsydata.build_arg_parser()
         cmd = "macsydata install toto>1"
@@ -1571,6 +1618,15 @@ Maybe you can use --user option to install in your HOME.""")
         cmd = "macsydata available"
         args = parser.parse_args(cmd.split()[1:])
         self.assertEqual(args.func.__name__, 'do_available')
+
+        cmd = "macsydata init --pack-name foo --authors 'john Doe' --maintainer 'Jim Doe' " \
+              "--email 'jim.doe@my_domain.com'"
+        args = parser.parse_args(shlex.split(cmd)[1:])
+        self.assertEqual(args.func.__name__, 'do_init_package')
+        self.assertEqual(args.pack_name, 'foo')
+        self.assertEqual(args.authors, 'john Doe')
+        self.assertEqual(args.maintainer, 'Jim Doe')
+        self.assertEqual(args.email, 'jim.doe@my_domain.com')
 
     def test_cmd_name(self):
         parser = macsydata.build_arg_parser()

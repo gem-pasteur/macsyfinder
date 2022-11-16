@@ -691,7 +691,16 @@ Place it in canonical location
         real_exit = sys.exit
         sys.exit = self.fake_exit
         open('macsyfinder.conf', 'w').close()
-        expected_conf = self.find_data("conf_files", "macsyfinder_default.conf")
+        conf_template = self.find_data("conf_files", "macsyfinder_default.conf")
+        with open(conf_template) as conf_file:
+            lines = conf_file.readlines()
+        # we nned to hak this line
+        # as the hmmsearch path may differ on each installation
+        lines[39] = f"# hmmer = {shutil.which('hmmsearch')}\n"
+        expected_conf = 'macsyfinder_default.conf'
+        with open(expected_conf, 'w') as conf_file:
+            conf_file.write(''.join(lines))
+
         try:
             with self.catch_io(out=True):
                 # test Abort

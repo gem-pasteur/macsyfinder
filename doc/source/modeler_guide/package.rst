@@ -80,6 +80,17 @@ If the package contains sub-families: ::
 
 For examples of macsy-model packages, please visit https://github.com/macsy-models
 
+You can create a template for your package by using `macsydata init`.
+It will create for you:
+
+* the data package directory with the right structure.
+* a template of `metadata.yaml` .
+* a template of `README.md` file.
+* a generic `model_conf.xml` file.
+* a LICENSE file if `--license` option is set.
+* a COPYRIGHT file if `--holders` option is set.
+* a directory `definitions` with an example of model definition (model_example.xml to remove before publishing).
+* a directory `profiles` where to put the hmm profiles corresponding to the models genes.
 
 README.md
 ---------

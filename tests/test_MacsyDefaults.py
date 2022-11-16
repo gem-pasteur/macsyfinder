@@ -43,7 +43,7 @@ class TestMacsyDefaults(MacsyTest):
                          'e_value_search': 0.1,
                          'cut_ga': True,
                          'db_type': None,
-                         'hmmer': 'hmmsearch',
+                         'hmmer': shutil.which('hmmsearch'),
                          'i_evalue_sel': 0.001,
                          'idx': False,
                          'index_dir': None,

@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+Authors: Jim Doe, John Doe
+Copyright: 2022 Pasteur
+See COPYRIGHT file for details.
+
+complete_pack is a package of models for macsyfinder
+(https://github.com/gem-pasteur/macsyfinder)
+complete_pack description in one line of this package
+
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
+or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+-->
+<model_config>
+  <weights>
+    <mandatory>1.0</mandatory>
+    <accessory>0.5</accessory>
+    <exchangeable>0.8</exchangeable>
+    <redundancy_penalty>1.5</redundancy_penalty>
+    <out_of_cluster>0.7</out_of_cluster>
+  </weights>
+  <filtering>
+    <e_value_search>0.1</e_value_search>
+    <i_evalue_sel>0.001</i_evalue_sel>
+    <coverage_profile>0.5</coverage_profile>
+    <cut_ga>True</cut_ga>
+  </filtering>
+</model_config>

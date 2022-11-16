@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+Authors: Jim Doe, John Doe
+Copyright: 2022 Pasteur
+See COPYRIGHT file for details.
+
+complete_pack is a package of models for macsyfinder
+(https://github.com/gem-pasteur/macsyfinder)
+complete_pack description in one line of this package
+
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
+or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+-->
+<model inter_gene_max_space="5" min_mandatory_genes_required="2" min_genes_required="3" vers="2.0">
+  <!--GENE_1 is a mandatory gene. GENE_1.hmm must exist in profiles directory-->
+  <gene name="GENE_1" presence="mandatory" />
+  <!--GENE_2 is accessory and can be exchanged with GENE_3 which play a similar role in model.
+Both GENE_2.hmm and GENE_3.hmm must exist in profiles_directory-->
+  <gene name="GENE_2" presence="accessory">
+    <exchangeables>
+      <gene name="GENE_3" />
+    </exchangeables>
+  </gene>
+  <!--GENE_4 can be anywhere in the genome and not clusterized with some other model genes-->
+  <gene name="GENE_4" presence="accessory" loner="true" />
+  <!--GENE_5 can be shared by several systems instance from different models.-->
+  <gene name="GENE_5" presence="accessory" multi_model="true" />
+  <!--GENE_6 have specific clusterisation rule-->
+  <gene name="GENE_6" presence="accessory" inter_gene_max_space="10" />
+  <!--
+For exhaustive documentation about grammar visit 
+https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html
+-->
+</model>
