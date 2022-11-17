@@ -135,7 +135,7 @@ if (! params['models'] and ! params['cfg-file']){
 }
 
 if ( params['db-type'] != 'gembase' && ! params['outdir'] ){
-    throw new Exception("The option 'outdir' is manadatory if db-type = '${params['db-type']}''")
+    throw new Exception("The option 'outdir' is mandatory if db-type = '${params['db-type']}''")
 }
 
 sequence_db = file(sequence_db)
@@ -234,10 +234,11 @@ workflow {
         replicons = split(gembase)
     } else {
         if( params['sequence-db'].contains(',') ){
-            replicons = params['sequence-db'].tokenize(',')
+            paths = params['sequence-db'].tokenize(',')
         } else {
-            replicons = Channel.fromPath(sequence_db)
+            paths = params['sequence-db']
         }
+        replicons = Channel.fromPath(paths)
     }
 
     results_per_replicon = macsyfinder(replicons.flatten(), models, db_type, replicon_topology, topology_file,
