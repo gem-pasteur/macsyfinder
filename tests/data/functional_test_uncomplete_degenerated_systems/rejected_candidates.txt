@@ -5,7 +5,7 @@
 
 Cluster:
 - model = uncomplete_degenerated_systems
-- replicon = UserReplicon
+- replicon = test_4
 - hits = (VICH001.B.00001.C001_01400, T2SS_gspD, 15)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (1) is not reached: 0

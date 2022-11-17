@@ -3,9 +3,9 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --sequence-db tests/data/base/test_14.fasta --db-type ordered_replicon --models-dir tests/data/models/ --models functional C_no_multi_model D_multi_model --replicon-topology circular -w 4 -o functional_test_ordered_only_one_multi_model --relative-path
 # Systems found:
 
-system id = UserReplicon_C_no_multi_model_1
+system id = test_14_C_no_multi_model_1
 model = functional/C_no_multi_model
-replicon = UserReplicon
+replicon = test_14
 clusters = [('VICH001.B.00001.C001_01506', 'T1SS_omf', 8), ('VICH001.B.00001.C001_01398', 'T1SS_mfp', 9), ('VICH001.B.00001.C001_01399', 'T1SS_abc', 10), ('VICH001.B.00001.C001_01400', 'T2SS_gspD', 11)]
 occ = 1
 wholeness = 1.000
@@ -18,14 +18,14 @@ mandatory genes:
 accessory genes:
 	- T1SS_mfp: 1 (T1SS_mfp)
 	- T1SS_abc: 1 (T1SS_abc)
-	- T2SS_gspD: 1 (T2SS_gspD [UserReplicon_D_multi_model_2])
+	- T2SS_gspD: 1 (T2SS_gspD [test_14_D_multi_model_2])
 
 neutral genes:
 
 ============================================================
-system id = UserReplicon_D_multi_model_2
+system id = test_14_D_multi_model_2
 model = functional/D_multi_model
-replicon = UserReplicon
+replicon = test_14
 clusters = [('VICH001.B.00001.C001_01400', 'T2SS_gspD', 11), ('GCF_000005845_000980', 'T4P_pilB', 12), ('GCF_000005845_025680', 'T4P_pilW', 13)]
 occ = 1
 wholeness = 1.000
@@ -37,7 +37,7 @@ mandatory genes:
 
 accessory genes:
 	- T4P_pilW: 1 (T4P_pilW)
-	- T2SS_gspD: 1 (T2SS_gspD [UserReplicon_C_no_multi_model_1])
+	- T2SS_gspD: 1 (T2SS_gspD [test_14_C_no_multi_model_1])
 
 neutral genes:
 
