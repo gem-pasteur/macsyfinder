@@ -27,9 +27,10 @@ import shutil
 import tempfile
 import argparse
 
-from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.utils import get_def_to_detect, get_replicon_names, threads_available
+from macsypy.error import MacsypyError
+
 from tests import MacsyTest
 
 
@@ -75,12 +76,27 @@ class TestUtils(MacsyTest):
             get_def_to_detect(('set_1', ['FOO', 'BAR']), registry)
 
 
-    def test_get_replicon_names(self):
-        replicon_names = get_replicon_names(self.find_data('base', 'gembase.fasta'))
+    def test_get_replicon_names_gembase(self):
+        replicon_names = get_replicon_names(self.find_data('base', 'gembase.fasta'), 'gembase')
         self.assertListEqual(replicon_names,
                              ['GCF_000005845', 'GCF_000006725', 'GCF_000006745', 'GCF_000006765', 'GCF_000006845',
                               'GCF_000006905', 'GCF_000006925', 'GCF_000006945'])
 
+    def test_get_replicon_names_ordered(self):
+        replicon_names = get_replicon_names(self.find_data('base', 'MOBP1_once.prt'), 'ordered_replicon')
+        self.assertListEqual(replicon_names,
+                             ['MOBP1_once'])
+
+    def test_get_replicon_names_unordered(self):
+        replicon_names = get_replicon_names(self.find_data('base', 'MOBP1_once.prt'), 'unordered')
+        self.assertListEqual(replicon_names,
+                             ['MOBP1_once'])
+
+    def test_get_replicon_names_bad_type(self):
+        with self.assertRaises(MacsypyError) as ctx:
+            get_replicon_names(self.find_data('base', 'MOBP1_once.prt'), 'bad_dbtype')
+        self.assertEqual(str(ctx.exception),
+                         'Invalid genome type: bad_dbtype')
 
     def test_threads_available(self):
         if hasattr(os, "sched_getaffinity"):

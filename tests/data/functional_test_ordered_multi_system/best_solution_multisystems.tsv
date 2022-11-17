@@ -3,6 +3,6 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-multisystem --relative-path --sequence-db tests/data/base/test_13.fasta -w 15 -o functional_test_multi_system
 # Multisystems found:
 replicon	model_fqn	function	gene_name	hit_id	hit_pos	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
-UserReplicon	functional/T12SS-multisystem	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01360	20	mandatory	484	3.200e-28	90.000	0.985	0.820	80	476
-UserReplicon	functional/T12SS-multisystem	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01506	35	mandatory	419	9.100e-35	111.500	0.998	0.912	25	406
+test_13	functional/T12SS-multisystem	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01360	20	mandatory	484	3.200e-28	90.000	0.985	0.820	80	476
+test_13	functional/T12SS-multisystem	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01506	35	mandatory	419	9.100e-35	111.500	0.998	0.912	25	406
 

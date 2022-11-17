@@ -3,9 +3,9 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-loner-exch --relative-path --sequence-db tests/data/base/test_6.fasta -o functional_test_ordered_2_clusters_1_loner
 # Systems found:
 
-system id = UserReplicon_T12SS-loner-exch_1
+system id = test_6_T12SS-loner-exch_1
 model = functional/T12SS-loner-exch
-replicon = UserReplicon
+replicon = test_6
 clusters = [('VICH001.B.00001.C001_01397', 'T1SS_abc', 10), ('VICH001.B.00001.C001_01398', 'T1SS_mfp', 11), ('VICH001.B.00001.C001_01399', 'T1SS_abc', 12), ('VICH001.B.00001.C001_01400', 'T2SS_gspD', 13)], [('VICH001.B.00001.C001_01506', 'T1SS_omf', 22)]
 occ = 2
 wholeness = 1.000
@@ -22,9 +22,9 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = UserReplicon_T12SS-loner-exch_2
+system id = test_6_T12SS-loner-exch_2
 model = functional/T12SS-loner-exch
-replicon = UserReplicon
+replicon = test_6
 clusters = [('VICH001.B.00001.C001_01150', 'T1SS_abc', 51), ('VICH001.B.00001.C001_01361_trunc', 'T1SS_mfp', 52), ('VICH001.B.00001.C001_00409', 'T2SS_gspD', 53)], [('VICH001.B.00001.C001_01506', 'T1SS_omf', 22)]
 occ = 1
 wholeness = 1.000
