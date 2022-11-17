@@ -250,10 +250,20 @@ def do_install(args: argparse.Namespace) -> None:
     :rtype: None
     """
     def clean_cache(model_index):
+        if args.no_clean:
+            _log.debug(f"skip cleaning {model_index.cache}")
+            return
         try:
             shutil.rmtree(model_index.cache)
         except Exception:
             _log.warning(f"Cannot clean cache '{model_index.cache}': {err}")
+    def create_dir(path):
+        if os.path.exists(path) and not os.path.isdir(path):
+            clean_cache(model_index)
+            raise RuntimeError(f"'{path}' already exist and is not a directory.")
+        elif not os.path.exists(path):
+            os.makedirs(path)
+        return path
 
     if os.path.exists(args.package):
         remote = False
@@ -347,18 +357,16 @@ def do_install(args: argparse.Namespace) -> None:
 
     _log.info(f"Extracting {pack_name} ({target_vers}).")
     cached_pack = model_index.unarchive_package(arch_path)
+    _log.debug(f"package is chached at {cached_pack}")
 
     if args.user:
         dest = os.path.realpath(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
-        if os.path.exists(dest) and not os.path.isdir(dest):
-            clean_cache(model_index)
-            raise RuntimeError("'{}' already exist and is not a directory.")
-        elif not os.path.exists(dest):
-            os.makedirs(dest)
+        create_dir(dest)
     elif args.target:
         dest = args.target
     elif 'VIRTUAL_ENV' in os.environ:
         dest = os.path.join(os.environ['VIRTUAL_ENV'], 'share', 'macsyfinder', 'models')
+        create_dir(dest)
     else:
         defaults = MacsyDefaults()
         config = Config(defaults, argparse.Namespace())
@@ -385,6 +393,7 @@ for the system wide models installation please refer to the documentation.
 
     _log.info(f"Installing {pack_name} ({target_vers}) in {dest}")
     try:
+        _log.debug(f"move {cached_pack} -> {dest}")
         shutil.move(cached_pack, dest)
     except PermissionError as err:
         clean_cache(model_index)
@@ -1074,6 +1083,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     install_subparser.add_argument('package',
                                    help='Package name.')
     install_subparser.add_argument('--cache',
+                                   help=argparse.SUPPRESS)
+    install_subparser.add_argument('--no-clean',
+                                   action='store_true',
+                                   default=False,
+                                   # do not clean cache for debugging purpose ONLY
                                    help=argparse.SUPPRESS)
     #############
     # Uninstall #

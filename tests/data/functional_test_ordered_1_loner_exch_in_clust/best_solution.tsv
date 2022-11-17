@@ -3,9 +3,9 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-loner-exch --relative-path --sequence-db tests/data/base/test_8.fasta -o functional_test_ordered_1_loner_exch_in_clust
 # Systems found:
 replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
-UserReplicon	VICH001.B.00001.C001_01397	T1SS_abc	8	functional/T12SS-loner-exch	UserReplicon_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_abc	mandatory	721	2.2e-157	516.300	0.996	0.698	175	677		
-UserReplicon	VICH001.B.00001.C001_01398	T1SS_mfp	9	functional/T12SS-loner-exch	UserReplicon_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_mfp	mandatory	467	2.2e-72	235.600	1.000	0.797	85	456		
-UserReplicon	VICH001.B.00001.C001_01399	T1SS_abc	10	functional/T12SS-loner-exch	UserReplicon_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_abc	mandatory	720	2e-158	519.700	1.000	0.699	167	669		
-UserReplicon	VICH001.B.00001.C001_01400	T2SS_gspD	11	functional/T12SS-loner-exch	UserReplicon_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_mfp	mandatory	559	2e-47	153.400	0.559	0.658	168	535		
-UserReplicon	VICH001.B.00001.C001_02599	T2SS_gspF	13	functional/T12SS-loner-exch	UserReplicon_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_omf	mandatory	406	2.4e-142	465.300	1.000	0.825	68	402		
+test_8	VICH001.B.00001.C001_01397	T1SS_abc	8	functional/T12SS-loner-exch	test_8_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_abc	mandatory	721	2.2e-157	516.300	0.996	0.698	175	677		
+test_8	VICH001.B.00001.C001_01398	T1SS_mfp	9	functional/T12SS-loner-exch	test_8_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_mfp	mandatory	467	2.2e-72	235.600	1.000	0.797	85	456		
+test_8	VICH001.B.00001.C001_01399	T1SS_abc	10	functional/T12SS-loner-exch	test_8_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_abc	mandatory	720	2e-158	519.700	1.000	0.699	167	669		
+test_8	VICH001.B.00001.C001_01400	T2SS_gspD	11	functional/T12SS-loner-exch	test_8_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_mfp	mandatory	559	2e-47	153.400	0.559	0.658	168	535		
+test_8	VICH001.B.00001.C001_02599	T2SS_gspF	13	functional/T12SS-loner-exch	test_8_T12SS-loner-exch_1	1	1	1.000	2.800	2	T1SS_omf	mandatory	406	2.4e-142	465.300	1.000	0.825	68	402		
 

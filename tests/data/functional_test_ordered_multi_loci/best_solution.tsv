@@ -3,8 +3,8 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-simple-exch --multi-loci functional/T12SS-simple-exch --relative-path --sequence-db tests/data/base/test_4.fasta -o functional_test_ordered_multi_loci
 # Systems found:
 replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
-UserReplicon	VICH001.B.00001.C001_01397	T1SS_abc	6	functional/T12SS-simple-exch	UserReplicon_T12SS-simple-exch_1	2	1	1.000	1.800	2	T1SS_abc	mandatory	721	2.1e-157	516.300	0.996	0.698	175	677		
-UserReplicon	VICH001.B.00001.C001_01398	T1SS_mfp	7	functional/T12SS-simple-exch	UserReplicon_T12SS-simple-exch_1	2	1	1.000	1.800	2	T1SS_mfp	accessory	467	2.1e-72	235.600	1.000	0.797	85	456		
-UserReplicon	VICH001.B.00001.C001_01399	T1SS_abc	14	functional/T12SS-simple-exch	UserReplicon_T12SS-simple-exch_1	2	2	1.000	1.800	2	T1SS_abc	mandatory	720	1.9e-158	519.700	1.000	0.699	167	669		
-UserReplicon	VICH001.B.00001.C001_01400	T2SS_gspD	15	functional/T12SS-simple-exch	UserReplicon_T12SS-simple-exch_1	2	2	1.000	1.800	2	T1SS_omf	mandatory	559	1.9e-47	153.400	0.559	0.658	168	535		
+test_4	VICH001.B.00001.C001_01397	T1SS_abc	6	functional/T12SS-simple-exch	test_4_T12SS-simple-exch_1	2	1	1.000	1.800	2	T1SS_abc	mandatory	721	2.1e-157	516.300	0.996	0.698	175	677		
+test_4	VICH001.B.00001.C001_01398	T1SS_mfp	7	functional/T12SS-simple-exch	test_4_T12SS-simple-exch_1	2	1	1.000	1.800	2	T1SS_mfp	accessory	467	2.1e-72	235.600	1.000	0.797	85	456		
+test_4	VICH001.B.00001.C001_01399	T1SS_abc	14	functional/T12SS-simple-exch	test_4_T12SS-simple-exch_1	2	2	1.000	1.800	2	T1SS_abc	mandatory	720	1.9e-158	519.700	1.000	0.699	167	669		
+test_4	VICH001.B.00001.C001_01400	T2SS_gspD	15	functional/T12SS-simple-exch	test_4_T12SS-simple-exch_1	2	2	1.000	1.800	2	T1SS_omf	mandatory	559	1.9e-47	153.400	0.559	0.658	168	535		
 

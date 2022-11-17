@@ -2,4 +2,4 @@
 # models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ -m functional A B --relative-path --sequence-db tests/data/base/test_9.fasta
 replicon	functional/B	functional/A
-UserReplicon	1	0
+test_9	1	0

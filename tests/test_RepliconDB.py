@@ -47,6 +47,7 @@ class Test(MacsyTest):
             obj.sequence_idx = obj._idx.find_my_indexes()
             obj.topology_file = cfg.topology_file()
             obj._DB = {}
+            obj._ordered_replicon_name = os.path.splitext(os.path.basename(cfg.sequence_db()))[0]
         self.fake_init = fake_init
         self.real_init = RepliconDB.__init__
 
@@ -141,7 +142,7 @@ class Test(MacsyTest):
         db._fill_ordered_min_max(cfg.replicon_topology())
 
         self.assertEqual(len(db._DB), 1)
-        rep = db[RepliconDB.ordered_replicon_name]
+        rep = db[db.ordered_replicon_name]
         self.assertEqual(rep.topology, cfg.replicon_topology())
         self.assertEqual(rep.min, 1)
         self.assertEqual(rep.max, 52)

@@ -827,6 +827,14 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
     print(_outfile_header(models_fam_name, models_version), file=sys_file)
 
     def fill_replicon(summary):
+        """
+        add row with 0 for all models for lacking replicons
+
+        :param summary: the
+        :type summary: :class:`pandas.DataFrame` object
+        :return:
+        :rtype: :class:`pandas.DataFrame` object
+        """
         index_name = summary.index.name
         computed_replicons = set(summary.index)
         lacking_replicons = set(replicon_names) - computed_replicons
@@ -837,6 +845,14 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
         return summary
 
     def fill_models(summary):
+        """
+        add columns for lacking models (it means no occurence found)
+
+        :param summary:
+        :type summary: :class:`pandas.DataFrame` object
+        :return:
+        :rtype: :class:`pandas.DataFrame` object
+        """
         computed_models = set(summary.columns)
         lacking_models = set(models_fqn) - computed_models
         lacking_models = sorted(lacking_models)
@@ -1174,11 +1190,7 @@ def main(args=None, loglevel=None):
         summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
         with open(summary_filename, "w") as summary_file:
             models_fqn = [m.fqn for m in models_def_to_detect]
-            if config.db_type() == 'gembase':
-                replicons_names = get_replicon_names(config.sequence_db())
-            else:
-                # it's an ordered_replicon
-                replicons_names = [RepliconDB.ordered_replicon_name]
+            replicons_names = get_replicon_names(config.sequence_db(), config.db_type())
             summary_best_solution(models_fam_name, models_version, best_solution_filename, summary_file, models_fqn, replicons_names)
 
     else:
