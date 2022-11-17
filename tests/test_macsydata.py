@@ -763,6 +763,7 @@ Available versions: 1.0"""
         self.args.upgrade = False
         self.args.force = False
         self.args.target = macsydata_dest
+        self.args.no_clean = False
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -801,6 +802,7 @@ Available versions: 1.0"""
         self.args.upgrade = False
         self.args.force = False
         self.args.target = macsydata_target
+        self.args.no_clean = False
 
         with self.catch_log(log_name='macsydata'):
             macsydata.do_install(self.args)
@@ -836,6 +838,7 @@ Available versions: 1.0"""
         self.args.upgrade = False
         self.args.force = False
         self.args.target = macsydata_target
+        self.args.no_clean = False
 
         with self.assertRaises(RuntimeError) as ctx:
             macsydata.do_install(self.args)
@@ -866,6 +869,7 @@ Available versions: 1.0"""
         self.args.upgrade = False
         self.args.force = False
         self.args.target = macsydata_dest
+        self.args.no_clean = False
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -903,6 +907,7 @@ To force installation use option -f --force-reinstall."""
         self.args.upgrade = False
         self.args.force = False
         self.args.target = macsydata_dest
+        self.args.no_clean = False
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -949,6 +954,7 @@ The models {pack_name} ({pack_vers}) have been installed successfully."""
         self.args.upgrade = False
         self.args.force = False
         self.args.target = macsydata_dest
+        self.args.no_clean = False
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -986,6 +992,7 @@ You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.target = macsydata_dest
+        self.args.no_clean = False
 
         # functions which do net operations
         # so we need to mock them
@@ -1028,6 +1035,7 @@ You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.target = None
+        self.args.no_clean = False
 
         # functions which do net operations
         # so we need to mock them
@@ -1068,6 +1076,7 @@ You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.target = None
+        self.args.no_clean = False
 
         # function which doing net operations
         # so we need to mock them
@@ -1110,6 +1119,7 @@ To force installation use option -f --force-reinstall.""")
         self.args.force = True
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.target = macsydata_dest
+        self.args.no_clean = False
 
         # function which doing net operations
         # so we need to mock them
@@ -1154,6 +1164,7 @@ To force installation use option -f --force-reinstall.""")
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.target = None
+        self.args.no_clean = False
 
         # function which doing net operations
         # so we need to mock them
@@ -1195,6 +1206,7 @@ To install it please run 'macsydata install --upgrade {pack_name}'""")
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.target = None
+        self.args.no_clean = False
 
         # function which doing net operations
         # so we need to mock them
@@ -1238,6 +1250,7 @@ To downgrade to 0.0b1 use option -f --force-reinstall.""")
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.target = macsydata_dest
+        self.args.no_clean = False
 
         # functions which do net operations
         # so we need to mock them
@@ -1321,6 +1334,7 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.careful = False
         self.args.match_case = False
         self.args.models_dir = None
+        self.args.no_clean = False
 
         # functions which do net operations
         # so we need to mock them
@@ -1349,6 +1363,7 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = False
         self.args.match_case = False
+        self.args.no_clean = False
 
         # functions which do net operations
         # so we need to mock them
@@ -1377,6 +1392,7 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = False
         self.args.match_case = True
+        self.args.no_clean = False
 
         # functions which do net operations
         # so we need to mock them
@@ -1406,6 +1422,7 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = True
         self.args.match_case = False
+        self.args.no_clean = False
 
         # functions which do net operations
         # so we need to mock them
@@ -1462,6 +1479,7 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = True
         self.args.match_case = True
+        self.args.no_clean = False
 
         # functions which do net operations
         # so we need to mock them
@@ -1491,6 +1509,7 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = True
         self.args.match_case = True
+        self.args.no_clean = False
 
         # functions which do net operations
         # so we need to mock them
@@ -1530,6 +1549,8 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.holders = None
         self.args.desc = None
         self.args.models_dir = self.models_dir[0]
+        self.args.no_clean = False
+
         with self.catch_log(log_name='macsydata') as log:
             macsydata.do_init_package(self.args)
 
@@ -1553,6 +1574,8 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.holders = 'Pasteur'
         self.args.desc = 'description in one line of this package'
         self.args.models_dir = self.models_dir[0]
+        self.args.no_clean = False
+
         with self.catch_log(log_name='macsydata') as log:
             macsydata.do_init_package(self.args)
 
