@@ -2,4 +2,4 @@
 # models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-loner --relative-path --sequence-db tests/data/base/test_5.fasta -o functional_test_ordered_2_clusters_3_loners
 replicon	functional/T12SS-loner
-UserReplicon	2
+test_5	2

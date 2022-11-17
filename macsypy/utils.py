@@ -31,6 +31,7 @@ import os.path
 from itertools import groupby
 
 from .registries import DefinitionLocation
+from .error import MacsypyError
 
 
 def get_def_to_detect(models, model_registry):
@@ -58,9 +59,18 @@ def get_def_to_detect(models, model_registry):
     return def_to_detect, model_family, model_vers
 
 
-def get_replicon_names(genome_path):
+def get_replicon_names(genomee_path, db_type):
+    if db_type == 'gembase':
+        return _get_gembase_replicon_names(genomee_path)
+    elif db_type in ('ordered_replicon', 'unordered'):
+        return [os.path.splitext(os.path.basename(genomee_path))[0]]
+    else:
+        raise MacsypyError(f"Invalid genome type: {db_type}")
+
+
+def _get_gembase_replicon_names(genome_path):
     """
-    parse gembase file and the list of replicon identifiers
+    parse gembase file and get the list of replicon identifiers
 
     :param str genome_path: The path to a file containing sequence in **gembase** format
     :return: the list of replicon identifiers

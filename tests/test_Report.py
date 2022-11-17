@@ -56,9 +56,9 @@ class TestReport(MacsyTest):
             shutil.rmtree(args.out_dir)
         os.mkdir(args.out_dir)
 
-        seq_db = self.find_data("base", "test_base.fa")
-        shutil.copy(seq_db, args.out_dir)
-        args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db))
+        self.seq_db = self.find_data("base", "test_base.fa")
+        shutil.copy(self.seq_db, args.out_dir)
+        args.sequence_db = os.path.join(args.out_dir, os.path.basename(self.seq_db))
         self.cfg = Config(MacsyDefaults(), args)
 
         os.mkdir(os.path.join(self.cfg.out_dir(), self.cfg.hmmer_dir()))
@@ -406,17 +406,18 @@ class TestOrderedHMMReport(TestReport):
         self.assertEqual(len(report.hits), 6)
         #           gene, model,     hit_id,         hit_seq_ length   replicon_name, pos_hit, i_eval,
         #           score,       profile_coverage, sequence_coverage, begin_match, end_match
-        hits = [CoreHit(c_gene, "NC_xxxxx_xx_056141", 803, RepliconDB.ordered_replicon_name, 141, float(2e-236), float(779.2),
+        replicon_name = os.path.splitext(os.path.basename(self.seq_db))[0]
+        hits = [CoreHit(c_gene, "NC_xxxxx_xx_056141", 803, replicon_name, 141, float(2e-236), float(779.2),
                         float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                CoreHit(c_gene, "PSAE001c01_006940", 803, RepliconDB.ordered_replicon_name, 68, float(1.2e-234), float(779.2),
+                CoreHit(c_gene, "PSAE001c01_006940", 803, replicon_name, 68, float(1.2e-234), float(779.2),
                         float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                CoreHit(c_gene, "PSAE001c01_013980", 759, RepliconDB.ordered_replicon_name, 69, float(3.7e-76), float(255.8),
+                CoreHit(c_gene, "PSAE001c01_013980", 759, replicon_name, 69, float(3.7e-76), float(255.8),
                         float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736),
-                CoreHit(c_gene, "PSAE001c01_017350", 600, RepliconDB.ordered_replicon_name, 70, float(3.2e-27), float(94.2),
+                CoreHit(c_gene, "PSAE001c01_017350", 600, replicon_name, 70, float(3.2e-27), float(94.2),
                         float(0.500000), (506.0 - 226.0 + 1) / 600, 226, 506),
-                CoreHit(c_gene, "PSAE001c01_018920", 776, RepliconDB.ordered_replicon_name, 71, float(6.1e-183), float(608.4),
+                CoreHit(c_gene, "PSAE001c01_018920", 776, replicon_name, 71, float(6.1e-183), float(608.4),
                         float(1.000000), (606.0 - 48.0 + 1) / 776, 48, 606),
-                CoreHit(c_gene, "PSAE001c01_031420", 658, RepliconDB.ordered_replicon_name, 73, float(1.8e-210), float(699.3),
+                CoreHit(c_gene, "PSAE001c01_031420", 658, replicon_name, 73, float(1.8e-210), float(699.3),
                         float(1.000000), (614.0 - 55.0 + 1) / 658, 55, 614)
                 ]
         self.assertListEqual(hits, report.hits)
@@ -462,20 +463,20 @@ class TestOrderedHMMReport(TestReport):
             if t is main_thread:
                 continue
         t.join()
-
+        replicon_name = os.path.splitext(os.path.basename(self.seq_db))[0]
         #          gene, model,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
         #          profile_coverage, sequence_coverage, begin_match, end_match
-        hits = [CoreHit(c_gene, "NC_xxxxx_xx_056141", 803, RepliconDB.ordered_replicon_name, 141, float(2e-236), float(779.2),
+        hits = [CoreHit(c_gene, "NC_xxxxx_xx_056141", 803, replicon_name, 141, float(2e-236), float(779.2),
                         float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                CoreHit(c_gene, "PSAE001c01_006940", 803, RepliconDB.ordered_replicon_name, 68, float(1.2e-234), float(779.2),
+                CoreHit(c_gene, "PSAE001c01_006940", 803, replicon_name, 68, float(1.2e-234), float(779.2),
                         float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                CoreHit(c_gene, "PSAE001c01_013980", 759, RepliconDB.ordered_replicon_name, 69, float(3.7e-76), float(255.8),
+                CoreHit(c_gene, "PSAE001c01_013980", 759, replicon_name, 69, float(3.7e-76), float(255.8),
                         float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736),
-                CoreHit(c_gene, "PSAE001c01_017350", 600, RepliconDB.ordered_replicon_name, 70, float(3.2e-27), float(94.2),
+                CoreHit(c_gene, "PSAE001c01_017350", 600, replicon_name, 70, float(3.2e-27), float(94.2),
                         float(0.500000), (506.0 - 226.0 + 1) / 600, 226, 506),
-                CoreHit(c_gene, "PSAE001c01_018920", 776, RepliconDB.ordered_replicon_name, 71, float(6.1e-183), float(608.4),
+                CoreHit(c_gene, "PSAE001c01_018920", 776, replicon_name, 71, float(6.1e-183), float(608.4),
                         float(1.000000), (606.0 - 48.0 + 1) / 776, 48, 606),
-                CoreHit(c_gene, "PSAE001c01_031420", 658, RepliconDB.ordered_replicon_name, 73, float(1.8e-210), float(699.3),
+                CoreHit(c_gene, "PSAE001c01_031420", 658, replicon_name, 73, float(1.8e-210), float(699.3),
                         float(1.000000), (614.0 - 55.0 + 1) / 658, 55, 614)
                 ]
         for report in reports:
@@ -497,17 +498,18 @@ class TestGeneralHMMReport(TestReport):
         self.assertEqual(len(report.hits), 6)
         #           gene, model,     hit_id,         hit_seq_ length   replicon_name, pos_hit, i_eval,
         #           score,       profile_coverage, sequence_coverage, begin_match, end_match
-        hits = [CoreHit(c_gene, "NC_xxxxx_xx_056141", 803, "Unordered", 141, float(2e-236), float(779.2),
+        replicon_name = os.path.splitext(os.path.basename(self.seq_db))[0]
+        hits = [CoreHit(c_gene, "NC_xxxxx_xx_056141", 803, replicon_name, 141, float(2e-236), float(779.2),
                         float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                CoreHit(c_gene, "PSAE001c01_006940", 803, "Unordered", 68, float(1.2e-234), float(779.2),
+                CoreHit(c_gene, "PSAE001c01_006940", 803, replicon_name, 68, float(1.2e-234), float(779.2),
                         float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                CoreHit(c_gene, "PSAE001c01_013980", 759, "Unordered", 69, float(3.7e-76), float(255.8),
+                CoreHit(c_gene, "PSAE001c01_013980", 759, replicon_name, 69, float(3.7e-76), float(255.8),
                         float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736),
-                CoreHit(c_gene, "PSAE001c01_017350", 600, "Unordered", 70, float(3.2e-27), float(94.2),
+                CoreHit(c_gene, "PSAE001c01_017350", 600, replicon_name, 70, float(3.2e-27), float(94.2),
                         float(0.500000), (506.0 - 226.0 + 1) / 600, 226, 506),
-                CoreHit(c_gene, "PSAE001c01_018920", 776, "Unordered", 71, float(6.1e-183), float(608.4),
+                CoreHit(c_gene, "PSAE001c01_018920", 776, replicon_name, 71, float(6.1e-183), float(608.4),
                         float(1.000000), (606.0 - 48.0 + 1) / 776, 48, 606),
-                CoreHit(c_gene, "PSAE001c01_031420", 658, "Unordered", 73, float(1.8e-210), float(699.3),
+                CoreHit(c_gene, "PSAE001c01_031420", 658, replicon_name, 73, float(1.8e-210), float(699.3),
                         float(1.000000), (614.0 - 55.0 + 1) / 658, 55, 614)
                 ]
         self.assertListEqual(hits, report.hits)
@@ -544,17 +546,18 @@ class TestGeneralHMMReport(TestReport):
 
         #          gene, model,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
         #          profile_coverage, sequence_coverage, begin_match, end_match
-        hits = [CoreHit(c_gene, "NC_xxxxx_xx_056141", 803, "Unordered", 141, float(2e-236), float(779.2),
+        replicon_name = os.path.splitext(os.path.basename(self.seq_db))[0]
+        hits = [CoreHit(c_gene, "NC_xxxxx_xx_056141", 803, replicon_name, 141, float(2e-236), float(779.2),
                         float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                CoreHit(c_gene, "PSAE001c01_006940", 803, "Unordered", 68, float(1.2e-234), float(779.2),
+                CoreHit(c_gene, "PSAE001c01_006940", 803, replicon_name, 68, float(1.2e-234), float(779.2),
                         float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                CoreHit(c_gene, "PSAE001c01_013980", 759, "Unordered", 69, float(3.7e-76), float(255.8),
+                CoreHit(c_gene, "PSAE001c01_013980", 759, replicon_name, 69, float(3.7e-76), float(255.8),
                         float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736),
-                CoreHit(c_gene, "PSAE001c01_017350", 600, "Unordered", 70, float(3.2e-27), float(94.2),
+                CoreHit(c_gene, "PSAE001c01_017350", 600, replicon_name, 70, float(3.2e-27), float(94.2),
                         float(0.500000), (506.0 - 226.0 + 1) / 600, 226, 506),
-                CoreHit(c_gene, "PSAE001c01_018920", 776, "Unordered", 71, float(6.1e-183), float(608.4),
+                CoreHit(c_gene, "PSAE001c01_018920", 776, replicon_name, 71, float(6.1e-183), float(608.4),
                         float(1.000000), (606.0 - 48.0 + 1) / 776, 48, 606),
-                CoreHit(c_gene, "PSAE001c01_031420", 658, "Unordered", 73, float(1.8e-210), float(699.3),
+                CoreHit(c_gene, "PSAE001c01_031420", 658, replicon_name, 73, float(1.8e-210), float(699.3),
                         float(1.000000), (614.0 - 55.0 + 1) / 658, 55, 614)
                 ]
         for report in reports:

@@ -5,7 +5,7 @@
 
 Cluster:
 - model = T12SS-simple-exch
-- replicon = UserReplicon
+- replicon = test_4
 - hits = (VICH001.B.00001.C001_01397, T1SS_abc, 6), (VICH001.B.00001.C001_01398, T1SS_mfp, 7)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (2) is not reached: 1
@@ -13,7 +13,7 @@ This candidate has been rejected because:
 ============================================================
 Cluster:
 - model = T12SS-simple-exch
-- replicon = UserReplicon
+- replicon = test_4
 - hits = (VICH001.B.00001.C001_01399, T1SS_abc, 14), (VICH001.B.00001.C001_01400, T2SS_gspD, 15)
 This candidate has been rejected because:
 	- The quorum of genes required (3) is not reached: 2

@@ -270,7 +270,6 @@ class RepliconDB:
     the Replicon object must be instantiated only for sequence_db of type 'gembase' or 'ordered_replicon'
     """
 
-    ordered_replicon_name = 'UserReplicon'
 
     def __init__(self, cfg):
         """
@@ -292,7 +291,12 @@ class RepliconDB:
         if self.cfg.db_type() == 'gembase':
             self._fill_gembase_min_max(topo_dict, default_topology=self.cfg.replicon_topology())
         else:
+            self._ordered_replicon_name = os.path.splitext(os.path.basename(self.cfg.sequence_db()))[0]
             self._fill_ordered_min_max(self.cfg.replicon_topology())
+
+    @property
+    def ordered_replicon_name(self):
+        return self._ordered_replicon_name
 
     def guess_if_really_gembase(self):
         """

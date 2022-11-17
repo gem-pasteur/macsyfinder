@@ -3,5 +3,5 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-loner-exch --relative-path --sequence-db tests/data/base/test_6.fasta -o functional_test_ordered_2_clusters_1_loner
 # Loners found:
 replicon	model_fqn	function	gene_name	hit_id	hit_pos	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
-UserReplicon	functional/T12SS-loner-exch	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01506	22	mandatory	419	1.100e-34	111.500	0.998	0.912	25	406
+test_6	functional/T12SS-loner-exch	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01506	22	mandatory	419	1.100e-34	111.500	0.998	0.912	25	406
 
