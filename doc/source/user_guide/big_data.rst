@@ -17,21 +17,40 @@ Parallelization
 ---------------
 
 The time limiting part are HMMER (search genes).
-If you want to deal with a large gembase file (with a lot of replicons, from ten to more than thousand),
+If you want to deal with a large data
+
+* a collection of file containing replicons (each file must contains one replicon)
+* or a gembase file (with a lot of replicons, from ten to more than thousand)
+
 we provide a workflow to parallelize the execution by the data.
 This mean that
 
-    #. We split the data input into chunks containing one replicon each.
+    #. We split the data input into chunks containing one replicon each (for *gembase* input file).
     #. Then execute MacSyFinder in parallel on each replicon (the number of parallel tasks can be limited)
     #. Then aggregate the results in one global summary.
 
-.. digraph:: parallel_macsyfinder
-    :caption: Diagram of the parallel_macsyfinder workflow
 
-    "split input" -> "MSF on replicon 1";
-    "split input" -> "MSF on replicon 2";
-    "split input" -> "MSF on replicon 3";
-    "split input" -> "MSF on replicon n";
+.. digraph:: parallel_macsyfinder_gembase
+    :caption: Diagram of the parallel_macsyfinder workflow on gembase input
+
+    "gembase input" -> "MSF on replicon 1";
+    "gembase input" -> "MSF on replicon 2";
+    "gembase input" -> "MSF on replicon 3";
+    "gembase input" -> "MSF on replicon n";
+    "MSF on replicon 1" -> "merge results";
+    "MSF on replicon 2" -> "merge results";
+    "MSF on replicon 3" -> "merge results";
+    "MSF on replicon n" -> "merge results";
+
+
+
+.. digraph:: parallel_macsyfinder_gembase
+    :caption: Diagram of the parallel_macsyfinder workflow on ordered or unordered replicon
+
+    "file 1 input" -> "MSF on replicon 1";
+    "file 2 input" -> "MSF on replicon 2";
+    "file 3 input" -> "MSF on replicon 3";
+    "file 4 input" -> "MSF on replicon n";
     "MSF on replicon 1" -> "merge results";
     "MSF on replicon 2" -> "merge results";
     "MSF on replicon 3" -> "merge results";
@@ -78,20 +97,37 @@ to see what you download ::
 
 to execute it directly on a local host with macsyfinder already installed and with with models installed too::
 
-    nextflow run gem-pasteur/macsyfinder -profile standard --models "TFF-SF all" --sequence-db <path/to/my/gembase.fasta>
+    nextflow run gem-pasteur/macsyfinder -profile standard --models "TFF-SF all" --db-type gembase --sequence-db <path/to/my/gembase.fasta>
 
 or::
 
-    nextflow run -r release_2.0 gem-pasteur/macsyfinder -profile standard --models "TFF-SF all" --sequence-db <path/to/my/gembase.fasta>
+    nextflow run -r release_2.0 gem-pasteur/macsyfinder -profile standard --models "TFF-SF all" --db-type gembas --sequence-db <path/to/my/gembase.fasta>
 
+or for ordered replicon ::
 
+    nextflow run gem-pasteur/macsyfinder -profile cluster_apptainer --models "TFF-SF all" --db-type ordered_replicon --sequence-db '<path/to/replicons/*.fasta>' --outdir <my_results>
+    nextflow run gem-pasteur/macsyfinder -profile cluster_apptainer --models "TFF-SF all" --db-type ordered_replicon --sequence-db 'file1.fasta,file2.fasta,file3.fst' --outdir <my_results>
 
-.. warning::
-    See the double quote surrounding the models value *--models "TFF-SF all"* with out quoting
-    macsyfinder will not received the right argument.
+or if you download the macsyfinder repository, or the the workflow with it's configuration file::
+
+    nextflow run  parallel_macsyfinder.nf -profile standard --models "TFF-SF all" --db-type ordered_replicon --sequence-db 'data/base/split/GCF_*.fasta' --outdir GCF
+
 
 .. note::
-    In
+    * For *gembase* data the workflow expected one file with several replicons.
+    * For *ordered_replicon* or *unordered* the workflow expected several files with one replicon per file.
+
+.. warning::
+    See the double quotes surrounding the models value *--models "TFF-SF all"* with out quoting
+    macsyfinder will not received the right argument.
+
+.. warning::
+    See the (double) quotes surrounding the models value *--sequence-db '<path/to/replicons/*.fasta>'* with out quoting
+    parallel_macsyfinder will not received all files.
+
+.. warning::
+    When you analyzed ordered or unordered replicons (*--db-type* set to *ordered_replicon* or *unordered*)
+    the *--out-dir* option is **REQUIRED**.
 
 
 standard profile
