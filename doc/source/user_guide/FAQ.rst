@@ -91,6 +91,7 @@ you could specify an alternate directory for the index with \-\-index\-dir (This
 
 See also the :ref:`quickstart` section for more examples.
 
+.. _faq-search-mode:
 
 What search mode to be used?
 ----------------------------
