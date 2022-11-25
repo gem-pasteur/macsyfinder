@@ -115,11 +115,16 @@ You will find complete documentation for setting up your project on readthedocs
 
 [![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
 
+## Example data set
+
+An example dataset with command lines and expected output files is available [here](https://doi.org/10.6084/m9.figshare.21581280.v1),
+and described [in the Documentation](https://macsyfinder.readthedocs.io/en/latest/user_guide/quickstart.html#an-example-data-set). 
+
 ## Docker
 
 MacSyFinder is also available as [Docker container](https://hub.docker.com/r/gempasteur/macsyfinder)
 
-### how to use macsyfinder container with docker
+### How to use macsyfinder container with docker
 
 The computations are performed under `msf` user in `/home/msf` inside the container.
 So You have to mount a directory from the host in the container to exchange data (inputs data, and results)
@@ -142,7 +147,7 @@ To work with Docker you have to install models in a directory which will be moun
     docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:<tag> --db-type gembase --models-dir=/home/msf/my_models/ --models  TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
 
 
-### how to use with apptainer (formely Singularity)
+### How to use with apptainer (formely Singularity)
 
 As the docker image is registered in docker hub you can also use it directly with [apptainer](https://apptainer.org/docs/user/main/).
 Unlike docker you have not to worry about shared directory, your `home` and `/tmp` are automatically shared.
