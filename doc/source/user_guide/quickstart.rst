@@ -100,7 +100,7 @@ An example data set
 ===================
 
 	We provide `here <https://doi.org/10.6084/m9.figshare.21581280.v1>`_ an example dataset comprising a replicon
-	and the output files expected with MacSyFinder, release 2.0.0 when running the TXSScan macsy-models.
+	and the output files expected with MacSyFinder, release 2.0 when running the TXSScan macsy-models.
 	The genomic dataset consists in the complete sequence of chromosome I from `Vibrio cholerae` O1 biovar El Tor str. N16961
 	(published here: https://pubmed.ncbi.nlm.nih.gov/10952301/).
 
