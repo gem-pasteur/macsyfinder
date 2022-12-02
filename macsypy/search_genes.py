@@ -86,7 +86,7 @@ def search_genes(genes, cfg):
         os.killpg(proc_grp_id, signum)
         sys.exit(signum)
 
-    signal.signal(signal.SIGTERM, stop)
+    default_signal_handler = signal.signal(signal.SIGTERM, stop)
 
 
     def search(gene, cpu):
@@ -169,4 +169,6 @@ def search_genes(genes, cfg):
             if report:
                 all_reports.append(report)
     _log.debug("end searching genes")
+
+    signal.signal(signal.SIGTERM, default_signal_handler)
     return all_reports
