@@ -1219,8 +1219,6 @@ def main(args=None, loglevel=None):
             all_best_solutions.extend(best_sol_4_1_replicon)
             one_best_solution.append(best_sol_4_1_replicon[0])
 
-
-
         ##############################
         # Write the results in files #
         ##############################

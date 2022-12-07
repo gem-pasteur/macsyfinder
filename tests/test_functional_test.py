@@ -302,7 +302,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                              os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
     def test_ordered_1_cluster_and_clusters_of_loners(self):
-        # genetic organization of test_1.fasta
+        # genetic organization of test_15.fasta
         #
         # gene       abc    mfp    abc   gspd    omf   omf    omf    omf
         # gene id   01397  01398  01399  01400  01506 01360  01548  01562

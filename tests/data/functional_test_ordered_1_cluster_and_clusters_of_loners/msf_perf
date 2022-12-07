@@ -1,9 +1,0 @@
-overall : hmmsearch : 0.17
-test_15 : nx graph : 0.00
-test_15 : nx nodes nb : 1  : edges nb : 0
-test_15 : nx clique time : 0.00
-test_15 : nx clique nb : 1
-test_15 : nx score clique : 0.00
-test_15 : best_solution : 0.00 : 1
-overall : best_solution : 0.00
-overall : macsyfinder : 0.31
