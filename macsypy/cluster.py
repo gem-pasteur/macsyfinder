@@ -160,7 +160,7 @@ def _clusterize(hits, model, hit_weights, rep_info):
 
 def _get_true_loners(clusters):
     """
-    A we call a True Loner a Cluster composed of only one gene tagged as loner
+    We call a True Loner a Cluster composed of one or several hit related to the same gene tagged as loner
     (by opposition with hit representing a gene tagged loner but include in cluster with several other genes)
 
     :param clusters: the clusters
@@ -170,6 +170,18 @@ def _get_true_loners(clusters):
              * dict containing true clusters  {str func_name : :class:`macsypy.hit.Loner | :class:`macsypy.hit.LonerMultiSystem` object}
              * list of :class:`macsypy.cluster.Cluster` objects
     """
+    def add_true_loner(clstr):
+        hits = clstr.hits
+        clstr_len = len(hits)
+        if clstr_len > 1:
+            _log.warning(f"Squash cluster of {clstr_len} {clstr[0].gene_ref.name} loners "
+                         f"({hits[0].position} -> {hits[-1].position})")
+        func_name = clstr[0].gene_ref.alternate_of().name
+        if func_name in true_loners:
+            true_loners[func_name].extend(hits)
+        else:
+            true_loners[func_name] = hits
+
     ###################
     # get True Loners #
     ###################
@@ -181,15 +193,9 @@ def _get_true_loners(clusters):
         model = clusters[0].model
         hit_weights = clusters[0].hit_weights
         for clstr in clusters:
-            if len(clstr) > 1:
-                true_clusters.append(clstr)
-            elif clstr.loner:
-                loner = clstr[0]
-                func_name = loner.gene_ref.alternate_of().name
-                if func_name in true_loners:
-                    true_loners[func_name].append(loner)
-                else:
-                    true_loners[func_name] = [loner]
+            if clstr.loner:
+                # it's  a true Loner
+                add_true_loner(clstr)
             else:
                 # it's a cluster of 1 hit
                 # but it's NOT a loner
@@ -298,14 +304,14 @@ class Cluster:
     @property
     def loner(self):
         """
-        :return: True if this cluster is made of only one hit representing a loner gene
+        :return: True if this cluster is made of only hits representing same gene and this gene is tag as gene
                  False otherwise:
-                 - contains several hits
+                 - contains several hits coding for different genes
                  - contains one hit but gene is not tag as loner (max_gene_required = 1)
         """
         # need this method in build_cluster before to transform ModelHit in Loner
         # so cannot rely on Loner type
-        return len(self) == 1 and self.hits[0].gene_ref.loner
+        return len({h.gene_ref.name for h in self.hits}) == 1 and self.hits[0].gene_ref.loner
 
     @property
     def multi_system(self):
