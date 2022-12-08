@@ -86,6 +86,8 @@ def search_genes(genes, cfg):
         os.killpg(proc_grp_id, signum)
         sys.exit(signum)
 
+    # store the original SIGTERM signal handler to restore it
+    # once search systems is over
     default_signal_handler = signal.signal(signal.SIGTERM, stop)
 
 
