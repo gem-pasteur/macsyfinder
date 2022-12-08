@@ -509,7 +509,6 @@ def main(args=None, log_level=None) -> None:
     try:
         # models can be a path like TXSScan/bacteria/diderm
         model_familly_name = split_def_name(cfg.models()[0])[0]
-        print(f"{model_familly_name =}")
         model_dir = [p for p in [os.path.join(p, model_familly_name) for p in cfg.models_dir()] if os.path.exists(p)][-1]
 
         profiles_dir = os.path.join(model_dir, 'profiles')
