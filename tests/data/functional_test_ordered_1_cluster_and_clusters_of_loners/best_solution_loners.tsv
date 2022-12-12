@@ -1,0 +1,10 @@
+# macsyfinder 20221212.dev
+# models : functional-0.0b2
+# /home/bneron/Projects/GEM/macsyfinder/py310/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ --models functional T12SS-loner --replicon-topology linear --sequence-db tests/data/base/test_15.fasta
+# Loners found:
+replicon	model_fqn	function	gene_name	hit_id	hit_pos	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
+test_15	functional/T12SS-loner	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01506	21	mandatory	419	9.100e-35	111.500	0.998	0.912	25	406
+test_15	functional/T12SS-loner	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01360	22	mandatory	484	3.200e-28	90.000	0.985	0.820	80	476
+test_15	functional/T12SS-loner	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01548	44	mandatory	476	1.400e-27	87.800	0.980	0.884	28	448
+test_15	functional/T12SS-loner	T1SS_omf	T1SS_omf	VICH001.B.00001.C001_01562	45	mandatory	445	4.700e-53	171.700	1.000	0.892	31	427
+

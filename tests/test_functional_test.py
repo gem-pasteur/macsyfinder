@@ -301,6 +301,42 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
         self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
                              os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
+    def test_ordered_1_cluster_and_clusters_of_loners(self):
+        # genetic organization of test_1.fasta
+        #
+        # gene       abc    mfp    abc   gspd    omf   omf    omf    omf
+        # gene id   01397  01398  01399  01400  01506 01360  01548  01562
+        # pos        9      10     11     12      21   22     44     45
+        # clst     [ M      M      M      ME ]   [ML   ML]   [ML     ML]
+        # syst      [abc    mfp    abc    gspd]    2 clusters of 2 loners but considered as 4 loners
+        # score       1      1      0      0                   .7  = 2.7
+        # loners                                  omf   omf    omf    omf
+        # omf 23 24 and 30 31 are clusters of loners with same gene  => consider as Loner
+        expected_result_dir = self.find_data("functional_test_ordered_1_cluster_and_clusters_of_loners")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-loner " \
+               "-o {out_dir} " \
+               f"--index-dir {self._index_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary,
+                          self.rejected_candidates_tsv):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
     def test_ordered_2_clusters_3_loners(self):
         # genetic organization of test_5.fasta

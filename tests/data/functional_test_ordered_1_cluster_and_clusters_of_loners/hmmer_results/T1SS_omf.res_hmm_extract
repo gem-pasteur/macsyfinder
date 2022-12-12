@@ -1,0 +1,9 @@
+# gene: T1SS_omf extract from ./macsyfinder-20221212_16-05-29/hmmer_results/T1SS_omf.search_hmm.out hmm output
+# profile length= 400
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_01360	test_15	22	484	T1SS_omf	3.200e-28	90.000	0.985	0.820	80	476
+VICH001.B.00001.C001_01506	test_15	21	419	T1SS_omf	9.100e-35	111.500	0.998	0.912	25	406
+VICH001.B.00001.C001_01548	test_15	44	476	T1SS_omf	1.400e-27	87.800	0.980	0.884	28	448
+VICH001.B.00001.C001_01562	test_15	45	445	T1SS_omf	4.700e-53	171.700	1.000	0.892	31	427

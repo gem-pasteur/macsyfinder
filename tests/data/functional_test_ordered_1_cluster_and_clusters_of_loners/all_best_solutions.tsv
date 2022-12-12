@@ -1,0 +1,11 @@
+# macsyfinder 20221212.dev
+# models : functional-0.0b2
+# /home/bneron/Projects/GEM/macsyfinder/py310/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ --models functional T12SS-loner --replicon-topology linear --sequence-db tests/data/base/test_15.fasta
+# Systems found:
+sol_id	replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
+1	test_15	VICH001.B.00001.C001_01397	T1SS_abc	9	functional/T12SS-loner	test_15_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_abc	mandatory	721	2.3e-157	516.300	0.996	0.698	175	677		
+1	test_15	VICH001.B.00001.C001_01398	T1SS_mfp	10	functional/T12SS-loner	test_15_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_mfp	mandatory	467	2.3e-72	235.600	1.000	0.797	85	456		
+1	test_15	VICH001.B.00001.C001_01399	T1SS_abc	11	functional/T12SS-loner	test_15_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_abc	mandatory	720	2.1e-158	519.700	1.000	0.699	167	669		
+1	test_15	VICH001.B.00001.C001_01400	T2SS_gspD	12	functional/T12SS-loner	test_15_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_mfp	mandatory	559	2.1e-47	153.400	0.559	0.658	168	535		
+1	test_15	VICH001.B.00001.C001_01562	T1SS_omf	45	functional/T12SS-loner	test_15_T12SS-loner_1	1	-1	1.000	2.700	2	T1SS_omf	mandatory	445	4.7e-53	171.700	1.000	0.892	31	427	VICH001.B.00001.C001_01506,VICH001.B.00001.C001_01548,VICH001.B.00001.C001_01360	
+

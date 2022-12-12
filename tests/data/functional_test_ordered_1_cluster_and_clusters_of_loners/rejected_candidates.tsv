@@ -1,0 +1,12 @@
+# macsyfinder 20221212.dev
+# models : functional-0.0b2
+# /home/bneron/Projects/GEM/macsyfinder/py310/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ --models functional T12SS-loner --replicon-topology linear --sequence-db tests/data/base/test_15.fasta
+# Rejected candidates found:
+candidate_id	replicon	model_fqn	cluster_id	hit_id	hit_pos	gene_name	function	reasons
+test_15_T12SS-loner_1	test_15	functional/T12SS-loner	c5	VICH001.B.00001.C001_01397	9	T1SS_abc	T1SS_abc	The quorum of genes required (3) is not reached: 2
+test_15_T12SS-loner_1	test_15	functional/T12SS-loner	c5	VICH001.B.00001.C001_01398	10	T1SS_mfp	T1SS_mfp	The quorum of genes required (3) is not reached: 2
+test_15_T12SS-loner_1	test_15	functional/T12SS-loner	c5	VICH001.B.00001.C001_01399	11	T1SS_abc	T1SS_abc	The quorum of genes required (3) is not reached: 2
+test_15_T12SS-loner_1	test_15	functional/T12SS-loner	c5	VICH001.B.00001.C001_01400	12	T2SS_gspD	T1SS_mfp	The quorum of genes required (3) is not reached: 2
+
+test_15_T12SS-loner_2	test_15	functional/T12SS-loner	c8	VICH001.B.00001.C001_01562	45	T1SS_omf	T1SS_omf	The quorum of mandatory genes required (2) is not reached: 1/The quorum of genes required (3) is not reached: 1
+
