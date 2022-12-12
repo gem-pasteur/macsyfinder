@@ -1,0 +1,8 @@
+
+############################ functional/T12SS-loner ############################
+functional/T12SS-loner: 1 clusters
+
+Cluster:
+- model = T12SS-loner
+- replicon = test_15
+- hits = (VICH001.B.00001.C001_01397, T1SS_abc, 9), (VICH001.B.00001.C001_01398, T1SS_mfp, 10), (VICH001.B.00001.C001_01399, T1SS_abc, 11), (VICH001.B.00001.C001_01400, T2SS_gspD, 12)

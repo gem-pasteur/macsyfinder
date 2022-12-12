@@ -1,0 +1,24 @@
+# macsyfinder 20221212.dev
+# models : functional-0.0b2
+# /home/bneron/Projects/GEM/macsyfinder/py310/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ --models functional T12SS-loner --replicon-topology linear --sequence-db tests/data/base/test_15.fasta
+# Systems found:
+
+system id = test_15_T12SS-loner_1
+model = functional/T12SS-loner
+replicon = test_15
+clusters = [('VICH001.B.00001.C001_01397', 'T1SS_abc', 9), ('VICH001.B.00001.C001_01398', 'T1SS_mfp', 10), ('VICH001.B.00001.C001_01399', 'T1SS_abc', 11), ('VICH001.B.00001.C001_01400', 'T2SS_gspD', 12)], [('VICH001.B.00001.C001_01562', 'T1SS_omf', 45)]
+occ = 2
+wholeness = 1.000
+loci nb = 1
+score = 2.700
+
+mandatory genes:
+	- T1SS_abc: 2 (T1SS_abc, T1SS_abc)
+	- T1SS_mfp: 2 (T1SS_mfp, T2SS_gspD)
+	- T1SS_omf: 1 (T1SS_omf)
+
+accessory genes:
+
+neutral genes:
+
+============================================================
