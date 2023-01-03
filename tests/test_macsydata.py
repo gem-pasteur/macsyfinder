@@ -31,6 +31,7 @@ import tarfile
 import unittest
 import io
 import shlex
+from collections import namedtuple
 
 import macsypy.registries
 from macsypy.registries import scan_models_dir, ModelRegistry
@@ -1550,19 +1551,26 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.desc = None
         self.args.models_dir = self.models_dir[0]
         self.args.no_clean = False
+        # see below (test_init_package_complete)
+        # why a do a mock for localtime
+        fake_time = namedtuple('FakeTime', ['tm_year'])
+        local_time_ori = macsydata.time.localtime
+        macsydata.time.localtime = lambda: fake_time(2022)
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_init_package(self.args)
 
-        with self.catch_log(log_name='macsydata') as log:
-            macsydata.do_init_package(self.args)
-
-        files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
-        for f_name in files:
-            # ElementTree ensure order of attribute only from python3.9
-            if sys.version_info.minor < 9 and f_name.endswith('.xml'):
-                continue
-            with self.subTest(file_name=f_name):
-                expected_file = self.find_data(self.args.pack_name, f_name)
-                got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
-                self.assertFileEqual(expected_file, got_file)
+            files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
+            for f_name in files:
+                # ElementTree ensure order of attribute only from python3.9
+                if sys.version_info.minor < 9 and f_name.endswith('.xml'):
+                    continue
+                with self.subTest(file_name=f_name):
+                    expected_file = self.find_data(self.args.pack_name, f_name)
+                    got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
+                    self.assertFileEqual(expected_file, got_file)
+        finally:
+            macsydata.time.localtime = local_time_ori
 
 
     def test_init_package_complete(self):
@@ -1575,20 +1583,28 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.desc = 'description in one line of this package'
         self.args.models_dir = self.models_dir[0]
         self.args.no_clean = False
+        # do_init_package call localtime to get year
+        # and put it in copyright filed of metadata
+        # so I do monkey patching to get reliable year
+        # otherwise I have to adapt the test each new year ;-(
+        fake_time = namedtuple('FakeTime', ['tm_year'])
+        local_time_ori = macsydata.time.localtime
+        macsydata.time.localtime = lambda: fake_time(2022)
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_init_package(self.args)
 
-        with self.catch_log(log_name='macsydata') as log:
-            macsydata.do_init_package(self.args)
-
-        files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
-        for f_name in files:
-            # ElementTree ensure order of attribute only from python3.9
-            if sys.version_info.minor < 9 and f_name.endswith('.xml'):
-                continue
-            with self.subTest(file_name=f_name):
-                expected_file = self.find_data(self.args.pack_name, f_name)
-                got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
-                self.assertFileEqual(expected_file, got_file)
-
+            files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
+            for f_name in files:
+                # ElementTree ensure order of attribute only from python3.9
+                if sys.version_info.minor < 9 and f_name.endswith('.xml'):
+                    continue
+                with self.subTest(file_name=f_name):
+                    expected_file = self.find_data(self.args.pack_name, f_name)
+                    got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
+                    self.assertFileEqual(expected_file, got_file)
+        finally:
+            macsydata.time.localtime = local_time_ori
 
     def test_build_argparser(self):
         parser = macsydata.build_arg_parser()
