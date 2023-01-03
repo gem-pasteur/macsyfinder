@@ -140,11 +140,24 @@ def find_best_solutions(systems):
     for sys_i, sys_j in itertools.combinations(systems, 2):
         if sys_i.is_compatible(sys_j):
             G.add_edge(sys_i, sys_j)
-
+    # find_cliques return a generator so the call to find cliques does not take time
+    # but each time I ask for next item (in the loop below for instance)
+    # nx compute the next clique so it can take time.
+    # the number of maximal clique grow exponentiamly with the number of node
+    # for instance for geneome  SYDY001.0321.00001.C001 ther is
+    # 261 nodes, 22566 edges
+    # 124 015 680 cliques
     cliques = nx.algorithms.clique.find_cliques(G)
     max_score = None
     max_cliques = []
     for c in cliques:
+        # it is important to sum the score of clusters
+        # and creat a solution object only for solution I want to keep
+        # because there could be lot of cliques
+        # but only few will be kept (les than 5)
+        # so the wide majority of these cliques will be thrown
+        # if I create a Solution object for each clique I spend lot if time and memory to
+        # instanciate new object to thrown them few line later :-(
         current_score = sum([s.score for s in c])
         if max_score is None or (current_score > max_score):
             max_score = current_score
