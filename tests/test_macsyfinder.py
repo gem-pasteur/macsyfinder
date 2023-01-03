@@ -1312,8 +1312,10 @@ Use ordered replicon to have better prediction.
         model_registry = self._fill_model_registry(config)
         def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
         systems, uncomplete_sys = search_systems(config, model_registry, def_to_detect, logger)
-        expected_sys_id = ['Unordered_T2SS_4', 'Unordered_MSH_3', 'Unordered_T4P_5', 'Unordered_T4bP_6']
+        expected_sys_id = ['VICH001.B.00001.C001_T2SS_4', 'VICH001.B.00001.C001_MSH_3',
+                           'VICH001.B.00001.C001_T4P_5', 'VICH001.B.00001.C001_T4bP_6']
         self.assertListEqual([s.id for s in systems], expected_sys_id)
 
-        expected_uncomplete_sys_id = ['Unordered_Archaeal-T4P_1', 'Unordered_ComM_2', 'Unordered_Tad_7']
+        expected_uncomplete_sys_id = ['VICH001.B.00001.C001_Archaeal-T4P_1', 'VICH001.B.00001.C001_ComM_2',
+                                      'VICH001.B.00001.C001_Tad_7']
         self.assertListEqual([s.id for s in uncomplete_sys], expected_uncomplete_sys_id)

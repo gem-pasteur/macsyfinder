@@ -5,7 +5,7 @@
 
 Cluster:
 - model = T12SS-loner-exch
-- replicon = UserReplicon
+- replicon = test_2
 - hits = (VICH001.B.00001.C001_01562, T1SS_omf, 43)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (2) is not reached: 1

@@ -3,14 +3,14 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-loner --relative-path --sequence-db tests/data/base/test_5.fasta -o functional_test_ordered_2_clusters_3_loners
 # Systems found:
 replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
-UserReplicon	VICH001.B.00001.C001_01397	T1SS_abc	11	functional/T12SS-loner	UserReplicon_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_abc	mandatory	721	3e-157	516.300	0.996	0.698	175	677
-UserReplicon	VICH001.B.00001.C001_01398	T1SS_mfp	12	functional/T12SS-loner	UserReplicon_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_mfp	mandatory	467	3e-72	235.600	1.000	0.797	85	456
-UserReplicon	VICH001.B.00001.C001_01399	T1SS_abc	13	functional/T12SS-loner	UserReplicon_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_abc	mandatory	720	2.7e-158	519.700	1.000	0.699	167	669
-UserReplicon	VICH001.B.00001.C001_01400	T2SS_gspD	14	functional/T12SS-loner	UserReplicon_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_mfp	mandatory	559	2.7e-47	153.400	0.559	0.658	168	535
-UserReplicon	VICH001.B.00001.C001_01562	T1SS_omf	46	functional/T12SS-loner	UserReplicon_T12SS-loner_1	1	-1	1.000	2.700	2	T1SS_omf	mandatory	445	6e-53	171.700	1.000	0.892	31	427	VICH001.B.00001.C001_01506,VICH001.B.00001.C001_01548
+test_5	VICH001.B.00001.C001_01397	T1SS_abc	11	functional/T12SS-loner	test_5_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_abc	mandatory	721	3e-157	516.300	0.996	0.698	175	677
+test_5	VICH001.B.00001.C001_01398	T1SS_mfp	12	functional/T12SS-loner	test_5_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_mfp	mandatory	467	3e-72	235.600	1.000	0.797	85	456
+test_5	VICH001.B.00001.C001_01399	T1SS_abc	13	functional/T12SS-loner	test_5_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_abc	mandatory	720	2.7e-158	519.700	1.000	0.699	167	669
+test_5	VICH001.B.00001.C001_01400	T2SS_gspD	14	functional/T12SS-loner	test_5_T12SS-loner_1	1	1	1.000	2.700	2	T1SS_mfp	mandatory	559	2.7e-47	153.400	0.559	0.658	168	535
+test_5	VICH001.B.00001.C001_01562	T1SS_omf	46	functional/T12SS-loner	test_5_T12SS-loner_1	1	-1	1.000	2.700	2	T1SS_omf	mandatory	445	6e-53	171.700	1.000	0.892	31	427	VICH001.B.00001.C001_01506,VICH001.B.00001.C001_01548
 
-UserReplicon	VICH001.B.00001.C001_01150	T1SS_abc	55	functional/T12SS-loner	UserReplicon_T12SS-loner_2	1	1	1.000	2.700	1	T1SS_abc	mandatory	573	6.1e-55	178.800	0.752	0.656	157	532
-UserReplicon	VICH001.B.00001.C001_01361_trunc	T1SS_mfp	56	functional/T12SS-loner	UserReplicon_T12SS-loner_2	1	1	1.000	2.700	1	T1SS_mfp	mandatory	395	1.9e-15	48.700	0.503	0.448	137	313
-UserReplicon	VICH001.B.00001.C001_00409	T2SS_gspD	57	functional/T12SS-loner	UserReplicon_T12SS-loner_2	1	1	1.000	2.700	1	T1SS_mfp	mandatory	559	2.7e-47	153.400	0.559	0.658	168	535
-UserReplicon	VICH001.B.00001.C001_01562	T1SS_omf	46	functional/T12SS-loner	UserReplicon_T12SS-loner_2	1	-1	1.000	2.700	1	T1SS_omf	mandatory	445	6e-53	171.700	1.000	0.892	31	427	VICH001.B.00001.C001_01506,VICH001.B.00001.C001_01548
+test_5	VICH001.B.00001.C001_01150	T1SS_abc	55	functional/T12SS-loner	test_5_T12SS-loner_2	1	1	1.000	2.700	1	T1SS_abc	mandatory	573	6.1e-55	178.800	0.752	0.656	157	532
+test_5	VICH001.B.00001.C001_01361_trunc	T1SS_mfp	56	functional/T12SS-loner	test_5_T12SS-loner_2	1	1	1.000	2.700	1	T1SS_mfp	mandatory	395	1.9e-15	48.700	0.503	0.448	137	313
+test_5	VICH001.B.00001.C001_00409	T2SS_gspD	57	functional/T12SS-loner	test_5_T12SS-loner_2	1	1	1.000	2.700	1	T1SS_mfp	mandatory	559	2.7e-47	153.400	0.559	0.658	168	535
+test_5	VICH001.B.00001.C001_01562	T1SS_omf	46	functional/T12SS-loner	test_5_T12SS-loner_2	1	-1	1.000	2.700	1	T1SS_omf	mandatory	445	6e-53	171.700	1.000	0.892	31	427	VICH001.B.00001.C001_01506,VICH001.B.00001.C001_01548
 

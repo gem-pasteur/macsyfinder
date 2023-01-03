@@ -5,21 +5,21 @@
 
 Cluster:
 - model = T12SS-loner-exch
-- replicon = UserReplicon
+- replicon = test_6
 - hits = (VICH001.B.00001.C001_01150, T1SS_abc, 51), (VICH001.B.00001.C001_01361_trunc, T1SS_mfp, 52), (VICH001.B.00001.C001_00409, T2SS_gspD, 53)
 This candidate has been rejected because:
 	- The quorum of genes required (3) is not reached: 2
 ============================================================
 Cluster:
 - model = T12SS-loner-exch
-- replicon = UserReplicon
+- replicon = test_6
 - hits = (VICH001.B.00001.C001_01397, T1SS_abc, 10), (VICH001.B.00001.C001_01398, T1SS_mfp, 11), (VICH001.B.00001.C001_01399, T1SS_abc, 12), (VICH001.B.00001.C001_01400, T2SS_gspD, 13)
 This candidate has been rejected because:
 	- The quorum of genes required (3) is not reached: 2
 ============================================================
 Cluster:
 - model = T12SS-loner-exch
-- replicon = UserReplicon
+- replicon = test_6
 - hits = (VICH001.B.00001.C001_01506, T1SS_omf, 22)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (2) is not reached: 1

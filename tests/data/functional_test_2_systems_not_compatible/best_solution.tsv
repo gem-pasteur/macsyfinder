@@ -3,7 +3,7 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ -m functional A B --relative-path --sequence-db tests/data/base/test_9.fasta
 # Systems found:
 replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
-UserReplicon	VICH001.B.00001.C001_01400	T2SS_gspD	13	functional/B	UserReplicon_B_2	1	1	1.000	2.000	1	T2SS_gspD	mandatory	559	1.4e-47	153.400	0.559	0.658	168	535		UserReplicon_A_1
-UserReplicon	VICH001.B.00001.C001_01506	T1SS_omf	15	functional/B	UserReplicon_B_2	1	1	1.000	2.000	1	T1SS_omf	accessory	419	5.9e-35	111.500	0.998	0.912	25	406		
-UserReplicon	VICH001.B.00001.C001_02599	T2SS_gspF	17	functional/B	UserReplicon_B_2	1	1	1.000	2.000	1	T2SS_gspF	accessory	406	1.6e-142	465.300	1.000	0.825	68	402		
+test_9	VICH001.B.00001.C001_01400	T2SS_gspD	13	functional/B	test_9_B_2	1	1	1.000	2.000	1	T2SS_gspD	mandatory	559	1.4e-47	153.400	0.559	0.658	168	535		test_9_A_1
+test_9	VICH001.B.00001.C001_01506	T1SS_omf	15	functional/B	test_9_B_2	1	1	1.000	2.000	1	T1SS_omf	accessory	419	5.9e-35	111.500	0.998	0.912	25	406		
+test_9	VICH001.B.00001.C001_02599	T2SS_gspF	17	functional/B	test_9_B_2	1	1	1.000	2.000	1	T2SS_gspF	accessory	406	1.6e-142	465.300	1.000	0.825	68	402		
 
