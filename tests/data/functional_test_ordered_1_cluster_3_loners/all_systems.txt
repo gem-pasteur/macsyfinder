@@ -3,9 +3,9 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-loner --relative-path --sequence-db tests/data/base/test_1.fasta -o functional_test_ordered_1_cluster_3_loners
 # Systems found:
 
-system id = UserReplicon_T12SS-loner_1
+system id = test_1_T12SS-loner_1
 model = functional/T12SS-loner
-replicon = UserReplicon
+replicon = test_1
 clusters = [('VICH001.B.00001.C001_01397', 'T1SS_abc', 11), ('VICH001.B.00001.C001_01398', 'T1SS_mfp', 12), ('VICH001.B.00001.C001_01399', 'T1SS_abc', 13), ('VICH001.B.00001.C001_01400', 'T2SS_gspD', 14)], [('VICH001.B.00001.C001_01562', 'T1SS_omf', 46)]
 occ = 2
 wholeness = 1.000

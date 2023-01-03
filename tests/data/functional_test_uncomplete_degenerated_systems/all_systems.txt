@@ -3,9 +3,9 @@
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional uncomplete_degenerated_systems --relative-path --sequence-db tests/data/base/test_4.fasta -o functional_test_uncomplete_degenerated_systems
 # Systems found:
 
-system id = UserReplicon_uncomplete_degenerated_systems_1
+system id = test_4_uncomplete_degenerated_systems_1
 model = functional/uncomplete_degenerated_systems
-replicon = UserReplicon
+replicon = test_4
 clusters = [('VICH001.B.00001.C001_01398', 'T1SS_mfp', 7)]
 occ = 1
 wholeness = 0.500

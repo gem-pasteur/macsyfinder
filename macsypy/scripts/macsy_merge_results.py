@@ -226,7 +226,7 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
     out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
     _log.info(f"Merging '{filename_to_merge}' in to '{out_file}'")
     all_summary_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
-    merge_summary(all_summary_files, out_file, header = 'Best Solution Summary')
+    merge_summary(all_summary_files, out_file, header='Best Solution Summary')
 
 
 def parse_args(args:  List[str]) -> argparse.Namespace:

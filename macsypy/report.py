@@ -64,7 +64,6 @@ class HMMReport(metaclass=abc.ABCMeta):
         self.cfg = cfg
         self._lock = Lock()
 
-
     @abc.abstractmethod
     def _get_replicon_name(self, hit_id):
         """
@@ -73,6 +72,8 @@ class HMMReport(metaclass=abc.ABCMeta):
         :param str hit_id: the id of the current hit extract from hmm output.
         :return: The name of the replicon
         """
+        rep_name = os.path.splitext(os.path.basename(self.cfg.sequence_db()))[0]
+        return rep_name
 
 
     def extract(self):
@@ -282,10 +283,8 @@ class GeneralHMMReport(HMMReport):
     Handle HMM report. Extract a synthetic report from the raw hmmer output.
     Dedicated to any type of 'unordered' datasets.
     """
-
     def _get_replicon_name(self, hit_id):
-        # replicon_name = self.cfg. # Define a variable in further devt
-        return "Unordered"
+        return super()._get_replicon_name(hit_id)
 
 
 
@@ -294,10 +293,8 @@ class OrderedHMMReport(HMMReport):
     Handle HMM report. Extract a synthetic report from the raw hmmer output.
     Dedicated to 'ordered_replicon' datasets.
     """
-
     def _get_replicon_name(self, hit_id):
-        return RepliconDB.ordered_replicon_name
-
+        return super()._get_replicon_name(hit_id)
 
 class GembaseHMMReport(HMMReport):
     """
