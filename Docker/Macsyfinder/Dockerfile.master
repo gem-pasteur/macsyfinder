@@ -22,7 +22,7 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-FROM ubuntu:impish
+FROM ubuntu:22.10
 
 LABEL org.opencontainers.image.authors="Bertrand Neron <bneron@pasteur.fr>"
 LABEL org.label-schema.vendor='Institut Pasteur'
@@ -38,7 +38,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV PYTHONNOUSERSITE=1
 
 RUN apt-get update -y &&\
-    apt-get install -y --no-install-recommends hmmer python3 python3-pip git
+    apt-get install -y --no-install-recommends hmmer python3.11 python3-pip git
 RUN apt-get clean -y
 
 RUN cd /tmp &&\
