@@ -34,6 +34,27 @@ import pandas as pd
 from macsypy.config import MacsyDefaults
 
 
+def get_warning(path):
+    """
+
+    :param path: the path of the result file to parse
+    :type path: str
+    :return: the list of warning in the header
+    :rtype: list of str
+    """
+    warn_to_report = []
+    with open(path) as file:
+        try:
+            line = next(file)
+            while line.startswith('#'):
+                if line.startswith('# WARNING: The replicon'):
+                    warn_to_report.append(line)
+                line = next(file)
+        except StopIteration:
+            pass
+    return warn_to_report
+
+
 def merge_files(files: List[str], out: str, header: str,
                 ignore: str = None, keep_first: str = None, skip_until=None) -> None:
     """
@@ -49,14 +70,20 @@ def merge_files(files: List[str], out: str, header: str,
     :param str header: The header of the merged file
     :return:
     """
-    def get_header(result: bool):
+    def get_header(result: bool, warnings):
         res_or_not = header if result else f"No {header}"
         header_str = f"""# parallel_msf {macsypy.__version__}
 # merged {os.path.basename(files[0])}
 # {res_or_not} found:
 """
-        return header_str
+        if warnings:
+            header_str += '# \n'
+            for warn in warnings:
+                header_str += warn
+            header_str += '# \n'
 
+        return header_str
+    warnings = []
     with open(out, 'w') as f_out:
         if keep_first is None:
             first = False
@@ -65,6 +92,7 @@ def merge_files(files: List[str], out: str, header: str,
         results = False
         for file in files:
             _log.debug(f"Merging {file}")
+            warnings += get_warning(file)
             skip = bool(skip_until)
             with open(file) as fh_in:
                 for line in fh_in:
@@ -75,7 +103,7 @@ def merge_files(files: List[str], out: str, header: str,
                             continue
                     if first and line.startswith(keep_first):
                         first = False
-                        f_out.write(get_header(True))
+                        f_out.write(get_header(True, warnings))
                     elif ignore and line.startswith(ignore):
                         continue
                     elif keep_first and line.startswith(keep_first):
@@ -85,7 +113,7 @@ def merge_files(files: List[str], out: str, header: str,
                 if not first:
                     f_out.write('\n')
         if not results:
-            f_out.write(get_header(False) + '\n')
+            f_out.write(get_header(False, warnings) + '\n')
 
 
 def merge_and_reindex(files: List[str], out: str,  header: str,
@@ -99,14 +127,21 @@ def merge_and_reindex(files: List[str], out: str,  header: str,
     :param str ignore: a string which start the lines to ignore
     :param str header: The header of the merged file
     """
-    def get_header(result: bool):
+    def get_header(result: bool, warnings):
         res_or_not = header if result else f"No {header}"
         header_str = f"""# parallel_msf {macsypy.__version__}
 # merged {os.path.basename(files[0])}
 # {res_or_not} found:
 """
+        if warnings:
+            header_str += '# \n'
+            for warn in warnings:
+                header_str += warn
+            header_str += '# \n'
+
         return header_str
 
+    warnings = []
     with open(out, 'w') as f_out:
         last_sol_id = 0
         new_sol_id = None
@@ -114,6 +149,7 @@ def merge_and_reindex(files: List[str], out: str,  header: str,
         results = False
         for file in files:
             _log.debug(f"Merging {file}")
+            warnings += get_warning(file)
             skip = bool(skip_until)
             with open(file) as fh_in:
                 for line in fh_in:
@@ -124,7 +160,7 @@ def merge_and_reindex(files: List[str], out: str,  header: str,
                             continue
                     if first and line.startswith('sol_id'):
                         first = False
-                        f_out.write(get_header(True))
+                        f_out.write(get_header(True, warnings))
                         new_line = line
                     elif line.startswith('sol_id'):
                         continue
@@ -149,7 +185,7 @@ def merge_and_reindex(files: List[str], out: str,  header: str,
             if new_sol_id is not None:  # The previous results are empty
                 last_sol_id = new_sol_id
         if not results:
-            f_out.write(get_header(False) + '\n')
+            f_out.write(get_header(False, warnings) + '\n')
 
 
 def merge_summary(files: List[str], out: str, header: str = "") -> None:
@@ -160,10 +196,12 @@ def merge_summary(files: List[str], out: str, header: str = "") -> None:
     :param str header: The header of the merged file
     :return:
     """
+    warnings = []
     data = []
     for one_file in files:
         datum = pd.read_csv(one_file, sep="\t", comment="#", index_col="replicon")
         data.append(datum)
+        warnings += get_warning(one_file)
     merged = pd.concat(data, axis=0)
     with open(out, 'w') as f_out:
         res_or_not = f"# {header}:" if not merged.empty else "# No Systems found:"
@@ -172,6 +210,10 @@ def merge_summary(files: List[str], out: str, header: str = "") -> None:
 {res_or_not}
 """
         f_out.write(header_str)
+        for warn in warnings:
+            f_out.write('# \n')
+            f_out.write(warn)
+            f_out.write('# \n')
         merged.to_csv(f_out, sep="\t")
 
 

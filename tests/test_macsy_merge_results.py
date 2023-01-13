@@ -58,6 +58,29 @@ class TestMerge(MacsyTest):
         for h in logger.handlers[:]:
             logger.removeHandler(h)
 
+    def test_get_warning(self):
+
+        header = """# parallel_msf 20230113.dev
+# merged best_solution.tsv
+# Systems found:
+"""
+        warning ="""# 
+# WARNING: The replicon 'GCF_000006765' has been SKIPPED. Cannot be solved before timeout.
+#
+"""
+        first_line = "replicon\thit_id\t...\n"
+
+        path = os.path.join(self.tmpdir, 'fake_result')
+        with open(path, 'w') as fake_file:
+            print(header + first_line, file=fake_file)
+        got_warning = macsy_merge_results.get_warning(path)
+        self.assertEqual(got_warning, [])
+
+        with open(path, 'w') as fake_file:
+            print(header + warning + first_line, file=fake_file)
+        got_warning = macsy_merge_results.get_warning(path)
+        self.assertEqual(got_warning, ["# WARNING: The replicon 'GCF_000006765' has been SKIPPED. Cannot be solved before timeout.\n"])
+
 
     def test_functional_merge(self):
         # res_1 have hits and systems
