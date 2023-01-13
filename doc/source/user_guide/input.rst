@@ -260,9 +260,9 @@ General options:
                         Conflict with options
                             --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer
  --timeout TIMEOUT     In some case msf can take a long time to find the best solution (in 'gembase' and 'ordered_replicon mode').
-                        If timeout is set, and this step is longer than the delay msf is aborted.
-                        NUMBER[SUFFIX]  NUMBER seconds. SUFFIX may be 's' for seconds (the default), 'm' for minutes, 'h' for hours or 'd' for days
-                        for instance 1h2m3s means 1 hour 2 min 3 sec. NUMBER must be an integer
+                       The timeout is per replicon. If this step reach the timeout, the replicon is skipped (for gembase mode the analyse of other replicons continue).
+                       NUMBER[SUFFIX]  NUMBER seconds. SUFFIX may be 's' for seconds (the default), 'm' for minutes, 'h' for hours or 'd' for days
+                       for instance 1h2m3s means 1 hour 2 min 3 sec. NUMBER must be an integer.
 
 .. note::
   For some command line examples, have a look :ref:`here<cmd-line-examples>`, or at the :ref:`quickstart` section.
