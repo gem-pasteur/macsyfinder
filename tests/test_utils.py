@@ -28,7 +28,7 @@ import tempfile
 import argparse
 
 from macsypy.registries import ModelRegistry, scan_models_dir
-from macsypy.utils import get_def_to_detect, get_replicon_names, threads_available
+from macsypy.utils import get_def_to_detect, get_replicon_names, threads_available, parse_time
 from macsypy.error import MacsypyError
 
 from tests import MacsyTest
@@ -121,3 +121,17 @@ class TestUtils(MacsyTest):
                 os.sched_getaffinity = sched_getaffinity_ori
             else:
                 del os.sched_getaffinity
+
+    def test_parse_time(self):
+        self.assertEqual(parse_time(10), 10)
+        self.assertEqual(parse_time('10s'), 10)
+        self.assertEqual(parse_time('10m'), 600)
+        self.assertEqual(parse_time('1h'), 3600)
+        self.assertEqual(parse_time('1d'), 86400)
+        self.assertEqual(parse_time(10.5), 10)
+        self.assertEqual(parse_time('10m10s1h'), 600 + 10 + 3600)
+        self.assertEqual(parse_time('10m 10s 1h'), 600 + 10 + 3600)
+        with self.assertRaises(ValueError) as ctx:
+            parse_time('10W')
+        self.assertEqual(str(ctx.exception),
+                         'Not valid time format. Units allowed h/m/s.')

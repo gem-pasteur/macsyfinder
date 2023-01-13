@@ -170,3 +170,27 @@ def indent_wrapper(ElementTree):
         _indent_children(tree, 0)
 
     return indent
+
+
+def parse_time(user_time):
+    try:
+        user_time = int(user_time)
+        return user_time # user time has no units , it's seconds
+    except ValueError:
+        pass
+    import re
+    parts_converter = {'s': lambda x: x,
+                       'm': lambda x: x * 60,
+                       'h': lambda x: x * 3600,
+                       'd': lambda x: x * 86400
+    }
+    time_parts = re.findall(r'(\d+)(\D+)', user_time)
+    time = 0
+    for value, unit in time_parts:
+        unit = unit.strip().lower()
+        try:
+            time += parts_converter[unit](int(value))
+        except KeyError:
+            raise ValueError("Not valid time format. Units allowed h/m/s.")
+    return time
+
