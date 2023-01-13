@@ -1164,7 +1164,8 @@ def main(args=None, loglevel=None):
     logger.info(f"\n{f' Searching systems ':#^70}")
     all_systems, rejected_candidates = search_systems(config, model_registry, models_def_to_detect, logger)
     track_multi_systems_hit = HitSystemTracker(all_systems)
-
+    skipped_replicons = []
+    
     if config.db_type() in ('gembase', 'ordered_replicon'):
         #############################
         # Ordered/Gembase replicons #
@@ -1177,11 +1178,8 @@ def main(args=None, loglevel=None):
         all_best_solutions = []
         one_best_solution = []
 
-
-
         # group systems found by replicon
         # before to search best system combination
-        skipped_replicons = []
         for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
             syst_group = list(syst_group)
             logger.info(f"Computing best solutions for {rep_name} (nb of candidate systems {len(syst_group)})")
