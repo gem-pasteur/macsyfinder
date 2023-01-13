@@ -173,6 +173,19 @@ def indent_wrapper(ElementTree):
 
 
 def parse_time(user_time):
+    """
+    parse user friendly time and return it in seconds
+    user time supports units as s h m d for sec min hour day
+    or a combination of them
+    1h10m50s means 1 hour 10 minutes 50 seconds
+    all terms will be converted in seconds and added
+
+    :param user_time:
+    :type user_time: int or str
+    :return: seconds
+    :rtype: int
+    :raise: ValueError if user_time is not parseable
+    """
     try:
         user_time = int(user_time)
         return user_time # user time has no units , it's seconds
