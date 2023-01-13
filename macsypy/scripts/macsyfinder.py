@@ -31,6 +31,8 @@ import os
 import argparse
 import logging
 import itertools
+import signal
+import time
 
 from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
@@ -52,13 +54,22 @@ from macsypy import cluster
 from macsypy.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
     sort_model_hits, compute_best_MSHit
 from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, HitSystemTracker
-from macsypy.utils import get_def_to_detect, get_replicon_names
+from macsypy.utils import get_def_to_detect, get_replicon_names, parse_time
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
 from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
     TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCandidatesSerializer
+
+
+def alarm_handler(signum, frame):
+    _log.critical("Timeout is over. Aborting")
+    for h in _log.handlers:
+        h.flush()
+    # I exit wit 0 otherwise in parallel_msf the job will be retry
+    # on an other machine. we don't want that.
+    sys.exit(0)
 
 
 def get_version_message():
@@ -446,6 +457,16 @@ Conflicts with options:
     # Use relative paths instead of absolute paths. This option is used
     # by developers to generate portable data set, as for example test
     # data set, which are used on many different machines (using previous-run option).
+
+    general_options.add_argument("--timeout",
+                                 action='store',
+                                 default=None,
+                                 type=parse_time,
+                                 help="""In some case msf can take a long time to find the best solution (in 'gembase' and 'ordered_replicon mode').
+If timeout is set, and this step is longer than the delay msf is aborted.
+NUMBER[SUFFIX]  NUMBER seconds. SUFFIX may be 's' for seconds (the default), 'm' for minutes, 'h' for hours or 'd' for days
+for instance 1h2m3s means 1 hour 2 min 3 sec. NUMBER must be an integer
+""")
 
     parsed_args = parser.parse_args(args)
     if parsed_args.cfg_file and parsed_args.previous_run:
@@ -1116,6 +1137,7 @@ def main(args=None, loglevel=None):
     logger.info(f"\n{f' Searching systems ':#^70}")
     all_systems, rejected_candidates = search_systems(config, model_registry, models_def_to_detect, logger)
     track_multi_systems_hit = HitSystemTracker(all_systems)
+
     if config.db_type() in ('gembase', 'ordered_replicon'):
         #############################
         # Ordered/Gembase replicons #
@@ -1128,9 +1150,15 @@ def main(args=None, loglevel=None):
         all_best_solutions = []
         one_best_solution = []
 
+        timeout = config.timeout()
+        if timeout:
+            # in some case best_solution take too much time
+            # user can define a timeout by default set to 0
+            default_signal = signal.signal(signal.SIGALRM, alarm_handler)
+            signal.alarm(config.timeout())
+
         # group systems found by replicon
         # before to search best system combination
-        import time
         for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
             syst_group = list(syst_group)
             logger.info(f"Computing best solutions for {rep_name} (nb of candidate systems {len(syst_group)})")
@@ -1144,6 +1172,11 @@ def main(args=None, loglevel=None):
             # pick one in one_best_solution => best_systems
             all_best_solutions.extend(best_sol_4_1_replicon)
             one_best_solution.append(best_sol_4_1_replicon[0])
+
+        if timeout:
+            _log.debug("Cancel the time out.")
+            signal.signal(signal.SIGALRM, default_signal)
+
 
         ##############################
         # Write the results in files #
