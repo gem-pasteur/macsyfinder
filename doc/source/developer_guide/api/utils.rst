@@ -34,3 +34,7 @@ get_replicon_names
 threads_available
 =================
 .. autofunction:: macsypy.utils.threads_available
+
+parse_time
+=================
+.. autofunction:: macsypy.utils.parse_time

@@ -62,3 +62,8 @@ class SystemDetectionError(MacsypyError):
     """
     Raised when the detection of systems from Hits encountered a problem.
     """
+
+class Timeout(MacsypyError):
+    """
+    Raised when best solution reach the timeout
+    """

@@ -70,6 +70,7 @@ class TestMacsyDefaults(MacsyTest):
                          'topology_file': None,
                          'verbosity': 0,
                          'worker': 1,
+                         'timeout': 0,
                          'mandatory_weight': 1.0,
                          'accessory_weight': .5,
                          'neutral_weight': 0.0,

@@ -154,7 +154,7 @@ def find_best_solutions(systems):
         # it is important to sum the score of clusters
         # and creat a solution object only for solution I want to keep
         # because there could be lot of cliques
-        # but only few will be kept (les than 5)
+        # but only few will be kept (less than 5)
         # so the wide majority of these cliques will be thrown
         # if I create a Solution object for each clique I spend lot if time and memory to
         # instanciate new object to thrown them few line later :-(

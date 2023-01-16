@@ -170,3 +170,40 @@ def indent_wrapper(ElementTree):
         _indent_children(tree, 0)
 
     return indent
+
+
+def parse_time(user_time):
+    """
+    parse user friendly time and return it in seconds
+    user time supports units as s h m d for sec min hour day
+    or a combination of them
+    1h10m50s means 1 hour 10 minutes 50 seconds
+    all terms will be converted in seconds and added
+
+    :param user_time:
+    :type user_time: int or str
+    :return: seconds
+    :rtype: int
+    :raise: ValueError if user_time is not parseable
+    """
+    try:
+        user_time = int(user_time)
+        return user_time # user time has no units , it's seconds
+    except ValueError:
+        pass
+    import re
+    parts_converter = {'s': lambda x: x,
+                       'm': lambda x: x * 60,
+                       'h': lambda x: x * 3600,
+                       'd': lambda x: x * 86400
+    }
+    time_parts = re.findall(r'(\d+)(\D+)', user_time)
+    time = 0
+    for value, unit in time_parts:
+        unit = unit.strip().lower()
+        try:
+            time += parts_converter[unit](int(value))
+        except KeyError:
+            raise ValueError("Not valid time format. Units allowed h/m/s.")
+    return time
+
