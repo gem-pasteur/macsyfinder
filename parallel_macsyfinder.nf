@@ -32,6 +32,7 @@ params['res-search-suffix']= false
 params['res-extract-suffix']= false
 params['profile-suffix']= false
 params['worker']= false
+params['timeout']= false
 params['outdir']= false
 params['cfg-file']= false
 params['debug'] = false
@@ -75,6 +76,7 @@ res_search_suffix = params['res-search-suffix'] ? " --res-search-suffix ${params
 res_extract_suffix = params['res-extract-suffix'] ? " --res-extract-suffix ${params['res-extract-suffix']}" : ''
 profile_suffix = params['profile-suffix'] ? " --profile-suffix ${params['profile-suffix']}" : ''
 worker = params['worker'] ? " --worker ${params['worker']}" : ''
+timeout = params['timeout'] ? " --timeout ${params['timeout']}" : ''
 cfg_file= params['cfg-file'] ? " --cfg-file ${params['cfg-file']}" : ''
 debug = params.debug ? ' -vv' : ''
 
@@ -110,6 +112,7 @@ parallel_macsyfinder available options:
  --profile-suffix
  --cfg-file
  --worker
+ --timeout
  --outdir
 Please refer to the MacSyFinder documentation (https://macsyfinder.readthedocs.io) for the meaning of each options.
 '''
@@ -196,6 +199,7 @@ process macsyfinder{
         val profile_suffix
         val cfg_file
         val debug
+        val timeout
     output:
         path("macsyfinder-${one_replicon.baseName}")
 
@@ -203,7 +207,7 @@ process macsyfinder{
         """
         macsyfinder --sequence-db ${one_replicon} --db-type ${db_type} ${replicon_topology}${topology_file}${models_dir}${models}${inter_gene_max_space}${min_mandatory_genes_required}${min_genes_required}${max_nb_genes}${multi_loci} \
 ${hmmer}${e_value_search} ${no_cut_ga}${i_value_sel} ${coverage_profile}${mandatory_weight}${accessory_weight}${exchangeable_weight}${redundancy_penalty}${out_of_cluster} \
-${index_dir}${res_search_suffix}${res_extract_suffix}${profile_suffix} --worker ${task.cpus} --mute${debug} --out-dir macsyfinder-${one_replicon.baseName}
+${index_dir}${res_search_suffix}${res_extract_suffix}${profile_suffix}${timeout} --worker ${task.cpus}  --mute${debug} --out-dir macsyfinder-${one_replicon.baseName}
 """
 }
 

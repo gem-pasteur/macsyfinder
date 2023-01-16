@@ -68,7 +68,7 @@ headers are provided with the content of the lines in the file.
     without processing of the potential overlaps between candidate systems. This set of possible candidate systems are also given
     under the form of a tabulated file in `all_systems.tsv`.
 
-  * :ref:`rejected_candidates.txt<rejected_candidates_txt>` - This file lists candidate clusters (or a combination of clusters) components that were rejected by
+  * :ref:`rejected_candidates.tsv<rejected_candidates_tsv>` and :ref:`rejected_candidates.txt<rejected_candidates_txt>` - This file lists candidate clusters (or a combination of clusters) components that were rejected by
     MacSyFinder during the search process, and were thus not assigned to a candidate system. This set of clusters are also given under the form of tabulated file
     :ref:`rejected_candidates.tsv<rejected_candidates_tsv>`.
 
@@ -518,6 +518,32 @@ Example of `rejected_candidates.tsv`
 .. literalinclude:: ../_static/rejected_candidates.tsv
    :language: text
    :lines:  1-33
+
+
+
+.. note::
+
+    If a timeout is set to limit the time spent in best solution resolution. This timeout is applied per replicon.
+    If the best solution resolution reach the timeout for a replicon, a WARNING is raised in `macysfinder.log`
+    The warning is also report in the following files:
+
+    * :ref:`best_solution.tsv<best_solution_tsv>`
+    * :ref:`best_solution_summary.tsv<best_solution_summary_tsv>`
+    * :ref:`all_best_solutions.tsv<best_solution_tsv>`
+    * :ref:`all_systems.tsv<all_systems_tsv>` and :ref:`all_systems.txt<all_systems_txt>`
+    * :ref:`rejected_candidates.tsv<rejected_candidates_tsv>` and :ref:`rejected_candidates.txt<rejected_candidates_txt>`
+
+    for instance
+
+    .. code-block:: text
+
+        # macsyfinder 20230113.dev
+        # models : TXSScan-1.1.1
+        # macsyfinder --sequence-db tests/data/base/gembase.fasta --db-type gembase --models TXSScan -w 15 --timeout 1s
+        #
+        # WARNING: The replicon 'GCF_000006765' has been SKIPPED. Cannot be solved before timeout.
+        #
+        replicon  hit_id ...
 
 
 .. _unordered_outputs:

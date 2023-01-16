@@ -31,6 +31,8 @@ import os
 import argparse
 import logging
 import itertools
+import signal
+import time
 
 from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
@@ -47,18 +49,28 @@ from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
-from macsypy.error import OptionError
+from macsypy.error import OptionError, Timeout
 from macsypy import cluster
 from macsypy.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
     sort_model_hits, compute_best_MSHit
 from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, HitSystemTracker
-from macsypy.utils import get_def_to_detect, get_replicon_names
+from macsypy.utils import get_def_to_detect, get_replicon_names, parse_time
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
 from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
     TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCandidatesSerializer
+
+
+def alarm_handler(signum, frame):
+    _log.critical("Timeout is over. Aborting")
+    for h in _log.handlers:
+        h.flush()
+    # I exit wit 0 otherwise in parallel_msf the job will be retry
+    # on an other machine. we don't want that.
+    #sys.exit(0)
+    raise Timeout()
 
 
 def get_version_message():
@@ -447,6 +459,16 @@ Conflicts with options:
     # by developers to generate portable data set, as for example test
     # data set, which are used on many different machines (using previous-run option).
 
+    general_options.add_argument("--timeout",
+                                 action='store',
+                                 default=None,
+                                 type=parse_time,
+                                 help="""In some case msf can take a long time to find the best solution (in 'gembase' and 'ordered_replicon mode').
+The timeout is per replicon. If this step reach the timeout, the replicon is skipped (for gembase mode the analyse of other replicons continue).
+NUMBER[SUFFIX]  NUMBER seconds. SUFFIX may be 's' for seconds (the default), 'm' for minutes, 'h' for hours or 'd' for days
+for instance 1h2m3s means 1 hour 2 min 3 sec. NUMBER must be an integer.
+""")
+
     parsed_args = parser.parse_args(args)
     if parsed_args.cfg_file and parsed_args.previous_run:
         # argparse does not allow to have mutually exclusive option  in a argument group
@@ -682,7 +704,7 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
     return likely_systems, rejected_hits
 
 
-def _outfile_header(models_fam_name, models_version):
+def _outfile_header(models_fam_name, models_version, skipped_replicons=None):
     """
     :return: The 2 first lines of each result file
     :rtype: str
@@ -690,10 +712,15 @@ def _outfile_header(models_fam_name, models_version):
     header = f"""# macsyfinder {macsypy.__version__}
 # models : {models_fam_name}-{models_version}
 # {' '.join(sys.argv)}"""
+    if skipped_replicons:
+        header += "\n#"
+        for rep_name in skipped_replicons:
+            header += f"\n# WARNING: The replicon '{rep_name}' has been SKIPPED. Cannot be solved before timeout."
+        header += "\n#"
     return header
 
 
-def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker, sys_file):
+def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker, sys_file, skipped_replicons=None):
     """
     print systems occurrences in a file in tabulated  format
 
@@ -703,9 +730,11 @@ def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker,
     :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
     :type sys_file: file object
+    :param skipped_replicons: the replicons name for which msf reach the timeout
+    :type skipped_replicons: list of str
     :return: None
     """
-    print(_outfile_header(models_fam_name, models_version), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
     if systems:
         print("# Systems found:", file=sys_file)
         print(TsvSystemSerializer.header, file=sys_file)
@@ -719,7 +748,7 @@ def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker,
         print("# No Systems found", file=sys_file)
 
 
-def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker, sys_file):
+def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker, sys_file, skipped_replicons=None):
     """
     print systems occurrences in a file in human readable format
 
@@ -729,10 +758,12 @@ def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker,
     :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
     :type sys_file: file object
+    :param skipped_replicons: the replicons name for which msf reach the timeout
+    :type skipped_replicons: list of str
     :return: None
     """
 
-    print(_outfile_header(models_fam_name, models_version), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
     if systems:
         print("# Systems found:\n", file=sys_file)
         for system in systems:
@@ -747,7 +778,7 @@ def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker,
         print("# No Systems found", file=sys_file)
 
 
-def solutions_to_tsv(models_fam_name, models_version, solutions, hit_system_tracker, sys_file):
+def solutions_to_tsv(models_fam_name, models_version, solutions, hit_system_tracker, sys_file, skipped_replicons=None):
     """
     print solution in a file in tabulated format
     A solution is a set of systems which represents an optimal combination of
@@ -759,9 +790,11 @@ def solutions_to_tsv(models_fam_name, models_version, solutions, hit_system_trac
     :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
     :type sys_file: file object
+    :param skipped_replicons: the replicons name for which msf reach the timeout
+    :type skipped_replicons: list of str
     :return: None
     """
-    print(_outfile_header(models_fam_name, models_version), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
     if solutions:
         sol_serializer = TsvSolutionSerializer()
         print("# Systems found:", file=sys_file)
@@ -805,7 +838,8 @@ def _loner_warning(systems):
     return warnings
 
 
-def summary_best_solution(models_fam_name, models_version, best_solution_path, sys_file, models_fqn, replicon_names):
+def summary_best_solution(models_fam_name, models_version, best_solution_path, sys_file, models_fqn, replicon_names,
+                          skipped_replicons=None):
     """
     do a summary of best_solution in best_solution_path and write it on out_path
     a summary compute the number of system occurrence for each model and each replicon
@@ -823,8 +857,10 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
     :type models_fqn: list of string
     :param replicon_names: the name of the replicons used
     :type replicon_names: list of string
+    :param skipped_replicons: the replicons name for which msf reach the timeout
+    :type skipped_replicons: list of str
     """
-    print(_outfile_header(models_fam_name, models_version), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
 
     def fill_replicon(summary):
         """
@@ -925,7 +961,8 @@ def multisystems_to_tsv(models_fam_name, models_version, systems, sys_file):
         print("# No Multisystems found", file=sys_file)
 
 
-def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candidates, cand_file):
+def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candidates, cand_file,
+                               skipped_replicons=None):
     """
     print rejected clusters in a file
 
@@ -933,9 +970,11 @@ def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candida
     :type rejected_candidates: list of :class:`macsypy.system.RejectedCandidate` objects
     :param cand_file: The file where to write down the rejected candidates
     :type cand_file: file object
+    :param skipped_replicons: the replicons name for which msf reach the timeout
+    :type skipped_replicons: list of str
     :return: None
     """
-    print(_outfile_header(models_fam_name, models_version), file=cand_file)
+    print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=cand_file)
     if rejected_candidates:
         print("# Rejected candidates:\n", file=cand_file)
         for rej_cand in rejected_candidates:
@@ -945,11 +984,20 @@ def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candida
         print("# No Rejected candidates", file=cand_file)
 
 
-def rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candidates, cand_file):
+def rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candidates, cand_file,
+                               skipped_replicons=None):
     """
+    print rejected clusters in a file
 
+    :param rejected_candidates: list of candidates which does not contitute a system
+    :type rejected_candidates: list of :class:`macsypy.system.RejectedCandidate` objects
+    :param cand_file: The file where to write down the rejected candidates
+    :type cand_file: file object
+    :param skipped_replicons: the replicons name for which msf reach the timeout
+    :type skipped_replicons: list of str
+    :return: None
     """
-    print(_outfile_header(models_fam_name, models_version), file=cand_file)
+    print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=cand_file)
     if rejected_candidates:
         serializer = TsvRejectedCandidatesSerializer()
         rej_candidates = serializer.serialize(rejected_candidates)
@@ -1116,6 +1164,8 @@ def main(args=None, loglevel=None):
     logger.info(f"\n{f' Searching systems ':#^70}")
     all_systems, rejected_candidates = search_systems(config, model_registry, models_def_to_detect, logger)
     track_multi_systems_hit = HitSystemTracker(all_systems)
+    skipped_replicons = []
+    
     if config.db_type() in ('gembase', 'ordered_replicon'):
         #############################
         # Ordered/Gembase replicons #
@@ -1130,13 +1180,29 @@ def main(args=None, loglevel=None):
 
         # group systems found by replicon
         # before to search best system combination
-        import time
         for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
             syst_group = list(syst_group)
             logger.info(f"Computing best solutions for {rep_name} (nb of candidate systems {len(syst_group)})")
-            find_best_solutions_start = time.perf_counter()
-            best_sol_4_1_replicon, score = find_best_solutions(syst_group)
-            find_best_solutions_stop = time.perf_counter()
+
+            timeout = config.timeout()
+            if timeout:
+                # in some case best_solution take too much time
+                # user can define a timeout by default set to 0
+                default_signal = signal.signal(signal.SIGALRM, alarm_handler)
+                signal.alarm(config.timeout())
+                _log.debug(f"set time out to {timeout} sec.")
+            try:
+                find_best_solutions_start = time.perf_counter()
+                best_sol_4_1_replicon, score = find_best_solutions(syst_group)
+                find_best_solutions_stop = time.perf_counter()
+            except Timeout:
+                _log.error(f"The {rep_name} cannot be solved in time skip it!")
+                skipped_replicons.append(rep_name)
+                continue
+            if timeout:
+                _log.debug("Cancel the time out.")
+                signal.signal(signal.SIGALRM, default_signal)
+
             logger.info(f"It took {find_best_solutions_stop - find_best_solutions_start:.2f}sec to find best solution"
                         f" ({score:.2f}) for replicon {rep_name}")
             # if several solutions are equivalent same number of system and score is same
@@ -1144,6 +1210,8 @@ def main(args=None, loglevel=None):
             # pick one in one_best_solution => best_systems
             all_best_solutions.extend(best_sol_4_1_replicon)
             one_best_solution.append(best_sol_4_1_replicon[0])
+
+
 
         ##############################
         # Write the results in files #
@@ -1153,10 +1221,12 @@ def main(args=None, loglevel=None):
         tsv_filename = os.path.join(config.working_dir(), "all_systems.tsv")
 
         with open(system_filename, "w") as sys_file:
-            systems_to_txt(models_fam_name, models_version, all_systems, track_multi_systems_hit, sys_file)
+            systems_to_txt(models_fam_name, models_version, all_systems, track_multi_systems_hit, sys_file,
+                           skipped_replicons=skipped_replicons)
 
         with open(tsv_filename, "w") as tsv_file:
-            systems_to_tsv(models_fam_name, models_version, all_systems, track_multi_systems_hit, tsv_file)
+            systems_to_tsv(models_fam_name, models_version, all_systems, track_multi_systems_hit, tsv_file,
+                           skipped_replicons=skipped_replicons)
 
         cluster_filename = os.path.join(config.working_dir(), "rejected_candidates.txt")
         with open(cluster_filename, "w") as clst_file:
@@ -1167,17 +1237,20 @@ def main(args=None, loglevel=None):
 
         cluster_filename = os.path.join(config.working_dir(), "rejected_candidates.tsv")
         with open(cluster_filename, "w") as clst_file:
-            rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candidates, clst_file)
+            rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candidates, clst_file,
+                                       skipped_replicons=skipped_replicons)
 
         tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
         with open(tsv_filename, "w") as tsv_file:
-            solutions_to_tsv(models_fam_name, models_version, all_best_solutions, track_multi_systems_hit, tsv_file)
+            solutions_to_tsv(models_fam_name, models_version, all_best_solutions, track_multi_systems_hit, tsv_file,
+                             skipped_replicons=skipped_replicons)
 
         best_solution_filename = os.path.join(config.working_dir(), "best_solution.tsv")
         with open(best_solution_filename, "w") as best_solution_file:
             one_best_solution = [syst for sol in one_best_solution for syst in sol]
             one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
-            systems_to_tsv(models_fam_name, models_version, one_best_solution, track_multi_systems_hit, best_solution_file)
+            systems_to_tsv(models_fam_name, models_version, one_best_solution, track_multi_systems_hit, best_solution_file,
+                           skipped_replicons=skipped_replicons)
 
         loners_filename = os.path.join(config.working_dir(), "best_solution_loners.tsv")
         with open(loners_filename, "w") as loners_file:
@@ -1191,7 +1264,8 @@ def main(args=None, loglevel=None):
         with open(summary_filename, "w") as summary_file:
             models_fqn = [m.fqn for m in models_def_to_detect]
             replicons_names = get_replicon_names(config.sequence_db(), config.db_type())
-            summary_best_solution(models_fam_name, models_version, best_solution_filename, summary_file, models_fqn, replicons_names)
+            summary_best_solution(models_fam_name, models_version, best_solution_filename, summary_file, models_fqn, replicons_names,
+                                  skipped_replicons=skipped_replicons)
 
     else:
         #######################
@@ -1222,7 +1296,9 @@ def main(args=None, loglevel=None):
 
         if not (all_systems or rejected_candidates):
             logger.info("No Systems found in this dataset.")
-
+    if skipped_replicons:
+        for rep_name in skipped_replicons:
+            _log.error(f"The replicon {rep_name} cannot be solved before timeout. SKIP IT.")
     logger.info("END")
 
 
