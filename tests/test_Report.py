@@ -370,7 +370,7 @@ class TestGembaseHMMReport(TestReport):
         for t in threading.enumerate():
             if t is main_thread:
                 continue
-        t.join()
+            t.join()
 
         #          gene, model,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
         #          profile_coverage, sequence_coverage, begin_match, end_match
@@ -462,7 +462,7 @@ class TestOrderedHMMReport(TestReport):
         for t in threading.enumerate():
             if t is main_thread:
                 continue
-        t.join()
+            t.join()
         replicon_name = os.path.splitext(os.path.basename(self.seq_db))[0]
         #          gene, model,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
         #          profile_coverage, sequence_coverage, begin_match, end_match
@@ -542,7 +542,7 @@ class TestGeneralHMMReport(TestReport):
         for t in threading.enumerate():
             if t is main_thread:
                 continue
-        t.join()
+            t.join()
 
         #          gene, model,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
         #          profile_coverage, sequence_coverage, begin_match, end_match
