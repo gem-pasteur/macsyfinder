@@ -1188,7 +1188,7 @@ def main(args=None, loglevel=None):
             if timeout:
                 # in some case best_solution take too much time
                 # user can define a timeout by default set to 0
-                default_signal = signal.signal(signal.SIGALRM, alarm_handler)
+                signal.signal(signal.SIGALRM, alarm_handler)
                 signal.alarm(config.timeout())
                 _log.debug(f"set time out to {timeout} sec.")
             try:
@@ -1201,7 +1201,8 @@ def main(args=None, loglevel=None):
                 continue
             if timeout:
                 _log.debug("Cancel the time out.")
-                signal.signal(signal.SIGALRM, default_signal)
+                signal.alarm(0)
+                signal.signal(signal.SIGALRM, signal.SIG_DFL)
 
             logger.info(f"It took {find_best_solutions_stop - find_best_solutions_start:.2f}sec to find best solution"
                         f" ({score:.2f}) for replicon {rep_name}")
