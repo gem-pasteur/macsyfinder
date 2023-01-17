@@ -873,7 +873,7 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
         """
         index_name = summary.index.name
         computed_replicons = set(summary.index)
-        lacking_replicons = set(replicon_names) - computed_replicons
+        lacking_replicons = set(replicon_names) - computed_replicons - set(skipped_replicons)
         lacking_replicons = sorted(lacking_replicons)
         rows = pd.DataFrame({models: [0 * len(lacking_replicons)] for models in summary.columns}, index=lacking_replicons)
         summary = pd.concat([summary, rows], ignore_index=False)
@@ -899,7 +899,13 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
     try:
         best_solution = pd.read_csv(best_solution_path, sep='\t', comment='#')
     except pd.errors.EmptyDataError:
-        summary = pd.DataFrame(0, index=replicon_names, columns=models_fqn)
+        # No results Found
+        # may be there is no results so I have to report
+        # may be the solution cannot be found So I do not to report (Warning)
+        # may be the both one replicon without results one replicon not solved
+        # So I have to report only the replicon without results
+        replicon_to_report = list(set(replicon_names) - set(skipped_replicons))
+        summary = pd.DataFrame(0, index=replicon_to_report, columns=models_fqn)
         summary.index.name = 'replicon'
     else:
         selection = best_solution[['replicon', 'sys_id', 'model_fqn']]
