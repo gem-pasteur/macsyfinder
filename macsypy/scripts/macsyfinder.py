@@ -860,6 +860,7 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
     :param skipped_replicons: the replicons name for which msf reach the timeout
     :type skipped_replicons: list of str
     """
+    skipped_replicons = skipped_replicons if skipped_replicons else set()
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
 
     def fill_replicon(summary):
