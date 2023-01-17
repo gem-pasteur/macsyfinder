@@ -1,0 +1,55 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/T2SS_gspN.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/T2SS_gspN.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T2SS_gspN  [M=112]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+  ------ inclusion threshold ------
+      0.081   12.6   0.4       0.18   11.5   0.4    1.6  1  PSAV001.0321.00001.C001_01299  C ATG TGA 1368310 1368774 Valid 
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAV001.0321.00001.C001_01299  C ATG TGA 1368310 1368774 Valid BKM03_RS06960 465 @WP_005736466.1@ BKM03_RS06960 1 136
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.5   0.4   1.5e-05      0.18       2      70 ..       4      95 ..       3     124 .. 0.61
+
+  Alignments for each domain:
+  == domain 1  score: 11.5 bits;  conditional E-value: 1.5e-05
+                      T2SS_gspN  2 alvvvlfilfllitlPadaverrlvaesaavglae....lsgslwrgalsgvtltgvrltk..................... 58
+                                   +++++l+ l+ll+ +Pa+a++ +l+a +a++g+ +     ++s     +++++   +rl+                      
+  PSAV001.0321.00001.C001_01299  4 GILLILTWLILLLRYPAKALQVSLAA-AAGLGIVAaiviWQDSR---EARQLDHLEMRLSYdpqgcpadrplqvsitntnqv 81
+                                   67899999****************87.77777665555522222...23344444444444555555555555555555555 PP
+
+                      T2SS_gspN 59 ..gsvawrlslfpl 70
+                                      +++wr+   ++
+  PSAV001.0321.00001.C001_01299 82 alQELRWRIAAYAP 95
+                                   55677777766665 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (112 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       631  (0.0515902); expected 244.6 (0.02)
+Passed bias filter:                      360  (0.0294334); expected 244.6 (0.02)
+Passed Vit filter:                        28  (0.00228926); expected 12.2 (0.001)
+Passed Fwd filter:                         2  (0.000163519); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.08
+# Mc/sec: 5497.62
+//
+[ok]

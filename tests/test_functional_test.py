@@ -31,6 +31,8 @@ import inspect
 import unittest
 import itertools
 
+import colorlog
+
 from tests import MacsyTest, which
 from macsypy.scripts import macsyfinder
 from macsypy.error import OptionError
@@ -49,7 +51,10 @@ class Test(MacsyTest):
     def tearDownClass(cls) -> None:
         if os.path.exists(cls._index_dir):
             shutil.rmtree(cls._index_dir)
-            pass
+
+        logger = colorlog.getLogger('macsypy')
+        for h in logger.handlers[:]:
+            logger.removeHandler(h)
 
     def setUp(self):
         self.tmp_dir = tempfile.gettempdir()
@@ -110,6 +115,39 @@ class Test(MacsyTest):
                           self.multisystems,
                           self.summary,
                           self.rejected_candidates_tsv):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        expected_result = self.find_data(expected_result_dir, self.rejected_candidates_txt)
+        get_results = os.path.join(self.out_dir, self.rejected_candidates_txt)
+        self.assertFileEqual(expected_result, get_results, comment="#")
+
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_timeout(self):
+        """
+
+        """
+        expected_result_dir = self.find_data("functional_test_timeout")
+        args = "--db-type=gembase " \
+               f"--models-dir={self.find_data('models')} " \
+               "--models TFF-SF all " \
+               "--out-dir={out_dir} " \
+               f"--index-dir {self._index_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path " \
+               "--timeout 2 "
+        with self.catch_io(out=True, err=True):
+            with self.catch_log() as log:
+                self._macsyfinder_run(args)
+                log_msg = log.get_value().strip()
+        self.assertEqual(log_msg,
+                         """Timeout is over. Aborting
+The THHY002.0321.00001.C001 cannot be solved in time skip it!
+The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""")
+        # test only if THHY002.0321.00001.C001 has_been skipped
+        for file_name in (self.summary,):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)

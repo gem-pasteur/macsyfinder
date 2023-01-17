@@ -1,0 +1,57 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG02421.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG02421.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG02421  [M=190]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+  ------ inclusion threshold ------
+      0.021   15.1   0.1      0.021   15.1   0.1    1.8  2  PSAV001.0321.00001.C001_04169  C ATG TGA 4659001 4659465 Valid 
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAV001.0321.00001.C001_04169  C ATG TGA 4659001 4659465 Valid BKM03_RS22325 465 @WP_003381490.1@ BKM03_RS22325 1 465
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -4.8   3.1         1   1.2e+04      15      27 ..      67      79 ..      64      81 .. 0.82
+   2 ?   15.1   0.1   1.7e-06     0.021      12      58 ..      84     129 ..      84     150 .. 0.83
+
+  Alignments for each domain:
+  == domain 1  score: -4.8 bits;  conditional E-value: 1
+                     arCOG02421 15 AVVSgfagGlvgs 27
+                                   AVV g++g+ +g+
+  PSAV001.0321.00001.C001_04169 67 AVVGGVGGSAIGG 79
+                                   8999999998875 PP
+
+  == domain 2  score: 15.1 bits;  conditional E-value: 1.7e-06
+                     arCOG02421  12 IIAAVVSgfagGlvgs.qqkaPqasidvkisnsgtasgsefgltfehl 58 
+                                    ++AAV+ ++agGl gs +++  + +  v+i++++++  ++++++++++
+  PSAV001.0321.00001.C001_04169  84 VVAAVIGAVAGGLLGSaTEEGLTRTQGVEITVREDD--GSMRAYVQQV 129
+                                    69**************8899************9966..5555555444 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (190 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       393  (0.0321315); expected 244.6 (0.02)
+Passed bias filter:                      304  (0.0248549); expected 244.6 (0.02)
+Passed Vit filter:                        42  (0.0034339); expected 12.2 (0.001)
+Passed Fwd filter:                         1  (8.17595e-05); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.06
+# Mc/sec: 11877.57
+//
+[ok]

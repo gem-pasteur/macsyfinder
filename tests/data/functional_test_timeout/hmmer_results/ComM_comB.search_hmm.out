@@ -1,0 +1,73 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/ComM_comB.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/ComM_comB.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       ComM_comB  [M=191]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+      5e-06   25.8   2.7    7.7e-06   25.2   2.7    1.3  1  THHY002.0321.00001.C001_00918  C ATG TGA 1010866 1012005 Valid 
+  ------ inclusion threshold ------
+      0.018   14.2   2.1      0.039   13.1   2.1    1.5  1  PSAV001.0321.00001.C001_03466  D ATG TGA 3879096 3880268 Valid 
+
+
+Domain annotation for each sequence (and alignments):
+>> THHY002.0321.00001.C001_00918  C ATG TGA 1010866 1012005 Valid TTHT_RS04595 1140 @WP_201328862.1@ TTHT_RS04595 1 1010
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   25.2   2.7   1.3e-09   7.7e-06      12     148 ..      35     174 ..      28     203 .. 0.79
+
+  Alignments for each domain:
+  == domain 1  score: 25.2 bits;  conditional E-value: 1.3e-09
+                      ComM_comB  12 aekeis..lstratvepsrilaniqstsnqrilanhleenklvkkGellvqyqegaegvqaeayasqldllkdqkkkley 89 
+                                     +k+is  +s   tv+p + ++ + s    +i+   ++e   vkkG+ll + +++    ++ +  +    lk qk  le 
+  THHY002.0321.00001.C001_00918  35 EKKDISetISGTGTVKPVKTVT-VMSEIMGKIVELPVKEGDFVKKGDLLCRIDDKNYKSEVSRLKA---ELKKQKLVLEQ 110
+                                    5677744499999999999876.667788899999***************9988776665555444...4799******* PP
+
+                      ComM_comB  90 lqkslkeGedqfpeedkf...G..yqetfrdyisqaeslrssvsqqnatiasqnaaasqsqaei 148
+                                    l+  lk+ e+ f  + k    G   +e f + ++q es + +vsqq+  i   na  +++  ++
+  THHY002.0321.00001.C001_00918 111 LKIDLKQSEKDFKRKLKLfksGilSKEEFENAKNQFESKKLNVSQQEFYIKQANANLAKALENL 174
+                                    ************9987642324324899**********************99999877765555 PP
+
+>> PSAV001.0321.00001.C001_03466  D ATG TGA 3879096 3880268 Valid BKM03_RS18505 1173 @WP_003383201.1@ BKM03_RS18505 1 38
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.1   2.1   6.4e-06     0.039      28     143 ..      59     183 ..      40     203 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: 13.1 bits;  conditional E-value: 6.4e-06
+                      ComM_comB  28 rilaniqstsnqrilanhleenklvkkGellvqyqegaegvqaeayasqldllkdqkk..........kleylqkslkeG 97 
+                                    r   ++ s +  +il  h +   +vk+G+llv+ +  ++ ++ +a    +d lk q +          + +  qksl  G
+  PSAV001.0321.00001.C001_03466  59 RSYVDVGSQASGQILKIHAQVGDQVKEGDLLVEIDPSTQKAKLDAARYAIDNLKAQLQeqralhelaeQKQQRQKSLAAG 138
+                                    4456788888999*********************9999999888877777877776431111111111344557888888 PP
+
+                      ComM_comB  98 edqfpeedkfGyqetfrdyisqaeslrssvsqqnatiasqnaaasq 143
+                                        + ed    q  fr  +++++ +++++ +  a++ s +aa   
+  PSAV001.0321.00001.C001_03466 139 GATRA-EDVQAAQSEFRATQARVDMFKAQILEAQAALRSDEAALGY 183
+                                    77655.577889999***************9999999999999765 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (191 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       373  (0.0304963); expected 244.6 (0.02)
+Passed bias filter:                      236  (0.0192952); expected 244.6 (0.02)
+Passed Vit filter:                        19  (0.00155343); expected 12.2 (0.001)
+Passed Fwd filter:                         2  (0.000163519); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.05
+# Mc/sec: 14980.58
+//
+[ok]

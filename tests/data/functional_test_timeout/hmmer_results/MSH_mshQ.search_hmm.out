@@ -1,0 +1,94 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/MSH_mshQ.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/MSH_mshQ.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       MSH_mshQ  [M=1008]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+    9.4e-97  324.6  32.2      4e-96  322.5  32.2    1.8  1  THHY002.0321.00001.C001_00629  D TTG TGA 697747 702351 Valid TT
+
+
+Domain annotation for each sequence (and alignments):
+>> THHY002.0321.00001.C001_00629  D TTG TGA 697747 702351 Valid TTHT_RS03145 4605 @WP_201328589.1@ TTHT_RS03145 1 697747
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  322.5  32.2  3.3e-100     4e-96     309    1008 .]     855    1532 ..     818    1532 .. 0.86
+
+  Alignments for each domain:
+  == domain 1  score: 322.5 bits;  conditional E-value: 3.3e-100
+                       MSH_mshQ  309 lstnlyeidnfkitGcaltsariglq.....seieysai.........idhyridhsgqglTCqaepvtikacadasc 372 
+                                      +t    +d+fki G al+ ++i        s+i+y +          +++++i+h+g+g+ C +e v i++c+  ++
+  THHY002.0321.00001.C001_00629  855 GQTIGTLVDEFKIFGYALSDSQIAYIynnesSGINYDGTsrdcngcsnVSYIEITHDGSGIVCYPERVHIRICDSGGN 932 
+                                     56666679***************9887888899999999***********************************9999 PP
+
+                       MSH_mshQ  373 telftdpvnatLnsvsavngWvggn..............tvtfsgGkttaqLrnnqpgtvnvdvsgsvpkakeltlck 436 
+                                     t + +   + tL+++ + + W ++                 t  +G++t q+     g v++ + ++  ++  ++ ++
+  THHY002.0321.00001.C001_00629  933 TVT-NYTGTITLTTSTGHGTWYSSYtgvtnddppqgtltDNTSDDGQATYQFVAADEGEVTLFLRDTHLETLTIYATD 1009
+                                     999.4444556768999999*999999*********997566678***********************9998888888 PP
+
+                       MSH_mshQ  437 angg.esaetctlnfadsGflld.vpdkvagksetvtikAvrkddssqqC.vpaftgvtksvnfwsdyidPatgvyad 511 
+                                     + +  ++++++ l f +sGf++d + ++++gk+ +vt+kAv +d ++  C + ++ g tk++   + y +P+tg+  +
+  THHY002.0321.00001.C001_00629 1010 GSADsTGHDSGALVFRASGFVFDsIANQISGKDFSVTVKAVGEDPETGDCtILDYDG-TKTITAYVIYQNPSTGS--T 1084
+                                     66666799***************9*************************96689999.**************998..9 PP
+
+                       MSH_mshQ  512 kvavnsaaidkssgetslsLtFdangeatlnvnYpDaGqlsLnaryegsgdeeglelaGssd.fvsrPakLvisatkg 588 
+                                      +++n++ i+ ss +t++sL+F+ ng+ t+++nYpDaGq+s++  ++ s       ++G+s+ fv++P ++ +sat g
+  THHY002.0321.00001.C001_00629 1085 DLKINGTDIS-SS-GTNISLNFS-NGQCTFTANYPDAGQISIR--FTDSA----EDITGDSNlFVVKPFGFYVSAT-G 1152
+                                     999******9.45.59******7.9*************99875..55443....3478**999*************.* PP
+
+                       MSH_mshQ  589 lcasadascsvfkkAGedFnvsvkavaweanddkDlsnN.............avtpnFvretessitlesslvaPsgG 653 
+                                     ++ + das++vfkkAGe+F++ vkav w+++dd+   +N              +tpn+     + ++l sslvaPsgG
+  THHY002.0321.00001.C001_00629 1153 NPGASDASGAVFKKAGEQFELVVKAVNWQSADDS---DNdgvpddgadlsdnSITPNYS----ETVNLISSLVAPSGG 1223
+                                     ******************************9994...444445556666666*******....99************* PP
+
+                       MSH_mshQ  654 qaatlsavsydhtaiansvnavqqsvseVGvfrltatlaasgYlgktiaaassntiGRFtParFsvvsevllpac.gg 730 
+                                     + +tls +s + + +++s     ++++eVG++++tat+++  Ylg   ++  s+++GRF+P+ F        pac   
+  THHY002.0321.00001.C001_00629 1224 ASGTLSPTSLNLSGGQGSDS--IMTFTEVGIITITATDSD--YLGAGSINGNSGNVGRFIPDSFRFDNVTQNPACsSV 1297
+                                     ********998886666654..57899**********999..***99******************9777789***888 PP
+
+                       MSH_mshQ  731 fsYlgqplgvataPeltvqarnasgqvtkNYlgdfarlseelvsrnsadasdgaaldlesgevepvtrswssgqlkvn 808 
+                                     f+Y gq + v       ++a+n +g++t+NY+gdfa+l+ + +s +     ++++  + + +v++ t +  +gq++ +
+  THHY002.0321.00001.C001_00629 1298 FTYGGQNFTVDV----SLSAVNSNGDITQNYTGDFAKLDFSGLSCSA--IINSSTSGDGTLNVNSTTINFNNGQTSFT 1369
+                                     **********88....**********************999888877..33334444466667777777777766665 PP
+
+                       MSH_mshQ  809 eqltykreaapeaPFtaelelgldvsdledsdgisladangtecnavqldevsggldlryGRlvledayGpes.aelr 885 
+                                       + y+  ++  +P +  l++ ++    +dsd +s ++     + +++         +ryGRl++e+ y p   + l+
+  THHY002.0321.00001.C001_00629 1370 LPCNYNW-SDEHNPEN--LAIKIT---ATDSDNVSGEG-----ISNYV--------PFRYGRLRVENGYAPSAdQSLT 1428
+                                     5555554.45567766..666666...55677666444.....66555........8***********998765**** PP
+
+                       MSH_mshQ  886 levqveYydGakFetNteDnCtaisalsevvlsdadlsvskaGsttsvkvaadttkstlknGesalkfappgqgetgl 963 
+                                     l+v +eYy+ + + +N++DnCt +   s+v+ls+ + + ++aG+t      +    st++nGe  l++ ppg g++g+
+  THHY002.0321.00001.C001_00629 1429 LNVFAEYYQDGDYLLNSDDNCTTYTD-SDVSLSNYSGN-LDAGET------SIVNYSTISNGEGSLTLSPPGVGNEGT 1498
+                                     *************************9.******99988.9****6......3355689******************** PP
+
+                       MSH_mshQ  964 vkvtlevPtWLkddwqgdgalddspsaratFGvyrGnDRvIyrrE 1008
+                                     v+  +  P ++    + +       s+ratFG yrGnD +I ++E
+  THHY002.0321.00001.C001_00629 1499 VDLIFSAPYYM----HFA-------SGRATFGIYRGNDNIISWEE 1532
+                                     ********333....333.......799***************98 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (1008 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       259  (0.0211757); expected 244.6 (0.02)
+Passed bias filter:                      209  (0.0170877); expected 244.6 (0.02)
+Passed Vit filter:                        15  (0.00122639); expected 12.2 (0.001)
+Passed Fwd filter:                         1  (8.17595e-05); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.22u 0.00s 00:00:00.22 Elapsed: 00:00:00.23
+# Mc/sec: 17521.44
+//
+[ok]

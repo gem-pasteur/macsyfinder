@@ -1,0 +1,11 @@
+# gene: Tad_tadC extract from functional_test_timeout/hmmer_results/Tad_tadC.search_hmm.out hmm output
+# profile length= 154
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+PSAV001.0321.00001.C001_04761	PSAV001.0321.00001.C001	4450	295	Tad_tadC	5.300e-09	35.800	0.896	0.458	108	242
+PSAV001.0321.00001.C001_04762	PSAV001.0321.00001.C001	4451	294	Tad_tadC	6.000e-34	116.800	1.000	0.524	130	283
+THHY002.0321.00001.C001_00721	THHY002.0321.00001.C001	5941	286	Tad_tadC	2.300e-15	56.400	0.903	0.476	96	231
+THHY002.0321.00001.C001_00722	THHY002.0321.00001.C001	5942	307	Tad_tadC	9.200e-26	90.200	0.961	0.479	147	293
+VEEI001.0321.00001.C001_00262	VEEI001.0321.00001.C001	7577	290	Tad_tadC	1.700e-13	50.400	0.857	0.438	105	231
+VEEI001.0321.00001.C001_00263	VEEI001.0321.00001.C001	7578	313	Tad_tadC	2.600e-32	111.500	1.000	0.486	152	303

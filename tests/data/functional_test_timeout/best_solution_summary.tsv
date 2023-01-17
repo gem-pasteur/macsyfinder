@@ -1,0 +1,9 @@
+# macsyfinder 20230117.dev
+# models : TFF-SF-0.0b2
+# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all -w 5 --sequence-db tests/data/base/gembase_with_slow_genome.fa --timeout 2 --out-dir functional_test_timeout
+#
+# WARNING: The replicon 'THHY002.0321.00001.C001' has been SKIPPED. Cannot be solved before timeout.
+#
+replicon	TFF-SF/T2SS	TFF-SF/T4P	TFF-SF/T4bP	TFF-SF/Tad	TFF-SF/Archaeal-T4P	TFF-SF/ComM	TFF-SF/MSH
+PSAV001.0321.00001.C001	1	2	0	1	0	0	0
+VEEI001.0321.00001.C001	2	2	1	0	0	0	0

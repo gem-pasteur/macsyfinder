@@ -1,0 +1,104 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG02298_PP.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG02298_PP.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG02298  [M=219]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+  ------ inclusion threshold ------
+      0.017   14.3   8.5      0.057   12.6   8.4    1.9  1  THHY002.0321.00001.C001_00712  D ATG TAG 779036 779587 Valid TT
+      0.021   14.0   3.1      0.038   13.2   3.1    1.6  1  PSAV001.0321.00001.C001_04743  D ATG TGA 5283064 5283546 Valid 
+       0.07   12.3   5.8      0.081   12.1   5.8    1.1  1  PSAV001.0321.00001.C001_00873  D ATG TGA 927746 928267 Valid ls
+      0.087   12.0   1.1       0.11   11.7   1.1    1.2  1  THHY002.0321.00001.C001_00134  C ATG TAA 135621 135953 Valid TT
+
+
+Domain annotation for each sequence (and alignments):
+>> THHY002.0321.00001.C001_00712  D ATG TAG 779036 779587 Valid TTHT_RS03565 552 @WP_201328666.1@ TTHT_RS03565 1 779036 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.6   8.4   1.9e-05     0.057       2      93 ..      17      93 ..      14     177 .. 0.71
+
+  Alignments for each domain:
+  == domain 1  score: 12.6 bits;  conditional E-value: 1.9e-05
+                     arCOG02298  2 sylDiktrrvcselWlplaalgaallay...dalsledaassgisylvsallsllvvlalayllwelglfggaDakaliaia 80
+                                   ++ D+ + ++ +++ +p++ lg+++ ++   d +              s ++ llv ++l+++ + +g++gg+D+k + ai 
+  THHY002.0321.00001.C001_00712 17 AITDVMYGKIFNKVTYPAILLGLIINLFlgkDNF-------------QSSVIGLLVAFILFLIVFMIGGLGGGDVKLMAAIG 85
+                                   6889999999999999999999999985333333.............2223667777889999999************8888 PP
+
+                     arCOG02298 81 vlfPlfpvalPll 93
+                                    +   +p    ++
+  THHY002.0321.00001.C001_00712 86 AIKG-YP----FV 93
+                                   8873.22....22 PP
+
+>> PSAV001.0321.00001.C001_04743  D ATG TGA 5283064 5283546 Valid BKM03_RS25410 483 @WP_005736760.1@ BKM03_RS25410 1 528
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.2   3.1   1.2e-05     0.038       4     108 ..      16     111 ..       4     159 .. 0.68
+
+  Alignments for each domain:
+  == domain 1  score: 13.2 bits;  conditional E-value: 1.2e-05
+                     arCOG02298   4 lDiktrrvcselWlplaalgaallaydalsledaassgi.sylvsallsllvvlalayllwelglfggaDakaliaiavl 82 
+                                    +D++++++++ l l ++al + +la   l++       + +  +  +l ll+ lal +  ++lg++g+aD+k + a+a++
+  PSAV001.0321.00001.C001_04743  16 QDARRKEIPNGLTLGAIALTTGYLAVTGLTW-------LgAPPLEGALALLLALALTLPGYTLGRLGAADVKLMTALALA 88 
+                                    7888888999988888888888888766633.......11223344466777788888899**************99999 PP
+
+                     arCOG02298  83 fPlfpva.l.Pllgatvfalsvllnall 108
+                                      +   + l  ++g     ++vl+ al+
+  PSAV001.0321.00001.C001_04743  89 SNTA--YlLcTFIG---AGVAVLAWALI 111
+                                    8443..32212222...33344444444 PP
+
+>> PSAV001.0321.00001.C001_00873  D ATG TGA 927746 928267 Valid lspA 522 @BKM03_RS04710@WP_003381294.1@ BKM03_RS04710 1 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.1   5.8   2.7e-05     0.081      30      83 ..      36     110 ..       6     163 .. 0.52
+
+  Alignments for each domain:
+  == domain 1  score: 12.1 bits;  conditional E-value: 2.7e-05
+                     arCOG02298  30 dalsledaa.....ssgi..sylvsal.................lsllvvlalayllwelglfggaDakaliaiavlf 83 
+                                    +alsl +++     + ++  +y   ++                 + l+ v++ a+l ++l+++g  D++  ia+a+  
+  PSAV001.0321.00001.C001_00873  36 NALSLYQQIivipdYFSWtlAY---NTgaafsfladgagwqrwlFALIAVVVSAVLVVWLKRLGRDDTWLAIALALVL 110
+                                    1112211112222211111122...1133333334444444444666889999**********************988 PP
+
+>> THHY002.0321.00001.C001_00134  C ATG TAA 135621 135953 Valid TTHT_RS00670 333 @WP_201328113.1@ TTHT_RS00670 1 135621 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.7   1.1   3.5e-05      0.11      70     123 ..       3      94 ..       1     107 [. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 11.7 bits;  conditional E-value: 3.5e-05
+                     arCOG02298  70 gaDakaliaiavlfPlf................................pva.....l.Pllgat.vfalsvllnallla 110
+                                     +D   +i++++lfPl+                                  +     l P+lg + +f+++++l   +la
+  THHY002.0321.00001.C001_00134   3 KGDNFFVIIFSFLFPLMligwgiresltksqkkvetegllfnliflfalI-FlkylsLiPILGIVfSFLFTIFLWFYVLA 81 
+                                    578889999*****999999999999999999999999999988876651.14555537***99977************* PP
+
+                     arCOG02298 111 lvfplvlflrnla 123
+                                    +v+++++   ++ 
+  THHY002.0321.00001.C001_00134  82 FVVIVIIKSNDIE 94 
+                                    *999987666655 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (219 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       777  (0.0635271); expected 244.6 (0.02)
+Passed bias filter:                      742  (0.0606655); expected 244.6 (0.02)
+Passed Vit filter:                        89  (0.00727659); expected 12.2 (0.001)
+Passed Fwd filter:                        31  (0.00253454); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):               4  [number of targets reported over threshold]
+# CPU time: 0.20u 0.00s 00:00:00.20 Elapsed: 00:00:00.23
+# Mc/sec: 3796.41
+//
+[ok]

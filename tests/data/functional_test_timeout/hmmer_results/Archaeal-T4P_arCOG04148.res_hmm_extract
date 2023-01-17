@@ -1,0 +1,10 @@
+# gene: Archaeal-T4P_arCOG04148 extract from functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG04148.search_hmm.out hmm output
+# profile length= 221
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+PSAV001.0321.00001.C001_01724	PSAV001.0321.00001.C001	1593	492	Archaeal-T4P_arCOG04148	7.400e-09	35.000	0.882	0.390	254	445
+PSAV001.0321.00001.C001_01724	PSAV001.0321.00001.C001	1593	492	Archaeal-T4P_arCOG04148	1.300e-10	40.800	0.959	0.431	17	228
+PSAV001.0321.00001.C001_02925	PSAV001.0321.00001.C001	2722	501	Archaeal-T4P_arCOG04148	2.900e-10	39.600	0.977	0.443	19	240
+PSAV001.0321.00001.C001_02925	PSAV001.0321.00001.C001	2722	501	Archaeal-T4P_arCOG04148	1.600e-17	63.300	0.968	0.423	260	471
+PSAV001.0321.00001.C001_04660	PSAV001.0321.00001.C001	4351	455	Archaeal-T4P_arCOG04148	1.800e-07	30.500	0.575	0.237	78	185
