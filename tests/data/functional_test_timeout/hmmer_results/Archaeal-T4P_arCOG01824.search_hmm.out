@@ -1,0 +1,50 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG01824.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG01824.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG01824  [M=110]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+  ------ inclusion threshold ------
+      0.045   13.3   0.1      0.085   12.4   0.1    1.4  1  THHY002.0321.00001.C001_01165  D ATG TAA 1268504 1268938 Valid 
+
+
+Domain annotation for each sequence (and alignments):
+>> THHY002.0321.00001.C001_01165  D ATG TAA 1268504 1268938 Valid TTHT_RS05830 435 @WP_201327040.1@ TTHT_RS05830 1 12685
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.4   0.1     7e-06     0.085       7      73 ..      12      82 ..       8      87 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 12.4 bits;  conditional E-value: 7e-06
+                     arCOG01824  7 lfiallvaayvlygavlssyetvqaaqedrtdlqleqlntkieitsvsv..dsnn..tlnvtvtNtGstsl 73
+                                   l+++++++++++  a+ + +++  +a +  ++  ++ ++++i i +++   +++    ++ ++t tG++sl
+  THHY002.0321.00001.C001_01165 12 LVMVIVILGILAAVAMPKYQDMREEALRASAKATISNIRSAIAIFYAKSalNGTPvfPTTAELTATGQQSL 82
+                                   57889999999999999***************************666653366647999999999999987 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (110 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       817  (0.0667975); expected 244.6 (0.02)
+Passed bias filter:                      663  (0.0542065); expected 244.6 (0.02)
+Passed Vit filter:                        72  (0.00588668); expected 12.2 (0.001)
+Passed Fwd filter:                         4  (0.000327038); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.08
+# Mc/sec: 5520.85
+//
+[ok]

@@ -1,0 +1,6 @@
+# gene: MSH_mshP extract from functional_test_timeout/hmmer_results/MSH_mshP.search_hmm.out hmm output
+# profile length= 59
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+THHY002.0321.00001.C001_01295	THHY002.0321.00001.C001	6497	118	MSH_mshP	9.600e-08	31.200	0.966	0.483	7	63

@@ -1,0 +1,61 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG03511.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG03511.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG03511  [M=105]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+    5.8e-14   51.5   0.8    4.5e-13   48.7   0.3    2.9  2  THHY002.0321.00001.C001_01290  C ATG TAA 1405834 1410219 Valid 
+
+
+Domain annotation for each sequence (and alignments):
+>> THHY002.0321.00001.C001_01290  C ATG TAA 1405834 1410219 Valid TTHT_RS06455 4386 @WP_201327159.1@ TTHT_RS06455 1 1405
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   48.7   0.3   3.6e-17   4.5e-13      10      93 ..      63     148 ..      51     157 .. 0.82
+   2 ?   -3.0   0.0      0.44   5.4e+03      43      66 ..     980    1001 ..     976    1009 .. 0.68
+
+  Alignments for each domain:
+  == domain 1  score: 48.7 bits;  conditional E-value: 3.6e-17
+                     arCOG03511  10 tdltnylikvtldpsslrat...tkarpd.ggdvrFvdedgtelLkYwieewdsasqravvwVkvpylpasgsktiylYy 85 
+                                     + tn+ + +++  + l+      ++++d g d++F+ +dg++ L+Y ie++d+a+ + v wVk+p    s+ ++iy+Yy
+  THHY002.0321.00001.C001_01290  63 SSQTNFPVLINITDTDLKTVtngGHVQNDnGWDIKFTASDGSTDLSYEIEKYDPATGELVAWVKIP--TLSTGTIIYMYY 140
+                                    56789999999998888877778566555166**********************************..778999****** PP
+
+                     arCOG03511  86 gnpaatse 93 
+                                    g+ + ++ 
+  THHY002.0321.00001.C001_01290 141 GSVSVNTD 148
+                                    *9988776 PP
+
+  == domain 2  score: -3.0 bits;  conditional E-value: 0.44
+                     arCOG03511   43 dedgtelLkYwieewdsasqravv 66  
+                                     d dg+++LkY+ + +     ++ v
+  THHY002.0321.00001.C001_01290  980 DPDGGSILKYYWDFDG--DGNTDV 1001
+                                     889******9988433..334444 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (105 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       183  (0.014962); expected 244.6 (0.02)
+Passed bias filter:                      147  (0.0120186); expected 244.6 (0.02)
+Passed Vit filter:                        13  (0.00106287); expected 12.2 (0.001)
+Passed Fwd filter:                         2  (0.000163519); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.04
+# Mc/sec: 8845.28
+//
+[ok]

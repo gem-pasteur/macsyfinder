@@ -1,0 +1,1087 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/T4P_pilT.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/T4P_pilT.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilT.mafft-edit  [M=341]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+   1.9e-181  602.0   1.1   2.2e-181  601.8   1.1    1.0  1  VEEI001.0321.00001.C001_01767  D GTG TGA 1882425 1883468 Valid 
+     3e-179  594.7   0.3   3.4e-179  594.5   0.3    1.0  1  PSAV001.0321.00001.C001_04959  C ATG TGA 5550792 5551826 Valid 
+   1.5e-152  507.0   1.2   1.8e-152  506.7   1.2    1.0  1  THHY002.0321.00001.C001_01619  C ATG TAA 1753487 1754620 Valid 
+   1.9e-137  457.3   2.4   2.2e-137  457.1   2.4    1.0  1  THHY002.0321.00001.C001_01093  D ATG TAA 1190909 1192066 Valid 
+   1.2e-116  388.9   0.0   1.4e-116  388.7   0.0    1.0  1  VEEI001.0321.00001.C001_01769  D ATG TGA 1884538 1885674 Valid 
+   1.4e-115  385.4   0.1   1.7e-115  385.1   0.1    1.0  1  PSAV001.0321.00001.C001_02574  D ATG TAA 2803893 2805062 Valid 
+   6.2e-101  337.2   0.0   7.3e-101  337.0   0.0    1.0  1  VEEI001.0321.00001.C001_00291  D ATG TGA 305907 307073 Valid VE
+    5.2e-56  189.5   3.7    3.1e-51  173.8   0.9    2.2  2  THHY002.0321.00001.C001_01162  D ATG TAA 1263585 1265234 Valid 
+    4.9e-52  176.5   0.3    6.8e-52  176.0   0.3    1.2  1  VEEI001.0321.00001.C001_01835  C ATG TGA 1955324 1956712 Valid 
+    1.2e-51  175.2   1.2    1.2e-50  171.9   0.5    2.1  2  THHY002.0321.00001.C001_01421  C ATG TAG 1543405 1545078 Valid 
+    4.2e-51  173.4   1.0    5.9e-48  163.0   0.2    2.2  2  THHY002.0321.00001.C001_01620  C ATG TAA 1754658 1756379 Valid 
+    1.5e-48  165.0   0.2    5.2e-48  163.2   0.1    1.7  2  PSAV001.0321.00001.C001_02322  D ATG TGA 2501306 2503030 Valid 
+    1.5e-46  158.4   0.8    1.7e-45  154.9   0.7    2.0  2  VEEI001.0321.00001.C001_00725  C ATG TGA 767373 769109 Valid ta
+    1.9e-43  148.2   2.1    1.9e-43  148.2   2.1    2.1  2  THHY002.0321.00001.C001_00872  D ATG TAG 952401 953921 Valid TT
+      2e-43  148.2   0.3    1.4e-41  142.1   0.1    2.2  2  PSAV001.0321.00001.C001_00333  C ATG TGA 350651 352435 Valid BK
+    9.8e-43  145.9   0.8    1.9e-42  144.9   0.0    1.8  3  VEEI001.0321.00001.C001_04074  D ATG TAA 4306503 4308239 Valid 
+      5e-42  143.5   0.1      2e-41  141.6   0.0    1.8  2  VEEI001.0321.00001.C001_04178  C ATG TGA 4408331 4410124 Valid 
+      2e-41  141.6   1.2      3e-41  141.0   0.3    1.6  2  PSAV001.0321.00001.C001_01020  C ATG TAA 1063085 1064779 Valid 
+    4.2e-36  124.1   0.1    6.2e-36  123.5   0.1    1.2  1  VEEI001.0321.00001.C001_01694  D ATG TAG 1805121 1806971 Valid 
+    2.8e-24   85.2   0.0    3.8e-24   84.8   0.0    1.1  1  VEEI001.0321.00001.C001_03859  C ATG TGA 4093819 4095549 Valid 
+    1.5e-15   56.5   0.8    2.1e-15   56.0   0.8    1.1  1  THHY002.0321.00001.C001_02080  C ATG TAA 2243240 2244673 Valid 
+    1.4e-13   50.0   0.4      2e-13   49.5   0.4    1.2  1  THHY002.0321.00001.C001_00720  D ATG TGA 786222 787901 Valid ta
+    1.2e-12   47.0   0.4    1.7e-12   46.4   0.4    1.2  1  PSAV001.0321.00001.C001_04760  D ATG TGA 5306623 5307879 Valid 
+      3e-12   45.7   0.2    4.5e-12   45.1   0.2    1.2  1  VEEI001.0321.00001.C001_00261  D ATG TGA 269110 271029 Valid ta
+    0.00096   17.7   0.1     0.0037   15.8   0.0    1.8  2  PSAV001.0321.00001.C001_01323  D ATG TGA 1397548 1398312 Valid 
+     0.0016   17.0   0.1     0.0023   16.4   0.1    1.3  1  THHY002.0321.00001.C001_00864  D ATG TAA 942750 943664 Valid ft
+     0.0018   16.8   0.1     0.0044   15.5   0.0    1.5  2  VEEI001.0321.00001.C001_03474  C ATC TAG 3718049 3718819 Valid 
+     0.0029   16.1   2.0        6.4    5.1   0.1    4.1  4  VEEI001.0321.00001.C001_00320  D ATG TGA 343477 349494 Valid VE
+     0.0032   16.0   0.0     0.0046   15.4   0.0    1.2  1  VEEI001.0321.00001.C001_03871  C ATG TGA 4106466 4107470 Valid 
+     0.0047   15.4   0.0     0.0068   14.9   0.0    1.2  1  PSAV001.0321.00001.C001_02590  D ATG TGA 2822893 2823678 Valid 
+     0.0057   15.1   0.0     0.0057   15.1   0.0    1.9  2  VEEI001.0321.00001.C001_01571  D ATG TGA 1678525 1679889 Valid 
+  ------ inclusion threshold ------
+      0.022   13.2   0.0      0.035   12.6   0.0    1.2  1  VEEI001.0321.00001.C001_03628  C ATG TGA 3845988 3846716 Valid 
+      0.023   13.1   0.2        2.4    6.5   0.0    2.2  2  VEEI001.0321.00001.C001_00901  D ATG TGA 956512 958113 Valid VE
+      0.027   12.9   0.0      0.041   12.3   0.0    1.2  1  VEEI001.0321.00001.C001_01272  C ATG TGA 1351454 1352191 Valid 
+       0.03   12.8   0.0      0.048   12.1   0.0    1.2  1  PSAV001.0321.00001.C001_05037  C ATG TGA 5640908 5642524 Valid 
+      0.032   12.7   0.1      0.069   11.6   0.0    1.5  2  PSAV001.0321.00001.C001_04228  D ATG TAA 4720109 4720843 Valid 
+      0.032   12.7   0.1      0.054   11.9   0.1    1.2  1  VEEI001.0321.00001.C001_01839  D ATG TGA 1958780 1961113 Valid 
+      0.037   12.5   0.0      0.062   11.7   0.0    1.3  1  PSAV001.0321.00001.C001_02693  D ATG TGA 2937320 2938048 Valid 
+      0.038   12.4   0.0      0.063   11.7   0.0    1.3  1  VEEI001.0321.00001.C001_00756  C ATG TGA 792582 793316 Valid VE
+       0.07   11.6   0.1        2.8    6.3   0.0    2.1  2  VEEI001.0321.00001.C001_04648  C ATG TGA 4939985 4940761 Valid 
+
+
+Domain annotation for each sequence (and alignments):
+>> VEEI001.0321.00001.C001_01767  D GTG TGA 1882425 1883468 Valid VEIS_RS08235 1044 @WP_011809450.1@ VEIS_RS08235 1 1882
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  601.8   1.1  7.1e-184  2.2e-181       1     341 []       2     343 ..       2     343 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 601.8 bits;  conditional E-value: 7.1e-184
+                pilT.mafft-edit   1 dieeLlelavkkkasdlhlsaGlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkglarf 80 
+                                    di++Ll++ vk+kasdlhlsaGlpp+irv+Gd+r+++ +al++++v+++vy+i+sd+qrk +ee+le+d+sfe++glarf
+  VEEI001.0321.00001.C001_01767   2 DITQLLAFGVKNKASDLHLSAGLPPMIRVHGDVRRINIDALDHKAVHSMVYDIMSDSQRKIYEEFLEIDFSFEIEGLARF 81 
+                                    699***************************************************************************** PP
+
+                pilT.mafft-edit  81 rvnvfkqkrgaaavlrtipskiltleelglpevlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedP 160
+                                    rvn+f+q+rg+aav+rtipskiltle+l++p+++++la k+rGLvLvtGPtGsGksttlaa+v+ +ne+e+ hilt+edP
+  VEEI001.0321.00001.C001_01767  82 RVNAFTQNRGVAAVFRTIPSKILTLEQLNAPRIFADLALKPRGLVLVTGPTGSGKSTTLAAMVNFLNETEYGHILTVEDP 161
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 161 iefvheskkslvnqrevgkdtksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhtssaaktidrii 240
+                                    iefvheskk+l+nqrevg +t sf++aLksaLredPd+iLvGe+rdletirla+taaetGhlvfgtLhtssaaktidrii
+  VEEI001.0321.00001.C001_01767 162 IEFVHESKKCLINQREVGPMTLSFSAALKSALREDPDAILVGEMRDLETIRLAMTAAETGHLVFGTLHTSSAAKTIDRII 241
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 241 dvfpaeekeqvrvqlsesLqavisqtLvk.kkgggrvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsl 319
+                                    dvfp+eeke++r++lsesLqavisqtL+k ++g+grvaahei+++t+airnlire+kv q+ysaiqtg+++Gmqtldq+l
+  VEEI001.0321.00001.C001_01767 242 DVFPSEEKEMIRAMLSESLQAVISQTLCKtRDGAGRVAAHEIMLGTSAIRNLIREAKVPQMYSAIQTGNSVGMQTLDQNL 321
+                                    *****************************55566********************************************** PP
+
+                pilT.mafft-edit 320 adllkegliteeeaaekakkpe 341
+                                    +dl+k+++it +ea++kak+pe
+  VEEI001.0321.00001.C001_01767 322 TDLVKSKIITPAEARSKAKIPE 343
+                                    ******************9986 PP
+
+>> PSAV001.0321.00001.C001_04959  C ATG TGA 5550792 5551826 Valid BKM03_RS26540 1035 @WP_003377212.1@ BKM03_RS26540 1 55
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  594.5   0.3  1.1e-181  3.4e-179       1     341 []       2     342 ..       2     342 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 594.5 bits;  conditional E-value: 1.1e-181
+                pilT.mafft-edit   1 dieeLlelavkkkasdlhlsaGlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkglarf 80 
+                                    di+eLl++++k++asdlhlsaGlpp+irvdGd+r+++ ++l+++evkal+y+i++d+qr+++ee+le+d+sfev+g+arf
+  PSAV001.0321.00001.C001_04959   2 DITELLAFSAKQGASDLHLSAGLPPMIRVDGDVRRINLPPLDAKEVKALIYDIMTDRQRQDFEERLETDFSFEVPGVARF 81 
+                                    699***************************************************************************** PP
+
+                pilT.mafft-edit  81 rvnvfkqkrgaaavlrtipskiltleelglpevlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedP 160
+                                    rvn+f+q+rga+av+rtipskil++e+lg+ +v++++++  rGL+LvtGPtGsGksttlaa++d++n ++++hiltiedP
+  PSAV001.0321.00001.C001_04959  82 RVNAFNQNRGAGAVFRTIPSKILSMEDLGMGSVFRKITDVARGLILVTGPTGSGKSTTLAAMIDYLNCNKHHHILTIEDP 161
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 161 iefvheskkslvnqrevgkdtksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhtssaaktidrii 240
+                                    iefvheskk+lvnqrev++dt  f++aL+saLredPdviLvGe+rdletirlaltaaetGhlvfgtLht+saaktidri+
+  PSAV001.0321.00001.C001_04959 162 IEFVHESKKCLVNQREVHRDTLGFSEALRSALREDPDVILVGEMRDLETIRLALTAAETGHLVFGTLHTTSAAKTIDRIV 241
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 241 dvfpaeekeqvrvqlsesLqavisqtLvkkkgggrvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsla 320
+                                    dvfpa+ek+++r++lsesL+av+sq+L+kk gggrvaahei+++tpairnliredkvaq+ys+iqtg++lGmqtld++la
+  PSAV001.0321.00001.C001_04959 242 DVFPAQEKSMIRSMLSESLHAVVSQALLKKVGGGRVAAHEIMMGTPAIRNLIREDKVAQMYSSIQTGGSLGMQTLDMCLA 321
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 321 dllkegliteeeaaekakkpe 341
+                                    dl+k+glit+e+a+e+ak p+
+  PSAV001.0321.00001.C001_04959 322 DLVKRGLITRESARERAKVPD 342
+                                    ****************99875 PP
+
+>> THHY002.0321.00001.C001_01619  C ATG TAA 1753487 1754620 Valid TTHT_RS08100 1134 @WP_201327471.1@ TTHT_RS08100 1 1753
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  506.7   1.2  5.9e-155  1.8e-152       2     340 ..       5     345 ..       4     346 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 506.7 bits;  conditional E-value: 5.9e-155
+                pilT.mafft-edit   2 ieeLlelavkkkasdlhlsaGlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkglarfr 81 
+                                    +++Ll+++v+++++dlh+++ +pp+ir dG+l +l++++l+++e+k+l+y i++daq++++e++le+d+sf++k+larfr
+  THHY002.0321.00001.C001_01619   5 LSQLLKKMVESGGTDLHITTNSPPQIRKDGKLIPLKMPPLTPAETKKLIYAIMTDAQKQKFEQDLEVDFSFGIKKLARFR 84 
+                                    789***************************************************************************** PP
+
+                pilT.mafft-edit  82 vnvfkqkrgaaavlrtipskiltleelglpevlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedPi 161
+                                     nvf+q++++a ++r ip +i  + elg+p v+++l++ +rGLvLvtGPtGsGksttlaa++d++n+e++ hi+tiedP+
+  THHY002.0321.00001.C001_01619  85 ANVFHQRGAVAGAFRLIPYEIRGFRELGIPMVVEKLCELPRGLVLVTGPTGSGKSTTLAAMIDKVNRERNAHIITIEDPV 164
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 162 efvheskkslvnqrevgkdtksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhtssaaktidriid 241
+                                    e++h++kk++vnqrev++dtksf++aL++aLr+dPdv+L+Ge+rdlet+++al++aetGhl f+tLht+sa++ti+riid
+  THHY002.0321.00001.C001_01619 165 EYLHSHKKCIVNQREVNTDTKSFSRALRAALRQDPDVVLIGEMRDLETVETALKIAETGHLTFATLHTNSAVQTINRIID 244
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 242 vfpaeekeqvrvqlsesLqavisqtLvkkkgg.grvaaheiliatpairnliredkvaqiysaiqtg.aklGmqtldqsl 319
+                                    +fpa++++q+r+qls +L+ vi qtL+ k+ g grv+a eili + a+rnliredk++qiy ++qtg +k+Gmqt++qsl
+  THHY002.0321.00001.C001_01619 245 IFPAHQQQQIRTQLSFVLEGVICQTLLPKASGrGRVLALEILIPNAAVRNLIREDKIHQIYATMQTGqMKHGMQTFNQSL 324
+                                    ***************************987666**********************************789********** PP
+
+                pilT.mafft-edit 320 adllkegliteeeaaekakkp 340
+                                    a l+ +glit+e a + ++++
+  THHY002.0321.00001.C001_01619 325 ASLFLQGLITKEVALAASSNK 345
+                                    *************99988765 PP
+
+>> THHY002.0321.00001.C001_01093  D ATG TAA 1190909 1192066 Valid TTHT_RS05470 1158 @WP_201326974.1@ TTHT_RS05470 1 1190
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  457.1   2.4  7.3e-140  2.2e-137       2     341 .]       3     346 ..       2     346 .. 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 457.1 bits;  conditional E-value: 7.3e-140
+                pilT.mafft-edit   2 ieeLlelavkkkasdlhlsaGlppkirvdGdlrkl.evealeeeevkalvyeilsdaqrkeleekleldlsfevkglarf 80 
+                                    i++Ll+ a +++asdlhl +G+ p++r++G+l++l e ++l +e++ a+ +++++ +q+++++e+le+d++++v+gl+rf
+  THHY002.0321.00001.C001_01093   3 INDLLKIATQRGASDLHLKVGSYPVLRINGKLTPLtELKKLMQEDTIAMAFSLMNARQKQKFKENLEIDIAYSVPGLGRF 82 
+                                    89********************************934578**************************************** PP
+
+                pilT.mafft-edit  81 rvnvfkqkrgaaavlrtipskiltleelglpevlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedP 160
+                                    r n+f+q++++++vlr+ip+ki t++el lp+v++++++++rGLvL tG tGsGksttlaa++d in++++ehi+tiedP
+  THHY002.0321.00001.C001_01093  83 RCNIFQQRGTVGLVLRVIPVKIRTIKELLLPKVIEKICEEQRGLVLCTGTTGSGKSTTLAAMIDFINSTRTEHIITIEDP 162
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 161 iefvheskkslvnqrevgkdtksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhtssaaktidrii 240
+                                    ief+h++kks++nqre+g dt++f+naL+ aLr+dPdviLvGe+rd eti++altaaetGhlv++tLht  a +ti+rii
+  THHY002.0321.00001.C001_01093 163 IEFLHRDKKSIINQREIGVDTRDFANALRGALRQDPDVILVGEMRDYETIETALTAAETGHLVLSTLHTLDATETINRII 242
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 241 dvfpaeekeqvrvqlsesLqavisqtLvkkkgg.grvaaheiliatpairnlire.dkvaqiysaiqtg.aklGmqtldq 317
+                                    +vfp+++++q+r ql+++L+avis +Lv +++g grv a e++ +tp ir li + +k++ i++ai+ g +++Gmqt+dq
+  THHY002.0321.00001.C001_01093 243 SVFPPHQQKQIRLQLAQVLKAVISMRLVPRADGkGRVPAVEVMRVTPYIRTLIEDkEKTKLIHDAIERGtSQYGMQTFDQ 322
+                                    *****************************988779******************97469999******996789******* PP
+
+                pilT.mafft-edit 318 sladllkegliteeeaaekakkpe 341
+                                    sl  l+k+glit +ea+++a++p+
+  THHY002.0321.00001.C001_01093 323 SLYFLYKQGLITLDEAMRRASNPD 346
+                                    *******************99886 PP
+
+>> VEEI001.0321.00001.C001_01769  D ATG TGA 1884538 1885674 Valid VEIS_RS08245 1137 @WP_011809453.1@ VEIS_RS08245 1 1884
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  388.7   0.0  4.7e-119  1.4e-116       2     338 ..      10     347 ..       9     350 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 388.7 bits;  conditional E-value: 4.7e-119
+                pilT.mafft-edit   2 ieeLlelavkkkasdlhlsaGlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkglarfr 81 
+                                    i++Ll+l+v +++sdl ++a  pp i+vdG+++k+  ++l+++++++l + i+sd+q +++e + e++++++  g++rfr
+  VEEI001.0321.00001.C001_01769  10 INDLLRLMVSRNGSDLFITAEFPPAIKVDGKVTKVSPQPLSPSHTQTLARAIMSDKQVSDFERTKECNFAISPAGIGRFR 89 
+                                    799***************************************************************************** PP
+
+                pilT.mafft-edit  82 vnvfkqkrgaaavlrtipskiltleelglpevlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedPi 161
+                                    vn f q++ +++vlrtip++ +t+++l+lp+vlke++++krGL +  G tGsGk+ttlaalvd  ne++  hi+t+edP+
+  VEEI001.0321.00001.C001_01769  90 VNTFIQQGKVGMVLRTIPLTPPTIDSLKLPQVLKEVSMHKRGLCILVGATGSGKTTTLAALVDWRNENSFGHIVTVEDPV 169
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 162 efvheskkslvnqrevgkdtksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhtssaaktidriid 241
+                                    efvh++k+++v qrevg dt s+e aLk aLr+ Pdv+L+Ge+rd+et+  a+t +etGhl+++tLh++sa +++drii 
+  VEEI001.0321.00001.C001_01769 170 EFVHSHKNCVVTQREVGLDTDSWELALKNALRQAPDVVLMGEIRDRETMAHAITFSETGHLCLATLHANSANQALDRIIH 249
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 242 vfpaeekeqvrvqlsesLqavisqtLvkkkgg.grvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsla 320
+                                     fp++++ q+ + ls  L+a+isq+L+ k++g gr+aa e+l++tp i++li ++ v++i+++++++ +lGmqt+dq+l 
+  VEEI001.0321.00001.C001_01769 250 FFPEDSRIQMLMDLSLNLRALISQRLIPKQDGrGRIAAVEVLLNTPLISDLIFKGEVSEIKEIMKKSRNLGMQTFDQALF 329
+                                    ***************************988877*********************************************** PP
+
+                pilT.mafft-edit 321 dllkegliteeeaaekak 338
+                                    d + + +i+ e+a ++a 
+  VEEI001.0321.00001.C001_01769 330 DAYDAYAISYEDALRNAD 347
+                                    *************98775 PP
+
+>> PSAV001.0321.00001.C001_02574  D ATG TAA 2803893 2805062 Valid BKM03_RS13790 1170 @WP_005737916.1@ BKM03_RS13790 1 28
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  385.1   0.1  5.5e-118  1.7e-115       4     339 ..       5     340 ..       2     342 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 385.1 bits;  conditional E-value: 5.5e-118
+                pilT.mafft-edit   4 eLlelavkkkasdlhlsaGlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkglarfrvn 83 
+                                     Ll+ ++ +++sdl+ls+G pp  + +G l++l+ e+l++ ev  +   +++++q+ e+  +le++l++++ g++rfr+n
+  PSAV001.0321.00001.C001_02574   5 ALLKILASQDGSDLYLSTGAPPCAKFNGVLKPLGIETLKPGEVAVVAQGLMDEEQKLEFLRELEMNLAVSLAGIGRFRIN 84 
+                                    69999*************************************************************************** PP
+
+                pilT.mafft-edit  84 vfkqkrgaaavlrtipskiltleelglpevlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedPief 163
+                                    +f+q++ +++v r i+++i+ +e+l lp+vl ++ ++k+GLvL  G tGsGkst laal+d+ n++ + hi+tiedP+ef
+  PSAV001.0321.00001.C001_02574  85 IFMQRNEVSIVARNIKLDIPRFEDLFLPPVLLDVIMEKHGLVLFVGATGSGKSTSLAALIDYRNRNASGHIITIEDPVEF 164
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 164 vheskkslvnqrevgkdtksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhtssaaktidriidvf 243
+                                    +h++kks+vnqrevg dt+sf++aLk  Lr+ PdviL+Ge+rd+et++ al  a+tGhl ++tLh++ a +++drii+ f
+  PSAV001.0321.00001.C001_02574 165 IHRHKKSIVNQREVGVDTRSFRAALKNTLRQAPDVILIGEIRDRETMEHALAFADTGHLAISTLHANNANQALDRIINFF 244
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 244 paeekeqvrvqlsesLqavisqtLvkkkgggrvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsladll 323
+                                    p+e++ q+   l + L+a +sq+Lvk+ +g+r aa e++++tp+ir+li+ + +++++ +++++++lGmqt+d +l +l 
+  PSAV001.0321.00001.C001_02574 245 PEERRAQLLHDLGNNLKAFVSQRLVKTPDGKRRAAVEVMMGTPTIRDLIQRNELTELKGIMEKSGSLGMQTFDTALFNLA 324
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 324 kegliteeeaaekakk 339
+                                     eg+i+eeea ++a +
+  PSAV001.0321.00001.C001_02574 325 VEGAISEEEALKNADS 340
+                                    **********998865 PP
+
+>> VEEI001.0321.00001.C001_00291  D ATG TGA 305907 307073 Valid VEIS_RS01375 1167 @WP_011808086.1@ VEIS_RS01375 1 305907
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  337.0   0.0  2.4e-103  7.3e-101       2     338 ..       4     340 ..       3     343 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 337.0 bits;  conditional E-value: 2.4e-103
+                pilT.mafft-edit   2 ieeLlelavkkkasdlhlsaGlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkglarfr 81 
+                                    +e +l+l+ +k+asd+ lsa  p+ ++++G+ +++++++l +++ ++l+ eil  ++ +elee+ el++ + ++g++rfr
+  VEEI001.0321.00001.C001_00291   4 MERILRLMNEKGASDVFLSANAPALLKINGECMPINNQILPTDAPRNLLSEILPPNRIEELEETGELNMGLPLDGVGRFR 83 
+                                    67899*************************************************************************** PP
+
+                pilT.mafft-edit  82 vnvfkqkrgaaavlrtipskiltleelglpevlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedPi 161
+                                    + + +q++++a+v+r i ++++++++l+lp+vl++l ++krGL+L +G  GsGksttla+++d  n+  + hiltiedP+
+  VEEI001.0321.00001.C001_00291  84 ISAMRQSGSYAVVIRFITQQVPDFDSLNLPPVLRDLIMEKRGLILLAGASGSGKSTTLASMIDSRNTYLRGHILTIEDPV 163
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 162 efvheskkslvnqrevgkdtksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhtssaaktidriid 241
+                                    e+ +++kks++nqrevg+dt+s + aLk aLr+ PdviL+Ge+rd+et+ +a+  a+ Ghl+++tLh+s + ++++ri++
+  VEEI001.0321.00001.C001_00291 164 EYRFHNKKSIINQREVGADTQSLQIALKNALRQAPDVILIGEIRDRETMTAAIAYAQSGHLCLSTLHASNSYHALNRILS 243
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 242 vfpaeekeqvrvqlsesLqavisqtLvkkkgggrvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqslad 321
+                                     +p e + ++   l+ +L+a++sq+L+++ ++ rv a e+l++t+ i +l+ ++    +++a++++ ++G qt++ +la+
+  VEEI001.0321.00001.C001_00291 244 FYPVEVRPTMLGDLAFALRAIVSQRLLRTLDTRRVPAVEVLLNTSLIADLVEKGDFFGVKEAMEKSIAEGSQTFEAALAK 323
+                                    ******************************************************************************** PP
+
+                pilT.mafft-edit 322 llkegliteeeaaekak 338
+                                    l+ +g+i ++e  ++a 
+  VEEI001.0321.00001.C001_00291 324 LVMAGKIERKEGLAHAD 340
+                                    ********999887765 PP
+
+>> THHY002.0321.00001.C001_01162  D ATG TAA 1263585 1265234 Valid tadA 1650 @TTHT_RS05815@WP_201327037.1@ TTHT_RS05815 1
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  173.8   0.9     1e-53   3.1e-51       3     271 ..     171     440 ..     169     451 .. 0.82
+   2 !   16.4   0.1   7.6e-06    0.0023     273     337 ..     483     545 ..     468     549 .] 0.86
+
+  Alignments for each domain:
+  == domain 1  score: 173.8 bits;  conditional E-value: 1e-53
+                pilT.mafft-edit   3 eeLlelavkkkasdlhlsaG...lppkirvdGdlrklevea...leeeevkalvyeilsdaq..rkeleekleldlsfev 74 
+                                    +++l +a +k+asd+h+  G   l  ++r+dG lr+ + ++   l ++ +++   +ils+ +  +k+  ++  + l +++
+  THHY002.0321.00001.C001_01162 171 NNILMQASQKEASDIHIEPGkarLRVRYRIDGVLREQDFNIpssLASAVISR--IKILSNMDiaEKRTPQDGRIQLKLGT 248
+                                    67899999*********99833345789******987766521233333333..35666554114555666666666666 PP
+
+                pilT.mafft-edit  75 kglarfrvnvfkqkrgaaavlrtipsk..iltleelglp....evlkelakkkrGLvLvtGPtGsGksttlaalvdeine 148
+                                    k+   +rv    +  g  +v+r +++    ++l++lgl     e++k+l k+++G++LvtGPtGsGk+ttl + ++e+n+
+  THHY002.0321.00001.C001_01162 249 KDY-DIRVSTLPTIYGEKIVMRLLDKSsaSVDLHSLGLNkqhlEIIKKLLKQPNGIILVTGPTGSGKTTTLYSCLKELNS 327
+                                    554.69******************765115678888876333369**********************************8 PP
+
+                pilT.mafft-edit 149 eeaehiltiedPiefvheskkslvnqrevgkdt.ksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtL 227
+                                    e ++ i+t+edP+e+ +++    +nq +v+ ++   f+n L+++Lr+dPd+i+vGe+rd+et ++a++aa tGhlv++t+
+  THHY002.0321.00001.C001_01162 328 E-DKNIITVEDPVEYQFDN----INQVQVNPQAgITFANGLRAILRQDPDIIMVGEIRDRETAEIAVQAALTGHLVLSTI 402
+                                    7.568**********9998....8999999875279******************************************** PP
+
+                pilT.mafft-edit 228 htssaaktidriidvfpaeekeqvrvqlsesLqavisqtLvkkk 271
+                                    ht+ a  ti r++++      e     l++s++a+i q+Lv+k+
+  THHY002.0321.00001.C001_01162 403 HTNDASSTISRLVEM------EIEPFLLASSIRAIIGQRLVRKI 440
+                                    ************986......4456789*************986 PP
+
+  == domain 2  score: 16.4 bits;  conditional E-value: 7.6e-06
+                pilT.mafft-edit 273 ggrvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsladllkegliteeeaaeka 337
+                                    +gr  ++eil+ ++ ir++i e+k+ +  ++iq+++  G +t++q   + + +g+ t ee+ + +
+  THHY002.0321.00001.C001_01162 483 KGRTGIYEILVINSEIRKMIVEKKTPD--EIIQKAKLSGYKTMQQDGFQKVLDGITTLEEVLRVT 545
+                                    499*********************985..89**************99999999988888877665 PP
+
+>> VEEI001.0321.00001.C001_01835  C ATG TGA 1955324 1956712 Valid tadA 1389 @VEIS_RS08545@WP_011809516.1@ VEIS_RS08545 1
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  176.0   0.3   2.2e-54   6.8e-52       1     335 [.     110     458 ..     110     462 .] 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 176.0 bits;  conditional E-value: 2.2e-54
+                pilT.mafft-edit   1 dieeLlelavkkkasdlhls...aGlppkirvdGdlrklevealeeeevkalvyeilsdaqrk..eleekleldlsfevk 75 
+                                    +++ Ll++a++++asd+h+      ++ ++rvdG lr++ +++   ++     ++i+ d + +  +l ++  + l +++ 
+  VEEI001.0321.00001.C001_01835 110 MLNALLTQAARDGASDIHIEpyeRHSSVRFRVDGSLREVVQPNRALHAALISRLKIMADLDISekRLPQDGRISLRLGT- 188
+                                    5789**************97222456789*********99887555555555568898876650044444444444444. PP
+
+                pilT.mafft-edit  76 glarfrvnvfkqkrgaaavlrtips..kiltleelglp.ev...lkelakkkrGLvLvtGPtGsGksttlaalvdeinee 149
+                                        +rv    + +g  avlr +++    l+le +g+  ++   ++ l  +++G++LvtGPtGsGk+ttl a +  ++  
+  VEEI001.0321.00001.C001_01835 189 RAIDVRVSTLPSAHGERAVLRLLDKseSKLSLEAVGMQgQTlrrFEGLIGQPHGIILVTGPTGSGKTTTLYAALGRLDAM 268
+                                    33469******************762256889999874345111567899*************************99875 PP
+
+                pilT.mafft-edit 150 eaehiltiedPiefvheskkslvnqrevgkd.tksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLh 228
+                                     ++ i+t+edPie+        v q +v+++   sf++aL+++Lr+dPd+i++Ge+rd et ++a++a+ tGhlv++tLh
+  VEEI001.0321.00001.C001_01835 269 -RNNIMTVEDPIEYELP----GVGQTQVNSKiDLSFAKALRAILRQDPDIIMIGEIRDFETAQIAIQASLTGHLVLATLH 343
+                                    .568*********9655....5899999876258********************************************** PP
+
+                pilT.mafft-edit 229 tssaaktidriidvfpaeekeqvrvqlsesLqavisqtLvkkkgg................grvaaheiliatpairnli 292
+                                    t+ aa ++ r+ d+  +         ls+sL  v++q+Lv+k  +                gr    e+l++t+air  i
+  VEEI001.0321.00001.C001_01835 344 TNDAASAVTRLTDMGVE------PFLLSSSLLGVLAQRLVRKYCShchgngcgqcgqtgytGRTGLFELLVTTDAIRAQI 417
+                                    ***********998443......4789**************976667778999*************************** PP
+
+                pilT.mafft-edit 293 redkvaqiysaiqtg.aklGmqtldqsladllkegliteeeaae 335
+                                    ++   +     i+ +  + Gm+ +    + l+++g+ ++ee+ +
+  VEEI001.0321.00001.C001_01835 418 HNRAAE---ADIRAAaLQAGMALMRDDGERLIAAGITSREEVLR 458
+                                    986543...3444442789***************9999999876 PP
+
+>> THHY002.0321.00001.C001_01421  C ATG TAG 1543405 1545078 Valid gspE 1674 @TTHT_RS07110@WP_201327280.1@ TTHT_RS07110 1
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  171.9   0.5   3.9e-53   1.2e-50       2     269 ..     176     444 ..     175     460 .. 0.82
+   2 ?    1.7   0.0      0.22        69     274     333 ..     493     550 ..     476     557 .] 0.72
+
+  Alignments for each domain:
+  == domain 1  score: 171.9 bits;  conditional E-value: 3.9e-53
+                pilT.mafft-edit   2 ieeLlelavkkkasdlhlsa...GlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkgla 78 
+                                    +++++++av++kasd+h+      l  ++r+dG l+++++++ + +       +i+s+ +    e+++  d  ++++ l+
+  THHY002.0321.00001.C001_01421 176 VNQMISKAVEMKASDIHVEPfekILRIRFRIDGVLHDVDNPPRSIAPAVISRIKIMSKLDIA--EKRVPQDGRINLRVLG 253
+                                    5799*************97511156789************9977666655666788766554..5666666666655554 PP
+
+                pilT.mafft-edit  79 r...frvnvfkqkrgaaavlrti...pskiltleelglp....evlkelakkkrGLvLvtGPtGsGksttlaalvdeine 148
+                                    +   +rv    + +g ++v+r +   + k+ +l +lg+p    + ++ l kk++G++LvtGPtGsGk+ttl a+++ +n+
+  THHY002.0321.00001.C001_01421 254 KeidLRVSTVPTLHGESVVMRILdkgSIKLFDLGKLGFPpdtyKKFETLIKKPHGIILVTGPTGSGKTTTLYAVLNRLNS 333
+                                    43339*****************9333358889999999843333578899*****************************8 PP
+
+                pilT.mafft-edit 149 eeaehiltiedPiefvheskkslvnqrevgkd.tksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtL 227
+                                     e + i+t+edP+e+  e     vnq +v+ +    f++ L+++Lr+dPd+iLvGe+rd+et ++a++a+ tGhlv++tL
+  THHY002.0321.00001.C001_01421 334 PE-KKIITVEDPVEYQLEG----VNQIHVNPQvGLTFASGLRTILRQDPDIILVGEIRDKETAEIAIQASLTGHLVLSTL 408
+                                    75.67**********8876....7777777652479******************************************** PP
+
+                pilT.mafft-edit 228 htssaaktidriidvfpaeekeqvrvqlsesLqavisqtLvk 269
+                                    ht+ a  ++ r++d+  ++        +s++L  v++q+Lv+
+  THHY002.0321.00001.C001_01421 409 HTNDACGAVTRLLDMGVED------YLISSTLIGVLAQRLVR 444
+                                    **************85543......56899999999999997 PP
+
+  == domain 2  score: 1.7 bits;  conditional E-value: 0.22
+                pilT.mafft-edit 274 grvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsladllkegliteeea 333
+                                    gr+a+ e+++  + +r++i e+      +    + k+Gm+tl +     + +g+ t ee+
+  THHY002.0321.00001.C001_01421 493 GRMAIFELFMIDENVRKMILEKPD--TPKLKAYARKNGMRTLREDGFLKVIQGITTPEEV 550
+                                    9******************99743..3333445789999999766544455566666655 PP
+
+>> THHY002.0321.00001.C001_01620  C ATG TAA 1754658 1756379 Valid pilB 1722 @TTHT_RS08105@WP_201327472.1@ TTHT_RS08105 1
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  163.0   0.2   1.9e-50   5.9e-48       4     269 ..     193     462 ..     190     491 .. 0.83
+   2 !    9.0   0.0    0.0014      0.42     273     333 ..     509     567 ..     499     572 .. 0.80
+
+  Alignments for each domain:
+  == domain 1  score: 163.0 bits;  conditional E-value: 1.9e-50
+                pilT.mafft-edit   4 eLlelavkkkasdlhlsaG...lppkirvdGdlrklevealeeeevkalvyeils..daqrkeleekleldlsfevkgla 78 
+                                     +l  avkk+asd+h+         ++r+dG l+++ +++l+ ++  +   +i+s  d  +k+l ++  + l ++++g+ 
+  THHY002.0321.00001.C001_01620 193 MMLVDAVKKGASDVHVEPYekyYRVRFRIDGILHEVMKPPLSMKDAITSRIKIMSklDIAEKRLPQDGRIKLKMKIEGKK 272
+                                    567889**********8651115678*******************999999***84466789999999999999998887 PP
+
+                pilT.mafft-edit  79 r...frvnvfkqkrgaaavlrtipsk..iltleelglpe....vlkelakkkrGLvLvtGPtGsGksttlaalvdeinee 149
+                                    +   frv v  +  g  +v+r ++ +  +l++  lg+ +     + e  +k+ G+vLvtGPtGsGk+ tl + + ++n+ 
+  THHY002.0321.00001.C001_01620 273 KeldFRVSVLPTLFGEKIVMRILDPEklMLDMTRLGFEQesldKFTEAIRKPYGMVLVTGPTGSGKTNTLYSAISQLNTP 352
+                                    5555*******************7552367777887654222258888999***************************87 PP
+
+                pilT.mafft-edit 150 eaehiltiedPiefvheskkslvnqrevgkd.tksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLh 228
+                                    e + i+t edP+ef        +nq +v+ +    f++aL+s Lr+dP++iLvGe+rd et ++a++aa tGhlv++tLh
+  THHY002.0321.00001.C001_01620 353 E-TNIMTAEDPVEFNLPG----INQVNVRDEiGLTFASALRSFLRQDPNIILVGEIRDFETAEIAIKAALTGHLVLSTLH 427
+                                    6.67**********7765....6677776542589********************************************* PP
+
+                pilT.mafft-edit 229 tssaaktidriidvfpaeekeqvrvqlsesLqavisqtLvk 269
+                                    t+ a  ti r++++  +         +++s++ + +q+Lv+
+  THHY002.0321.00001.C001_01620 428 TNDAPSTISRLMNMGIE------PFLVATSVNLICAQRLVR 462
+                                    ***********986322......233455555555555555 PP
+
+  == domain 2  score: 9.0 bits;  conditional E-value: 0.0014
+                pilT.mafft-edit 273 ggrvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsladllkegliteeea 333
+                                    +grv  +e++ +t+ai++li  + +a   +  +++ k+Gm tl +s    +k+g+ + ee+
+  THHY002.0321.00001.C001_01620 509 KGRVGLYEVMEVTDAIKDLILSGATA--LDLREQAIKEGMITLRRSGLIKIKAGITSIEEV 567
+                                    49*******************99876..466678999******998777777777777666 PP
+
+>> PSAV001.0321.00001.C001_02322  D ATG TGA 2501306 2503030 Valid gspE 1725 @BKM03_RS12420@WP_032633800.1@ BKM03_RS12420
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  163.2   0.1   1.7e-50   5.2e-48       5     273 ..     197     465 ..     193     481 .. 0.84
+   2 ?   -1.2   0.0       1.7   5.3e+02     274     315 ..     508     547 ..     500     566 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 163.2 bits;  conditional E-value: 1.7e-50
+                pilT.mafft-edit   5 Llelavkkkasdlhls...aGlppkirvdGdlrklevealeeeevkalvyeils..daqrkeleekleldlsfevkglar 79 
+                                    +l+ av+++asd+h+    + l+ ++r+dG l++ e ++ ++++     ++i+   d  +++l ++  + l ++ k+l  
+  PSAV001.0321.00001.C001_02322 197 ILQRAVEQRASDIHIEpfeSQLKVRYRIDGVLHEAEAPPSSSSAAVISRVKIMArlDIAERRLPQDGRIMLRIQGKEL-D 275
+                                    6899**********8533378999***************998888888888887234555566666666666666554.6 PP
+
+                pilT.mafft-edit  80 frvnvfkqkrgaaavlrtipskiltle..elglp....evlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaeh 153
+                                    +rv    ++ g ++v+r ++ + ++++  +lg+     + + ++ ++++G++LvtGPtGsGk+ttl + +  +n+ e   
+  PSAV001.0321.00001.C001_02322 276 LRVSTVPTSFGESVVMRLLDRQTINFDfpSLGFDgerlDEFLDVLERPHGILLVTGPTGSGKTTTLYTALSRLNTAEC-K 354
+                                    9******************9999887744565533222568899******************************8765.6 PP
+
+                pilT.mafft-edit 154 iltiedPiefvheskkslvnqrevgkd.tksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhtssa 232
+                                    i+t+edP+e+  e     +nq +v+ +   +f+ aL+s++r+dPdvi++Ge+rdlet r+a++ + tGhlv++tLht+sa
+  PSAV001.0321.00001.C001_02322 355 IITVEDPVEYQLEG----INQIQVKPSiGLDFAGALRSIVRQDPDVIMIGEMRDLETCRIAIQSSLTGHLVLSTLHTNSA 430
+                                    **********8776....8999999762589************************************************* PP
+
+                pilT.mafft-edit 233 aktidriidvfpaeekeqvrvqlsesLqavisqtLvkkkgg 273
+                                    a  i r++d+  ++        ++++++ +++q+Lv++ + 
+  PSAV001.0321.00001.C001_02322 431 AASITRLLDMGVES------YLIASTVNGILAQRLVRRLDP 465
+                                    *********85433......467888999999999999876 PP
+
+  == domain 2  score: -1.2 bits;  conditional E-value: 1.7
+                pilT.mafft-edit 274 grvaaheiliatpairnl.iredkvaqiysaiqtgaklGmqtl 315
+                                    gr a+ e+l+ ++ +r l +r +  + +++a + g   G++tl
+  PSAV001.0321.00001.C001_02322 508 GRSAITELLVMNEELRSLlMRHADASTLEEAARRG---GLRTL 547
+                                    899************99625777777777776665...44554 PP
+
+>> VEEI001.0321.00001.C001_00725  C ATG TGA 767373 769109 Valid tadA 1737 @VEIS_RS03380@WP_011808484.1@ VEIS_RS03380 1 7
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  154.9   0.7   5.6e-48   1.7e-45       4     270 ..     197     463 ..     194     475 .. 0.77
+   2 ?    1.3   0.0       0.3        92     271     315 ..     506     549 ..     494     574 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 154.9 bits;  conditional E-value: 5.6e-48
+                pilT.mafft-edit   4 eLlelavkkkasdlhls...aGlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkglar. 79 
+                                     ++  +++ +asd+hl     Gl  ++r+dG +++ e  + + ++  +  +++l   +    e +l  d  ++++ ++r 
+  VEEI001.0321.00001.C001_00725 197 TIIGRVIDLRASDIHLEpfdDGLHVRYRIDGVIHPGELVPPRLSAAVNSRVKLLAHLDIA--ERRLPQDGRIKTRLKGRe 274
+                                    5677789999*****963337************999887766555555556666554433..444444544444444443 PP
+
+                pilT.mafft-edit  80 ..frvnvfkqkrgaaavlrtipski..ltleelgl.pevlkela...kkkrGLvLvtGPtGsGksttlaalvdeineeea 151
+                                      +rv    + +g ++v+r+++     l+le++g+ p++l++la   ++++G++LvtGPtGsGk+ttl a + +i+  e 
+  VEEI001.0321.00001.C001_00725 275 ldLRVSTVPTVHGESVVMRVLDRASvrLELESMGFePDTLARLAtllARPHGILLVTGPTGSGKTTTLYAALTKIDAGE- 353
+                                    339******************86541378899996588887765222689*************************9875. PP
+
+                pilT.mafft-edit 152 ehiltiedPiefvheskkslvnqrevgkdt.ksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhts 230
+                                    + i+t+edP+e+      + +nq +v+++    f+naL+s+Lr+dPd+i++Ge+rd et ++a++ a tGhlv++tLht+
+  VEEI001.0321.00001.C001_00725 354 QKIITVEDPVEYQ----LAGINQIQVHTQIdLTFANALRSILRQDPDIIMIGEMRDGETAQIAVQSALTGHLVLSTLHTN 429
+                                    67*********95....56699****9885379*********************************************** PP
+
+                pilT.mafft-edit 231 saaktidriidvfpaeekeqvrvqlsesLqavisqtLvkk 270
+                                    +aa ++ r+ d+    e       ++++++ v+sq+Lv++
+  VEEI001.0321.00001.C001_00725 430 TAAGAVVRMQDMGV--EP----YLITSAVNGVLSQRLVRT 463
+                                    ********988632..22....334455555666666554 PP
+
+  == domain 2  score: 1.3 bits;  conditional E-value: 0.3
+                pilT.mafft-edit 271 kgg.grvaaheiliatpairnliredkvaqiysaiqtgaklGmqtl 315
+                                    +g  gr  +he+l+  +++r  i e++ a+i  a+ +  + Gm  l
+  VEEI001.0321.00001.C001_00725 506 SGYrGRTGIHELLLLDDSLRRAIIEGRDANILHAMAV--QGGMLSL 549
+                                    333599*************************999865..4466555 PP
+
+>> THHY002.0321.00001.C001_00872  D ATG TAG 952401 953921 Valid TTHT_RS04365 1521 @WP_201328818.1@ TTHT_RS04365 1 952401
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  148.2   2.1   6.3e-46   1.9e-43       4     271 ..     123     396 ..     120     413 .. 0.81
+   2 ?    1.4   0.1      0.27        84     274     331 ..     442     497 ..     434     505 .. 0.71
+
+  Alignments for each domain:
+  == domain 1  score: 148.2 bits;  conditional E-value: 6.3e-46
+                pilT.mafft-edit   4 eLlelavkkkasdlhlsa...GlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkglar. 79 
+                                     ++ +a++k+ sd+h+ +    ++ k+rvdG l +  +++++++  ++++  i   a+ +  e+++  d  f+v+ +++ 
+  THHY002.0321.00001.C001_00872 123 TVIFNALQKRVSDIHIETrddSVVIKYRVDGVLYQA-MDKIDKKYHNEIISRIKVMAELDIAEKRIPQDGRFKVRLKGKn 201
+                                    566778999*******98333567789****99875.6789999999999988888888888999999988887654433 PP
+
+                pilT.mafft-edit  80 ..frvnvfkqkrgaaavlrtips.......kiltleelglpe....vlkelakkkrGLvLvtGPtGsGksttlaalvdei 146
+                                      frv +  + +g  av+r +++       k l+l+ lg+pe     l++  k++ G++LvtGPtGsGk+ttl a + ei
+  THHY002.0321.00001.C001_00872 202 vdFRVSIMPTIHGEDAVIRILDKestdkdfKSLNLDVLGFPErdkrKLRKFIKEPYGMILVTGPTGSGKTTTLYACISEI 281
+                                    34******************97522222226789999**997333369999***************************** PP
+
+                pilT.mafft-edit 147 neeeaehiltiedPiefvheskkslvnqrevg.kdtksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfg 225
+                                     +e ++ i+tiedP+e+  +     v q  v+ k+   f++ L+s+Lr+dPd i+vGe+rd et  +a++ a tGhlvf+
+  THHY002.0321.00001.C001_00872 282 KTE-EDKIITIEDPVEYQLDG----VTQIPVNeKKGLTFAKGLRSILRHDPDKIMVGEIRDSETATIAIQSALTGHLVFT 356
+                                    765.567**********7765....5555554156899****************************************** PP
+
+                pilT.mafft-edit 226 tLhtssaaktidriidvfpaeekeqvrvqlsesLqavisqtLvkkk 271
+                                    t+h++  +  i r + +        +   + +sL+ +++q+Lv+k+
+  THHY002.0321.00001.C001_00872 357 TVHANNVVDVIGRFVHMGI-----DIY-SFVSSLNCILAQRLVRKI 396
+                                    **********999886532.....233.455689999999999876 PP
+
+  == domain 2  score: 1.4 bits;  conditional E-value: 0.27
+                pilT.mafft-edit 274 grvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsladllkeglitee 331
+                                    gr ++ e+l  ++ ir+li +++   + ++ +++ ++Gm tl qs  + + +g+ + +
+  THHY002.0321.00001.C001_00872 442 GRTVISELLDLSDEIRELIINKR--PVREIKNKAIEEGMVTLRQSGIEKVLKGITSLK 497
+                                    89999999999999999997765..344555677888999998876666666555544 PP
+
+>> PSAV001.0321.00001.C001_00333  C ATG TGA 350651 352435 Valid BKM03_RS01840 1785 @WP_005737361.1@ BKM03_RS01840 1 3506
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  142.1   0.1   4.7e-44   1.4e-41       5     267 ..     214     477 ..     210     486 .. 0.77
+   2 ?    4.0   0.0     0.044        14     273     336 ..     526     587 ..     513     592 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 142.1 bits;  conditional E-value: 4.7e-44
+                pilT.mafft-edit   5 LlelavkkkasdlhlsaGl...ppkirvdGdlrklevealeeeevkalvyei.....lsdaqrkeleekleldlsfevkg 76 
+                                    L++ a +++asd+h+       + ++r+dG l+++ + +  ++ ++a+v  +     ++   +k+  ++  + +++  + 
+  PSAV001.0321.00001.C001_00333 214 LFQYAFQQRASDIHIEPRReqgTVRFRIDGVLHNVYQFP--AQVIMAIVSRLkslgrMN-VAEKRKPQDGRVKTTTPENR 290
+                                    7888999********864311146899999998876544..444444444431112133.33344455666777777777 PP
+
+                pilT.mafft-edit  77 larfrvnvfkqkrgaaavlrtipskil..tleelglp....evlkelakkkrGLvLvtGPtGsGksttlaalvdeineee 150
+                                       +r+    +  g  +v+r  + ++l  ++++lg+     +  +e++++++G++LvtGPtGsGk+ttl + ++++ ++e
+  PSAV001.0321.00001.C001_00333 291 EVELRLSTLPTAFGEKMVMRIFDPEVLlkDFDQLGFSsddlRRWQEMTRQPNGIILVTGPTGSGKTTTLYTTLKKLATSE 370
+                                    889*******************998864479***987332245789******************************8776 PP
+
+                pilT.mafft-edit 151 aehiltiedPiefvheskkslvnqrevgkd.tksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLht 229
+                                       + tiedPie v    +    q +v+++   sf++ +++ +r+dPd+i++Ge+rdlet ++a++aa tGhlv++tLht
+  PSAV001.0321.00001.C001_00333 371 V-NLCTIEDPIEMVEPAFN----QMQVQHNiDLSFAAGVRALMRQDPDIIMIGEIRDLETAEMAIQAALTGHLVLSTLHT 445
+                                    5.699*********98765....55554441479********************************************** PP
+
+                pilT.mafft-edit 230 ssaaktidriidvfpaeekeqvrvqlsesLqavisqtL 267
+                                    + a  +i r++++  ++        l  ++  v++q+L
+  PSAV001.0321.00001.C001_00333 446 NDAPSAISRMLELGVPH------YLLKATILGVMAQRL 477
+                                    **********9985443......233444445555555 PP
+
+  == domain 2  score: 4.0 bits;  conditional E-value: 0.044
+                pilT.mafft-edit 273 ggrvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsladllkegliteeeaaek 336
+                                     gr+ ++ei++ ++ i+ li  d   ++  + +++ k+G + l  s a+ +++gl t ee+ + 
+  PSAV001.0321.00001.C001_00333 526 RGRAGVYEIMVMSDNIKALISAD--LDLTAMRRQAFKEGTRSLRLSGAQKVSAGLTTLEEVLRV 587
+                                    3999****************987..467777778888888888888888888888777777655 PP
+
+>> VEEI001.0321.00001.C001_04074  D ATG TAA 4306503 4308239 Valid pilB 1737 @VEIS_RS18965@WP_041950195.1@ VEIS_RS18965 1
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -3.5   0.0       8.9   2.7e+03     274     315 ..     120     163 ..     101     166 .. 0.68
+   2 !  144.9   0.0   6.2e-45   1.9e-42       2     240 ..     199     444 ..     198     468 .. 0.85
+   3 ?   -2.8   0.0       5.2   1.6e+03     273     303 ..     514     545 ..     508     556 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: -3.5 bits;  conditional E-value: 8.9
+                pilT.mafft-edit 274 grvaaheiliatp.airnlire.dkvaqiysaiqtgaklGmqtl 315
+                                    ++ aa++i  at+ ++  +i e dk++ + +ai ++a++ m tl
+  VEEI001.0321.00001.C001_04074 120 DQEAAEKIKFATQmGVDWVIAEyDKLSLLVEAITKSANEAMDTL 163
+                                    56666667666552455556555789999999999999999887 PP
+
+  == domain 2  score: 144.9 bits;  conditional E-value: 6.2e-45
+                pilT.mafft-edit   2 ieeLlelavkkkasdlhls...aGlppkirvdGdlrklevealeeeevkalvyeils..daqrkeleekleldlsfevkg 76 
+                                    ++++l  a +++asdlh+         ++r+dG+lr++ ++++  +e  a   +++s  d  +k++ ++  + l ++ + 
+  VEEI001.0321.00001.C001_04074 199 LHKMLLDAFNMRASDLHFEpyeHQYRVRFRIDGELREIASPPIAIKEKLASRIKVISrlDISEKRIPQDGRMKLKVGQNR 278
+                                    578888999********97222456778*************98877666666666653478889999************* PP
+
+                pilT.mafft-edit  77 larfrvnvfkqkrgaaavlrtip..skiltleelglpevlke....lakkkrGLvLvtGPtGsGksttlaalvdeineee 150
+                                    +  frv    +  g  +v+r ++  s  l ++ lg+ +v ke       ++ G++LvtGPtGsGk+  l + ++ +n+ +
+  VEEI001.0321.00001.C001_04074 279 VIDFRVSTLPTLFGEKVVIRILDpsSAKLGIDALGYEPVEKErllqAIGRPYGMILVTGPTGSGKTVSLYTCLNLLNKPD 358
+                                    *********************962255678899**99997763211345689*************************976 PP
+
+                pilT.mafft-edit 151 aehiltiedPiefvheskkslvnqrevgkdt.ksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLht 229
+                                       i t edP e         vnq +v++++   f++aL+s Lr+dPd+i+vGe+rdlet +++++aa+tGhlv++tLht
+  VEEI001.0321.00001.C001_04074 359 -VNIATAEDPCEINL----PGVNQVNVNEKAgLTFAAALRSFLRQDPDIIMVGEIRDLETADISIKAAQTGHLVLSTLHT 433
+                                    .57********9754....459999998764389********************************************** PP
+
+                pilT.mafft-edit 230 ssaaktidrii 240
+                                    + a  t+ r+ 
+  VEEI001.0321.00001.C001_04074 434 NDAPTTLTRMR 444
+                                    ******99975 PP
+
+  == domain 3  score: -2.8 bits;  conditional E-value: 5.2
+                pilT.mafft-edit 273 ggrvaaheiliatpairnli.redkvaqiysa 303
+                                    +grv +++++  t+ i+ +i r++   +i ++
+  VEEI001.0321.00001.C001_04074 514 KGRVGIYQVMPITEEIQRIIlRDGSALEIAEQ 545
+                                    599999****9999999877477777676655 PP
+
+>> VEEI001.0321.00001.C001_04178  C ATG TGA 4408331 4410124 Valid tadA 1794 @VEIS_RS19465@WP_011811712.1@ VEIS_RS19465 1
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  141.6   0.0   6.5e-44     2e-41       5     269 ..     218     483 ..     214     502 .. 0.80
+   2 ?   -1.0   0.0       1.5   4.7e+02     274     332 ..     532     588 ..     523     594 .. 0.73
+
+  Alignments for each domain:
+  == domain 1  score: 141.6 bits;  conditional E-value: 6.5e-44
+                pilT.mafft-edit   5 LlelavkkkasdlhlsaGl...ppkirvdGdlrklevealeeeevkalvyeils..daqrkeleekleldlsfevkglar 79 
+                                    L + a +++asd+hl         ++r+dG l+++ + ++  ++      ++l   d  +k+  ++  + +  +  +   
+  VEEI001.0321.00001.C001_04178 218 LWQYAFDQRASDIHLEPRRdqgMIRFRIDGILHPVYQLPMGVHNAIVARIKLLGriDVMEKRRPQDGRIKTRNQRGEEVE 297
+                                    5677899********865411135789*******9988876555444444444322666777778888888888888999 PP
+
+                pilT.mafft-edit  80 frvnvfkqkrgaaavlrtip..skiltleelglpe....vlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaeh 153
+                                    +r+    +  g  +v+r  +  + + +l+ lg+ +      + l+k+++G++LvtGPtGsGk+ttl + ++ + +ee   
+  VEEI001.0321.00001.C001_04178 298 MRLSTLPTAFGEKMVMRIFDpdNAVKDLDALGFAQhdaqRWESLVKRPHGIILVTGPTGSGKTTTLYSTLKRVATEE-VN 376
+                                    *****************996336799*****987522115789****************************998765.57 PP
+
+                pilT.mafft-edit 154 iltiedPiefvheskkslvnqrevgkdt.ksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhtssa 232
+                                    + t+edPie +  s     nq +v+ +   sf++ L++ +r+dPd+i+vGe+rd+et ++a++aa tGhlvf+tLht+ a
+  VEEI001.0321.00001.C001_04178 377 VSTVEDPIEMIEPS----FNQTQVQPQLdFSFAEGLRALMRQDPDIIMVGEIRDQETAEMAVQAALTGHLVFSTLHTNDA 452
+                                    99*********987....5888888775269************************************************* PP
+
+                pilT.mafft-edit 233 aktidriidvfpaeekeqvrvqlsesLqavisqtLvk 269
+                                      +i r++++  ++        l  +L  v++q+Lv+
+  VEEI001.0321.00001.C001_04178 453 PSAITRMMELGVPA------YLLNATLLGVLAQRLVR 483
+                                    *******9985543......34555556666666655 PP
+
+  == domain 2  score: -1.0 bits;  conditional E-value: 1.5
+                pilT.mafft-edit 274 grvaaheiliatpairnliredkvaqiysaiqtgaklGmqtldqsladllkegliteee 332
+                                    gr+  +e+l++++a+++ +       i    +++ ++Gm+ l  + a  ++egl t +e
+  VEEI001.0321.00001.C001_04178 532 GRMGLYELLVVSEALKEQVTH--APSIDALRRQAVQDGMRPLRLAGALRVAEGLTTMDE 588
+                                    899999********9998865..467888888888999988876665556666655555 PP
+
+>> PSAV001.0321.00001.C001_01020  C ATG TAA 1063085 1064779 Valid pilB 1695 @BKM03_RS05495@WP_005736083.1@ BKM03_RS05495
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  141.0   0.3   9.8e-44     3e-41       3     269 ..     187     454 ..     185     475 .. 0.79
+   2 ?   -2.1   0.0       3.2   9.9e+02     274     314 ..     501     542 ..     492     561 .. 0.71
+
+  Alignments for each domain:
+  == domain 1  score: 141.0 bits;  conditional E-value: 9.8e-44
+                pilT.mafft-edit   3 eeLlelavkkkasdlhlsaG...lppkirvdGdlrklevealeeeevkalvyeilsdaq..rkeleekleldlsfevkgl 77 
+                                    +++l  a++ ++sdlh+         ++r dG l+++  ++++ ++  a  ++++   +  +++  ++  + l ++ ++ 
+  PSAV001.0321.00001.C001_01020 187 NKMLLDAIRLGSSDLHFEPYekiFRVRLRTDGILHEVARPPIHLANRIAARLKVMASLDisERRKPQDGRVKLRVSKTKA 266
+                                    6778889999******98651114578999***********998888888888887554004445566677777777888 PP
+
+                pilT.mafft-edit  78 arfrvnvfkqkrgaaavlrtipski..ltleelglpe....vlkelakkkrGLvLvtGPtGsGksttlaalvdeineeea 151
+                                      fr+n   +  g  +v+r ++ +   + ++ lg+ +    ++ e  k+++G++LvtGPtGsGk+  l + ++ +n+ + 
+  PSAV001.0321.00001.C001_01020 267 IDFRMNTLPTLWGEKIVMRILDPTSaqMGIDALGYEPeqkaLYLEALKQPQGMILVTGPTGSGKTVSLYTGLNILNTVD- 345
+                                    99*******************8665115569998754122255677899**************************9865. PP
+
+                pilT.mafft-edit 152 ehiltiedPiefvheskkslvnqrevg.kdtksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLhts 230
+                                      i t edP+e   e     +nq +v+ ++  +f++aL++ Lr+dPdvi+vGe+rdlet ++a++a++tGh+v++tLht+
+  PSAV001.0321.00001.C001_01020 346 INISTAEDPVEINLEG----INQVNVNpRQGLDFSQALRAFLRQDPDVIMVGEIRDLETAEIAIKASQTGHMVLSTLHTN 421
+                                    67*********87665....788888735689************************************************ PP
+
+                pilT.mafft-edit 231 saaktidriidvfpaeekeqvrvqlsesLqavisqtLvk 269
+                                    saa+t+ r+  +       +    ++++++ +i+q+L +
+  PSAV001.0321.00001.C001_01020 422 SAAETLTRLHHM------GVAAFNIATAINLIIAQRLAR 454
+                                    ********8543......233344555555555555554 PP
+
+  == domain 2  score: -2.1 bits;  conditional E-value: 3.2
+                pilT.mafft-edit 274 grvaaheiliatpairnlire.dkvaqiysaiqtgaklGmqt 314
+                                    grv ++e++ +t  ++ +i e +   +i  ++++ + + ++t
+  PSAV001.0321.00001.C001_01020 501 GRVGIYEVVKKTAELERIIMEeGNSLEISRQMRKDGFNDLRT 542
+                                    899999999999999888865156668888888877776666 PP
+
+>> VEEI001.0321.00001.C001_01694  D ATG TAG 1805121 1806971 Valid tadA 1851 @VEIS_RS07890@WP_011809385.1@ VEIS_RS07890 1
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  123.5   0.1     2e-38   6.2e-36       2     239 ..     229     473 ..     228     501 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 123.5 bits;  conditional E-value: 2e-38
+                pilT.mafft-edit   2 ieeLlelavkkkasdlhlsaGlppk.....irvdGdlrk.levealeeeevkalvyeils..daqrkeleekleldlsfe 73 
+                                    i+ ++++a+ ++asd+h+ + l pk     +r+dGdl + le +a  + +v a + +++   d  +++  ++  +d++  
+  VEEI001.0321.00001.C001_01694 229 INAVIDEAIGRNASDIHIETELAPKslrirLRIDGDLAThLELPARYRVAVVARI-KVMAgmDISERRKPQEGKIDFARF 307
+                                    66789999***********9998854443389****9751666665555555554.555511444445566777888876 PP
+
+                pilT.mafft-edit  74 vkglarfrvnvfkqkrgaaavlrtipskiltleelglpe....vlkelakkkrGLvLvtGPtGsGksttlaalvdeinee 149
+                                          +rv    +++g   v+ ++ + +l l+ ++l +     l+ +a+k+ GLvLv GPtG Gk+ttl +++  in +
+  VEEI001.0321.00001.C001_01694 308 GGPPVELRVTSIPTSQGLEDVVLRLLTGVLALDRIDLSRanllALQSVAQKRYGLVLVCGPTGCGKTTTLHSVLRDINGT 387
+                                    667789****999999998888778899*****99998733334899*******************************98 PP
+
+                pilT.mafft-edit 150 eaehiltiedPiefvheskkslvnqrevgkd.tksfenaLksaLredPdviLvGelrdletirlaltaaetGhlvfgtLh 228
+                                      + i t edPie   +  +    q +v+       ++a+++ Lr dPdvi+v e+rd e  r+al+aa tGhlv++tL 
+  VEEI001.0321.00001.C001_01694 388 G-RKIWTAEDPIEITQDGLR----QVQVNPRlGWTVAAAMRAFLRADPDVIMVDEMRDEEIARIALEAAFTGHLVLTTLL 462
+                                    6.56*********9887654....45555431457899****************************************** PP
+
+                pilT.mafft-edit 229 tssaaktidri 239
+                                    t++a  ++ r 
+  VEEI001.0321.00001.C001_01694 463 TTAAPDAVARQ 473
+                                    ****9999885 PP
+
+>> VEEI001.0321.00001.C001_03859  C ATG TGA 4093819 4095549 Valid tadA 1731 @VEIS_RS17925@WP_198137892.1@ VEIS_RS17925 1
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   84.8   0.0   1.2e-26   3.8e-24       5     241 ..     137     402 ..     133     414 .. 0.78
+
+  Alignments for each domain:
+  == domain 1  score: 84.8 bits;  conditional E-value: 1.2e-26
+                pilT.mafft-edit   5 Llelavkkkasdlhlsa...Glpp.kirvdGdlrklevea......leeeevkalvyeilsdaqrkeleekle....... 67 
+                                     ++la ++ka+dlh+     Gl    +rvdG+l+++  +       +++ + ++  ye+lsd++ ++   + e       
+  VEEI001.0321.00001.C001_03859 137 WVTLAKEEKATDLHIRIldgGLAEvLMRVDGELEPITGSDrglftkFDALDAMKSAYEMLSDRHSNSSGTFSEsetlssm 216
+                                    56778899******7533327764168********97543232222677889999*******988765444441112222 PP
+
+                pilT.mafft-edit  68 ldlsfevkglarfrvnvfkqkrgaaavlrtipsk....iltleelglp....evlkelakkkrGLvLvtGPtGsGksttl 139
+                                    +d+++++ +  r+r    +   g  av+r + s      +t+ ++g+     e++++ ++ + G +   G tGsGk+tt 
+  VEEI001.0321.00001.C001_03859 217 IDTALGIAN-IRLRFSCLRGLYGPKAVVRLLASSaadsAMTFASMGFApshiELFERAQRLDCGAIGQMGITGSGKTTTA 295
+                                    566666644.599999999999********987522226899999975233356778888889***************** PP
+
+                pilT.mafft-edit 140 aalvdeineeeaehiltiedPiefvheskkslvnqrev...gkdtks..fenaLksaLredPdviLvGelrdletirlal 214
+                                     ++v+   +  ++ +  + dPie+   + + +  qr +   +++ k+  ++ a+ s +r dPd++ vGe+rd    r+  
+  VEEI001.0321.00001.C001_03859 296 KTFVEAHPKYGRSAMYQVADPIEYPMLHMHQIYVQRSLltlNEHGKKdpYNVAIESLMRSDPDLVDVGEVRDILSARAMA 375
+                                    ************************8888888888886533244444344******************************* PP
+
+                pilT.mafft-edit 215 taaetGhlvfgtLhtssaaktidriid 241
+                                    ++a+ Ghl + tLh  s a +i+r+ d
+  VEEI001.0321.00001.C001_03859 376 NVAKSGHLSMFTLHVGSIAGAINRLTD 402
+                                    ************************987 PP
+
+>> THHY002.0321.00001.C001_02080  C ATG TAA 2243240 2244673 Valid tadA 1434 @TTHT_RS10405@WP_201327917.1@ TTHT_RS10405 1
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   56.0   0.8   6.8e-18   2.1e-15      19     282 ..     142     417 ..     128     427 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: 56.0 bits;  conditional E-value: 6.8e-18
+                pilT.mafft-edit  19 lsaGlppkirvdGdlrklevealeeeevkalvyeilsdaqrkeleekleldlsfevkglarfrvnvf.kqkrgaaavlrt 97 
+                                    +    + +i  +G+++k +++  +e+++ a v +i     ++  e +  ld  +  ++ +r+   +      g+ + +r+
+  THHY002.0321.00001.C001_02080 142 INGHDKIYIERKGKIEKTDKKFASEKALVAAVKNIARALGKEVSEINPRLDARL--DDGSRVAAVIPpCALTGTYVSIRK 219
+                                    555556678889999999999999999999999999988888888888888755..557777665541567888999*** PP
+
+                pilT.mafft-edit  98 ipskiltleel.glpev......lkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedPiefvheskks 170
+                                     ++k ltl++l ++ ++      + el+   +  v+v G tGsGk+t l  l   i ++  e i+ ied  e   ++++ 
+  THHY002.0321.00001.C001_02080 220 FSKKALTLQDLiNFGAItqdaidFIELCILMKQNVIVSGGTGSGKTTLLNVLSSLIPDN--ERIIVIEDTAELQLQKEHI 297
+                                    *********9855667622222345688899999***********99999999988765..68*********99988888 PP
+
+                pilT.mafft-edit 171 l.vnqrevgkdtk...sfenaLksaLredPdviLvGelrdletirlaltaaetGhl.vfgtLhtssaaktidriidvfpa 245
+                                    l ++ +  +k+ +     ++ L+s Lr  Pd i++Ge+r  e+ +l l+a +tGh   ++t+h +s   t+ r+ +   +
+  THHY002.0321.00001.C001_02080 298 LrMEAKPADKKGRgevTIRDLLHSTLRMRPDRIVIGEIRGGEAFDL-LQAMNTGHGgSMSTIHSNSPFDTLSRLENTTLQ 376
+                                    734444444444322268899***********************98.99******6479**************9876544 PP
+
+                pilT.mafft-edit 246 ee.k...eqvrvqlsesLqavisqtLvkkkgggrvaaheil 282
+                                    +  +   +++r q+s+++++++  +  +    + + + e++
+  THHY002.0321.00001.C001_02080 377 SGiQlplKAIREQISSAINIIVHTKRFEDGSRKVNFISEVM 417
+                                    32122226899999999999987776655554555556666 PP
+
+>> THHY002.0321.00001.C001_00720  D ATG TGA 786222 787901 Valid tadA 1680 @TTHT_RS03605@WP_201328674.1@ TTHT_RS03605 1 7
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   49.5   0.4   6.5e-16     2e-13      87     280 ..     293     499 ..     215     515 .. 0.71
+
+  Alignments for each domain:
+  == domain 1  score: 49.5 bits;  conditional E-value: 6.5e-16
+                pilT.mafft-edit  87 qkrgaaavlrtipskiltleel......glp.evlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltied 159
+                                      +g ++ +r+  +k lt+e+l      + p +++ el+ k r  +++ G tGsGk+t l  l   i  +  e i+tied
+  THHY002.0321.00001.C001_00720 293 ALKGPCLTIRKFGKKNLTIEDLvrfgtlNKPmATFLELCVKGRKNIIISGGTGSGKTTLLNVLSSFIPPN--ERIVTIED 370
+                                    4677788888888888887775322222556357999*********************999999999765..68****** PP
+
+                pilT.mafft-edit 160 Piefvheskkslv...nqrevgkd.tksfenaLksaLredPdviLvGelrdletirlaltaaetGhl.vfgtLhtssaak 234
+                                      e    +k+ +    +  +v+ +     ++ +k aLr  Pd i+vGe r  e++++ l+a +tGh   ++t h++s   
+  THHY002.0321.00001.C001_00720 371 AAELRLPQKHVVSlesKPPNVEGKgEITIRDLVKNALRMRPDRIIVGECRGGEALDM-LQAMNTGHAgSMTTGHANSPDD 449
+                                    ***876655544211123356544145788899*********************996.9*******8468999****999 PP
+
+                pilT.mafft-edit 235 tidri..idvfpaeek..eqvrvqlsesLqavisqtLvkkkgggrvaahe 280
+                                     + r+  + + ++ e    ++r q+++++ +++ q+ ++    +   + e
+  THHY002.0321.00001.C001_00720 450 ILRRLetMVLMSGMELpiRAIRDQIASAIDIIVQQQRLSDGSRKITSITE 499
+                                    88887323344555532257999******999999877654444444555 PP
+
+>> PSAV001.0321.00001.C001_04760  D ATG TGA 5306623 5307879 Valid BKM03_RS25505 1257 @WP_003376493.1@ BKM03_RS25505 1 53
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   46.4   0.4   5.6e-15   1.7e-12      88     273 ..     172     368 ..      98     386 .. 0.65
+
+  Alignments for each domain:
+  == domain 1  score: 46.4 bits;  conditional E-value: 5.6e-15
+                pilT.mafft-edit  88 krgaaavlrtipskiltleelglpe.....vlkel..akkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedP 160
+                                      g ++ +r+  +++l+  +l + +     +++    a  kr  vLv G tG+Gk+t l  l + i+++  + ++tied 
+  PSAV001.0321.00001.C001_04760 172 LDGPCLSIRKFRKDMLKSADLVAMQtidqpIFEFFqeAVGKRCNVLVSGGTGTGKTTMLNVLSQLIDSN--QRLVTIEDV 249
+                                    45666666666666655544444331001133333113357999***************9999999876..579****** PP
+
+                pilT.mafft-edit 161 iefvheskksl.vnqrevgkdtks...fenaLksaLredPdviLvGelrdletirlaltaaetGhl.vfgtLhtssaakt 235
+                                     e   ++ + + ++ r  +++ +     ++ ++  Lr  Pd i++Ge+r  e +++ lta +tGh   ++t+h++ a  +
+  PSAV001.0321.00001.C001_04760 250 AELQLSHPHVVrLETRPPNAEGHGevrASDLIRNSLRMRPDRIILGEIRGVEVLDV-LTAMNTGHDgSMSTVHANNAQDA 328
+                                    **876665544367787666665411145568********************9885.9*******6479*******9999 PP
+
+                pilT.mafft-edit 236 idriidvfpae....ekeqvrvqlsesLqavisqtLvkkkgg 273
+                                    + r+  +   +     ++++r+++  +L  +i   L +  +g
+  PSAV001.0321.00001.C001_04760 329 LLRLETLVGLTgrliPEKTLRQMICAALDVIIQ--LARLPDG 368
+                                    888755554431112356788888888887773..4444444 PP
+
+>> VEEI001.0321.00001.C001_00261  D ATG TGA 269110 271029 Valid tadA 1920 @VEIS_RS01225@WP_011808057.1@ VEIS_RS01225 1 2
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   45.1   0.2   1.5e-14   4.5e-12     114     266 ..     389     547 ..     305     562 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 45.1 bits;  conditional E-value: 1.5e-14
+                pilT.mafft-edit 114 lkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedPiefvheskksl.vnqrev...gkdtksfenaLk 189
+                                    + +++ + r  ++v G tGsGk+t l  l + i     e ++t+ed  e   ++++ + ++ r     gk     ++ ++
+  VEEI001.0321.00001.C001_00261 389 FLRICVQARKNIIVCGGTGSGKTTLLNILSNFIPP--GERVITVEDAAELRLNHEHLIsLESRPAnveGKGGVAIRELVR 466
+                                    55789999999********************9986..5689*******9876655544245665511234455789999* PP
+
+                pilT.mafft-edit 190 saLredPdviLvGelrdletirlaltaaetGhl.vfgtLhtssaaktidriidv..fpaeek..eqvrvqlsesLqavis 264
+                                      Lr  Pd i+vGe r  e++++ l+a +tGh   ++tLh++s    + r+  +   ++ e    ++r q+++++ +++ 
+  VEEI001.0321.00001.C001_00261 467 NTLRMRPDRIVVGECRGAEALDM-LQAMNTGHEgSLTTLHANSPRDGLARLETMvlMAGMELplAAIREQIASAVDILVQ 545
+                                    ********************996.99******7479*******9999988744300333332125678888888777777 PP
+
+                pilT.mafft-edit 265 qt 266
+                                    qt
+  VEEI001.0321.00001.C001_00261 546 QT 547
+                                    76 PP
+
+>> PSAV001.0321.00001.C001_01323  D ATG TGA 1397548 1398312 Valid BKM03_RS07080 765 @WP_003408905.1@ BKM03_RS07080 1 139
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.8   0.0   1.2e-05    0.0037     113     184 ..      29      99 ..      22     104 .. 0.74
+   2 ?   -0.8   0.0       1.3     4e+02     194     240 ..     174     220 ..     156     228 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 15.8 bits;  conditional E-value: 1.2e-05
+                pilT.mafft-edit 113 vlkelakk.krG.LvLvtGPtGsGksttlaalvdeineeeaehiltiedPiefvheskkslvnqrevgkdtksf 184
+                                    vlk++  + ++G  ++  GP GsGkstt+ + ++ + e+++  i+   d  e   + k+    +revg+  ++f
+  PSAV001.0321.00001.C001_01323  29 VLKDINLNvRQGeRIVLCGPSGSGKSTTIRC-LNRLEEHQQGRII--VDGTELTSDLKQIETIRREVGMVFQHF 99 
+                                    667765431344358889**********986.5999999999986..478888877777777778887776666 PP
+
+  == domain 2  score: -0.8 bits;  conditional E-value: 1.3
+                pilT.mafft-edit 194 edPdviLvGelrdletirlaltaaetGhlvfgtLhtssaakti.drii 240
+                                    ++P   L  e+  +e +++ +  ae G  ++   h  + a+t+ +r+i
+  PSAV001.0321.00001.C001_01323 174 DEPTSALDPEMV-KEVLDTMVGLAEEGMTMLCVTHEMGFARTVaNRVI 220
+                                    445555555553.67888888999999999999999999999856776 PP
+
+>> THHY002.0321.00001.C001_00864  D ATG TAA 942750 943664 Valid ftsY 915 @TTHT_RS04325@WP_201328810.1@ TTHT_RS04325 1 94
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   16.4   0.1   7.6e-06    0.0023      87     159 ..      69     140 ..      12     166 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 16.4 bits;  conditional E-value: 7.6e-06
+                pilT.mafft-edit  87 qkrgaaavlrtipskiltleelglpevlkelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltied 159
+                                    + +   av+r++  k++++ +++  + + e ++k+  ++Lv G  G Gk+tt+  l ++  +e ++ il   d
+  THHY002.0321.00001.C001_00864  69 EVGDLDAVMRALREKVVEMLSVSKESHILEDSRKP-LVILVVGVNGVGKTTTIGKLAKKFKNEGKKVILGAAD 140
+                                    4556789*********9987776554433333333.4689********************9999999997766 PP
+
+>> VEEI001.0321.00001.C001_03474  C ATC TAG 3718049 3718819 Valid VEIS_RS16195 771 @WP_198138057.1@ VEIS_RS16195 1 37180
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.5   0.0   1.4e-05    0.0044     120     185 ..      25      88 ..      11      92 .. 0.76
+   2 ?   -2.1   0.0       3.3     1e+03     195     240 ..     163     208 ..     145     213 .. 0.67
+
+  Alignments for each domain:
+  == domain 1  score: 15.5 bits;  conditional E-value: 1.4e-05
+                pilT.mafft-edit 120 kkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedPiefv.heskkslvnqrevgkdtksfe 185
+                                    k    +++ GP GsGkst l   ++++ + e+  i    d ie   he k+    +revg+  ++f+
+  VEEI001.0321.00001.C001_03474  25 KAGERIVICGPSGSGKST-LIRCINHLEKVEKGRIA--VDGIELTgHERKNVDAVRREVGMVFQQFN 88 
+                                    34446999********96.77889***999999985..499**984555555577899999888886 PP
+
+  == domain 2  score: -2.1 bits;  conditional E-value: 3.3
+                pilT.mafft-edit 195 dPdviLvGelrdletirlaltaaetGhlvfgtLhtssaakti.drii 240
+                                    +P   L  e+   e +++ +  ae G  ++   h  + a+ + dr+i
+  VEEI001.0321.00001.C001_03474 163 EPTSALDPEMV-NEVLDTMIGLAEDGMTMLCVTHEMGFARRVaDRVI 208
+                                    44444444554.46777888889999988888888875554338887 PP
+
+>> VEEI001.0321.00001.C001_00320  D ATG TGA 343477 349494 Valid VEIS_RS01515 6018 @WP_011808112.1@ VEIS_RS01515 1 343477
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    5.1   0.1     0.021       6.4     123     137 ..      27      41 ..      16      49 .. 0.83
+   2 ?    0.1   0.0      0.71   2.2e+02     123     140 ..     711     728 ..     704     733 .. 0.85
+   3 ?    1.2   0.0      0.33     1e+02     120     137 ..    1084    1102 ..    1060    1115 .. 0.78
+   4 ?    4.6   0.0     0.029         9     120     139 ..    1674    1692 ..    1629    1703 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 5.1 bits;  conditional E-value: 0.021
+                pilT.mafft-edit 123 GLvLvtGPtGsGkst 137
+                                     L +vtGP GsGks+
+  VEEI001.0321.00001.C001_00320  27 ELTVVTGPSGSGKSS 41 
+                                    5889*********98 PP
+
+  == domain 2  score: 0.1 bits;  conditional E-value: 0.71
+                pilT.mafft-edit 123 GLvLvtGPtGsGksttla 140
+                                     Lv +tG  GsGks+ + 
+  VEEI001.0321.00001.C001_00320 711 RLVTITGVSGSGKSSLIQ 728
+                                    5999**********9765 PP
+
+  == domain 3  score: 1.2 bits;  conditional E-value: 0.33
+                pilT.mafft-edit  120 kkrG.LvLvtGPtGsGkst 137 
+                                      +rG + +vtG  GsGkst
+  VEEI001.0321.00001.C001_00320 1084 IPRGkFSVVTGVSGSGKST 1102
+                                     566624589********98 PP
+
+  == domain 4  score: 4.6 bits;  conditional E-value: 0.029
+                pilT.mafft-edit  120 kkrGLvLvtGPtGsGksttl 139 
+                                       r Lv vtG  GsGkst l
+  VEEI001.0321.00001.C001_00320 1674 PLRRLVAVTGVSGSGKST-L 1692
+                                     4578************97.4 PP
+
+>> VEEI001.0321.00001.C001_03871  C ATG TGA 4106466 4107470 Valid VEIS_RS17985 1005 @WP_011811417.1@ VEIS_RS17985 1 4106
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.4   0.0   1.5e-05    0.0046     120     236 ..     147     260 ..     132     277 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: 15.4 bits;  conditional E-value: 1.5e-05
+                pilT.mafft-edit 120 kkrGLvLvtGPtGsGksttlaalvdeineeeaehiltiedPiefv..heskkslvnqrevgkdtksfenaLksaLredPd 197
+                                    +++   + +GPt  Gk+t   a++  +    +e i  ied  e     e+k++++   + g  +k     ++ a+r   d
+  VEEI001.0321.00001.C001_03871 147 EDKKNCVFAGPTSGGKTTLANAILMDL--PGNERIGLIEDAREIAlrVENKECMLASPQTGLTAKV---LIQHAMRSRFD 221
+                                    444445678***999976666666555..5566788899986654227899****99998877665...578999***** PP
+
+                pilT.mafft-edit 198 viLvGelrdletirlaltaaetGhl.vfgtLhtssaakti 236
+                                     +++ e r  +t +l l+a   Gh   ++tLh++saa ++
+  VEEI001.0321.00001.C001_03871 222 RLILSETRGDDTFDL-LRALSSGHGgSVTTLHAASAAGAL 260
+                                    *************98.7888888853689*******9765 PP
+
+>> PSAV001.0321.00001.C001_02590  D ATG TGA 2822893 2823678 Valid BKM03_RS13880 786 @WP_005737931.1@ BKM03_RS13880 1 282
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.9   0.0   2.2e-05    0.0068     108     156 ..      22      71 ..       6      96 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 14.9 bits;  conditional E-value: 2.2e-05
+                pilT.mafft-edit 108 lglpevlkela..kkkrGLvLvtGPtGsGksttlaalvdeineeeaehilt 156
+                                    +g  +vlk++    ++  + ++ GP GsGkst l   ++++ + ++ hi  
+  PSAV001.0321.00001.C001_02590  22 FGSQQVLKDIDltIEPGKVTVILGPSGSGKSTLL-RTINHLEKIDSGHITI 71 
+                                    56778888875103444455678*******9876.569**********854 PP
+
+>> VEEI001.0321.00001.C001_01571  D ATG TGA 1678525 1679889 Valid ffh 1365 @VEIS_RS07315@WP_011809269.1@ VEIS_RS07315 1 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.1   0.0   1.9e-05    0.0057     116     158 ..      94     136 ..      80     141 .. 0.90
+   2 ?   -2.3   0.5       3.7   1.1e+03     271     315 ..     397     443 ..     392     446 .. 0.68
+
+  Alignments for each domain:
+  == domain 1  score: 15.1 bits;  conditional E-value: 1.9e-05
+                pilT.mafft-edit 116 elakkkrGLvLvtGPtGsGksttlaalvdeineeeaehiltie 158
+                                    +la+++  ++L++G  G+Gk+tt a l +++ e++++ +lt+ 
+  VEEI001.0321.00001.C001_01571  94 NLAAQPPAVILMAGLQGAGKTTTTAKLAKYLIEKRKKKVLTVS 136
+                                    467888999********************************96 PP
+
+  == domain 2  score: -2.3 bits;  conditional E-value: 3.7
+                pilT.mafft-edit 271 kgggrvaaheiliatpairnlire.dkvaqiysaiqtgak.lGmqtl 315
+                                    +  +r +ah   +  + ++ l++e ++++ + ++++ g+  + m+t+
+  VEEI001.0321.00001.C001_01571 397 ATRKRRIAHGAGVHVQEVNRLLKEfEQMQGMVKKMKGGGLmKMMKTM 443
+                                    44567788888889999999999844566677777777541445565 PP
+
+>> VEEI001.0321.00001.C001_03628  C ATG TGA 3845988 3846716 Valid VEIS_RS16865 729 @WP_011811191.1@ VEIS_RS16865 1 38459
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.6   0.0   0.00011     0.035     112     144 ..      15      48 ..       8      60 .. 0.71
+
+  Alignments for each domain:
+  == domain 1  score: 12.6 bits;  conditional E-value: 0.00011
+                pilT.mafft-edit 112 evlkelak.kkrG.LvLvtGPtGsGksttlaalvd 144
+                                    +vlk++    krG +v++ GP GsGkst l + ++
+  VEEI001.0321.00001.C001_03628  15 HVLKDINLvFKRGeVVVICGPSGSGKSTLLRT-IN 48 
+                                    5778776424667366779********98754.44 PP
+
+>> VEEI001.0321.00001.C001_00901  D ATG TGA 956512 958113 Valid VEIS_RS04210 1602 @WP_049773813.1@ VEIS_RS04210 1 956512
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    4.3   0.1     0.037        11     124     144 ..      49      68 ..      41      83 .. 0.77
+   2 ?    6.5   0.0    0.0079       2.4     112     148 ..     310     348 ..     303     353 .. 0.72
+
+  Alignments for each domain:
+  == domain 1  score: 4.3 bits;  conditional E-value: 0.037
+                pilT.mafft-edit 124 LvLvtGPtGsGksttlaalvd 144
+                                    L+   GP G+Gkstt+  +++
+  VEEI001.0321.00001.C001_00901  49 LLALIGPNGAGKSTTFN-MIN 68 
+                                    56678**********85.554 PP
+
+  == domain 2  score: 6.5 bits;  conditional E-value: 0.0079
+                pilT.mafft-edit 112 evlkelak.kkrG.LvLvtGPtGsGksttlaalvdeine 148
+                                    ++l +l    +rG +v   G  G+Gksttl al+  + +
+  VEEI001.0321.00001.C001_00901 310 QILYDLDLyVRRGeVVALMGRNGAGKSTTLKALMGLLAR 348
+                                    5665554313556256689*************9987765 PP
+
+>> VEEI001.0321.00001.C001_01272  C ATG TGA 1351454 1352191 Valid VEIS_RS05945 738 @WP_011808997.1@ VEIS_RS05945 1 13514
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.3   0.0   0.00013     0.041     121     142 ..      25      47 ..       9      66 .. 0.73
+
+  Alignments for each domain:
+  == domain 1  score: 12.3 bits;  conditional E-value: 0.00013
+                pilT.mafft-edit 121 krG.LvLvtGPtGsGksttlaal 142
+                                    ++G +v+v GP GsGkst + a+
+  VEEI001.0321.00001.C001_01272  25 NKGeVVVVCGPSGSGKSTLIKAI 47 
+                                    455278899********977664 PP
+
+>> PSAV001.0321.00001.C001_05037  C ATG TGA 5640908 5642524 Valid BKM03_RS26965 1617 @WP_060402257.1@ BKM03_RS26965 1 56
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.1   0.0   0.00016     0.048     115     154 ..      43      82 ..      35      86 .. 0.86
+
+  Alignments for each domain:
+  == domain 1  score: 12.1 bits;  conditional E-value: 0.00016
+                pilT.mafft-edit 115 kelakkkrGLvLvtGPtGsGksttlaalvdeineeeaehi 154
+                                    ++la++ + L+ vtGP GsGk+    alv   n+++ + +
+  PSAV001.0321.00001.C001_05037  43 HHLARYSQLLLAVTGPQGSGKTLLRQALVASTNKQSVQSV 82 
+                                    567778888999*********************9987655 PP
+
+>> PSAV001.0321.00001.C001_04228  D ATG TAA 4720109 4720843 Valid BKM03_RS22640 735 @WP_005620053.1@ BKM03_RS22640 1 472
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.6   0.0   0.00023     0.069     120     146 ..      24      50 ..       7      62 .. 0.71
+   2 ?   -2.6   0.1       4.5   1.4e+03     207     231 ..     173     197 ..     143     210 .. 0.49
+
+  Alignments for each domain:
+  == domain 1  score: 11.6 bits;  conditional E-value: 0.00023
+                pilT.mafft-edit 120 kkrG.LvLvtGPtGsGksttlaalvdei 146
+                                      +G +v+v GP GsGkst     v+ +
+  PSAV001.0321.00001.C001_04228  24 VSKGeVVVVCGPSGSGKSTL-IKCVNAL 50 
+                                    4555378899*******975.4556655 PP
+
+  == domain 2  score: -2.6 bits;  conditional E-value: 4.5
+                pilT.mafft-edit 207 letirlaltaaetGhlvfgtLhtss 231
+                                     e +++ ++ a+ G  ++   h  +
+  PSAV001.0321.00001.C001_04228 173 NEVLDVMVQLAHEGMTMMCVTHEMG 197
+                                    2344445555666666666666555 PP
+
+>> VEEI001.0321.00001.C001_01839  D ATG TGA 1958780 1961113 Valid VEIS_RS08565 2334 @WP_011809520.1@ VEIS_RS08565 1 1958
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.9   0.1   0.00018     0.054     112     145 ..     420     451 ..     407     468 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 11.9 bits;  conditional E-value: 0.00018
+                pilT.mafft-edit 112 evlkelakkkrGLvLvtGPtGsGksttlaalvde 145
+                                    +v+++la++++  vLv+G tGsGks  + a++  
+  VEEI001.0321.00001.C001_01839 420 PVVADLARMPH--VLVAGTTGSGKSVGINAMILS 451
+                                    57888888876..99****************955 PP
+
+>> PSAV001.0321.00001.C001_02693  D ATG TGA 2937320 2938048 Valid BKM03_RS14425 729 @WP_003379556.1@ BKM03_RS14425 1 293
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.7   0.0    0.0002     0.062     118     155 ..      22      59 ..      11      61 .. 0.71
+
+  Alignments for each domain:
+  == domain 1  score: 11.7 bits;  conditional E-value: 0.0002
+                pilT.mafft-edit 118 akkkrGLvLv.tGPtGsGksttlaalvdeineeeaehil 155
+                                    a+ +rG v+v  GP GsGkst l   v+ + + ++  il
+  PSAV001.0321.00001.C001_02693  22 AEVQRGEVVVlCGPSGSGKST-LIRTVNRLEDVQQGQIL 59 
+                                    456888655538*******97.55667888777777665 PP
+
+>> VEEI001.0321.00001.C001_00756  C ATG TGA 792582 793316 Valid VEIS_RS03530 735 @WP_011808515.1@ VEIS_RS03530 1 792582 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.7   0.0   0.00021     0.063     112     145 ..      15      49 ..       7      61 .. 0.69
+
+  Alignments for each domain:
+  == domain 1  score: 11.7 bits;  conditional E-value: 0.00021
+                pilT.mafft-edit 112 evlkela.kkkrGLvL.vtGPtGsGksttlaalvde 145
+                                    +vl + + + ++G vL v GP GsGkst +   v+ 
+  VEEI001.0321.00001.C001_00756  15 QVLTDCTtSIRKGEVLvVCGPSGSGKSTLI-KCVNA 49 
+                                    5666654145788777258*******9754.45555 PP
+
+>> VEEI001.0321.00001.C001_04648  C ATG TGA 4939985 4940761 Valid VEIS_RS21620 777 @WP_011812154.1@ VEIS_RS21620 1 49399
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    6.3   0.0    0.0092       2.8     108     140 ..      15      49 ..       7      60 .. 0.77
+   2 ?    3.1   0.0     0.088        27     209     238 ..      97     126 ..      92     128 .. 0.88
+
+  Alignments for each domain:
+  == domain 1  score: 6.3 bits;  conditional E-value: 0.0092
+                pilT.mafft-edit 108 lglpevlkela..kkkrGLvLvtGPtGsGksttla 140
+                                    +++ +vl++l+    +  +v   GP GsGkst l 
+  VEEI001.0321.00001.C001_04648  15 FDANQVLHDLQfaIAPGEIVGLLGPNGSGKSTLLN 49 
+                                    66778888775214566788899********9875 PP
+
+  == domain 2  score: 3.1 bits;  conditional E-value: 0.088
+                pilT.mafft-edit 209 tirlaltaaetGhlvfgtLhtssaaktidr 238
+                                     +++a+ aa   h v++tL  s aa+  +r
+  VEEI001.0321.00001.C001_04648  97 VLEVAMAAATGAHGVLATLLRSPAARRAER 126
+                                    5789******9***********99998776 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (341 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       729  (0.0596026); expected 244.6 (0.02)
+Passed bias filter:                      612  (0.0500368); expected 244.6 (0.02)
+Passed Vit filter:                       186  (0.0152073); expected 12.2 (0.001)
+Passed Fwd filter:                        42  (0.0034339); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):              40  [number of targets reported over threshold]
+# CPU time: 0.18u 0.00s 00:00:00.18 Elapsed: 00:00:00.18
+# Mc/sec: 7656.13
+//
+[ok]

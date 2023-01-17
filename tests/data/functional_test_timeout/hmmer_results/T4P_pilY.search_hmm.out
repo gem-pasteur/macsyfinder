@@ -1,0 +1,494 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/T4P_pilY.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/T4P_pilY.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T4P_pilY  [M=544]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+   6.3e-123  410.7  18.0   6.3e-123  410.7  18.0    1.7  2  PSAV001.0321.00001.C001_00881  D ATG TAG 932571 935762 Valid BK
+   1.7e-117  392.7   0.2   2.1e-117  392.4   0.2    1.1  1  VEEI001.0321.00001.C001_01572  C ATG TGA 1679964 1684187 Valid 
+   2.2e-114  382.5   3.9     3e-114  382.0   3.9    1.1  1  VEEI001.0321.00001.C001_02947  D ATG TGA 3173270 3177610 Valid 
+   3.1e-113  378.7   0.0     4e-113  378.3   0.0    1.1  1  VEEI001.0321.00001.C001_01130  C TTG TAA 1195059 1199195 Valid 
+   1.5e-112  376.5   0.0   1.9e-112  376.1   0.0    1.1  1  VEEI001.0321.00001.C001_01777  C TTG TAA 1893921 1898057 Valid 
+   1.4e-100  336.9   0.3   2.1e-100  336.3   0.3    1.3  1  VEEI001.0321.00001.C001_00524  D ATG TGA 566355 571340 Valid VE
+    2.2e-97  326.4   2.3    3.1e-97  325.9   2.3    1.2  1  VEEI001.0321.00001.C001_03983  C ATG TGA 4221789 4226780 Valid 
+    3.6e-95  319.0   3.0    3.6e-95  319.0   3.0    1.6  2  VEEI001.0321.00001.C001_03285  C ATG TGA 3500668 3505821 Valid 
+    2.4e-52  177.7   3.0    6.3e-52  176.3   2.8    1.8  2  THHY002.0321.00001.C001_02025  D ATG TAA 2186771 2190373 Valid 
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAV001.0321.00001.C001_00881  D ATG TAG 932571 935762 Valid BKM03_RS04750 3192 @WP_005740183.1@ BKM03_RS04750 1 9325
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  410.7  18.0  4.6e-126  6.3e-123       2     542 ..     419     958 ..     418     960 .. 0.96
+   2 ?   -2.6   0.1      0.76     1e+03     330     353 ..     971     994 ..     966    1038 .. 0.57
+
+  Alignments for each domain:
+  == domain 1  score: 410.7 bits;  conditional E-value: 4.6e-126
+                       T4P_pilY   2 asdaeelvealqqilnsikaratasaasvavssanlqsgtelYqakFksadWsGnLkaykiteddstesatsaWsaasqL 81 
+                                    ++d++ l +al+ +l++i a+ ++s ++ a++s++lq+g+++Yq+ ++++dW+G+++ay++++++    +t++W++++++
+  PSAV001.0321.00001.C001_00881 419 TNDSAGLNSALSLALSDIYAK-AGSGGGGAANSSTLQAGSRFYQTLYDPSDWHGTIRAYNLDATT-GALSTPFWTTDTTI 496
+                                    7899*****************.*****************************************97.89999********* PP
+
+                       T4P_pilY  82 rakaaasRkivtangsggs.eavefttanlsstqqaaltataetsstgaellaylrGddskeeeegatfraRtsllGDiv 160
+                                    +++  a+  ++   ++++s ++ ++ +++++++q++a+tat ++   ga+++a+++G +++      ++r+Rt llGDiv
+  PSAV001.0321.00001.C001_00881 497 TTS--AQAPVFESWNTAASpAKIPLDFTRFTQAQRDAFTATLPNGVSGADMIAWAKGTANA------NLRPRTLLLGDIV 568
+                                    *98..999999999999998999**********************************9965......58*********** PP
+
+                       T4P_pilY 161 nSqpvvvgkpdlgy....gassYaefaaaka.srapvvyvGaNdGmLHafdadtageElfAfiPkevlkklaeladpay. 234
+                                    nS+  +  +++ +     g++sY++++++ka ++   ++  aNdG++  +da t g+ ++A++P++ l+ la++++++y 
+  PSAV001.0321.00001.C001_00881 569 NSSLGAALPTEKTAadllGDTSYTTYLSTKAnNMSYSLLTNANDGFFNVIDAGT-GARKYAYMPSTSLTSLATISATSYg 647
+                                    ****9999966555799*************989999******************.************************* PP
+
+                       T4P_pilY 235 ..shryyvDGspvvadadd..gsswktvlvgglgrGGrsvyALDVtdptspk..vlWeitdadesf.....adLGqtlsk 303
+                                      +h++ vDG+++v+d++   gs+w+tv + glg+GG++++A+ + + t+ +  +lWe+++ d s      ++LG+t+sk
+  PSAV001.0321.00001.C001_00881 648 sgAHKFTVDGQISVFDTQSaaGSAWRTVAYSGLGAGGKALFAIRLFEGTADNvgALWEVKAPDASDttnafNNLGYTYSK 727
+                                    ******************9889***********************999877777****9876655455666********* PP
+
+                       T4P_pilY 304 pviakvkegekwvvifgnGydstkddkaalyvvdaatGallkeiaadtgvgstsmenglasvllvdsnsdgvadrvYagD 383
+                                    p +a++++g + +v++gnGy s ++ +a l+v++a+tG+l+ ei  +t v+ ++++ngl+sv l   +s+++++ +YagD
+  PSAV001.0321.00001.C001_00881 728 PDVARMADG-TGIVVVGNGYGSFTG-RASLFVLNANTGKLIAEI--PTPVSGSETDNGLSSVKLR-VDSQNIVQAAYAGD 802
+                                    *********.***************.******************..9****************99.9999********** PP
+
+                       T4P_pilY 384 lgGnlWrfDlsdettskwsvsklaslgg.plf.dtagnaqpitaapevarapkgyllvlfGtGkylepldkastaqqsfY 461
+                                    l+G+lW+fD+s++++s+w+v++    gg plf + +g++q it +p +  +p +++lv+fGtGk+ e++dk+++a q fY
+  PSAV001.0321.00001.C001_00881 803 LKGRLWKFDMSGAAASSWKVAF----GGvPLFtTPRGANQSITVQPLLLDHPLNGKLVYFGTGKFSETADKQTSALQDFY 878
+                                    ********************88....778***8899******************************************** PP
+
+                       T4P_pilY 462 aikDknstsstaksttpltrsnLlaqtiseetsatkatertvsanavn.stkkGWyidLas....sGervvssavlvagr 536
+                                    ai+D +s s       ++ ++nL+aq ++ +   ++ t+ t+++n+v+ +tkkGWy+ L++     Ger++++a++++gr
+  PSAV001.0321.00001.C001_00881 879 AIWDADSASG------NIVEANLQAQAVNGTVVGNGNTYFTTTTNDVDwGTKKGWYMPLSTaapyVGERIIYPAQTSRGR 952
+                                    *********9......68*******************************************9****************** PP
+
+                       T4P_pilY 537 viftty 542
+                                    +iftt 
+  PSAV001.0321.00001.C001_00881 953 IIFTTA 958
+                                    ****96 PP
+
+  == domain 2  score: -2.6 bits;  conditional E-value: 0.76
+                       T4P_pilY 330 kaalyvvdaatGallkeiaadtgv 353
+                                    + +l+ ++aatG++l+    dt+ 
+  PSAV001.0321.00001.C001_00881 971 TGRLFELNAATGSMLNYQVLDTNN 994
+                                    678899999999998876554433 PP
+
+>> VEEI001.0321.00001.C001_01572  C ATG TGA 1679964 1684187 Valid VEIS_RS07320 4224 @WP_157048706.1@ VEIS_RS07320 1 1679
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  392.4   0.2  1.6e-120  2.1e-117       2     531 ..     692    1284 ..     691    1298 .. 0.91
+
+  Alignments for each domain:
+  == domain 1  score: 392.4 bits;  conditional E-value: 1.6e-120
+                       T4P_pilY    2 asdaeelvealqqilnsikaratasaasvavssan.lqsgtelYqakFksadWsGnLkaykitedds..tesatsaWs 76  
+                                     a+ a+ l +al+ i++++ +r     a+ ++++ + l+ ++ +Y+a+F++++WsG++ a  i+++++    + ++ Ws
+  VEEI001.0321.00001.C001_01572  692 AAPARGLFRALDGIFSQAPSR-MRHVAGGSLNTGHrLTRDSVSYSASFDTSTWSGDVLAEPIRQNARhaLVVGAPLWS 768 
+                                     788999***************.55666667777777***************************995566999****** PP
+
+                       T4P_pilY   77 aasqLrakaa..asRkivtangsggs..eavefttanlsstqqaalta...taetsstgaellaylrGddskeeeega 147 
+                                     aa++L+a  a  ++R+i++ +++++s  +a+ef +++++ + qa+l++    a+ ++ gae+laylrGd+s+e+   a
+  VEEI001.0321.00001.C001_01572  769 AAQRLDARPApaTGRRIFVGKTDATSgpAATEFIWDQIEPALQAHLNRasaSAAPDNRGAERLAYLRGDRSQEG--AA 844 
+                                     ******997799*********88888889***********99999999888889999****************9..** PP
+
+                       T4P_pilY  148 tfraRtsllGDivnSqpvvvgkpdlgygassYaefaaakasrapvvyvGaNdGmLHafdadtageElfAfiPkevlkk 225 
+                                     +fr R sllGDivnS+  ++g+p+ +++++ Ya+f++a+a+r+p+v++GaNdGmLHafda t g+ElfA+iP+++  +
+  VEEI001.0321.00001.C001_01572  845 RFRVRGSLLGDIVNSNISYSGAPAKAFSGAGYAAFRRAHAARRPAVFAGANDGMLHAFDAGT-GDELFAYIPSWLGRN 921 
+                                     **************************************************************.*************** PP
+
+                       T4P_pilY  226 laeladpay..shryyvDGspvvadadd.....gsswktvlvgglgrGGrsvyALDVtdptspk...vlWeitdades 293 
+                                     l++l+dp +  +h+ yvD++ vva a++     +s+wktvlv g+g GG++++ALDV+dp+ ++   vlWe+t ad+ 
+  VEEI001.0321.00001.C001_01572  922 LSALTDPGFasQHQNYVDAPSVVAPAQVahtggASDWKTVLVSGTGGGGSGLFALDVSDPARFDaahVLWEFTRADD- 998 
+                                     *********99****************9999866*******************************************. PP
+
+                       T4P_pilY  294 fadLGqtlskpviakvkeg.......ekwvvifgnGydstkdd...........kaalyvvdaatGallkeiaa.... 349 
+                                      +d+Gq+++ p i+k+k+g       ++w++++g+G ++   d              l+ +d   G+++ +  +    
+  VEEI001.0321.00001.C001_01572  999 -PDIGQVVGAPKIMKFKTGgqhagdtYRWFAVVGSGVNNYRPDsdnrfnrdgqpALFLLALDKPVGQAWVRGRNyfkl 1075
+                                     .*****************779999**************99888899******888888889***********999988 PP
+
+                       T4P_pilY  350 ...dtgvgstsmenglasvllvdsnsdgvadrvYagDlgGnlWrfDlsdettskwsvskla.....slgg......pl 413 
+                                        + +  +++   gla+  ++   ++g ++ +Y gDl+G+lWr+ + ++tt++ws+ +l+     +  +      pl
+  VEEI001.0321.00001.C001_01572 1076 svpTDSRLAATHAPGLANFSAL-HGAQGEVTDIYFGDLHGALWRLHFAGKTTADWSMDQLSffyrgT--AenrrahPL 1150
+                                     88655558999999********.9999********************************99887652..134667899 PP
+
+                       T4P_pilY  414 f...dtagnaqpitaapevarap....kgyllvlfGtGkylepldkastaqqsfYaikDknstsstaks.......tt 477 
+                                     +   + +++ q i+aap++++ p     + + vl+GtGkylep+d+ s+++qs+Y + D+n +  +a++       + 
+  VEEI001.0321.00001.C001_01572 1151 YlarTGKSEVQAIFAAPALFAGPtvqgVESFHVLIGTGKYLEPADNFSNTTQSVYLLHDDNDSAGAASGlpagsgsSV 1228
+                                     99888999*****************9999***********************************98888999999877 PP
+
+                       T4P_pilY  478 pltrsnLlaqtiseetsatk..atertvsanavn...stkkGWyidLassGervvssav 531 
+                                       +r++L    +++ + + +  a+er   a   +   + ++GWy+dL+++Ger+ ++a+
+  VEEI001.0321.00001.C001_01572 1229 IGGRARLRRGRVDQASRTVTvsAAERGHPA---SgaaAGRSGWYFDLPQAGERIDQAAL 1284
+                                     778999999998877665543333444444...24559***************876665 PP
+
+>> VEEI001.0321.00001.C001_02947  D ATG TGA 3173270 3177610 Valid VEIS_RS13770 4341 @WP_198138050.1@ VEIS_RS13770 1 3173
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  382.0   3.9  2.2e-117    3e-114       4     543 ..     719    1335 ..     716    1336 .. 0.90
+
+  Alignments for each domain:
+  == domain 1  score: 382.0 bits;  conditional E-value: 2.2e-117
+                       T4P_pilY    4 daeelvealqqilnsikaratasaasvavssan.lqsgt....elYqakFksadWsGnLkaykitedds....tesat 72  
+                                      a++l++a+++i+++ + + t s a+ ++++ + l+++      +Y+a+F++++WsG++ a ki  ++s         
+  VEEI001.0321.00001.C001_02947  719 PARDLLNAFDDIFSRGSVV-TRSVAGGSMNTGRkLSTNPdspsVIYSATFDTSNWSGDVVAEKIILNASqanaPVLGP 795 
+                                     5778999999999987777.888899999999988888677879********************96633344466778 PP
+
+                       T4P_pilY   73 saWsaasqLrakaaasRkivtangsggs..eavefttanlsstqqaalta...taetsstgaellaylrGddskeeee 145 
+                                     + W+aa+qL a++a +Rki+ +++s+++  e v ft+a+++ t +  +++    a+ ++ g+++++ylrGd+ske   
+  VEEI001.0321.00001.C001_02947  796 PLWRAATQLGAPSAVTRKIFITQASRSArsEVVGFTWATINDTLKGYMNRynpSAAPDDMGRARVSYLRGDRSKE--- 870 
+                                     9**********************999988899**********88888887777899999**************99... PP
+
+                       T4P_pilY  146 gatfraRtsllGDivnSqpvvvgk.pdlgygassYaefaaakasrapvvyvGaNdGmLHafdadtageElfAfiPkev 222 
+                                     g+ fr R sllGDivnS+  ++g+ + ++++++ Y++f +++a+r pvv++GaNdGmLHaf+a+t g+ElfA+iP+++
+  VEEI001.0321.00001.C001_02947  871 GNPFRVRGSLLGDIVNSNISYSGApSRAAFTDAGYKAFSEQYAQRVPVVFAGANDGMLHAFNAKT-GDELFAYIPSWL 947 
+                                     59**********************455566***********************************.************ PP
+
+                       T4P_pilY  223 lkklaeladpay..shryyvDGspvvadadd.....gsswktvlvgglgrGGrsvyALDVtdptspk...vlWeitda 290 
+                                      +kl++l+dp +  +h+ yvD++ vvada++     +++wktvlv g+g GG +v+ALDV++p++++   v+We+t a
+  VEEI001.0321.00001.C001_02947  948 APKLSALTDPGFaiNHQNYVDAPSVVADAQVantgaATDWKTVLVSGTGGGGPGVFALDVSNPAQFDaanVMWEFTRA 1025
+                                     *******************************999777***************************************** PP
+
+                       T4P_pilY  291 desfadLGqtlskpviakvkeg.................ekwvvifgnGydstkdd..........kaalyvvdaatG 341 
+                                     d+  +d+Gq++++p ++k+ ++                 ++w++++g+G ++   +             l+ +d   G
+  VEEI001.0321.00001.C001_02947 1026 DD--PDIGQVVGTPKVMKIMTQaarvtdgtasstttpakYRWFAVVGSGVNNYRPEngknsatgqpALFLLALDKPAG 1101
+                                     **..**************99966889999********999*********9998877789*****888888899***** PP
+
+                       T4P_pilY  342 allkeiaa.......dtgvgstsmenglasvllvdsnsdgvadrvYagDlgGnlWrfDlsdettskwsvskla..... 407 
+                                     +++   ++        +++ + s+++gl +  ++    +g ++ +Y gDl+GnlWr+ + +++t +w++ kl+     
+  VEEI001.0321.00001.C001_02947 1102 QAWSLGNNyfkvslpINSTLARSNPTGLINFSAL-YGIQGEMTDIYMGDLHGNLWRLQFAGKETRDWNMGKLSffnqg 1178
+                                     **99998899888876667899************.99999*******************************9977555 PP
+
+                       T4P_pilY  408 slgg......plf.....dtagnaqpitaapevarap....kgyllvlfGtGkylepldkastaqqsfYaikDknsts 470 
+                                     +  +      pl+     dt  + qpi aap +   p     + ++v++GtGkylep d+ st+qq++Yai+D+++ +
+  VEEI001.0321.00001.C001_02947 1179 D--TstptpiPLYiartgDTVPKVQPIAAAPVILPGPivggVESFYVVVGTGKYLEPRDSVSTTQQTVYAIYDDGTRT 1254
+                                     2..0557888888999999*********************************************************** PP
+
+                       T4P_pilY  471 staks.....ttpltrsnLlaqtiseetsatkatertvsanavn...stkkGWyidLassGervvssav.lvagrvif 539 
+                                     ++ +s     +  ++rs+L a t+++ + + ++++ +  +   +   + ++GWy+dL+++Gerv ++a+ l a +v++
+  VEEI001.0321.00001.C001_02947 1255 TDGASrasatSVITGRSRLRAGTVDKDGRKVTVSAFQWGRPM-AdtqAARAGWYFDLPVTGERVDQAALdLGALTVAI 1331
+                                     988889998777789**********99877765555555533.336699***************88887566667766 PP
+
+                       T4P_pilY  540 ttyt 543 
+                                     ++ +
+  VEEI001.0321.00001.C001_02947 1332 NSKI 1335
+                                     6655 PP
+
+>> VEEI001.0321.00001.C001_01130  C TTG TAA 1195059 1199195 Valid VEIS_RS05290 4137 @WP_011808860.1@ VEIS_RS05290 1 1195
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  378.3   0.0  2.9e-116    4e-113       5     531 ..     667    1248 ..     664    1262 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 378.3 bits;  conditional E-value: 2.9e-116
+                       T4P_pilY    5 aeelvealqqilnsikaratasaasvavssan.lqsgtelYqakFksadWsGnLkaykitedds..tesatsaWsaas 79  
+                                     a+ l++a+++i+ +++     saa++ +++ + l++g+ +Y+a+F+++dWsG++ a  i +++s   e   + W+aa+
+  VEEI001.0321.00001.C001_01130  667 ARGLLSAFDRIFYRASMG-MRSAAGARLNTGSqLSQGSVMYSARFDTGDWSGDVVAEPIGHNASqaLEILPPLWRAAQ 743 
+                                     67899*************.99999999999999***************************98666699999******* PP
+
+                       T4P_pilY   80 qLrakaaasRkivtangsggs..eavefttanlsstqqaaltataetsstgaellaylrGddskeeeegatfraRtsl 155 
+                                     qL+ + +a R+i + ++ +     a +ft + ++  ++ al       ++ga+++aylrGd+ske   ga fr R+sl
+  VEEI001.0321.00001.C001_01130  744 QLDRMPPARRNIHVGRPGRHPvpVASRFTRDDIDL-RSLAL---HFGGAAGADRIAYLRGDRSKE---GAPFRLRSSL 814 
+                                     *****99*********6666657788888888888.44445...5799***************99...5********* PP
+
+                       T4P_pilY  156 lGDivnSqpvvvgkpdlgygassYaefaaakasrapvvyvGaNdGmLHafdadtageElfAfiPkevlkklaeladpa 233 
+                                     lGDivnS+  ++g+p+  + ++ Ya+f++++ +r+p+v+vGaNdGmLHaf+a+t g+ElfA+iP++++++l++l++p 
+  VEEI001.0321.00001.C001_01130  815 LGDIVNSNISYSGPPSNVFPGAGYADFRRQYGARTPAVFVGANDGMLHAFNANT-GDELFAYIPSWLVPRLSALTEPG 891 
+                                     ******************************************************.*********************** PP
+
+                       T4P_pilY  234 y..shryyvDGspvvadadd......gsswktvlvgglgrGGrsvyALDVtdptspk...vlWeitdadesfadLGqt 300 
+                                     +  +h+ yvD++ vva+a +      + +wktvlv g+g+GG +v+ALDV+dp+ ++   v+We+t ad+  +d+Gq+
+  VEEI001.0321.00001.C001_01130  892 FrnHHQSYVDAPSVVAQAWVgpgnssARDWKTVLVSGTGAGGAGVFALDVSDPARFDsshVMWEFTRADD--PDMGQV 967 
+                                     *9889***************88887669******************************************..****** PP
+
+                       T4P_pilY  301 lskpviakvkeg............ekwvvifgnGydstkdd...........kaalyvvdaatGallkeiaa...... 349 
+                                     l+ p i+k++++            ++w++++g+G ++   d              l+ +d   G+++   ++      
+  VEEI001.0321.00001.C001_01130  968 LGSPRIMKIRTNapmrngrrqaavYRWFAVVGSGVNNHVPDdnqpqpgsgrpALFLLALDKPAGQAWLPGHNyfkvsl 1045
+                                     **********97788999*******************988889*******888888899********99988776666 PP
+
+                       T4P_pilY  350 ..dtgv.gstsmenglasvllvdsnsdgvadrvYagDlgGnlWrfDlsdettskwsvskla....slgg.......pl 413 
+                                       d     + ++  gla+  ++    +g ++ +Y+gDl+G+lWr+ + ++ t+kws++ l+       +       pl
+  VEEI001.0321.00001.C001_01130 1046 ptD--PgLARTVAPGLANFSAL-YGIQGEVTDIYVGDLHGKLWRLQFAGKGTDKWSMNGLSffdqG--TaaspapyPL 1118
+                                     433..23577788899999999.9999******************************999877652..2456888999 PP
+
+                       T4P_pilY  414 f...dtagnaqpitaapevarap....kgyllvlfGtGkylepldkastaqqsfYaikDknstsstaks..ttpltrs 482 
+                                     +   + +g+ qp++aap+v+  p     ++++v++GtGkyle+ d ast  qs+Y i+D++st ++a+   ++  +r+
+  VEEI001.0321.00001.C001_01130 1119 YsarSDDGQVQPLFAAPAVFVGPvvggVETFYVVVGTGKYLEVPDGASTIGQSVYVIYDNGSTRADASPavSAIAGRG 1196
+                                     9877799*********************************************************99887989999*** PP
+
+                       T4P_pilY  483 nLlaqtiseetsatk....atertvsanavn.stkkGWyidLassGervvssav 531 
+                                     +L++ +++  +++ +       r  s+   + +t++GW++dL++sGer+ ++a+
+  VEEI001.0321.00001.C001_01130 1197 RLQQGVVDTGNQTVSvrafRWGRPRSDA--DvATRAGWFFDLPVSGERIDQAAL 1248
+                                     *****99966555444444333333333..36****************876665 PP
+
+>> VEEI001.0321.00001.C001_01777  C TTG TAA 1893921 1898057 Valid VEIS_RS08280 4137 @WP_011809462.1@ VEIS_RS08280 1 1893
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  376.1   0.0  1.4e-115  1.9e-112       5     531 ..     667    1248 ..     664    1262 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 376.1 bits;  conditional E-value: 1.4e-115
+                       T4P_pilY    5 aeelvealqqilnsikaratasaasvavssan.lqsgtelYqakFksadWsGnLkaykitedds..tesatsaWsaas 79  
+                                     a+ l++a+++i+ +++     saa++ +++ + l++g+ +Y+a+F+++dWsG++ a  i +++s   e   + W+aa+
+  VEEI001.0321.00001.C001_01777  667 ARGLLSAFDRIFYRASMG-MRSAAGARLNTGSqLSQGSVMYSARFDTGDWSGDVVAEPIGHNASqaLEILPPLWRAAQ 743 
+                                     67899*************.99999999999999***************************98666699999******* PP
+
+                       T4P_pilY   80 qLrakaaasRkivtangsggs..eavefttanlsstqqaaltataetsstgaellaylrGddskeeeegatfraRtsl 155 
+                                     qL+ + +a R+i + ++ +     a +ft + ++  ++ al       ++ga+++aylrGd+ske   ga fr R+sl
+  VEEI001.0321.00001.C001_01777  744 QLDRMPPARRNIHVGRPGRHPvpVASRFTRDDIDL-RSLAL---HFGGAAGADRIAYLRGDRSKE---GAPFRLRSSL 814 
+                                     *****99*********6666657788888888888.44445...5799***************99...5********* PP
+
+                       T4P_pilY  156 lGDivnSqpvvvgkpdlgygassYaefaaakasrapvvyvGaNdGmLHafdadtageElfAfiPkevlkklaeladpa 233 
+                                     lGDivnS+  ++g+p+  + ++ Ya+f++++ +r+p+v+vGaNdGmLHaf+a+t g+ElfA+iP++++++l++l++p 
+  VEEI001.0321.00001.C001_01777  815 LGDIVNSNISYSGPPSNVFPGAGYADFRRQYGARTPAVFVGANDGMLHAFNANT-GDELFAYIPSWLVPRLSALTEPG 891 
+                                     ******************************************************.*********************** PP
+
+                       T4P_pilY  234 y..shryyvDGspvvadadd......gsswktvlvgglgrGGrsvyALDVtdptspk...vlWeitdadesfadLGqt 300 
+                                     +  +h+ yvD++ vva+a +      + +wktvlv g+g+GG +v+ALDV+dp+ ++   v+We+t ad+  +d+Gq+
+  VEEI001.0321.00001.C001_01777  892 FrnHHQSYVDAPSVVAQAWVgpgnssARDWKTVLVSGTGAGGAGVFALDVSDPARFDsshVMWEFTRADD--PDMGQV 967 
+                                     *9889***************88887669******************************************..****** PP
+
+                       T4P_pilY  301 lskpviakvkeg............ekwvvifgnGydstkdd...........kaalyvvdaatGallkeiaa...... 349 
+                                     l+ p i+k++++            ++w++++g+G ++   d              l+ +d   G+++   ++      
+  VEEI001.0321.00001.C001_01777  968 LGSPRIMKIRTNapmrngrrqaavYRWFAVVGSGVNNHVPDdnqpqpgsgrpALFLLALDKPAGQAWLPGHNyfkvsl 1045
+                                     **********97788999*******************988889*******888888899********99988776666 PP
+
+                       T4P_pilY  350 ..dtgv.gstsmenglasvllvdsnsdgvadrvYagDlgGnlWrfDlsdettskwsvskla....slgg.......pl 413 
+                                       d     + ++  gla+  ++    +g ++ +Y+gDl+G+lWr+ + ++ t+kws++ l+       +       pl
+  VEEI001.0321.00001.C001_01777 1046 ptD--PgLARTVAPGLANFSAL-YGIQGEVTDIYVGDLHGKLWRLQFAGKGTDKWSMNGLSffdqG--TaaspapyPL 1118
+                                     433..23577788899999999.9999******************************999877652..2456888999 PP
+
+                       T4P_pilY  414 f...dtagnaqpitaapevarap....kgyllvlfGtGkylepldkastaqqsfYaikDknstsstaks..ttpltrs 482 
+                                     +   + +g+ qp++aap+v+  p     ++++v++GtGkyle+ d ast  qs+Y i+D++st ++a+   ++  +r+
+  VEEI001.0321.00001.C001_01777 1119 YsarSDDGQVQPLFAAPAVFVGPvvggVETFYVVVGTGKYLEVPDGASTFGQSVYVIYDNGSTRADASPavSAIAGRG 1196
+                                     9877799*********************************************************99887989999*** PP
+
+                       T4P_pilY  483 nLlaqtiseetsatk....atertvsanavn.stkkGWyidLassGervvssav 531 
+                                     +L++ +++  + + +       r  s+   + +t++GW++dL++sGer+ ++a+
+  VEEI001.0321.00001.C001_01777 1197 RLQQGVVDTGNRSVSvrafRWGRPRSDA--DvATRAGWFFDLPVSGERIDQAAL 1248
+                                     *****99966555444444333333443..36****************876665 PP
+
+>> VEEI001.0321.00001.C001_00524  D ATG TGA 566355 571340 Valid VEIS_RS02450 4986 @WP_157048680.1@ VEIS_RS02450 1 566355
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  336.3   0.3  1.5e-103  2.1e-100       2     544 .]     943    1529 ..     942    1529 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 336.3 bits;  conditional E-value: 1.5e-103
+                       T4P_pilY    2 asdaeelvealqqilnsikaratasaasvavssanlqsgtelYqakFksadWsGnLkaykiteddstesatsaWsaas 79  
+                                     a+ +e l ++l+++l +++++    +++ a+ sa+l+ g++ + a+F+ ++ sG+L+ay+++++ +  +at++W+a +
+  VEEI001.0321.00001.C001_00524  943 ARRPELLEAQLRTALHAAAKS---LNSAPAIASAQLTGGSRKFVARFSETTVSGELEAYEVDAE-GEFQATPVWQAGA 1016
+                                     667888999999999998888...788888999*****************************99.588999*****88 PP
+
+                       T4P_pilY   80 qLrakaa....asRkivtangsggseavefttanlsstqqaalta...taetsstgaellaylrGddskeeeegatfr 150 
+                                      L++ ++    ++R i+t++g+g ++ v f++a l ++ ++++t+   ++ ++++++ +l+y+rGd s+e+   + +r
+  VEEI001.0321.00001.C001_00524 1017 MLKERTRlssgNDRAIITNDGNGRAAGVGFRWADLPEDYRKKMTEqgtNQLSEANAQLALNYIRGDHSRED--PNGLR 1092
+                                     88777667778**************************8888888877567777888889***********9..77788 PP
+
+                       T4P_pilY  151 aRts.llGDivnSqpvvvgkpdlgy.......gassYaefaaakasrapvvyvGaNdGmLHafdadtageElfAfiPk 220 
+                                     +R + llG +vn++p + g+p   +       ++  Y++f +a+++ra+++ ++aNdGmLHaf+ dt g+E fA++P 
+  VEEI001.0321.00001.C001_00524 1093 QRADsLLGPVVNATPWIQGPPGPVLagfrsadERIGYSAFFSAHKDRAKLIWLAANDGMLHAFNPDT-GAEVFAYVPG 1169
+                                     887659**************65555779*999999********************************.********** PP
+
+                       T4P_pilY  221 evlkklael...............adpay...........shryyvDGspvvadaddgsswktvlvgglgrGGrsvyA 272 
+                                     ++ ++lae+               +   +           +   yvDG p  ad+ +g +wkt+++g+lgrGG++++A
+  VEEI001.0321.00001.C001_00524 1170 ALANRLAEIplqrgaatrtklegsN---FvtgperhppggTVWAYVDGHPFSADVMVGDDWKTYVFGTLGRGGKGIFA 1244
+                                     *********9999988776665540...2555554555666699********************************** PP
+
+                       T4P_pilY  273 LDVtdptspk.......vlWeitdadesfadLGqtlskpviakvkeg.........ekwvvifgnGydstkdd...ka 331 
+                                     LD t  ++ +       ++W++t++d+  +dLG+  ++  +   +++          k+++++gnGy+s  ++   ka
+  VEEI001.0321.00001.C001_00524 1245 LDATVVADLTesnaasvFKWQFTSTDD--EDLGHITGEVSVHAASNQatpvvrmnnGKYALLLGNGYKSMPSTapgKA 1320
+                                     **99999888899999***********..**********99988886677888777799**********999999999 PP
+
+                       T4P_pilY  332 alyvv..d..aatGallkeiaadtgvgstsmenglasvllvdsnsdgvadrvYagDlgGnlWrfDlsdettskwsvsk 405 
+                                     +lyv+  d   + G+ + ++  ++ v++++  ngl+ +++ d +++g+ad +YagDl+GnlW+fDl+++  ++w+v+ 
+  VEEI001.0321.00001.C001_00524 1321 VLYVLfvDgpNDEGSWTGRY--TKIVADAGPGNGLSMPRWEDIDGNGTADVAYAGDLKGNLWKFDLQSDRPNEWQVAL 1396
+                                     99997334223567777777..888999************************************************99 PP
+
+                       T4P_pilY  406 laslgg.plfdtagnaqpitaapevarapkgyllvlfGtGkylepldk.astaqqsfYaikDknstsstaksttpltr 481 
+                                        +++ pl+   ++   it+ap++++  kg+++v f tG+ +e++d  +  + q++Y+i+D+ s++     t p+++
+  VEEI001.0321.00001.C001_00524 1397 KEGTVNkPLY---TASDAITTAPQIMYMGKGGFMVNFATGNAFETHDFpKLGVPQRIYGIWDRPSFVG----TRPIRT 1467
+                                     7755555988...78889*****************************989999**************9....6799** PP
+
+                       T4P_pilY  482 snLlaqtiseetsatkatertvsanavn.stkkGWyidLassGervvssavlvagrvifttytP 544 
+                                      +L+ + ++++++ +      + a a++ s ++GWy+dL++ Ge v+s+++l +g++ f t+ P
+  VEEI001.0321.00001.C001_00524 1468 DTLALRAYTRNQDGKVI--GAADAPALDwSRHNGWYMDLPNPGEAVLSNPTLESGVLSFVTVRP 1529
+                                     *********99988844..4444555999********************************988 PP
+
+>> VEEI001.0321.00001.C001_03983  C ATG TGA 4221789 4226780 Valid VEIS_RS18515 4992 @WP_049773965.1@ VEIS_RS18515 1 4221
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  325.9   2.3  2.3e-100   3.1e-97       7     544 .]     934    1534 ..     930    1534 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 325.9 bits;  conditional E-value: 2.3e-100
+                       T4P_pilY    7 elvealqqilnsikaratasaasvavssanlqsgtelYqakFksadWsGnLkaykiteddstesatsaWsaasqLrak 84  
+                                      l + l+++ln ++++   ++a  ++ +a+l+s ++ + a+F+s+  +G+L+ay+++++ +  sat+aW+a + L+a 
+  VEEI001.0321.00001.C001_03983  934 LLEAYLRNALNVLAKN---TNAVPTIAAAQLSSAEHKFMARFDSTAVTGELEAYEVDSS-GKFSATPAWKAGALLQAR 1007
+                                     5667788888887777...5555566678899*************************99.58999**********999 PP
+
+                       T4P_pilY   85 aa..asRkivtangsggseavefttanlsstqqaalta...taetsstgaellaylrGddskeeeegatfraRt.sll 156 
+                                     +   +sR+i+t+ng+g ++ v+f++++l ++ ++++ta   ++ + ++++ +l+y+rGd+s+e+   + +r+R  sll
+  VEEI001.0321.00001.C001_03983 1008 TDvaNSREIITNNGNGPAAGVKFRWTSLPEDYKNKMTAqskNRLSGTNAKLALEYIRGDQSREG--FNGLRQRVgSLL 1083
+                                     7799**************************7777777655466677788889***********9..55666664159* PP
+
+                       T4P_pilY  157 GDivnSqpvvvgkpdlgy....gassYaefaaakasrapvvyvGaNdGmLHafdadtageElfAfiPkevlkklael. 229 
+                                     G +vn++p v g pd+++    +++ Y +f +++++ra+++ v+aNdGmLHaf+ dt g+E fA++P ++ ++lae+ 
+  VEEI001.0321.00001.C001_03983 1084 GPVVNATPWVQGRPDATLaglrSDDGYVTFFKNHKDRAKLLWVAANDGMLHAFNPDT-GAEVFAYVPGALANRLAEIp 1160
+                                     ***************99999**9**********************************.*******************9 PP
+
+                       T4P_pilY  230 ................adpay...........shryyvDGspvvadadd....gsswktvlvgglgrGGrsvyALDVt 276 
+                                                         +           +   yvDG+p  ad+++    g++wkt+++g+lgrGG++v+ALD t
+  VEEI001.0321.00001.C001_03983 1161 lqrgsnaagrtklagkD---FvtgaenlpphgTVWPYVDGNPFSADVKVgiaaGTAWKTYVFGTLGRGGKGVFALDAT 1235
+                                     99988888877775540...2555555665545578*************88888************************ PP
+
+                       T4P_pilY  277 dptspk.......vlWeitdadesfadLGqtlskpviakvkeg.........ekwvvifgnGydstkddkaalyv..v 336 
+                                     + ++ +       ++W++t+ad+  +dLG+  ++  i  ++++          k+++++gnGy+s+++ ka+lyv  v
+  VEEI001.0321.00001.C001_03983 1236 RIADLTednaanvFKWQFTAADD--PDLGYITGEVSIHATSNQalpvakmnnGKYALLLGNGYKSESG-KAVLYVlfV 1310
+                                     99999999999************..**********9998888667788877779**************.*****9334 PP
+
+                       T4P_pilY  337 daatGallkeiaa...dtgvgstsmenglasvllvdsnsdgvadrvYagDlgGnlWrfDlsdet.tskwsvskla... 407 
+                                     d   G+ +         + v++++  ngl+ +++ d ++dg+ad +YagDl+Gn+W+f+l++ t  + w+v       
+  VEEI001.0321.00001.C001_03983 1311 DGPGGNGWTPGRDgsyLKIVADAGPGNGLSMPRWEDIDGDGTADVAYAGDLKGNIWKFNLQHRTnPTMWQVDPQDgsa 1388
+                                     66677777777444433344999*************************************954414556665433333 PP
+
+                       T4P_pilY  408 ........slgg..plfdtagnaqpitaapevarapkgyllvlfGtGkylepldk.astaqqsfYaikDknstsstak 474 
+                                             s+g   p     ++ +pit+ap+++   +g+l+v f tG+ +  +d  +  ++q++Y+i+D+ s+  +  
+  VEEI001.0321.00001.C001_03983 1389 sfgpgnasSVGRtwP---LHNAGHPITTAPQLMHMGQGGLMVNFATGNAFGDADFpRVGVTQRVYGIWDRRSVAGAPP 1463
+                                     332222212222444...6799********************************98999***********99987543 PP
+
+                       T4P_pilY  475 s..ttpltrsnLlaqtiseetsatkatertvsanavn.stkkGWyidLassGervvssavlvagrvifttytP 544 
+                                        t ++++++L+ +t++++++   +t+   +  a++ s ++GWyidL+  Ge v+s++ l ag++ f t+ P
+  VEEI001.0321.00001.C001_03983 1464 FaqTRTIDANTLVRRTYTRNAEGV-VTVAADT-PALDwSAHNGWYIDLPGPGEAVLSDPFLDAGVLSFVTVRP 1534
+                                     355999************998776.3333333.36889********************************988 PP
+
+>> VEEI001.0321.00001.C001_03285  C ATG TGA 3500668 3505821 Valid VEIS_RS15300 5154 @WP_011810873.1@ VEIS_RS15300 1 3500
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -4.2   0.5       2.3   3.2e+03      28      57 ..     119     148 ..     114     155 .. 0.82
+   2 !  319.0   3.0   2.7e-98   3.6e-95       7     544 .]     972    1593 ..     968    1593 .. 0.83
+
+  Alignments for each domain:
+  == domain 1  score: -4.2 bits;  conditional E-value: 2.3
+                       T4P_pilY  28 asvavssanlqsgtelYqakFksadWsGnL 57 
+                                      v+v +a++++ +  Y+ + +++ WsGn+
+  VEEI001.0321.00001.C001_03285 119 EPVTVGTATTTTTATRYKCSASASHWSGNF 148
+                                    55777888899999999999999*****97 PP
+
+  == domain 2  score: 319.0 bits;  conditional E-value: 2.7e-98
+                       T4P_pilY    7 elvealqqilnsikaratasaasvavssanlqsgtelYqakFksadWsGnLkaykiteddstesatsaWsaasqLrak 84  
+                                      l + l+++ln ++++   ++a  a+ +a+++s +  + a+F+s++ +G+L+ayki+++++  ++t+ W+a + L++ 
+  VEEI001.0321.00001.C001_03285  972 LLEAYLRNALNVMAKN---TNAVPAIAAAQVSSAEYKFVARFDSTTVTGELEAYKIDSATGEFKTTPEWKAGALLQTR 1046
+                                     5667788888888888...6777777788899****************************999***********9998 PP
+
+                       T4P_pilY   85 aa..asRkivtangsggseavefttanlss....tqqaalta.taetsstgaellaylrGddskeeeegatfraRt.s 154 
+                                     +   +sR+i+t+n ++ s+ ++f++++  s    +q+++ ++ ++ +++++  +l+y+rGd+s+e+   + +r+R  s
+  VEEI001.0321.00001.C001_03285 1047 TDvaNSRQIITNNRNSPSAGTKFRWDEGLSrfykDQMTTTQSrNRLSETNAILALNYIRGDQSNES--LNGLRQRVgS 1122
+                                     7789*********999999*****9987776664444444443444555556789**********8..6666666515 PP
+
+                       T4P_pilY  155 llGDivnSqpvvvgkpdlgy....gassYaefaaakasrapvvyvGaNdGmLHafdadtageElfAfiPkevlkklae 228 
+                                     llG +vn++p v g pd ++    +++ Y +f +++++ra+++ v+aNdGmLHaf+ dt g+E fA++P ++ ++l+e
+  VEEI001.0321.00001.C001_03285 1123 LLGPVVNATPWVQGRPDSTLaglrSDKDYVHFYKSYKDRAKLLWVAANDGMLHAFNPDT-GDEVFAYVPGALANRLTE 1199
+                                     9**************9999999**9**********************************.****************** PP
+
+                       T4P_pilY  229 l.................adpay...........shryyvDGspvvadadd.............gsswktvlvgglgr 265 
+                                     +                     +           +   yvDG+p  ad+++             +++wkt+++g+lgr
+  VEEI001.0321.00001.C001_03285 1200 IplqrgsnaagrtklagkD---FvigaenhppggTVWPYVDGNPFSADVKVglathtskctapaNTAWKTYVFGTLGR 1274
+                                     *999988888777775440...2566663345555588************************999************* PP
+
+                       T4P_pilY  266 GGrsvyALDVtdptspk.......vlWeitdadesfadLGqtlskpviakvkeg.........ekwvvifgnGydstk 327 
+                                     GG++v+ALD t  ++ +       ++W++t++d+  +dLG+  ++ +i  ++++          k+++++gnGy+s++
+  VEEI001.0321.00001.C001_03285 1275 GGKGVFALDATCIADLTednaanvFKWQFTADDD--PDLGYITGDVTIHPTSNQaspvakmnnGKYALLLGNGYKSDS 1350
+                                     *********99888888888999********999..************999996678888887799************ PP
+
+                       T4P_pilY  328 ddkaalyvv........daatGallkeiaa..dtgv......gstsmenglasvllvdsnsdgvadrvYagDlgGnlW 389 
+                                     + ka+l+v+        d+  G    ++++  +  +      ++t+ +ngl+ +++ d ++dg+ad +YagDl+Gn+W
+  VEEI001.0321.00001.C001_03285 1351 G-KAVLFVLfvngpnapDVPGGFDRVRWTPgaN--EgylkivADTGPNNGLSMPRWEDIDGDGTADVAYAGDLKGNIW 1425
+                                     *.******9443333333333333333323442..255777799********************************** PP
+
+                       T4P_pilY  390 rfDlsdett.skwsvskla..........slgg...plfdtagnaqpitaapevarapkgyllvlfGtGkylepldk. 452 
+                                     +fDls+ t+ s w+v   +          s+g    p     ++  pit+ap+++   +g+l+v f tG+ ++ +d  
+  VEEI001.0321.00001.C001_03285 1426 KFDLSNPTNpSLWQVDPQSgsiasapgkaSIGSivsP---LYNAGLPITTAPQLMHMGQGGLMVNFATGSAFDDADFp 1500
+                                     *****65431556665544444433333233223334...66999*******************************98 PP
+
+                       T4P_pilY  453 astaqqsfYaikDknstsstaks..ttpltrsnLlaqtiseetsatkatertvsanavn.stkkGWyidLassGervv 527 
+                                     +  ++q++Y+i+D+ s   + +    +++++++L+ + ++++t+   +t+   +  a+n s+++GWy+dL+ sGe v+
+  VEEI001.0321.00001.C001_03285 1501 KLGVTQRVYGIWDRRSLAGAPSFarVKTVDTNTLVRRAYTRSTEGV-VTVAADT-PALNwSNHNGWYMDLPDSGEAVL 1576
+                                     999************998855447799*************998776.3333333.36889****************** PP
+
+                       T4P_pilY  528 ssavlvagrvifttytP 544 
+                                     s+++l+ag++ f t+ P
+  VEEI001.0321.00001.C001_03285 1577 SDPSLSAGVLSFVTVRP 1593
+                                     **************988 PP
+
+>> THHY002.0321.00001.C001_02025  D ATG TAA 2186771 2190373 Valid TTHT_RS10130 3603 @WP_201327864.1@ TTHT_RS10130 1 2186
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  176.3   2.8   4.7e-55   6.3e-52      37     442 ..     516     997 ..     481     998 .. 0.70
+   2 ?   -3.9   0.0       1.8   2.5e+03     503     533 ..    1043    1073 ..    1029    1075 .. 0.70
+
+  Alignments for each domain:
+  == domain 1  score: 176.3 bits;  conditional E-value: 4.7e-55
+                       T4P_pilY  37 lqsgtelYqakFks.............adWsGnLkaykited.................ds..tesatsaWsaasqLrak 84 
+                                    ++ + ++Y++k+ +             ++W G+L ay                      ++   ++  + Wsa ++L++ 
+  THHY002.0321.00001.C001_02025 516 TTPSGATYEGKYPAleanimyttkifyPSWEGDLIAYMPMYRsasdhklyyfpqiydssTGtyKPDYPKIWSAREELSKV 595
+                                    34444444444444444444444555599999999998874445667888888888654226688888999995555555 PP
+
+                       T4P_pilY  85 aa..........asRkivtangsggseavefttanlss....tqqaalta..........taetsstgaellaylrGdds 140
+                                     +            R  +  +g +++e +++ + n++     ++  ++t           t+++     +l++ + +   
+  THHY002.0321.00001.C001_02025 596 LNgyddngnhvpGIRDALGMTGYTTTEDDSIPWRNIKLvvpnGAYPNFTMinlnqfvydsTNQKWVPSPTLVSQVADAVY 675
+                                    44555555544433333333333333344444444444333322222222434444444333333334444444444444 PP
+
+                       T4P_pilY 141 keeee......gatfraRtsllGDivnSqpvvvgkpdlgy..gassYaefaaaka.srapvvyvGaNdGmLHafdadtag 211
+                                     ++++      +      t++lGDi  S+p ++ +p++g+   ++sY +++   +  r+pvv+vGaNdGmLH+f+a t g
+  THHY002.0321.00001.C001_02025 676 PGDSNaigkaaKLIHFVQTRMLGDITYSSPSTIFEPEMGFedWRDSYLKYKIVARhLRTPVVVVGANDGMLHGFNAYT-G 754
+                                    44333444432444467899******************9988789999999877769*********************.* PP
+
+                       T4P_pilY 212 eElfAfiPkevlkklael................adpay.......shryyvDGspvvadadd.......gsswktvlvg 261
+                                    +E++A iP  v++ l+++                +            h y++  sp ++d  +       + +w+tvlv+
+  THHY002.0321.00001.C001_02025 755 KEEWAVIPWGVIESLKQMvdnydpennpsgqvdvT---NqdslgrnMHIYGIASSPKIVDIGNldddnpdNDEWRTVLVC 831
+                                    ***************99977766665555555543...055599999*************99999999999********* PP
+
+                       T4P_pilY 262 glgrGGrsvyALDVtdptspkvlWeitdadesfadLGqtlskpviakvkeg..ekwvvifgnGydstkddkaalyvvdaa 339
+                                    glg GG+s++ LDVt+p +p++ W+ + +++ f+dLG t+  p++  +k g  + +v +f++Gy++++++++ lyv+++a
+  THHY002.0321.00001.C001_02025 832 GLGGGGNSYFCLDVTNPLNPQIRWDTSTNSD-FDDLGETWAYPAMWLTKMGndYYNVGFFTSGYSTDNSKGKELYVMNIA 910
+                                    *************************999666.***********9988888666999************************ PP
+
+                       T4P_pilY 340 tGallkeiaa...dtgvgstsmenglasvllvdsnsdgvadrvYagDlgGnlWrfDlsdettskwsvsklaslggplfdt 416
+                                    tG+l+ + +     +++   + + g+ ++        ++++ vY+g ++G+l+r Dl +++  +            +f  
+  THHY002.0321.00001.C001_02025 911 TGDLITKKSIlsgRNDDFLFAAPAGILNP------DARFIKGVYVGSTHGELFRYDLMADDVCE------------VF-D 971
+                                    *****999443343444444444444444......4469******************9765442............44.3 PP
+
+                       T4P_pilY 417 agnaqpitaapevarapkgyllvlfG 442
+                                    ++n   i + p+v  +++++ +v +G
+  THHY002.0321.00001.C001_02025 972 TNNGYAIITLPAVYVDSSNNEWVSIG 997
+                                    45555566667777777777777666 PP
+
+  == domain 2  score: -3.9 bits;  conditional E-value: 1.8
+                       T4P_pilY  503 vsanavn.stkkGWyidLassGervvssavlv 533 
+                                       ++++  + ++G+y++L+ + e +++++++ 
+  THHY002.0321.00001.C001_02025 1043 NFNTEIPlGGNDGYYFELK-RNETMFADPLIT 1073
+                                     333445578999******9.889888888775 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (544 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       281  (0.0229744); expected 244.6 (0.02)
+Passed bias filter:                      211  (0.0172512); expected 244.6 (0.02)
+Passed Vit filter:                        28  (0.00228926); expected 12.2 (0.001)
+Passed Fwd filter:                         9  (0.000735835); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):               9  [number of targets reported over threshold]
+# CPU time: 0.17u 0.01s 00:00:00.18 Elapsed: 00:00:00.18
+# Mc/sec: 12062.65
+//
+[ok]

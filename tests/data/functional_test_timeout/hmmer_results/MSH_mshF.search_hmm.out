@@ -1,0 +1,50 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/MSH_mshF.hmm
+# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# output directed to file:         functional_test_timeout/hmmer_results/MSH_mshF.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       MSH_mshF  [M=101]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+  ------ inclusion threshold ------
+      0.048   13.1   0.0      0.064   12.7   0.0    1.2  1  THHY002.0321.00001.C001_01165  D ATG TAA 1268504 1268938 Valid 
+
+
+Domain annotation for each sequence (and alignments):
+>> THHY002.0321.00001.C001_01165  D ATG TAA 1268504 1268938 Valid TTHT_RS05830 435 @WP_201327040.1@ TTHT_RS05830 1 12685
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.7   0.0   5.2e-06     0.064       1      55 [.      13      67 ..      12      88 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 12.7 bits;  conditional E-value: 5.2e-06
+                       MSH_mshF  1 vvwvliivillvallsvlrkveedaqktalalaskqlieraslykqqWllkGkps 55
+                                   v++++i  il+ + + +++ + e+a +++++ + +++ + + ++ ++  l+G p 
+  THHY002.0321.00001.C001_01165 13 VMVIVILGILAAVAMPKYQDMREEALRASAKATISNIRSAIAIFYAKSALNGTPV 67
+                                   567788899*******************************999999999999885 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (101 nodes)
+Target sequences:                      12231  (4044983 residues searched)
+Passed MSV filter:                       358  (0.0292699); expected 244.6 (0.02)
+Passed bias filter:                      314  (0.0256725); expected 244.6 (0.02)
+Passed Vit filter:                        25  (0.00204399); expected 12.2 (0.001)
+Passed Fwd filter:                         1  (8.17595e-05); expected 0.1 (1e-05)
+Initial search space (Z):              12231  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.06
+# Mc/sec: 6209.47
+//
+[ok]

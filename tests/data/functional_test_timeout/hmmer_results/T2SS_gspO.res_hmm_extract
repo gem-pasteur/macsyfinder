@@ -1,0 +1,9 @@
+# gene: T2SS_gspO extract from functional_test_timeout/hmmer_results/T2SS_gspO.search_hmm.out hmm output
+# profile length= 228
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+PSAV001.0321.00001.C001_01018	PSAV001.0321.00001.C001	926	290	T2SS_gspO	5.500e-81	271.000	1.000	0.828	31	270
+THHY002.0321.00001.C001_00712	THHY002.0321.00001.C001	5932	183	T2SS_gspO	6.300e-08	32.000	0.513	0.601	4	113
+THHY002.0321.00001.C001_01147	THHY002.0321.00001.C001	6354	269	T2SS_gspO	2.700e-46	157.600	0.917	0.773	40	247
+VEEI001.0321.00001.C001_04076	VEEI001.0321.00001.C001	11157	294	T2SS_gspO	1.700e-74	249.800	0.982	0.837	25	270

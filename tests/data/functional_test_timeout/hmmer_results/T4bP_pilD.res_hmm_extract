@@ -1,0 +1,9 @@
+# gene: T4bP_pilD extract from functional_test_timeout/hmmer_results/T4bP_pilD.search_hmm.out hmm output
+# profile length= 220
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+PSAV001.0321.00001.C001_01018	PSAV001.0321.00001.C001	926	290	T4bP_pilD	1.400e-68	230.400	0.991	0.821	31	268
+THHY002.0321.00001.C001_00712	THHY002.0321.00001.C001	5932	183	T4bP_pilD	4.700e-11	42.200	0.614	0.863	7	164
+THHY002.0321.00001.C001_01147	THHY002.0321.00001.C001	6354	269	T4bP_pilD	7.200e-56	188.700	1.000	0.803	33	248
+VEEI001.0321.00001.C001_04076	VEEI001.0321.00001.C001	11157	294	T4bP_pilD	9.400e-66	221.100	0.991	0.844	25	272
