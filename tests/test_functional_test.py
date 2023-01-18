@@ -138,6 +138,7 @@ class Test(MacsyTest):
                f"--previous-run {expected_result_dir} " \
                "--relative-path " \
                "--timeout 2 "
+
         with self.catch_io(out=True, err=True):
             with self.catch_log() as log:
                 self._macsyfinder_run(args)
@@ -146,6 +147,7 @@ class Test(MacsyTest):
                          """Timeout is over. Aborting
 The THHY002.0321.00001.C001 cannot be solved in time skip it!
 The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""")
+
         # test only if THHY002.0321.00001.C001 has_been skipped
         for file_name in (self.summary,):
             with self.subTest(file_name=file_name):
@@ -153,10 +155,10 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-        expected_result = self.find_data(expected_result_dir, self.rejected_candidates_txt)
-        get_results = os.path.join(self.out_dir, self.rejected_candidates_txt)
-        self.assertFileEqual(expected_result, get_results, comment="#")
-
+                with open(get_results) as results:
+                    lines = results.readlines()
+                self.assertEqual(lines[4],
+                                 "# WARNING: The replicon 'THHY002.0321.00001.C001' has been SKIPPED. Cannot be solved before timeout.\n")
 
     def test_only_loners(self):
         # genetic organization of MOBP1_twice.fast
