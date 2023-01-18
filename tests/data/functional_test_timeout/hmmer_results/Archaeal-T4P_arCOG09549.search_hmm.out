@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG09549.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG09549.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -27,14 +27,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (358 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       307  (0.0251002); expected 244.6 (0.02)
-Passed bias filter:                      247  (0.0201946); expected 244.6 (0.02)
-Passed Vit filter:                        24  (0.00196223); expected 12.2 (0.001)
-Passed Fwd filter:                         1  (8.17595e-05); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       277  (0.025253); expected 219.4 (0.02)
+Passed bias filter:                      222  (0.0202389); expected 219.4 (0.02)
+Passed Vit filter:                        20  (0.00182332); expected 11.0 (0.001)
+Passed Fwd filter:                         0  (0); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
 Domain search space  (domZ):               0  [number of targets reported over threshold]
-# CPU time: 0.08u 0.00s 00:00:00.08 Elapsed: 00:00:00.07
-# Mc/sec: 18406.85
+# CPU time: 0.07u 0.00s 00:00:00.07 Elapsed: 00:00:00.09
+# Mc/sec: 13784.87
 //
 [ok]

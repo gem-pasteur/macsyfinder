@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG04673.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG04673.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -16,15 +16,15 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
   ------ inclusion threshold ------
-      0.033   13.6   0.1      0.052   13.0   0.1    1.4  1  PSAV001.0321.00001.C001_00739  C ATG TGA 779055 779642 Valid BK
-      0.076   12.4   0.6          3    7.2   0.1    2.2  2  PSAV001.0321.00001.C001_02955  C ATG TAA 3281191 3281802 Valid 
+      0.029   13.6   0.1      0.046   13.0   0.1    1.4  1  PSAV001.0321.00001.C001_00739  C ATG TGA 779055 779642 Valid BK
+      0.068   12.4   0.6        2.7    7.2   0.1    2.2  2  PSAV001.0321.00001.C001_02955  C ATG TAA 3281191 3281802 Valid 
 
 
 Domain annotation for each sequence (and alignments):
 >> PSAV001.0321.00001.C001_00739  C ATG TGA 779055 779642 Valid BKM03_RS03985 588 @WP_005739296.1@ BKM03_RS03985 1 77905
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   13.0   0.1   8.4e-06     0.052      95     137 ..      42      82 ..      18      90 .. 0.83
+   1 ?   13.0   0.1   8.4e-06     0.046      95     137 ..      42      82 ..      18      90 .. 0.83
 
   Alignments for each domain:
   == domain 1  score: 13.0 bits;  conditional E-value: 8.4e-06
@@ -36,8 +36,8 @@ Domain annotation for each sequence (and alignments):
 >> PSAV001.0321.00001.C001_02955  C ATG TAA 3281191 3281802 Valid BKM03_RS32240 612 @WP_146047708.1@ BKM03_RS32240 1 328
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?    7.2   0.1    0.0005         3      12      37 ..      10      35 ..       7      37 .. 0.91
-   2 ?    3.4   0.0    0.0074        46      26      59 ..     114     147 ..     109     171 .. 0.82
+   1 ?    7.2   0.1    0.0005       2.7      12      37 ..      10      35 ..       7      37 .. 0.91
+   2 ?    3.4   0.0    0.0074        41      26      59 ..     114     147 ..     109     171 .. 0.82
 
   Alignments for each domain:
   == domain 1  score: 7.2 bits;  conditional E-value: 0.0005
@@ -57,14 +57,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (158 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       588  (0.0480746); expected 244.6 (0.02)
-Passed bias filter:                      359  (0.0293516); expected 244.6 (0.02)
-Passed Vit filter:                        37  (0.0030251); expected 12.2 (0.001)
-Passed Fwd filter:                         2  (0.000163519); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       588  (0.0536056); expected 219.4 (0.02)
+Passed bias filter:                      347  (0.0316346); expected 219.4 (0.02)
+Passed Vit filter:                        28  (0.00255265); expected 11.0 (0.001)
+Passed Fwd filter:                         3  (0.000273498); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
 Domain search space  (domZ):               2  [number of targets reported over threshold]
-# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.05
-# Mc/sec: 11967.69
+# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.04
+# Mc/sec: 11903.81
 //
 [ok]

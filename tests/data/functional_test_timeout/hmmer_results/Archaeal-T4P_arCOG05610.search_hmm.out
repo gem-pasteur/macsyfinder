@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG05610.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG05610.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -16,15 +16,15 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
   ------ inclusion threshold ------
-      0.044   13.3   0.0          7    6.3   0.0    2.4  2  THHY002.0321.00001.C001_02032  C ATG TAA 2195912 2196853 Valid 
+      0.039   13.3   0.0        6.3    6.3   0.0    2.4  2  THHY002.0321.00001.C001_02032  C ATG TAA 2195912 2196853 Valid 
 
 
 Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_02032  C ATG TAA 2195912 2196853 Valid TTHT_RS10165 942 @WP_201327871.1@ TTHT_RS10165 1 21959
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?    4.5   0.0    0.0021        25      40      79 ..     176     215 ..     170     231 .. 0.85
-   2 ?    6.3   0.0   0.00057         7      17      43 ..     270     296 ..     266     304 .. 0.92
+   1 ?    4.5   0.0    0.0021        23      40      79 ..     176     215 ..     170     231 .. 0.85
+   2 ?    6.3   0.0   0.00057       6.3      17      43 ..     270     296 ..     266     304 .. 0.92
 
   Alignments for each domain:
   == domain 1  score: 4.5 bits;  conditional E-value: 0.0021
@@ -44,14 +44,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (107 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       541  (0.0442319); expected 244.6 (0.02)
-Passed bias filter:                      454  (0.0371188); expected 244.6 (0.02)
-Passed Vit filter:                        40  (0.00327038); expected 12.2 (0.001)
-Passed Fwd filter:                         1  (8.17595e-05); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       466  (0.0424834); expected 219.4 (0.02)
+Passed bias filter:                      382  (0.0348254); expected 219.4 (0.02)
+Passed Vit filter:                        31  (0.00282615); expected 11.0 (0.001)
+Passed Fwd filter:                         1  (9.1166e-05); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
 Domain search space  (domZ):               1  [number of targets reported over threshold]
 # CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.04
-# Mc/sec: 9002.55
+# Mc/sec: 7937.62
 //
 [ok]

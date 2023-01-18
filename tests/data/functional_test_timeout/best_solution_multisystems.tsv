@@ -1,4 +1,4 @@
-# macsyfinder 20230117.dev
+# macsyfinder 20230118.dev
 # models : TFF-SF-0.0b2
-# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all -w 5 --sequence-db tests/data/base/gembase_with_slow_genome.fa --timeout 2 --out-dir functional_test_timeout
+# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all -w 5 --sequence-db tests/data/base/gembase_w_slow_genome.fa --timeout 2 --out-dir functional_test_timeout --index-dir .
 # No Multisystems found

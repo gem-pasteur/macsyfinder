@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG06912.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG06912.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -13,28 +13,43 @@
 Query:       arCOG06912  [M=206]
 Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
-    E-value  score  bias    E-value  score  bias    exp  N  Sequence Description
-    ------- ------ -----    ------- ------ -----   ---- --  -------- -----------
-
-   [No hits detected that satisfy reporting thresholds]
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
+  ------ inclusion threshold ------
+      0.026   13.6   6.1      0.041   13.0   6.1    1.3  1  XAOR001.0321.00001.C001_03387  D ATG TAG 3847372 3848484 Valid 
 
 
 Domain annotation for each sequence (and alignments):
+>> XAOR001.0321.00001.C001_03387  D ATG TAG 3847372 3848484 Valid EYR27_RS17750 1113 @WP_019301712.1@ EYR27_RS17750 1 38
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.0   6.1   3.7e-06     0.041       7      93 ..     110     199 ..     107     265 .. 0.72
 
-   [No targets detected that satisfy reporting thresholds]
+  Alignments for each domain:
+  == domain 1  score: 13.0 bits;  conditional E-value: 3.7e-06
+                     arCOG06912   7 ivllaavavvLiiAlvikPvvtgasaafsl.........ditvPdtsptPavtaspiptvstatPtptptptkelqpirv 77 
+                                    i+ l+ v++ Li+  +  P vt  ++ +s          d+++P + p+P  +++p+p ++  tPtp++tp+   +p++ 
+  XAOR001.0321.00001.C001_03387 110 ISALLHVLMLLILLSASTPTVTPPQGSASGgrikvdfvgDTSQP-DQPVP--SPTPVPPTP--TPTPVQTPPAA-SPVQS 183
+                                    55555555555555556666665555544466678999999999.77778..556666664..66666666666.67777 PP
+
+                     arCOG06912  78 ffvkpptyhlsnqtst 93 
+                                    + v+++   ++ q +t
+  XAOR001.0321.00001.C001_03387 184 TLVQQAKNPVPPQGNT 199
+                                    8888888888877444 PP
+
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (206 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       445  (0.036383); expected 244.6 (0.02)
-Passed bias filter:                      352  (0.0287793); expected 244.6 (0.02)
-Passed Vit filter:                        49  (0.00400621); expected 12.2 (0.001)
-Passed Fwd filter:                         1  (8.17595e-05); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               0  [number of targets reported over threshold]
-# CPU time: 0.06u 0.00s 00:00:00.06 Elapsed: 00:00:00.09
-# Mc/sec: 8543.03
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       438  (0.0399307); expected 219.4 (0.02)
+Passed bias filter:                      344  (0.0313611); expected 219.4 (0.02)
+Passed Vit filter:                        39  (0.00355547); expected 11.0 (0.001)
+Passed Fwd filter:                         1  (9.1166e-05); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.07
+# Mc/sec: 9848.06
 //
 [ok]

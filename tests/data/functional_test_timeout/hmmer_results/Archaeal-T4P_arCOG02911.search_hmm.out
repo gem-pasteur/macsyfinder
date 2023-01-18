@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG02911.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG02911.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -15,17 +15,35 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-     0.0084   15.8   0.0      0.021   14.5   0.0    1.8  1  PSAV001.0321.00001.C001_04972  C ATG TGA 5562199 5563878 Valid 
+    0.00022   20.8   0.2    0.00029   20.4   0.2    1.1  1  XAOR001.0321.00001.C001_00877  D ATG TAG 922302 922751 Valid EY
+     0.0075   15.8   0.0      0.019   14.5   0.0    1.8  1  PSAV001.0321.00001.C001_04972  C ATG TGA 5562199 5563878 Valid 
 
 
 Domain annotation for each sequence (and alignments):
+>> XAOR001.0321.00001.C001_00877  D ATG TAG 922302 922751 Valid EYR27_RS04585 450 @WP_192807631.1@ EYR27_RS04585 1 92230
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   20.4   0.2   5.3e-08   0.00029       8     127 ..      21     133 ..      19     139 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 20.4 bits;  conditional E-value: 5.3e-08
+                     arCOG02911   8 Gfvli.lgiiviavslvlvygvpslgktaeishmteveqeftelksdidslivnvsrgltvsveislgtipflspirssg 86 
+                                    Gf li l+i+v+ v+++ ++ +ps+ +   +s   +++ +++e+++ +++  ++ + ++ vs+++  g+           
+  XAOR001.0321.00001.C001_00877  21 GFTLIeLMIVVAIVGILAAVAYPSYADHVRKSRRAQAKADLVEYSQLLERSHTT-N-NTYVSFKFGNGS----------T 88 
+                                    566664799999999***********************************9887.5.788888887777..........7 PP
+
+                     arCOG02911  87 tlsveesdsgt..invtvngyngssgsdndnrgnv...slgsieye 127
+                                    t++  + ++gt  +n+t  +++++++ + +++g+    ++g+++++
+  XAOR001.0321.00001.C001_00877  89 TIQSPR-EGGTaqYNITLATTQSTFTLTAAPQGSQakdNCGTLTLN 133
+                                    777776.555455788887777766666666665555577776665 PP
+
 >> PSAV001.0321.00001.C001_04972  C ATG TGA 5562199 5563878 Valid BKM03_RS26610 1680 @WP_162497115.1@ BKM03_RS26610 1 55
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   14.5   0.0   1.7e-06     0.021       4     144 ..      26     332 ..      17     333 .. 0.77
+   1 !   14.5   0.0   3.4e-06     0.019       4     144 ..      26     332 ..      17     333 .. 0.77
 
   Alignments for each domain:
-  == domain 1  score: 14.5 bits;  conditional E-value: 1.7e-06
+  == domain 1  score: 14.5 bits;  conditional E-value: 3.4e-06
                      arCOG02911   4 SeviGfvlil....................giiviavslvlvygvpslgktaeishmteveqeftelksdidslivnvsr 63 
                                     S  iGfvl++                    gi +i+ +++l+y    +gk    ++ +     ++ +ks++  ++  ++ 
   PSAV001.0321.00001.C001_04972  26 SLWIGFVLLVylnaqennmeisnirsvtrwGIAAIFGTVLLTYSGHWWGKAVAHEKAE-----LAAYKSNVAAQVSDQQA 100
@@ -51,14 +69,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (145 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       543  (0.0443954); expected 244.6 (0.02)
-Passed bias filter:                      475  (0.0388357); expected 244.6 (0.02)
-Passed Vit filter:                        61  (0.00498733); expected 12.2 (0.001)
-Passed Fwd filter:                         3  (0.000245278); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               1  [number of targets reported over threshold]
-# CPU time: 0.06u 0.00s 00:00:00.06 Elapsed: 00:00:00.08
-# Mc/sec: 6745.56
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       491  (0.0447625); expected 219.4 (0.02)
+Passed bias filter:                      424  (0.0386544); expected 219.4 (0.02)
+Passed Vit filter:                        60  (0.00546996); expected 11.0 (0.001)
+Passed Fwd filter:                         4  (0.000364664); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.06
+# Mc/sec: 8478.33
 //
 [ok]

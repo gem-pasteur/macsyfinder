@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG03871.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG03871.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -15,26 +15,36 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-
-   [No hits detected that satisfy reporting thresholds]
+  ------ inclusion threshold ------
+      0.094   12.5   0.2        0.2   11.4   0.2    1.5  1  THHY002.0321.00001.C001_00929  C ATG TAA 1019388 1021199 Valid 
 
 
 Domain annotation for each sequence (and alignments):
+>> THHY002.0321.00001.C001_00929  C ATG TAA 1019388 1021199 Valid TTHT_RS04650 1812 @WP_201328873.1@ TTHT_RS04650 1 1019
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.4   0.2   1.8e-05       0.2       1      26 [.     328     354 ..     328     359 .. 0.83
 
-   [No targets detected that satisfy reporting thresholds]
+  Alignments for each domain:
+  == domain 1  score: 11.4 bits;  conditional E-value: 1.8e-05
+                     arCOG03871   1 lstliaa.viLviiavvasivvvlwnt 26 
+                                    +s++i+a ++ +iia+ a   +++w +
+  THHY002.0321.00001.C001_00929 328 MSPVIIAaIVFIIIAIGAVGGYYYWQS 354
+                                    788877758889999***99*****76 PP
+
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (67 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       932  (0.0761998); expected 244.6 (0.02)
-Passed bias filter:                      696  (0.0569046); expected 244.6 (0.02)
-Passed Vit filter:                        96  (0.00784891); expected 12.2 (0.001)
-Passed Fwd filter:                        16  (0.00130815); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               0  [number of targets reported over threshold]
-# CPU time: 0.06u 0.00s 00:00:00.06 Elapsed: 00:00:00.10
-# Mc/sec: 2539.10
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       843  (0.0768529); expected 219.4 (0.02)
+Passed bias filter:                      653  (0.0595314); expected 219.4 (0.02)
+Passed Vit filter:                        88  (0.00802261); expected 11.0 (0.001)
+Passed Fwd filter:                        11  (0.00100283); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.06
+# Mc/sec: 3948.20
 //
 [ok]

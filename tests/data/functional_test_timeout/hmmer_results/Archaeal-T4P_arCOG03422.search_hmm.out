@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG03422.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG03422.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -15,27 +15,28 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-     0.0017   17.9   0.3      0.046   13.3   0.1    2.2  2  THHY002.0321.00001.C001_01698  C ATG TGA 1829707 1830228 Valid 
+     0.0015   17.9   0.3      0.041   13.3   0.1    2.2  2  THHY002.0321.00001.C001_01698  C ATG TGA 1829707 1830228 Valid 
   ------ inclusion threshold ------
-      0.026   14.1   0.0      0.029   13.9   0.0    1.1  1  THHY002.0321.00001.C001_01751  D ATG TAA 1889554 1889736 Valid 
-      0.029   13.9   0.4       0.03   13.9   0.4    1.0  1  THHY002.0321.00001.C001_00943  C ATG TAG 1039288 1039434 Valid 
+      0.023   14.1   0.0      0.026   13.9   0.0    1.1  1  THHY002.0321.00001.C001_01751  D ATG TAA 1889554 1889736 Valid 
+      0.026   13.9   0.4      0.027   13.9   0.4    1.0  1  THHY002.0321.00001.C001_00943  C ATG TAG 1039288 1039434 Valid 
+      0.065   12.6   0.0       0.21   11.0   0.0    1.8  1  XAOR001.0321.00001.C001_03801  C ATG TAG 4305015 4305875 Valid 
 
 
 Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01698  C ATG TGA 1829707 1830228 Valid scpB 522 @TTHT_RS08495@WP_201327545.1@ TTHT_RS08495 1 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   13.3   0.1   1.1e-05     0.046       7      57 ..       2      51 ..       1      58 [. 0.89
-   2 ?    2.7   0.0     0.023        92       9      37 ..      84     113 ..      65     126 .. 0.77
+   1 !   13.3   0.1   1.5e-05     0.041       7      57 ..       2      51 ..       1      58 [. 0.89
+   2 ?    2.7   0.0      0.03        83       9      37 ..      84     113 ..      65     126 .. 0.77
 
   Alignments for each domain:
-  == domain 1  score: 13.3 bits;  conditional E-value: 1.1e-05
+  == domain 1  score: 13.3 bits;  conditional E-value: 1.5e-05
                      arCOG03422  7 sksklrrkvlelLasiyprpkdlaeiakavkidesnvrgalkGlgnrYske 57
                                    +k +l++ v  +L s    p +++eia   + d ++v ++l+ l+  Y+++
   THHY002.0321.00001.C001_01698  2 NKETLKQVVEAILFS-SDTPLTAKEIASFLEKDKKEVEEILEELKDDYKSK 51
                                    788999888888888.8*******************************986 PP
 
-  == domain 2  score: 2.7 bits;  conditional E-value: 0.023
+  == domain 2  score: 2.7 bits;  conditional E-value: 0.03
                      arCOG03422   9 sklrrkvlelLasi.yprpkdlaeiakavk 37 
                                     ++  r  le La i y +p++++eia++ +
   THHY002.0321.00001.C001_01698  84 QSFSRAALETLAIIaYRQPITAQEIAALRG 113
@@ -44,10 +45,10 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01751  D ATG TAA 1889554 1889736 Valid TTHT_RS08760 183 @WP_201327594.1@ TTHT_RS08760 1 18895
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   13.9   0.0   7.2e-06     0.029      10      52 ..       3      44 ..       1      47 [. 0.92
+   1 ?   13.9   0.0   9.6e-06     0.026      10      52 ..       3      44 ..       1      47 [. 0.92
 
   Alignments for each domain:
-  == domain 1  score: 13.9 bits;  conditional E-value: 7.2e-06
+  == domain 1  score: 13.9 bits;  conditional E-value: 9.6e-06
                      arCOG03422 10 klrrkvlelLasiyprpkdlaeiakavkidesnvrgalkGlgn 52
                                    +l+  vl+ +++   +p+++ ++ak+ ++d ++v  a+k l+n
   THHY002.0321.00001.C001_01751  3 ELKDAVLKAMKD-AGKPVRPGDVAKMLNVDSKEVSKAIKELKN 44
@@ -56,28 +57,40 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_00943  C ATG TAG 1039288 1039434 Valid TTHT_RS04720 147 @WP_201328886.1@ TTHT_RS04720 1 10392
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   13.9   0.4   7.4e-06      0.03       2      45 ..       4      47 ..       3      48 .] 0.94
+   1 ?   13.9   0.4   9.8e-06     0.027       2      45 ..       4      47 ..       3      48 .] 0.94
 
   Alignments for each domain:
-  == domain 1  score: 13.9 bits;  conditional E-value: 7.4e-06
+  == domain 1  score: 13.9 bits;  conditional E-value: 9.8e-06
                      arCOG03422  2 iyesLsksklrrkvlelLasiyprpkdlaeiakavkidesnvrg 45
                                     y+ L+k +  + v  l+  iy ++k+++eia+   i+++ vr 
   THHY002.0321.00001.C001_00943  4 LYHELRKEEFPKAVRTLVQMIYTSKKNIREIAAILSISRNTVRK 47
                                    588999**********************************9985 PP
+
+>> XAOR001.0321.00001.C001_03801  C ATG TAG 4305015 4305875 Valid EYR27_RS19925 861 @WP_019301432.1@ EYR27_RS19925 1 430
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.0   0.0   7.5e-05      0.21      15      57 ..      51      93 ..      46      95 .. 0.90
+
+  Alignments for each domain:
+  == domain 1  score: 11.0 bits;  conditional E-value: 7.5e-05
+                     arCOG03422 15 vlelLasiyprpkdlaeiakavkidesnvrgalkGlgnr.Yske 57
+                                   vl ++a+ + r++++++i+  ++i++  vr +l  l++  Y +e
+  XAOR001.0321.00001.C001_03801 51 VLSVFAQ-HAREVTMSQISLETGISRAAVRRVLHTLAKLgYVGE 93
+                                   7888888.99************************9999888766 PP
 
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (84 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       362  (0.0295969); expected 244.6 (0.02)
-Passed bias filter:                      307  (0.0251002); expected 244.6 (0.02)
-Passed Vit filter:                        27  (0.00220751); expected 12.2 (0.001)
-Passed Fwd filter:                         4  (0.000327038); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               3  [number of targets reported over threshold]
-# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.04
-# Mc/sec: 8400.46
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       343  (0.0312699); expected 219.4 (0.02)
+Passed bias filter:                      288  (0.0262558); expected 219.4 (0.02)
+Passed Vit filter:                        21  (0.00191449); expected 11.0 (0.001)
+Passed Fwd filter:                         5  (0.00045583); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               4  [number of targets reported over threshold]
+# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.03
+# Mc/sec: 8279.69
 //
 [ok]

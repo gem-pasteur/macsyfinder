@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/T2SS_gspG.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/T2SS_gspG.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -15,79 +15,51 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-    3.3e-32  110.0   0.0    4.2e-32  109.7   0.0    1.1  1  VEEI001.0321.00001.C001_03675  D CTG TAG 3892370 3892798 Valid 
-    9.6e-30  102.1   0.0    1.2e-29  101.9   0.0    1.1  1  THHY002.0321.00001.C001_01419  C ATG TAA 1541730 1542152 Valid 
-    3.7e-25   87.5   0.0    4.7e-25   87.1   0.0    1.1  1  VEEI001.0321.00001.C001_00723  C ATG TGA 765614 766099 Valid gs
-    4.4e-17   61.6   0.0    6.5e-17   61.0   0.0    1.2  1  PSAV001.0321.00001.C001_02324  D ATG TAA 2504255 2504686 Valid 
-    8.6e-16   57.4   0.0    1.1e-15   57.1   0.0    1.2  1  THHY002.0321.00001.C001_00028  D ATG TAA 32193 32579 Valid TTHT
-    2.6e-14   52.7   0.1    2.1e-13   49.8   0.0    2.0  2  THHY002.0321.00001.C001_01703  C ATG TAA 1833845 1834354 Valid 
-    1.7e-12   46.9   0.2    2.2e-12   46.5   0.2    1.1  1  THHY002.0321.00001.C001_00220  D ATG TAA 238980 239375 Valid TT
-    1.9e-12   46.7   0.2    2.5e-12   46.3   0.2    1.2  1  THHY002.0321.00001.C001_01165  D ATG TAA 1268504 1268938 Valid 
-    4.9e-11   42.2   0.0    7.2e-11   41.7   0.0    1.2  1  VEEI001.0321.00001.C001_03982  C ATG TAA 4221298 4221792 Valid 
-    1.5e-10   40.6   0.3    3.1e-10   39.6   0.1    1.5  1  THHY002.0321.00001.C001_00026  C ATG TAA 31001 31453 Valid TTHT
-    9.5e-10   38.1   0.0    1.5e-09   37.5   0.0    1.3  1  VEEI001.0321.00001.C001_00525  D ATG TGA 571337 571816 Valid VE
-    2.7e-09   36.6   0.9    4.2e-09   36.0   0.9    1.3  1  THHY002.0321.00001.C001_00025  C GTG TAA 30526 30996 Valid TTHT
-    1.1e-08   34.7   0.1    1.8e-08   34.0   0.1    1.4  1  VEEI001.0321.00001.C001_04976  C ATG TGA 5280400 5280939 Valid 
-    5.4e-08   32.4   0.0    7.5e-08   32.0   0.0    1.3  1  PSAV001.0321.00001.C001_00882  D ATG TAA 935774 936172 Valid BK
-    1.1e-07   31.5   0.3    1.6e-07   31.0   0.3    1.3  1  PSAV001.0321.00001.C001_01021  D ATG TAA 1065006 1065434 Valid 
-    1.3e-07   31.2   0.2    2.2e-07   30.5   0.2    1.4  1  THHY002.0321.00001.C001_01294  D TTG TAG 1414273 1415034 Valid 
-    3.4e-07   29.9   0.1    4.8e-07   29.4   0.1    1.2  1  VEEI001.0321.00001.C001_02948  D ATG TGA 3177610 3178068 Valid 
-      4e-07   29.7   0.1    5.7e-07   29.2   0.1    1.3  1  THHY002.0321.00001.C001_01418  C ATG TAG 1541339 1541788 Valid 
-      7e-07   28.9   0.0      1e-06   28.3   0.0    1.2  1  THHY002.0321.00001.C001_00878  D GTG TAA 958592 959047 Valid TT
-    8.1e-07   28.7   0.0    1.5e-06   27.8   0.0    1.4  1  PSAV001.0321.00001.C001_00877  D ATG TGA 930381 930863 Valid BK
-    1.3e-06   28.0   0.1    1.8e-06   27.6   0.1    1.2  1  PSAV001.0321.00001.C001_02325  D ATG TAA 2504695 2505129 Valid 
-    8.2e-06   25.5   0.1    1.1e-05   25.0   0.1    1.2  1  VEEI001.0321.00001.C001_00722  C ATG TGA 765149 765595 Valid VE
-    5.1e-05   22.9   0.2    9.2e-05   22.1   0.2    1.5  1  VEEI001.0321.00001.C001_02949  D ATG TAG 3178065 3178643 Valid 
-    8.8e-05   22.1   0.2    0.00014   21.5   0.2    1.4  1  PSAV001.0321.00001.C001_00876  C ATG TAA 929749 930249 Valid BK
-    0.00015   21.4   0.2    0.00022   20.8   0.2    1.3  1  PSAV001.0321.00001.C001_02327  D ATG TGA 2505509 2506141 Valid 
-    0.00017   21.2   0.1    0.00027   20.6   0.1    1.3  1  THHY002.0321.00001.C001_01292  D ATG TAG 1413335 1413796 Valid 
-    0.00025   20.7   0.1    0.00044   19.9   0.1    1.4  1  VEEI001.0321.00001.C001_03987  C ATG TGA 4229410 4230078 Valid 
-     0.0003   20.4   0.3    0.00045   19.9   0.3    1.3  1  VEEI001.0321.00001.C001_00720  C ATG TGA 764044 764715 Valid VE
-     0.0008   19.1   0.1     0.0012   18.5   0.1    1.3  1  VEEI001.0321.00001.C001_03676  D ATG TGA 3892801 3893289 Valid 
-    0.00084   19.0   0.4     0.0013   18.4   0.4    1.3  1  THHY002.0321.00001.C001_02026  D ATG TAG 2190358 2191056 Valid 
-      0.001   18.7   0.1     0.0016   18.1   0.1    1.4  1  THHY002.0321.00001.C001_01417  C ATG TAA 1540926 1541336 Valid 
-     0.0021   17.7   0.0      0.087   12.5   0.0    2.2  2  THHY002.0321.00001.C001_00080  D ATG TGA 80977 81510 Valid TTHT
+    8.6e-30  102.1   0.0    1.1e-29  101.9   0.0    1.1  1  THHY002.0321.00001.C001_01419  C ATG TAA 1541730 1542152 Valid 
+    1.4e-19   69.5   0.0    1.7e-19   69.1   0.0    1.1  1  XAOR001.0321.00001.C001_03020  C ATG TAA 3456259 3456690 Valid 
+      4e-17   61.6   0.0    5.8e-17   61.0   0.0    1.2  1  PSAV001.0321.00001.C001_02324  D ATG TAA 2504255 2504686 Valid 
+    7.7e-16   57.4   0.0      1e-15   57.1   0.0    1.2  1  THHY002.0321.00001.C001_00028  D ATG TAA 32193 32579 Valid TTHT
+    2.3e-14   52.7   0.1    1.9e-13   49.8   0.0    2.0  2  THHY002.0321.00001.C001_01703  C ATG TAA 1833845 1834354 Valid 
+    1.5e-12   46.9   0.2    1.9e-12   46.5   0.2    1.1  1  THHY002.0321.00001.C001_00220  D ATG TAA 238980 239375 Valid TT
+    1.7e-12   46.7   0.2    2.3e-12   46.3   0.2    1.2  1  THHY002.0321.00001.C001_01165  D ATG TAA 1268504 1268938 Valid 
+    3.6e-12   45.7   0.0    6.3e-12   44.9   0.0    1.3  1  XAOR001.0321.00001.C001_00877  D ATG TAG 922302 922751 Valid EY
+    1.4e-10   40.6   0.3    2.8e-10   39.6   0.1    1.5  1  THHY002.0321.00001.C001_00026  C ATG TAA 31001 31453 Valid TTHT
+    2.4e-09   36.6   0.9    3.7e-09   36.0   0.9    1.3  1  THHY002.0321.00001.C001_00025  C GTG TAA 30526 30996 Valid TTHT
+    4.8e-08   32.4   0.0    6.7e-08   32.0   0.0    1.3  1  PSAV001.0321.00001.C001_00882  D ATG TAA 935774 936172 Valid BK
+    9.6e-08   31.5   0.3    1.4e-07   31.0   0.3    1.3  1  PSAV001.0321.00001.C001_01021  D ATG TAA 1065006 1065434 Valid 
+    1.2e-07   31.2   0.2      2e-07   30.5   0.2    1.4  1  THHY002.0321.00001.C001_01294  D TTG TAG 1414273 1415034 Valid 
+    3.6e-07   29.7   0.1    5.1e-07   29.2   0.1    1.3  1  THHY002.0321.00001.C001_01418  C ATG TAG 1541339 1541788 Valid 
+    5.7e-07   29.0   0.8      1e-06   28.2   0.8    1.4  1  XAOR001.0321.00001.C001_02933  C ATG TAA 3374528 3374941 Valid 
+    6.3e-07   28.9   0.0    9.4e-07   28.3   0.0    1.2  1  THHY002.0321.00001.C001_00878  D GTG TAA 958592 959047 Valid TT
+    7.2e-07   28.7   0.0    1.4e-06   27.8   0.0    1.4  1  PSAV001.0321.00001.C001_00877  D ATG TGA 930381 930863 Valid BK
+    1.2e-06   28.0   0.1    1.6e-06   27.6   0.1    1.2  1  PSAV001.0321.00001.C001_02325  D ATG TAA 2504695 2505129 Valid 
+    4.1e-05   23.0   0.1      6e-05   22.5   0.1    1.3  1  XAOR001.0321.00001.C001_00872  D ATG TGA 915694 916209 Valid EY
+    7.9e-05   22.1   0.2    0.00013   21.5   0.2    1.4  1  PSAV001.0321.00001.C001_00876  C ATG TAA 929749 930249 Valid BK
+    0.00014   21.4   0.2     0.0002   20.8   0.2    1.3  1  PSAV001.0321.00001.C001_02327  D ATG TGA 2505509 2506141 Valid 
+    0.00016   21.2   0.1    0.00024   20.6   0.1    1.3  1  THHY002.0321.00001.C001_01292  D ATG TAG 1413335 1413796 Valid 
+    0.00076   19.0   0.4     0.0012   18.4   0.4    1.3  1  THHY002.0321.00001.C001_02026  D ATG TAG 2190358 2191056 Valid 
+    0.00091   18.7   0.1     0.0015   18.1   0.1    1.4  1  THHY002.0321.00001.C001_01417  C ATG TAA 1540926 1541336 Valid 
+     0.0019   17.7   0.0      0.078   12.5   0.0    2.2  2  THHY002.0321.00001.C001_00080  D ATG TGA 80977 81510 Valid TTHT
   ------ inclusion threshold ------
-       0.01   15.5   0.3      0.017   14.8   0.3    1.4  1  VEEI001.0321.00001.C001_02944  D ATG TGA 3170661 3171332 Valid 
-      0.017   14.8   0.2      0.023   14.4   0.2    1.3  1  VEEI001.0321.00001.C001_03677  D ATG TGA 3893289 3893648 Valid 
-      0.025   14.3   0.2      0.044   13.5   0.2    1.4  1  PSAV001.0321.00001.C001_00879  D ATG TGA 931365 932072 Valid BK
-       0.03   14.0   0.1      0.045   13.5   0.1    1.3  1  VEEI001.0321.00001.C001_04975  C ATG TGA 5279166 5279645 Valid 
-      0.031   14.0   0.2      0.088   12.5   0.2    1.8  1  VEEI001.0321.00001.C001_00521  D ATG TAA 563815 564462 Valid pi
-      0.037   13.7   0.1      0.066   12.9   0.1    1.4  1  VEEI001.0321.00001.C001_00520  D ATG TGA 563147 563803 Valid VE
-      0.047   13.4  10.0       0.63    9.8   3.7    2.8  2  THHY002.0321.00001.C001_01437  D ATG TAA 1561883 1562923 Valid 
-      0.051   13.3   0.5        0.1   12.3   0.5    1.5  1  THHY002.0321.00001.C001_02023  D ATG TGA 2184914 2186026 Valid 
-      0.071   12.8   0.1       0.11   12.2   0.1    1.3  1  VEEI001.0321.00001.C001_03679  D CTG TGA 3893824 3894507 Valid 
-      0.072   12.8   0.0       0.12   12.2   0.0    1.4  1  PSAV001.0321.00001.C001_02326  D ATG TGA 2505129 2505512 Valid 
-      0.081   12.6   3.7       0.18   11.6   3.7    1.7  1  THHY002.0321.00001.C001_01416  C TTG TAA 1540313 1540942 Valid 
-      0.082   12.6   0.3       0.16   11.7   0.3    1.6  1  VEEI001.0321.00001.C001_03986  C ATG TAA 4228719 4229396 Valid 
-      0.085   12.6   0.0       0.14   11.9   0.0    1.4  1  THHY002.0321.00001.C001_00221  D ATG TAA 239362 239949 Valid TT
+      0.022   14.3   0.2       0.04   13.5   0.2    1.4  1  PSAV001.0321.00001.C001_00879  D ATG TGA 931365 932072 Valid BK
+      0.027   14.0   0.0      0.039   13.5   0.0    1.3  1  XAOR001.0321.00001.C001_03018  C ATG TGA 3455327 3455743 Valid 
+      0.042   13.4  10.0       0.56    9.8   3.7    2.8  2  THHY002.0321.00001.C001_01437  D ATG TAA 1561883 1562923 Valid 
+      0.045   13.3   0.5      0.091   12.3   0.5    1.5  1  THHY002.0321.00001.C001_02023  D ATG TGA 2184914 2186026 Valid 
+      0.058   13.0   0.2      0.091   12.3   0.2    1.3  1  XAOR001.0321.00001.C001_03019  C ATG TGA 3455740 3456249 Valid 
+      0.065   12.8   0.0        0.1   12.2   0.0    1.4  1  PSAV001.0321.00001.C001_02326  D ATG TGA 2505129 2505512 Valid 
+      0.073   12.6   3.7       0.16   11.6   3.7    1.7  1  THHY002.0321.00001.C001_01416  C TTG TAA 1540313 1540942 Valid 
+      0.076   12.6   0.0       0.13   11.9   0.0    1.4  1  THHY002.0321.00001.C001_00221  D ATG TAA 239362 239949 Valid TT
+      0.096   12.3   0.1       0.25   11.0   0.1    1.8  1  PSAV001.0321.00001.C001_01035  D ATG TAA 1076836 1077870 Valid 
 
 
 Domain annotation for each sequence (and alignments):
->> VEEI001.0321.00001.C001_03675  D CTG TAG 3892370 3892798 Valid gspG 429 @VEIS_RS17070@WP_198138061.1@ VEIS_RS17070 1 
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !  109.7   0.0   1.5e-34   4.2e-32       1      87 [.      10      94 ..      10      95 .. 0.97
-
-  Alignments for each domain:
-  == domain 1  score: 109.7 bits;  conditional E-value: 1.5e-34
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaLvakpesepepknw 82
-                                   rgftLlE+mvV+viig+laal+vpn+l+++d+a+ ++a++di +l++aL++y+ldn++yPt eqgL+aL  kp + p p+nw
-  VEEI001.0321.00001.C001_03675 10 RGFTLLELMVVLVIIGVLAALIVPNLLDRADDARMTAARTDITNLMQALKLYRLDNQRYPTAEQGLQALLVKPGAGPMPNNW 91
-                                   7********************************************************************************* PP
-
-                      T2SS_gspG 83 kkggy 87
-                                   k  +y
-  VEEI001.0321.00001.C001_03675 92 K--PY 94
-                                   4..45 PP
-
 >> THHY002.0321.00001.C001_01419  C ATG TAA 1541730 1542152 Valid gspG 423 @TTHT_RS07100@WP_201327278.1@ TTHT_RS07100 1 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !  101.9   0.0   4.3e-32   1.2e-29       1      88 []       6      89 ..       6      89 .. 0.98
+   1 !  101.9   0.0   3.3e-32   1.1e-29       1      88 []       6      89 ..       6      89 .. 0.98
 
   Alignments for each domain:
-  == domain 1  score: 101.9 bits;  conditional E-value: 4.3e-32
+  == domain 1  score: 101.9 bits;  conditional E-value: 3.3e-32
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaLvakpesepepknw 82
                                    rgftL+E+mvV++ii+lla++v+p+ +++ d++++++ak++i+a esaL+m+++d+g+yPt+e+gL+aLv+kpe+++   nw
   THHY002.0321.00001.C001_01419  6 RGFTLVELMVVMIIIALLAGFVAPKFFKRVDESRRTAAKNQISAFESALDMFYIDTGRYPTNEEGLEALVKKPENIK---NW 84
@@ -98,30 +70,30 @@ Domain annotation for each sequence (and alignments):
   THHY002.0321.00001.C001_01419 85 -KGPYL 89
                                    .99997 PP
 
->> VEEI001.0321.00001.C001_00723  C ATG TGA 765614 766099 Valid gspG 486 @VEIS_RS03370@WP_011808482.1@ VEIS_RS03370 1 76
+>> XAOR001.0321.00001.C001_03020  C ATG TAA 3456259 3456690 Valid gspG 432 @EYR27_RS15860@WP_010367778.1@ EYR27_RS15860 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   87.1   0.0   1.7e-27   4.7e-25       1      88 []      29     112 ..      29     112 .. 0.96
+   1 !   69.1   0.0   5.4e-22   1.7e-19       2      87 ..      17      95 ..      16      96 .. 0.93
 
   Alignments for each domain:
-  == domain 1  score: 87.1 bits;  conditional E-value: 1.7e-27
-                      T2SS_gspG   1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaLvakpesepepk 80 
-                                    rgftL+E++vV++i++lla+lv p+vl+++  ak+++a  +i+ l + Le++kld g+yPtt++gL+aL+++p + +   
-  VEEI001.0321.00001.C001_00723  29 RGFTLIELLVVLAILTLLAGLVGPRVLNQLGGAKAKTALVQIADLDKSLELFKLDVGRYPTTQEGLEALIQRPGNVQ--- 105
-                                    7************************************************************************9954... PP
+  == domain 1  score: 69.1 bits;  conditional E-value: 5.4e-22
+                      T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaLvakpesepepknwk 83
+                                   g++LlEi++Viv+ig + +lv  +vlg +d++k++ aks+i++l++++e+++ld+gk+P++   L++Lv++p +++    w 
+  XAOR001.0321.00001.C001_03020 17 GMSLLEIIIVIVLIGAVLTLVGSRVLGGADRGKANLAKSQIQTLAGKIENFQLDTGKLPSK---LDDLVTQPGDSS---GW- 91
+                                   9**********************************************************65...*******99865...66. PP
 
-                      T2SS_gspG  81 nwkkggyl 88 
-                                     w +g+yl
-  VEEI001.0321.00001.C001_00723 106 GW-TGPYL 112
-                                    78.88886 PP
+                      T2SS_gspG 84 kggy 87
+                                    g+y
+  XAOR001.0321.00001.C001_03020 92 LGPY 95
+                                   5555 PP
 
 >> PSAV001.0321.00001.C001_02324  D ATG TAA 2504255 2504686 Valid gspG 432 @BKM03_RS12430@WP_005618920.1@ BKM03_RS12430 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   61.0   0.0   2.4e-19   6.5e-17       2      87 ..      16      94 ..      15      95 .. 0.95
+   1 !   61.0   0.0   1.8e-19   5.8e-17       2      87 ..      16      94 ..      15      95 .. 0.95
 
   Alignments for each domain:
-  == domain 1  score: 61.0 bits;  conditional E-value: 2.4e-19
+  == domain 1  score: 61.0 bits;  conditional E-value: 1.8e-19
                       T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaLvakpesepepknwk 83
                                    gftLlE++ Viv++g++a++vv +v gn dk+k  + k+++++l  ++e y ld g+ P   + L++L +kp + +   nw 
   PSAV001.0321.00001.C001_02324 16 GFTLLEMLAVIVLLGIVATIVVRQVGGNVDKGKYGAGKAQLASLGMKVESYALDVGSPP---KTLQQLTEKPGNAS---NW- 90
@@ -135,10 +107,10 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_00028  D ATG TAA 32193 32579 Valid TTHT_RS00140 387 @WP_201328014.1@ TTHT_RS00140 1 32193 325
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   57.1   0.0   4.1e-18   1.1e-15       1      69 [.       4      72 ..       4      84 .. 0.91
+   1 !   57.1   0.0   3.1e-18     1e-15       1      69 [.       4      72 ..       4      84 .. 0.91
 
   Alignments for each domain:
-  == domain 1  score: 57.1 bits;  conditional E-value: 4.1e-18
+  == domain 1  score: 57.1 bits;  conditional E-value: 3.1e-18
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaL 69
                                    +gftL+E++vV+++ig+laa+ +p  +g + + ++++a +d+++l+sa+e+y+ ++++y  ++  +++L
   THHY002.0321.00001.C001_00028  4 KGFTLVELLVVVAVIGILAAIAIPAYMGVQTRTRREAAVTDLQNLASAMELYYQEHNRYAPSDGTITDL 72
@@ -147,17 +119,17 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01703  C ATG TAA 1833845 1834354 Valid TTHT_RS08520 510 @WP_201327550.1@ TTHT_RS08520 1 18338
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   49.8   0.0   7.7e-16   2.1e-13       1      65 [.       4      67 ..       4      82 .. 0.90
-   2 ?    0.7   0.1       1.6   4.3e+02      52      79 ..     124     150 ..     121     157 .. 0.72
+   1 !   49.8   0.0   5.8e-16   1.9e-13       1      65 [.       4      67 ..       4      82 .. 0.90
+   2 ?    0.7   0.1       1.2   3.8e+02      52      79 ..     124     150 ..     121     157 .. 0.72
 
   Alignments for each domain:
-  == domain 1  score: 49.8 bits;  conditional E-value: 7.7e-16
+  == domain 1  score: 49.8 bits;  conditional E-value: 5.8e-16
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqg 65
                                    +gf+LlE+++ i+ii l++++ vp+ l++ +ka+  ++++++k++++a++ y+ld+g yP+   +
   THHY002.0321.00001.C001_01703  4 KGFSLLEMLIAITIILLIGSIAVPKYLNSVNKARWIASREQLKKVAEAFDQYNLDHGYYPEY-AS 67
                                    69**********************************************************54.44 PP
 
-  == domain 2  score: 0.7 bits;  conditional E-value: 1.6
+  == domain 2  score: 0.7 bits;  conditional E-value: 1.2
                       T2SS_gspG  52 ykldngkyPtteqgLkaLvakpesepep 79 
                                     y+++ g++ t+ +  ++Lva+++++ e+
   THHY002.0321.00001.C001_01703 124 YYIKDGNFLTE-EQYQELVAQEQANEEA 150
@@ -166,10 +138,10 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_00220  D ATG TAA 238980 239375 Valid TTHT_RS01100 396 @WP_201328197.1@ TTHT_RS01100 1 238980 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   46.5   0.2   7.9e-15   2.2e-12       1      72 [.       7      75 ..       7      86 .. 0.89
+   1 !   46.5   0.2     6e-15   1.9e-12       1      72 [.       7      75 ..       7      86 .. 0.89
 
   Alignments for each domain:
-  == domain 1  score: 46.5 bits;  conditional E-value: 7.9e-15
+  == domain 1  score: 46.5 bits;  conditional E-value: 6e-15
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaLvak 72
                                    +gft +E+mvV++ii lla++ v    +   kak+   k+++ ++++a+e y++d+g+yP   ++L+ Lv+ 
   THHY002.0321.00001.C001_00220  7 KGFTVIELMVVMTIILLLASVAVKINKKAIIKAKEAVLKENLFQMRQAIEQYYADKGHYP---DSLETLVDD 75
@@ -178,82 +150,58 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01165  D ATG TAA 1268504 1268938 Valid TTHT_RS05830 435 @WP_201327040.1@ TTHT_RS05830 1 12685
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   46.3   0.2   9.4e-15   2.5e-12       1      56 [.       5      60 ..       5      82 .. 0.89
+   1 !   46.3   0.2   7.1e-15   2.3e-12       1      56 [.       5      60 ..       5      82 .. 0.89
 
   Alignments for each domain:
-  == domain 1  score: 46.3 bits;  conditional E-value: 9.4e-15
+  == domain 1  score: 46.3 bits;  conditional E-value: 7.1e-15
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldn 56
                                    +gftL+E+++Vivi+g+laa+ +p+  +  ++a + +ak+ i++++sa+ +++++ 
   THHY002.0321.00001.C001_01165  5 KGFTLIELVMVIVILGILAAVAMPKYQDMREEALRASAKATISNIRSAIAIFYAKS 60
                                    69************************************************999864 PP
 
->> VEEI001.0321.00001.C001_03982  C ATG TAA 4221298 4221792 Valid VEIS_RS18510 495 @WP_011811521.1@ VEIS_RS18510 1 42212
+>> XAOR001.0321.00001.C001_00877  D ATG TAG 922302 922751 Valid EYR27_RS04585 450 @WP_192807631.1@ EYR27_RS04585 1 92230
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   41.7   0.0   2.6e-13   7.2e-11       1      67 [.       8      74 ..       8      83 .. 0.95
+   1 !   44.9   0.0   1.9e-14   6.3e-12       2      59 ..      21      78 ..      20      84 .. 0.96
 
   Alignments for each domain:
-  == domain 1  score: 41.7 bits;  conditional E-value: 2.6e-13
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLk 67
-                                   +gftL+E+m+V++iig++ +l  p   +++ k+++  ak+ +   ++ +e ++++n +y +++ g +
-  VEEI001.0321.00001.C001_03982  8 SGFTLIELMIVVAIIGIVSGLAYPAFKEQLAKSRRADAKATLVGAQQWMERFYTENFRYDQNSAGVE 74
-                                   59*********************************************************98888765 PP
+  == domain 1  score: 44.9 bits;  conditional E-value: 1.9e-14
+                      T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngky 59
+                                   gftL+E+m+V++i+g+laa+  p+  ++  k+++ +ak+d+ + ++ Le  ++ n++y
+  XAOR001.0321.00001.C001_00877 21 GFTLIELMIVVAIVGILAAVAYPSYADHVRKSRRAQAKADLVEYSQLLERSHTTNNTY 78
+                                   9****************************************************99998 PP
 
 >> THHY002.0321.00001.C001_00026  C ATG TAA 31001 31453 Valid TTHT_RS00130 453 @WP_201328013.1@ TTHT_RS00130 1 31001 314
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   39.6   0.1   1.1e-12   3.1e-10       1      52 [.       3      54 ..       3      62 .. 0.94
+   1 !   39.6   0.1   8.6e-13   2.8e-10       1      52 [.       3      54 ..       3      62 .. 0.94
 
   Alignments for each domain:
-  == domain 1  score: 39.6 bits;  conditional E-value: 1.1e-12
+  == domain 1  score: 39.6 bits;  conditional E-value: 8.6e-13
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemy 52
                                    rgftL+E+++V++iig+l  +v+p  lg + ++++ +  +d+kal++ L+ +
   THHY002.0321.00001.C001_00026  3 RGFTLIELLIVVAIIGILSIIVIPGYLGVQTRSQRAAITEDCKALRTELDSM 54
                                    7*********************************************999875 PP
 
->> VEEI001.0321.00001.C001_00525  D ATG TGA 571337 571816 Valid VEIS_RS02455 480 @WP_011808305.1@ VEIS_RS02455 1 571337 
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   37.5   0.0   5.4e-12   1.5e-09       2      67 ..       9      74 ..       8      81 .. 0.95
-
-  Alignments for each domain:
-  == domain 1  score: 37.5 bits;  conditional E-value: 5.4e-12
-                      T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLk 67
-                                   gftL+E+m++++i+gll al  p+ +++  k+++  ak+ + + ++ +e ++++n +y  +  g +
-  VEEI001.0321.00001.C001_00525  9 GFTLIELMIIVAIVGLLSALAYPSFREQVIKSRRADAKTILVSAQQWMERFYTENFRYDKNRAGVR 74
-                                   9*********************************************************98887765 PP
-
 >> THHY002.0321.00001.C001_00025  C GTG TAA 30526 30996 Valid TTHT_RS00125 471 @WP_201328012.1@ TTHT_RS00125 1 30526 309
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   36.0   0.9   1.5e-11   4.2e-09       1      52 [.       5      56 ..       5      67 .. 0.91
+   1 !   36.0   0.9   1.2e-11   3.7e-09       1      52 [.       5      56 ..       5      67 .. 0.91
 
   Alignments for each domain:
-  == domain 1  score: 36.0 bits;  conditional E-value: 1.5e-11
+  == domain 1  score: 36.0 bits;  conditional E-value: 1.2e-11
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemy 52
                                    +gftL+E+++V+++i +laa+ +p  lg +++ak+ ++ ++ kal+  Le++
   THHY002.0321.00001.C001_00025  5 KGFTLIELLIVVAVILILAAIAIPAYLGVQERAKRANVVAQAKALKLELENM 56
                                    69*****************************************998887765 PP
 
->> VEEI001.0321.00001.C001_04976  C ATG TGA 5280400 5280939 Valid VEIS_RS23170 540 @WP_011812452.1@ VEIS_RS23170 1 52804
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   34.0   0.1   6.6e-11   1.8e-08       1      36 [.      11      46 ..      11      60 .. 0.94
-
-  Alignments for each domain:
-  == domain 1  score: 34.0 bits;  conditional E-value: 6.6e-11
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqq 36
-                                   +gftL+E+m+V++iig+la++ +p   + +++ak+ 
-  VEEI001.0321.00001.C001_04976 11 QGFTLIELMIVVAIIGILASVALPAYQDYTKRAKVS 46
-                                   79****************************999976 PP
-
 >> PSAV001.0321.00001.C001_00882  D ATG TAA 935774 936172 Valid BKM03_RS04755 399 @WP_019332749.1@ BKM03_RS04755 1 93577
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   32.0   0.0   2.8e-10   7.5e-08       1      43 [.       6      48 ..       6      64 .. 0.81
+   1 !   32.0   0.0   2.1e-10   6.7e-08       1      43 [.       6      48 ..       6      64 .. 0.81
 
   Alignments for each domain:
-  == domain 1  score: 32.0 bits;  conditional E-value: 2.8e-10
+  == domain 1  score: 32.0 bits;  conditional E-value: 2.1e-10
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdik 43
                                    rgftL+E+m+V++i+g+laa+  p+ ++  ++ ++ +  s ++
   PSAV001.0321.00001.C001_00882  6 RGFTLIELMIVVAIVGILAAVAYPSYTEYVKRTQRSAIASLLA 48
@@ -262,10 +210,10 @@ Domain annotation for each sequence (and alignments):
 >> PSAV001.0321.00001.C001_01021  D ATG TAA 1065006 1065434 Valid BKM03_RS05500 429 @WP_005736082.1@ BKM03_RS05500 1 106
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   31.0   0.3   5.8e-10   1.6e-07       1      36 [.       5      40 ..       5      67 .. 0.84
+   1 !   31.0   0.3   4.4e-10   1.4e-07       1      36 [.       5      40 ..       5      67 .. 0.84
 
   Alignments for each domain:
-  == domain 1  score: 31.0 bits;  conditional E-value: 5.8e-10
+  == domain 1  score: 31.0 bits;  conditional E-value: 4.4e-10
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqq 36
                                    +gftL+E+m+V++i+g+laa+ +p   + + +a++ 
   PSAV001.0321.00001.C001_01021  5 KGFTLIELMIVVAIVGILAAVAIPAYQDYTIRAQVA 40
@@ -274,46 +222,46 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01294  D TTG TAG 1414273 1415034 Valid TTHT_RS06475 762 @WP_201327163.1@ TTHT_RS06475 1 14142
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   30.5   0.2   8.2e-10   2.2e-07       2      39 ..      10      47 ..       9      65 .. 0.87
+   1 !   30.5   0.2   6.2e-10     2e-07       2      39 ..      10      47 ..       9      65 .. 0.87
 
   Alignments for each domain:
-  == domain 1  score: 30.5 bits;  conditional E-value: 8.2e-10
+  == domain 1  score: 30.5 bits;  conditional E-value: 6.2e-10
                       T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnkdkakqqkak 39
                                    gftL+E+++Vivi g++a+++ p ++   + +kq++  
   THHY002.0321.00001.C001_01294 10 GFTLIELIIVIVITGIVAGILYPVIMYGMKSSKQFNEA 47
                                    9*************************999999987644 PP
 
->> VEEI001.0321.00001.C001_02948  D ATG TGA 3177610 3178068 Valid VEIS_RS13775 459 @WP_157048745.1@ VEIS_RS13775 1 31776
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   29.4   0.1   1.8e-09   4.8e-07       1      59 [.       8      66 ..       8      79 .. 0.95
-
-  Alignments for each domain:
-  == domain 1  score: 29.4 bits;  conditional E-value: 1.8e-09
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngky 59
-                                   rgftL+E+m+ ++i+g+l a+  p  +++  k+++ + ++ + +l +  e y+++ ++y
-  VEEI001.0321.00001.C001_02948  8 RGFTLIELMITLAIVGVLVAVAYPVYTNSMIKGRRAQGRTALVQLLQQQERYMTQRNSY 66
-                                   7********************************************99999999988877 PP
-
 >> THHY002.0321.00001.C001_01418  C ATG TAG 1541339 1541788 Valid TTHT_RS07095 450 @WP_201327277.1@ TTHT_RS07095 1 15413
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   29.2   0.1   2.1e-09   5.7e-07       1      37 [.      20      56 ..      20      75 .. 0.86
+   1 !   29.2   0.1   1.6e-09   5.1e-07       1      37 [.      20      56 ..      20      75 .. 0.86
 
   Alignments for each domain:
-  == domain 1  score: 29.2 bits;  conditional E-value: 2.1e-09
+  == domain 1  score: 29.2 bits;  conditional E-value: 1.6e-09
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqk 37
                                    +gftL+E+mvV++ii+++ a+v p   +  +  k+q 
   THHY002.0321.00001.C001_01418 20 KGFTLMELMVVLIIIAIMSAVVYPYFKKGMESIKSQR 56
                                    69*********************99888877666554 PP
 
+>> XAOR001.0321.00001.C001_02933  C ATG TAA 3374528 3374941 Valid EYR27_RS15410 414 @WP_019302546.1@ EYR27_RS15410 1 337
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   28.2   0.8   3.1e-09     1e-06       1      30 [.       5      34 ..       5      45 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 28.2 bits;  conditional E-value: 3.1e-09
+                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnk 30
+                                   +gftL+E+m+V++ii++laa+ +p   + +
+  XAOR001.0321.00001.C001_02933  5 QGFTLIELMIVVAIIAILAAIALPAYQDYT 34
+                                   79*******************999876655 PP
+
 >> THHY002.0321.00001.C001_00878  D GTG TAA 958592 959047 Valid TTHT_RS04395 456 @WP_201328824.1@ TTHT_RS04395 1 958592 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   28.3   0.0   3.9e-09     1e-06       1      54 [.       4      57 ..       4      68 .. 0.92
+   1 !   28.3   0.0   2.9e-09   9.4e-07       1      54 [.       4      57 ..       4      68 .. 0.92
 
   Alignments for each domain:
-  == domain 1  score: 28.3 bits;  conditional E-value: 3.9e-09
+  == domain 1  score: 28.3 bits;  conditional E-value: 2.9e-09
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykl 54
                                    rgft +E++v  +i+++la++vvp +    ++ k+ + +  ++++++a++ yk 
   THHY002.0321.00001.C001_00878  4 RGFTYIELLVAATILAILASAVVPFLKLTVKRKKEIQLRRALREIRTAIDHYKE 57
@@ -322,10 +270,10 @@ Domain annotation for each sequence (and alignments):
 >> PSAV001.0321.00001.C001_00877  D ATG TGA 930381 930863 Valid BKM03_RS04730 483 @WP_003381286.1@ BKM03_RS04730 1 93038
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   27.8   0.0   5.7e-09   1.5e-06       1      54 [.       6      56 ..       6      61 .. 0.84
+   1 !   27.8   0.0   4.3e-09   1.4e-06       1      54 [.       6      56 ..       6      61 .. 0.84
 
   Alignments for each domain:
-  == domain 1  score: 27.8 bits;  conditional E-value: 5.7e-09
+  == domain 1  score: 27.8 bits;  conditional E-value: 4.3e-09
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykl 54
                                    +gf+L+E++v + ++g+laa+ vp+ +++ +    +ka+++++ l+ aL+  +l
   PSAV001.0321.00001.C001_00877  6 KGFSLIELLVTVSLVGILAAIAVPSFTSSIQS---NKADTELSDLQRALNYARL 56
@@ -334,46 +282,34 @@ Domain annotation for each sequence (and alignments):
 >> PSAV001.0321.00001.C001_02325  D ATG TAA 2504695 2505129 Valid BKM03_RS12435 435 @WP_007246056.1@ BKM03_RS12435 1 250
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   27.6   0.1   6.5e-09   1.8e-06       1      44 [.       8      51 ..       8      76 .. 0.91
+   1 !   27.6   0.1   4.9e-09   1.6e-06       1      44 [.       8      51 ..       8      76 .. 0.91
 
   Alignments for each domain:
-  == domain 1  score: 27.6 bits;  conditional E-value: 6.5e-09
+  == domain 1  score: 27.6 bits;  conditional E-value: 4.9e-09
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdika 44
                                    rgftL+E++vV+v++ +  +lv + + + + +a ++ a  d+ +
   PSAV001.0321.00001.C001_02325  8 RGFTLMEMLVVLVLMSIAVGLVGFGLQQGLSTASERRAVGDMVE 51
                                    7*************************************999865 PP
 
->> VEEI001.0321.00001.C001_00722  C ATG TGA 765149 765595 Valid VEIS_RS03365 447 @WP_011808481.1@ VEIS_RS03365 1 765149 
+>> XAOR001.0321.00001.C001_00872  D ATG TGA 915694 916209 Valid EYR27_RS04560 516 @WP_019299928.1@ EYR27_RS04560 1 91569
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   25.0   0.1   4.1e-08   1.1e-05       1      38 [.       5      42 ..       5      57 .. 0.84
+   1 !   22.5   0.1   1.9e-07     6e-05       2      35 ..       8      41 ..       7      62 .. 0.86
 
   Alignments for each domain:
-  == domain 1  score: 25.0 bits;  conditional E-value: 4.1e-08
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqka 38
-                                   rgftL+E++vV++i++l+ +lv +   + ++ ak + +
-  VEEI001.0321.00001.C001_00722  5 RGFTLIELLVVFAIMALVIGLVPVAFERLSESAKYRDT 42
-                                   7*********************9999999999987655 PP
-
->> VEEI001.0321.00001.C001_02949  D ATG TAG 3178065 3178643 Valid VEIS_RS13780 579 @WP_011810561.1@ VEIS_RS13780 1 31780
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   22.1   0.2   3.4e-07   9.2e-05       2      33 ..      13      44 ..      12      68 .. 0.87
-
-  Alignments for each domain:
-  == domain 1  score: 22.1 bits;  conditional E-value: 3.4e-07
-                      T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnkdka 33
-                                   gftL+E+mv i++++++++l +p+ ++ + ++
-  VEEI001.0321.00001.C001_02949 13 GFTLIELMVTIALVAVMMTLAAPSFVQYLRNS 44
-                                   9**********************998877665 PP
+  == domain 1  score: 22.5 bits;  conditional E-value: 1.9e-07
+                      T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnkdkakq 35
+                                   gftL+E+m+ iv++++l ++  p+ +g +   ++
+  XAOR001.0321.00001.C001_00872  8 GFTLVELMITIVVLAILLTIAFPSFRGTLRSNRV 41
+                                   9**********************99988776655 PP
 
 >> PSAV001.0321.00001.C001_00876  C ATG TAA 929749 930249 Valid BKM03_RS04725 501 @WP_005740180.1@ BKM03_RS04725 1 92974
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   21.5   0.2   5.3e-07   0.00014       2      34 ..       5      37 ..       4      52 .. 0.82
+   1 !   21.5   0.2     4e-07   0.00013       2      34 ..       5      37 ..       4      52 .. 0.82
 
   Alignments for each domain:
-  == domain 1  score: 21.5 bits;  conditional E-value: 5.3e-07
+  == domain 1  score: 21.5 bits;  conditional E-value: 4e-07
                       T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnkdkak 34
                                    gftL+E+++V++++++la +  p+  +  d  +
   PSAV001.0321.00001.C001_00876  5 GFTLIELLIVVALVAILANVATPSFKQLIDSNR 37
@@ -382,10 +318,10 @@ Domain annotation for each sequence (and alignments):
 >> PSAV001.0321.00001.C001_02327  D ATG TGA 2505509 2506141 Valid BKM03_RS12445 633 @WP_005618916.1@ BKM03_RS12445 1 250
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   20.8   0.2   8.2e-07   0.00022       2      30 ..       7      35 ..       6      64 .. 0.85
+   1 !   20.8   0.2   6.2e-07    0.0002       2      30 ..       7      35 ..       6      64 .. 0.85
 
   Alignments for each domain:
-  == domain 1  score: 20.8 bits;  conditional E-value: 8.2e-07
+  == domain 1  score: 20.8 bits;  conditional E-value: 6.2e-07
                       T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnk 30
                                    gftLlE++ Vi ++g+l  lv+  +lg +
   PSAV001.0321.00001.C001_02327  7 GFTLLEVLLVISLLGVLLVLVAGALLGAN 35
@@ -394,58 +330,22 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01292  D ATG TAG 1413335 1413796 Valid TTHT_RS06465 462 @WP_201327161.1@ TTHT_RS06465 1 14133
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   20.6   0.1   9.8e-07   0.00027       2      39 ..       6      43 ..       5      62 .. 0.85
+   1 !   20.6   0.1   7.4e-07   0.00024       2      39 ..       6      43 ..       5      62 .. 0.85
 
   Alignments for each domain:
-  == domain 1  score: 20.6 bits;  conditional E-value: 9.8e-07
+  == domain 1  score: 20.6 bits;  conditional E-value: 7.4e-07
                       T2SS_gspG  2 gftLlEimvViviigllaalvvpnvlgnkdkakqqkak 39
                                    g tL+E++++ivi+ +++++ +p+  g ++   ++ ak
   THHY002.0321.00001.C001_01292  6 GYTLVELVIIIVILSIIGFIAIPKFAGYSESILVKDAK 43
                                    99**********************99998876666665 PP
 
->> VEEI001.0321.00001.C001_03987  C ATG TGA 4229410 4230078 Valid VEIS_RS18535 669 @WP_011811526.1@ VEIS_RS18535 1 42294
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   19.9   0.1   1.6e-06   0.00044       1      31 [.      39      69 ..      39      77 .. 0.90
-
-  Alignments for each domain:
-  == domain 1  score: 19.9 bits;  conditional E-value: 1.6e-06
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkd 31
-                                   rgftL+E+mv +++  +l++l +p+v+++  
-  VEEI001.0321.00001.C001_03987 39 RGFTLIELMVTLALAVILGSLAAPSVRDSII 69
-                                   7*************************98865 PP
-
->> VEEI001.0321.00001.C001_00720  C ATG TGA 764044 764715 Valid VEIS_RS03355 672 @WP_041949780.1@ VEIS_RS03355 1 764044 
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   19.9   0.3   1.7e-06   0.00045       1      39 [.       7      45 ..       7      61 .. 0.79
-
-  Alignments for each domain:
-  == domain 1  score: 19.9 bits;  conditional E-value: 1.7e-06
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkak 39
-                                   rgftL+E++vV++++ l++ ++  +++  +++ ++  a+
-  VEEI001.0321.00001.C001_00720  7 RGFTLVEVLVVMALLSLVMLALGASLRTVAQTQERVDAR 45
-                                   7*******************9999887766655554443 PP
-
->> VEEI001.0321.00001.C001_03676  D ATG TGA 3892801 3893289 Valid VEIS_RS17075 489 @WP_011811233.1@ VEIS_RS17075 1 38928
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   18.5   0.1   4.4e-06    0.0012       1      29 [.      15      43 ..      15      68 .. 0.83
-
-  Alignments for each domain:
-  == domain 1  score: 18.5 bits;  conditional E-value: 4.4e-06
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgn 29
-                                   rgftLlE+++Vi i++l  a v   +++ 
-  VEEI001.0321.00001.C001_03676 15 RGFTLLELLIVICIMALATAGVGLALRDD 43
-                                   7****************999998888766 PP
-
 >> THHY002.0321.00001.C001_02026  D ATG TAG 2190358 2191056 Valid TTHT_RS10135 699 @WP_201327865.1@ TTHT_RS10135 1 21903
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   18.4   0.4   4.9e-06    0.0013       1      39 [.       9      47 ..       9      57 .. 0.94
+   1 !   18.4   0.4   3.7e-06    0.0012       1      39 [.       9      47 ..       9      57 .. 0.94
 
   Alignments for each domain:
-  == domain 1  score: 18.4 bits;  conditional E-value: 4.9e-06
+  == domain 1  score: 18.4 bits;  conditional E-value: 3.7e-06
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkak 39
                                    +gf+L+E++v i+++ +++++ +  v  ++ +a+++ka 
   THHY002.0321.00001.C001_02026  9 KGFSLVELLVAIAVLIIIMGAAALTVGTSTRDARTKKAA 47
@@ -454,10 +354,10 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01417  C ATG TAA 1540926 1541336 Valid TTHT_RS07090 411 @WP_201327276.1@ TTHT_RS07090 1 15409
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   18.1   0.1   6.1e-06    0.0016       2      25 ..       6      28 ..       5      45 .. 0.78
+   1 !   18.1   0.1   4.6e-06    0.0015       2      25 ..       6      28 ..       5      45 .. 0.78
 
   Alignments for each domain:
-  == domain 1  score: 18.1 bits;  conditional E-value: 6.1e-06
+  == domain 1  score: 18.1 bits;  conditional E-value: 4.6e-06
                       T2SS_gspG  2 gftLlEimvViviigllaalvvpn 25
                                    gftL+Eimv ++i+++   +v  +
   THHY002.0321.00001.C001_01417  6 GFTLVEIMVAVAILAIASVAV-LR 28
@@ -466,108 +366,60 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_00080  D ATG TGA 80977 81510 Valid TTHT_RS00400 534 @WP_201328066.1@ TTHT_RS00400 1 80977 815
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?    3.1   0.0      0.28        76      46      65 ..      45      64 ..      40      69 .. 0.90
-   2 !   12.5   0.0   0.00032     0.087      25      69 ..      76     117 ..      70     133 .. 0.81
+   1 ?    3.1   0.0      0.21        68      46      65 ..      45      64 ..      40      69 .. 0.90
+   2 !   12.5   0.0   0.00024     0.078      25      69 ..      76     117 ..      70     133 .. 0.81
 
   Alignments for each domain:
-  == domain 1  score: 3.1 bits;  conditional E-value: 0.28
+  == domain 1  score: 3.1 bits;  conditional E-value: 0.21
                       T2SS_gspG 46 esaLemykldngkyPtteqg 65
                                    ++aL +yk  +++yP+t++g
   THHY002.0321.00001.C001_00080 45 RKALLLYKHVMEAYPETKSG 64
                                    67999***********9987 PP
 
-  == domain 2  score: 12.5 bits;  conditional E-value: 0.00032
+  == domain 2  score: 12.5 bits;  conditional E-value: 0.00024
                       T2SS_gspG  25 nvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaL 69 
                                     ++l+++ +a+++      k+l+ a+e+y+ d+ +yP++    ++L
   THHY002.0321.00001.C001_00080  76 QMLQSEIEANKKINFDRTKKLARAVELYYRDHRRYPNS---VTDL 117
                                     678888889999999999******************54...4444 PP
 
->> VEEI001.0321.00001.C001_02944  D ATG TGA 3170661 3171332 Valid pilV 672 @VEIS_RS13755@WP_011810556.1@ VEIS_RS13755 1 
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   14.8   0.3   6.2e-05     0.017       1      49 [.      13      61 ..      13      77 .. 0.61
-
-  Alignments for each domain:
-  == domain 1  score: 14.8 bits;  conditional E-value: 6.2e-05
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqq.kaksdikalesaL 49
-                                   +gf+LlE++v ivi++  a l  + + g + +a+++   +++   l++ L
-  VEEI001.0321.00001.C001_02944 13 KGFSLLEVLVAIVILTF-AILGTVGMQGYALQANREaRLQAQAVMLANEL 61
-                                   69************984.33333444455555543302334444455555 PP
-
->> VEEI001.0321.00001.C001_03677  D ATG TGA 3893289 3893648 Valid gspI 360 @VEIS_RS17080@WP_011811234.1@ VEIS_RS17080 1 
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   14.4   0.2   8.3e-05     0.023       1      23 [.       6      30 ..       6      69 .. 0.70
-
-  Alignments for each domain:
-  == domain 1  score: 14.4 bits;  conditional E-value: 8.3e-05
-                      T2SS_gspG  1 rgftLlEimvViviigl..laalvv 23
-                                   rgftL+E++v ++i+++  +a+l +
-  VEEI001.0321.00001.C001_03677  6 RGFTLVEVLVALAIVAIalMAGLQA 30
-                                   7*********998876511444443 PP
-
 >> PSAV001.0321.00001.C001_00879  D ATG TGA 931365 932072 Valid BKM03_RS04740 708 @WP_005740181.1@ BKM03_RS04740 1 93136
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   13.5   0.2   0.00016     0.044       1      32 [.       6      36 ..       6      60 .. 0.76
+   1 ?   13.5   0.2   0.00012      0.04       1      32 [.       6      36 ..       6      60 .. 0.76
 
   Alignments for each domain:
-  == domain 1  score: 13.5 bits;  conditional E-value: 0.00016
+  == domain 1  score: 13.5 bits;  conditional E-value: 0.00012
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdk 32
                                    rgf L+Eimv +v +gl+ +l +++++  +  
   PSAV001.0321.00001.C001_00879  6 RGFGLIEIMVALV-LGLVVSLGIIQIFTASRG 36
                                    79*******9875.899999999999876543 PP
 
->> VEEI001.0321.00001.C001_04975  C ATG TGA 5279166 5279645 Valid VEIS_RS27295 480 @WP_011812451.1@ VEIS_RS27295 1 52791
+>> XAOR001.0321.00001.C001_03018  C ATG TGA 3455327 3455743 Valid EYR27_RS15850 417 @WP_019302120.1@ EYR27_RS15850 1 345
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   13.5   0.1   0.00016     0.045       9      36 ..       1      28 [.       1      44 [. 0.92
+   1 ?   13.5   0.0   0.00012     0.039       1      33 [.       5      37 ..       5      71 .. 0.76
 
   Alignments for each domain:
-  == domain 1  score: 13.5 bits;  conditional E-value: 0.00016
-                      T2SS_gspG  9 mvViviigllaalvvpnvlgnkdkakqq 36
-                                   m+V+++ig+la++ +p   + +++a++ 
-  VEEI001.0321.00001.C001_04975  1 MIVVAVIGILASVALPTYQDYTKRARVS 28
-                                   9****************99999999875 PP
-
->> VEEI001.0321.00001.C001_00521  D ATG TAA 563815 564462 Valid pilV 648 @VEIS_RS25315@WP_157048679.1@ VEIS_RS25315 1 56
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   12.5   0.2   0.00032     0.088       1      17 [.      18      34 ..      18      70 .. 0.82
-
-  Alignments for each domain:
-  == domain 1  score: 12.5 bits;  conditional E-value: 0.00032
-                      T2SS_gspG  1 rgftLlEimvViviigl 17
-                                   rg+tL+E+mv iv++ +
-  VEEI001.0321.00001.C001_00521 18 RGVTLVEVMVAIVVLSI 34
-                                   79***********9865 PP
-
->> VEEI001.0321.00001.C001_00520  D ATG TGA 563147 563803 Valid VEIS_RS24615 657 @WP_011808300.1@ VEIS_RS24615 1 563147 
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   12.9   0.1   0.00024     0.066       1      29 [.      32      60 ..      32      79 .. 0.89
-
-  Alignments for each domain:
-  == domain 1  score: 12.9 bits;  conditional E-value: 0.00024
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgn 29
-                                   rgftL E+++ +++ ++l++l +p v++ 
-  VEEI001.0321.00001.C001_00520 32 RGFTLTELLMTLALAAILGSLAAPAVRDF 60
-                                   7***********************99875 PP
+  == domain 1  score: 13.5 bits;  conditional E-value: 0.00012
+                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdka 33
+                                   rg tL+E++v +++++l  +l++ ++ g + + 
+  XAOR001.0321.00001.C001_03018  5 RGYTLIEVIVAFALLALALSLLLGSLSGAARQV 37
+                                   79*******************999998766543 PP
 
 >> THHY002.0321.00001.C001_01437  D ATG TAA 1561883 1562923 Valid TTHT_RS07190 1041 @WP_201327295.1@ TTHT_RS07190 1 1561
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?    6.7   0.3     0.021       5.8      10      73 ..      33      96 ..      31     106 .. 0.80
-   2 ?    9.8   3.7    0.0023      0.63      29      77 ..     115     163 ..     102     170 .. 0.87
+   1 ?    6.7   0.3     0.016       5.2      10      73 ..      33      96 ..      31     106 .. 0.80
+   2 ?    9.8   3.7    0.0017      0.56      29      77 ..     115     163 ..     102     170 .. 0.87
 
   Alignments for each domain:
-  == domain 1  score: 6.7 bits;  conditional E-value: 0.021
+  == domain 1  score: 6.7 bits;  conditional E-value: 0.016
                       T2SS_gspG 10 vViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaLvakp 73
                                     V++i+ l+a++     ++ + + +++k k++i+ l+++L+  + +  +  ++ + ++++ +k+
   THHY002.0321.00001.C001_01437 33 YVLIIVLLIAGIAFLGYREFTRQNEINKLKKQIEVLNKKLSQKENELAEISQKLENIQSVFSKT 96
                                    58889999999999999999999*****************988877766666666666666555 PP
 
-  == domain 2  score: 9.8 bits;  conditional E-value: 0.0023
+  == domain 2  score: 9.8 bits;  conditional E-value: 0.0017
                       T2SS_gspG  29 nkdkakqqkaksdikalesaLemykldngkyPtteqgLkaLvakpesep 77 
                                     +++k k++k  + i +l++ L+  + +n+k+ t+++ L+++v+++++  
   THHY002.0321.00001.C001_01437 115 KEQKKKVKKLSKKITSLQNELKRLENKNKKLETEKKKLEKIVEEKDKMI 163
@@ -576,34 +428,34 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_02023  D ATG TGA 2184914 2186026 Valid TTHT_RS10120 1113 @WP_201327862.1@ TTHT_RS10120 1 2184
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   12.3   0.5   0.00038       0.1       1      42 [.      12      53 ..      12      69 .. 0.78
+   1 ?   12.3   0.5   0.00028     0.091       1      42 [.      12      53 ..      12      69 .. 0.78
 
   Alignments for each domain:
-  == domain 1  score: 12.3 bits;  conditional E-value: 0.00038
+  == domain 1  score: 12.3 bits;  conditional E-value: 0.00028
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksdi 42
                                    +gftL+E+mv +v+  +++++     +++++  k++ + +d+
   THHY002.0321.00001.C001_02023 12 KGFTLVELMVGMVVAVIVMGMTYAIFTSQLKLTKTEMSINDL 53
                                    69********99999999999887777777666666655554 PP
 
->> VEEI001.0321.00001.C001_03679  D CTG TGA 3893824 3894507 Valid VEIS_RS17085 684 @WP_157048764.1@ VEIS_RS17085 1 38938
+>> XAOR001.0321.00001.C001_03019  C ATG TGA 3455740 3456249 Valid EYR27_RS15855 510 @WP_019302119.1@ EYR27_RS15855 1 345
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   12.2   0.1   0.00042      0.11       1      38 [.      17      56 ..      17      76 .. 0.70
+   1 ?   12.3   0.2   0.00028     0.091       1      41 [.      23      63 ..      23      77 .. 0.82
 
   Alignments for each domain:
-  == domain 1  score: 12.2 bits;  conditional E-value: 0.00042
-                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnv..lgnkdkakqqka 38
-                                   +gftL+E++  i +++lla l    +  + ++++ ++q a
-  VEEI001.0321.00001.C001_03679 17 QGFTLIELLLAIGVMALLAVLSWRGLdgMVRAQETTRQRA 56
-                                   79***************99875443311444455555544 PP
+  == domain 1  score: 12.3 bits;  conditional E-value: 0.00028
+                      T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaksd 41
+                                   rg +LlE++ Vi +i++ + l +  + g  d  + ++a + 
+  XAOR001.0321.00001.C001_03019 23 RGTSLLEMLLVIGLIAMAGVLAAAALNGGIDGMRLRTAGKA 63
+                                   799************99998888888888777666666555 PP
 
 >> PSAV001.0321.00001.C001_02326  D ATG TGA 2505129 2505512 Valid BKM03_RS12440 384 @WP_003381181.1@ BKM03_RS12440 1 250
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   12.2   0.0   0.00042      0.12       1      40 [.       6      44 ..       6      60 .. 0.79
+   1 ?   12.2   0.0   0.00032       0.1       1      40 [.       6      44 ..       6      60 .. 0.79
 
   Alignments for each domain:
-  == domain 1  score: 12.2 bits;  conditional E-value: 0.00042
+  == domain 1  score: 12.2 bits;  conditional E-value: 0.00032
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlgnkdkakqqkaks 40
                                    +gftLlE++  ++++++  +++++  +g++ ++ qq ++s
   PSAV001.0321.00001.C001_02326  6 SGFTLLEMLAALTVMAVCSGVLLVA-FGQSARSLQQVSRS 44
@@ -612,52 +464,52 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01416  C TTG TAA 1540313 1540942 Valid TTHT_RS07085 630 @WP_201327275.1@ TTHT_RS07085 1 15403
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   11.6   3.7   0.00065      0.18       1      28 [.       6      32 ..       6      81 .. 0.79
+   1 ?   11.6   3.7   0.00049      0.16       1      28 [.       6      32 ..       6      81 .. 0.79
 
   Alignments for each domain:
-  == domain 1  score: 11.6 bits;  conditional E-value: 0.00065
+  == domain 1  score: 11.6 bits;  conditional E-value: 0.00049
                       T2SS_gspG  1 rgftLlEimvViviigllaalvvpnvlg 28
                                    +gftL+E+++ i+i g++  + +++++g
   THHY002.0321.00001.C001_01416  6 KGFTLVELIIAIAITGIIT-VTIFQIFG 32
                                    69**************996.55556555 PP
 
->> VEEI001.0321.00001.C001_03986  C ATG TAA 4228719 4229396 Valid pilV 678 @VEIS_RS26850@WP_083758672.1@ VEIS_RS26850 1 
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   11.7   0.3   0.00058      0.16       2      17 ..      19      34 ..      18      72 .. 0.76
-
-  Alignments for each domain:
-  == domain 1  score: 11.7 bits;  conditional E-value: 0.00058
-                      T2SS_gspG  2 gftLlEimvViviigl 17
-                                   g+tL+E+mv iv++ +
-  VEEI001.0321.00001.C001_03986 19 GVTLVEVMVAIVVLSI 34
-                                   99**********9876 PP
-
 >> THHY002.0321.00001.C001_00221  D ATG TAA 239362 239949 Valid TTHT_RS01105 588 @WP_201328198.1@ TTHT_RS01105 1 239362 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   11.9   0.0   0.00052      0.14       4      73 ..      10      76 ..       7      88 .. 0.88
+   1 ?   11.9   0.0   0.00039      0.13       4      73 ..      10      76 ..       7      88 .. 0.88
 
   Alignments for each domain:
-  == domain 1  score: 11.9 bits;  conditional E-value: 0.00052
+  == domain 1  score: 11.9 bits;  conditional E-value: 0.00039
                       T2SS_gspG  4 tLlEimvViviigllaalvvpnvlgnkdkakqqkaksdikalesaLemykldngkyPtteqgLkaLvakp 73
                                     L   +v ivi+ + +al++ + +   ++ k+++     ++ ++a++ ++l +++yP +   Lk+L++++
   THHY002.0321.00001.C001_00221 10 ILTATIVMIVILSISMALIAEKWTYVVKREKENELLFRGEQYAQAIRRFYLTHKRYPFE---LKELIESN 76
                                    566679***************************************************65...88888875 PP
+
+>> PSAV001.0321.00001.C001_01035  D ATG TAA 1076836 1077870 Valid BKM03_RS05570 1035 @WP_003383242.1@ BKM03_RS05570 1 10
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.0   0.1   0.00076      0.25       4      24 ..     315     334 ..     312     344 .] 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 11.0 bits;  conditional E-value: 0.00076
+                      T2SS_gspG   4 tLlEimvViviigllaalvvp 24 
+                                    +Ll ++vV+ iig++a+l+ p
+  PSAV001.0321.00001.C001_01035 315 SLL-VVVVVLIIGIVASLLFP 334
+                                    577.8999**********987 PP
 
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (88 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       535  (0.0437413); expected 244.6 (0.02)
-Passed bias filter:                      471  (0.0385087); expected 244.6 (0.02)
-Passed Vit filter:                        91  (0.00744011); expected 12.2 (0.001)
-Passed Fwd filter:                        48  (0.00392445); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):              45  [number of targets reported over threshold]
-# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.05
-# Mc/sec: 6533.10
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       515  (0.0469505); expected 219.4 (0.02)
+Passed bias filter:                      455  (0.0414805); expected 219.4 (0.02)
+Passed Vit filter:                        88  (0.00802261); expected 11.0 (0.001)
+Passed Fwd filter:                        37  (0.00337314); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):              34  [number of targets reported over threshold]
+# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.05
+# Mc/sec: 5865.99
 //
 [ok]

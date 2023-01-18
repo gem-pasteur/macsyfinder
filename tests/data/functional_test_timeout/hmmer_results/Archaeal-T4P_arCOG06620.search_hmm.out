@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG06620.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG06620.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -16,35 +16,48 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
   ------ inclusion threshold ------
-      0.028   14.3   2.2       0.17   11.8   2.9    2.1  1  THHY002.0321.00001.C001_00713  D ATG TGA 779596 780753 Valid TT
+      0.025   14.3   2.2       0.15   11.8   2.9    2.1  1  THHY002.0321.00001.C001_00713  D ATG TGA 779596 780753 Valid TT
+      0.068   12.9   0.8       0.12   12.1   0.8    1.5  1  XAOR001.0321.00001.C001_00877  D ATG TAG 922302 922751 Valid EY
 
 
 Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_00713  D ATG TGA 779596 780753 Valid TTHT_RS03570 1158 @WP_201328667.1@ TTHT_RS03570 1 779596
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   11.8   2.9   1.4e-05      0.17      10      63 ..      12      67 ..      11     203 .. 0.84
+   1 ?   11.8   2.9   2.7e-05      0.15      10      63 ..      12      67 ..      11     203 .. 0.84
 
   Alignments for each domain:
-  == domain 1  score: 11.8 bits;  conditional E-value: 1.4e-05
+  == domain 1  score: 11.8 bits;  conditional E-value: 2.7e-05
                      arCOG06620 10 ElgiLlaaviiVAaIagYyy....lknvkdtyiakninetaskttnslnntnseltes 63
                                    E  i+l +v++VA+I  Y y    +k+  dt  a +  et+  +++ l ++n +  ++
   THHY002.0321.00001.C001_00713 12 EYMIVLLLVAVVAIIGTYAYqkffVKKSFDT--AIESLETGDDVSSELMEENTSKIDK 67
                                    5679999999**********98889999999..7777777777777776666555554 PP
+
+>> XAOR001.0321.00001.C001_00877  D ATG TAG 922302 922751 Valid EYR27_RS04585 450 @WP_192807631.1@ EYR27_RS04585 1 92230
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.1   0.8   2.1e-05      0.12       9      37 ..      25      78 ..      23     117 .. 0.71
+
+  Alignments for each domain:
+  == domain 1  score: 12.1 bits;  conditional E-value: 2.1e-05
+                     arCOG06620  9 lElgiLlaaviiVAaIagYyylknvkdt.........................y 37
+                                   +El i++a+v i Aa+a+ +y+ +v ++                         y
+  XAOR001.0321.00001.C001_00877 25 IELMIVVAIVGILAAVAYPSYADHVRKSrraqakadlveysqllershttnntY 78
+                                   599*******************99999977776666666333333333333332 PP
 
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (71 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       699  (0.0571499); expected 244.6 (0.02)
-Passed bias filter:                      645  (0.0527349); expected 244.6 (0.02)
-Passed Vit filter:                        95  (0.00776715); expected 12.2 (0.001)
-Passed Fwd filter:                         7  (0.000572316); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               1  [number of targets reported over threshold]
-# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.04
-# Mc/sec: 6230.01
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       667  (0.0608077); expected 219.4 (0.02)
+Passed bias filter:                      611  (0.0557024); expected 219.4 (0.02)
+Passed Vit filter:                        94  (0.00856961); expected 11.0 (0.001)
+Passed Fwd filter:                         7  (0.000638162); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.06
+# Mc/sec: 4063.88
 //
 [ok]

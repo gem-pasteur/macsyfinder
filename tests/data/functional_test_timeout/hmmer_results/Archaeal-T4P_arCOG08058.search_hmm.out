@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG08058.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG08058.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -15,42 +15,56 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-     0.0039   16.6   0.3     0.0039   16.6   0.3    2.4  2  PSAV001.0321.00001.C001_04171  C ATG TGA 4660552 4661682 Valid 
+     0.0035   16.6   0.3     0.0035   16.6   0.3    2.4  2  PSAV001.0321.00001.C001_04171  C ATG TGA 4660552 4661682 Valid 
+  ------ inclusion threshold ------
+      0.059   12.6   0.2      0.079   12.2   0.2    1.1  1  XAOR001.0321.00001.C001_03265  C ATG TGA 3718577 3719179 Valid 
 
 
 Domain annotation for each sequence (and alignments):
 >> PSAV001.0321.00001.C001_04171  C ATG TGA 4660552 4661682 Valid BKM03_RS22335 1131 @WP_032633951.1@ BKM03_RS22335 1 46
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   16.6   0.3   3.2e-07    0.0039       4      74 ..       7      75 ..       6     142 .. 0.69
-   2 ?   -0.8   2.4     0.069   8.4e+02      34      78 ..     318     366 ..     289     376 .] 0.61
+   1 !   16.6   0.3   6.4e-07    0.0035       4      74 ..       7      75 ..       6     142 .. 0.69
+   2 ?   -0.8   2.4      0.14   7.5e+02      34      78 ..     318     366 ..     289     376 .] 0.61
 
   Alignments for each domain:
-  == domain 1  score: 16.6 bits;  conditional E-value: 3.2e-07
+  == domain 1  score: 16.6 bits;  conditional E-value: 6.4e-07
                      arCOG08058  4 lllilvvlsaGcikvlpqkespsssasrv.....sesgetsavspestatPapvqeietvtevtPvikgpseesdp 74
                                    l+l+l+++++Gc+++ pq  s+++  +       s s ++ a ++++++ Papv  ++  +   P + g+ e+s p
   PSAV001.0321.00001.C001_04171  7 LVLALCIAVTGCAQT-PQSDSAAT--GGHwwqfgSGSESSDAGTAAKAPAPAPV--AKAAATPAP-AAGA-ESSGP 75
                                    789***********5.65555555..3334554533333333333344444444..444443444.3333.44444 PP
 
-  == domain 2  score: -0.8 bits;  conditional E-value: 0.069
+  == domain 2  score: -0.8 bits;  conditional E-value: 0.14
                      arCOG08058  34 esgetsavspestatPapvqeietvtevtPv.....ikgpseesdplatP 78 
                                     + ++++av+++ ta  ap+ +++t +++ P      +k+p   ++p  +P
   PSAV001.0321.00001.C001_04171 318 APAKKAAVAKKDTARKAPA-KASTAKKAAPAkttaaAKKPAATKAPAKAP 366
                                     4456677777777777774.788888888844444333334444444444 PP
+
+>> XAOR001.0321.00001.C001_03265  C ATG TGA 3718577 3719179 Valid EYR27_RS17115 603 @WP_019300060.1@ EYR27_RS17115 1 371
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.2   0.2   1.4e-05     0.079       4      70 ..      10      68 ..       8      87 .. 0.70
+
+  Alignments for each domain:
+  == domain 1  score: 12.2 bits;  conditional E-value: 1.4e-05
+                     arCOG08058  4 lllilvvlsaGcikv.lpqkespsssasrvsesgetsavspestatPapvqeietvtevtPvikgpse 70
+                                   lll++ v++aG   + +p +e ++       +sg+t + ++ s +tP+ +q+    + +tP ++++ e
+  XAOR001.0321.00001.C001_03265 10 LLLCATVCIAGAQTMpMPLEEASAA------PSGST-PAAAVSSTTPSAAQQRARWEAMTP-AQQA-E 68
+                                   6899999999988764222222222......44444.44666999***99***********.6555.3 PP
 
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (211 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       291  (0.023792); expected 244.6 (0.02)
-Passed bias filter:                      234  (0.0191317); expected 244.6 (0.02)
-Passed Vit filter:                        25  (0.00204399); expected 12.2 (0.001)
-Passed Fwd filter:                         1  (8.17595e-05); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               1  [number of targets reported over threshold]
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       330  (0.0300848); expected 219.4 (0.02)
+Passed bias filter:                      265  (0.024159); expected 219.4 (0.02)
+Passed Vit filter:                        37  (0.00337314); expected 11.0 (0.001)
+Passed Fwd filter:                         3  (0.000273498); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
 # CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.06
-# Mc/sec: 13858.18
+# Mc/sec: 11952.60
 //
 [ok]

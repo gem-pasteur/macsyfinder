@@ -3,4 +3,5 @@
 # i_evalue threshold= 0.001
 # coverage threshold= 0.500
 # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
-THHY002.0321.00001.C001_00208	THHY002.0321.00001.C001	5445	202	MSH_mshI	2.500e-04	20.800	0.836	0.579	37	153
+THHY002.0321.00001.C001_00208	THHY002.0321.00001.C001	5445	202	MSH_mshI	2.200e-04	20.800	0.836	0.579	37	153
+XAOR001.0321.00001.C001_00241	XAOR001.0321.00001.C001	7531	260	MSH_mshI	1.000e-06	28.300	0.654	0.385	46	145
