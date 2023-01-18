@@ -1,8 +1,16 @@
-# macsyfinder 20230117.dev
+# macsyfinder 20230118.dev
 # models : TFF-SF-0.0b2
-# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all -w 5 --sequence-db tests/data/base/gembase_with_slow_genome.fa --timeout 2 --out-dir functional_test_timeout
+# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all -w 5 --sequence-db tests/data/base/gembase_w_slow_genome.fa --timeout 2 --out-dir functional_test_timeout --index-dir .
 # Rejected candidates:
 
+Cluster:
+- model = Archaeal-T4P
+- replicon = PSAV001.0321.00001.C001
+- hits = (PSAV001.0321.00001.C001_02925, Archaeal-T4P_arCOG04148, 2722), (PSAV001.0321.00001.C001_02931, Archaeal-T4P_arCOG05613, 2728)
+This candidate has been rejected because:
+	- The quorum of mandatory genes required (3) is not reached: 0
+	- The quorum of genes required (3) is not reached: 2
+============================================================
 Cluster:
 - model = ComM
 - replicon = PSAV001.0321.00001.C001
@@ -1931,973 +1939,152 @@ This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 0
 ============================================================
 Cluster:
-- model = ComM
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00421, ComM_comEC, 7733)
+- model = Archaeal-T4P
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00250, Archaeal-T4P_arCOG02900, 7538), (XAOR001.0321.00001.C001_00244, T4P_pilQ, 7534)
 This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-	- The quorum of genes required (4) is not reached: 1
+	- There is 1 forbidden genes occurrence(s): T4P_pilQ
+	- The quorum of mandatory genes required (3) is not reached: 0
+	- The quorum of genes required (3) is not reached: 1
 ============================================================
 Cluster:
 - model = ComM
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00421, ComM_comEC, 7733)
-Cluster:
-- model = ComM
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02734, ComM_comEB, 9903)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_01504, ComM_comEC, 8557)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 1
-	- The quorum of genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = ComM
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02734, ComM_comEB, 9903)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 0
 	- The quorum of genes required (4) is not reached: 1
 ============================================================
 Cluster:
 - model = T2SS
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01835, T2SS_gspE, 9061)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00037, Tad_tadD, 7362), (XAOR001.0321.00001.C001_00040, Tad_tadD, 7365)
 This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of mandatory genes required (4) is not reached: 0
 	- The quorum of genes required (6) is not reached: 1
 ============================================================
 Cluster:
 - model = T2SS
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03675, T2SS_gspG, 10776), (VEEI001.0321.00001.C001_03676, T2SS_gspH, 10777), (VEEI001.0321.00001.C001_03677, T2SS_gspI, 10778), (VEEI001.0321.00001.C001_03679, T2SS_gspJ, 10780), (VEEI001.0321.00001.C001_03680, T2SS_gspK, 10781), (VEEI001.0321.00001.C001_03681, T2SS_gspL, 10782), (VEEI001.0321.00001.C001_03682, T2SS_gspM, 10783), (VEEI001.0321.00001.C001_03684, T2SS_gspD, 10785)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00037, Tad_tadD, 7362), (XAOR001.0321.00001.C001_00040, Tad_tadD, 7365)
 Cluster:
 - model = T2SS
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01835, T2SS_gspE, 9061)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_02935, T4P_pilD, 9760)
 This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T2SS
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01835, T2SS_gspE, 9061)
-Cluster:
-- model = T2SS
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04076, T4P_pilD, 11157)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
+	- The quorum of mandatory genes required (4) is not reached: 1
 	- The quorum of genes required (6) is not reached: 2
 ============================================================
 Cluster:
 - model = T2SS
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03675, T2SS_gspG, 10776), (VEEI001.0321.00001.C001_03676, T2SS_gspH, 10777), (VEEI001.0321.00001.C001_03677, T2SS_gspI, 10778), (VEEI001.0321.00001.C001_03679, T2SS_gspJ, 10780), (VEEI001.0321.00001.C001_03680, T2SS_gspK, 10781), (VEEI001.0321.00001.C001_03681, T2SS_gspL, 10782), (VEEI001.0321.00001.C001_03682, T2SS_gspM, 10783), (VEEI001.0321.00001.C001_03684, T2SS_gspD, 10785)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T2SS
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03675, T2SS_gspG, 10776), (VEEI001.0321.00001.C001_03676, T2SS_gspH, 10777), (VEEI001.0321.00001.C001_03677, T2SS_gspI, 10778), (VEEI001.0321.00001.C001_03679, T2SS_gspJ, 10780), (VEEI001.0321.00001.C001_03680, T2SS_gspK, 10781), (VEEI001.0321.00001.C001_03681, T2SS_gspL, 10782), (VEEI001.0321.00001.C001_03682, T2SS_gspM, 10783), (VEEI001.0321.00001.C001_03684, T2SS_gspD, 10785)
-Cluster:
-- model = T2SS
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04076, T4P_pilD, 11157)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T2SS
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04076, T4P_pilD, 11157)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_02935, T4P_pilD, 9760)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 1
 	- The quorum of genes required (6) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00018, T4P_pilQ, 7349), (VEEI001.0321.00001.C001_00019, T4P_pilP, 7350), (VEEI001.0321.00001.C001_00020, T4P_pilO, 7351), (VEEI001.0321.00001.C001_00021, T4P_pilN, 7352), (VEEI001.0321.00001.C001_00022, T4P_pilM, 7353)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00240, T4P_pilM, 7530), (XAOR001.0321.00001.C001_00241, T4P_pilN, 7531), (XAOR001.0321.00001.C001_00242, T4P_pilO, 7532), (XAOR001.0321.00001.C001_00243, T4P_pilP, 7533), (XAOR001.0321.00001.C001_00244, T4P_pilQ, 7534)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 3
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00018, T4P_pilQ, 7349), (VEEI001.0321.00001.C001_00019, T4P_pilP, 7350), (VEEI001.0321.00001.C001_00020, T4P_pilO, 7351), (VEEI001.0321.00001.C001_00021, T4P_pilN, 7352), (VEEI001.0321.00001.C001_00022, T4P_pilM, 7353)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00240, T4P_pilM, 7530), (XAOR001.0321.00001.C001_00241, T4P_pilN, 7531), (XAOR001.0321.00001.C001_00242, T4P_pilO, 7532), (XAOR001.0321.00001.C001_00243, T4P_pilP, 7533), (XAOR001.0321.00001.C001_00244, T4P_pilQ, 7534)
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_03253, T4P_pilA, 10027)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 3
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00018, T4P_pilQ, 7349), (VEEI001.0321.00001.C001_00019, T4P_pilP, 7350), (VEEI001.0321.00001.C001_00020, T4P_pilO, 7351), (VEEI001.0321.00001.C001_00021, T4P_pilN, 7352), (VEEI001.0321.00001.C001_00022, T4P_pilM, 7353)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00018, T4P_pilQ, 7349), (VEEI001.0321.00001.C001_00019, T4P_pilP, 7350), (VEEI001.0321.00001.C001_00020, T4P_pilO, 7351), (VEEI001.0321.00001.C001_00021, T4P_pilN, 7352), (VEEI001.0321.00001.C001_00022, T4P_pilM, 7353)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00018, T4P_pilQ, 7349), (VEEI001.0321.00001.C001_00019, T4P_pilP, 7350), (VEEI001.0321.00001.C001_00020, T4P_pilO, 7351), (VEEI001.0321.00001.C001_00021, T4P_pilN, 7352), (VEEI001.0321.00001.C001_00022, T4P_pilM, 7353)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00018, T4P_pilQ, 7349), (VEEI001.0321.00001.C001_00019, T4P_pilP, 7350), (VEEI001.0321.00001.C001_00020, T4P_pilO, 7351), (VEEI001.0321.00001.C001_00021, T4P_pilN, 7352), (VEEI001.0321.00001.C001_00022, T4P_pilM, 7353)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00018, T4P_pilQ, 7349), (VEEI001.0321.00001.C001_00019, T4P_pilP, 7350), (VEEI001.0321.00001.C001_00020, T4P_pilO, 7351), (VEEI001.0321.00001.C001_00021, T4P_pilN, 7352), (VEEI001.0321.00001.C001_00022, T4P_pilM, 7353)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00018, T4P_pilQ, 7349), (VEEI001.0321.00001.C001_00019, T4P_pilP, 7350), (VEEI001.0321.00001.C001_00020, T4P_pilO, 7351), (VEEI001.0321.00001.C001_00021, T4P_pilN, 7352), (VEEI001.0321.00001.C001_00022, T4P_pilM, 7353)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 0
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 0
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04074, T4P_pilB, 11155), (VEEI001.0321.00001.C001_04075, T4P_pilC, 11156), (VEEI001.0321.00001.C001_04076, T4P_pilD, 11157)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04074, T4P_pilB, 11155), (VEEI001.0321.00001.C001_04075, T4P_pilC, 11156), (VEEI001.0321.00001.C001_04076, T4P_pilD, 11157)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00520, T4P_fimT, 7821), (VEEI001.0321.00001.C001_00521, T4P_pilV, 7822), (VEEI001.0321.00001.C001_00522, T4P_pilW, 7823), (VEEI001.0321.00001.C001_00523, T4P_pilX, 7824), (VEEI001.0321.00001.C001_00524, T4P_pilY, 7825), (VEEI001.0321.00001.C001_00525, T4P_pilA, 7826)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-	- The quorum of genes required (5) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-	- The quorum of genes required (5) is not reached: 4
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00717, T4P_pilO, 8012), (VEEI001.0321.00001.C001_00718, T4P_pilN, 8013)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-	- The quorum of genes required (5) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00601, T4P_pilU, 7819), (XAOR001.0321.00001.C001_00602, T4P_pilT, 7820)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 1
 	- The quorum of genes required (5) is not reached: 2
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00601, T4P_pilU, 7819), (XAOR001.0321.00001.C001_00602, T4P_pilT, 7820)
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00872, T4P_fimT, 8028), (XAOR001.0321.00001.C001_00873, T4P_pilV, 8029), (XAOR001.0321.00001.C001_00874, T4P_pilW, 8030), (XAOR001.0321.00001.C001_00876, T4P_pilY, 8032), (XAOR001.0321.00001.C001_00877, T4P_pilE, 8033), (XAOR001.0321.00001.C001_00879, T4P_fimT, 8034)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 2
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00601, T4P_pilU, 7819), (XAOR001.0321.00001.C001_00602, T4P_pilT, 7820)
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00872, T4P_fimT, 8028), (XAOR001.0321.00001.C001_00873, T4P_pilV, 8029), (XAOR001.0321.00001.C001_00874, T4P_pilW, 8030), (XAOR001.0321.00001.C001_00876, T4P_pilY, 8032), (XAOR001.0321.00001.C001_00877, T4P_pilE, 8033), (XAOR001.0321.00001.C001_00879, T4P_fimT, 8034)
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_03253, T4P_pilA, 10027)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 2
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00601, T4P_pilU, 7819), (XAOR001.0321.00001.C001_00602, T4P_pilT, 7820)
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_03253, T4P_pilA, 10027)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_01767, T4P_pilT, 8998), (VEEI001.0321.00001.C001_01769, T4P_pilU, 9000)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 2
 	- The quorum of genes required (5) is not reached: 3
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00872, T4P_fimT, 8028), (XAOR001.0321.00001.C001_00873, T4P_pilV, 8029), (XAOR001.0321.00001.C001_00874, T4P_pilW, 8030), (XAOR001.0321.00001.C001_00876, T4P_pilY, 8032), (XAOR001.0321.00001.C001_00877, T4P_pilE, 8033), (XAOR001.0321.00001.C001_00879, T4P_fimT, 8034)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00872, T4P_fimT, 8028), (XAOR001.0321.00001.C001_00873, T4P_pilV, 8029), (XAOR001.0321.00001.C001_00874, T4P_pilW, 8030), (XAOR001.0321.00001.C001_00876, T4P_pilY, 8032), (XAOR001.0321.00001.C001_00877, T4P_pilE, 8033), (XAOR001.0321.00001.C001_00879, T4P_fimT, 8034)
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_03253, T4P_pilA, 10027)
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_02944, T4P_pilV, 10099), (VEEI001.0321.00001.C001_02946, T4P_pilX, 10101), (VEEI001.0321.00001.C001_02947, T4P_pilY, 10102), (VEEI001.0321.00001.C001_02948, T4P_pilE, 10103), (VEEI001.0321.00001.C001_02949, T4P_fimT, 10104)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 0
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04074, T4P_pilB, 11155), (VEEI001.0321.00001.C001_04075, T4P_pilC, 11156), (VEEI001.0321.00001.C001_04076, T4P_pilD, 11157)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_03982, T4P_pilA, 11068), (VEEI001.0321.00001.C001_03983, T4P_pilY, 11069), (VEEI001.0321.00001.C001_03984, T4P_pilX, 11070), (VEEI001.0321.00001.C001_03985, T4P_pilW, 11071), (VEEI001.0321.00001.C001_03986, T4P_pilV, 11072), (VEEI001.0321.00001.C001_03987, T4P_fimT, 11073)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04074, T4P_pilB, 11155), (VEEI001.0321.00001.C001_04075, T4P_pilC, 11156), (VEEI001.0321.00001.C001_04076, T4P_pilD, 11157)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 3
-	- The quorum of genes required (5) is not reached: 3
-============================================================
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04074, T4P_pilB, 11155), (VEEI001.0321.00001.C001_04075, T4P_pilC, 11156), (VEEI001.0321.00001.C001_04076, T4P_pilD, 11157)
-Cluster:
-- model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_02929, T4P_pilB, 9754), (XAOR001.0321.00001.C001_02933, T4P_pilE, 9758), (XAOR001.0321.00001.C001_02934, T4P_pilC, 9759), (XAOR001.0321.00001.C001_02935, T4P_pilD, 9760)
 This candidate has been rejected because:
 	- The quorum of genes required (5) is not reached: 4
 ============================================================
 Cluster:
 - model = T4P
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_04975, T4P_pilE, 11984), (VEEI001.0321.00001.C001_04976, T4P_pilE, 11985)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_03253, T4P_pilA, 10027)
 This candidate has been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of mandatory genes required (4) is not reached: 0
 	- The quorum of genes required (5) is not reached: 1
 ============================================================
 Cluster:
 - model = Tad
-- replicon = VEEI001.0321.00001.C001
-- hits = (VEEI001.0321.00001.C001_00259, Tad_rcpC, 7574), (VEEI001.0321.00001.C001_00260, Tad_rcpA, 7575), (VEEI001.0321.00001.C001_00261, Tad_tadA, 7576), (VEEI001.0321.00001.C001_00262, Tad_tadB, 7577), (VEEI001.0321.00001.C001_00263, Tad_tadC, 7578)
+- replicon = XAOR001.0321.00001.C001
+- hits = (XAOR001.0321.00001.C001_00037, Tad_tadD, 7362), (XAOR001.0321.00001.C001_00040, Tad_tadD, 7365)
 This candidate has been rejected because:
-	- The quorum of genes required (6) is not reached: 5
+	- The quorum of mandatory genes required (4) is not reached: 0
+	- The quorum of genes required (6) is not reached: 1
 ============================================================

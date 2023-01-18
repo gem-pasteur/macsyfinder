@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/ComM_comC.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/ComM_comC.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -15,19 +15,19 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-    7.8e-43  146.3   1.7    7.8e-43  146.3   1.7    1.4  2  PSAV001.0321.00001.C001_01018  C ATG TGA 1060991 1061863 Valid 
-    7.1e-40  136.6  14.9    7.1e-40  136.6  14.9    1.4  2  THHY002.0321.00001.C001_01147  D ATG TAA 1243988 1244797 Valid 
-    2.2e-37  128.5   0.0    3.1e-37  128.0   0.0    1.1  1  VEEI001.0321.00001.C001_04076  D ATG TGA 4309488 4310372 Valid 
-    2.8e-08   33.4  13.1    2.8e-08   33.4  13.1    1.7  2  THHY002.0321.00001.C001_00712  D ATG TAG 779036 779587 Valid TT
-    0.00035   20.1   3.8     0.0032   16.9   3.8    1.9  1  PSAV001.0321.00001.C001_04743  D ATG TGA 5283064 5283546 Valid 
+      7e-43  146.3   1.7      7e-43  146.3   1.7    1.4  2  PSAV001.0321.00001.C001_01018  C ATG TGA 1060991 1061863 Valid 
+    6.4e-40  136.6  14.9    6.4e-40  136.6  14.9    1.4  2  THHY002.0321.00001.C001_01147  D ATG TAA 1243988 1244797 Valid 
+    7.1e-33  113.6   0.0    9.5e-33  113.2   0.0    1.1  1  XAOR001.0321.00001.C001_02935  D ATG TGA 3376561 3377424 Valid 
+    2.6e-08   33.4  13.1    2.6e-08   33.4  13.1    1.7  2  THHY002.0321.00001.C001_00712  D ATG TAG 779036 779587 Valid TT
+    0.00032   20.1   3.8     0.0029   16.9   3.8    1.9  1  PSAV001.0321.00001.C001_04743  D ATG TGA 5283064 5283546 Valid 
 
 
 Domain annotation for each sequence (and alignments):
 >> PSAV001.0321.00001.C001_01018  C ATG TGA 1060991 1061863 Valid BKM03_RS05485 873 @WP_005736087.1@ BKM03_RS05485 1 106
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   -3.0   0.1       1.7   4.1e+03     156     180 ..       9      33 ..       4      43 .. 0.53
-   2 !  146.3   1.7   3.2e-46   7.8e-43      11     204 ..      64     268 ..      61     270 .. 0.92
+   1 ?   -3.0   0.1       1.7   3.7e+03     156     180 ..       9      33 ..       4      43 .. 0.53
+   2 !  146.3   1.7   3.2e-46     7e-43      11     204 ..      64     268 ..      61     270 .. 0.92
 
   Alignments for each domain:
   == domain 1  score: -3.0 bits;  conditional E-value: 1.7
@@ -55,8 +55,8 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01147  D ATG TAA 1243988 1244797 Valid TTHT_RS05740 810 @WP_201327026.1@ TTHT_RS05740 1 12439
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   -2.7   0.1       1.4   3.3e+03      92     111 ..       3      22 ..       1      28 [. 0.58
-   2 !  136.6  14.9   2.9e-43   7.1e-40       2     205 ..      34     247 ..      33     248 .. 0.90
+   1 ?   -2.7   0.1       1.4     3e+03      92     111 ..       3      22 ..       1      28 [. 0.58
+   2 !  136.6  14.9   2.9e-43   6.4e-40       2     205 ..      34     247 ..      33     248 .. 0.90
 
   Alignments for each domain:
   == domain 1  score: -2.7 bits;  conditional E-value: 1.4
@@ -81,33 +81,33 @@ Domain annotation for each sequence (and alignments):
   THHY002.0321.00001.C001_01147 194 KMLALMGTFLGKK-AFLALMIGSIIGTIVGLFIiYVLKKGRHYEIPFGCFLAIGT 247
                                     **********965.667888999999888765505677***************97 PP
 
->> VEEI001.0321.00001.C001_04076  D ATG TGA 4309488 4310372 Valid VEIS_RS18975 885 @WP_011811615.1@ VEIS_RS18975 1 43094
+>> XAOR001.0321.00001.C001_02935  D ATG TGA 3376561 3377424 Valid EYR27_RS15420 864 @WP_019302544.1@ EYR27_RS15420 1 337
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !  128.0   0.0   1.3e-40   3.1e-37      11     202 ..      67     270 ..      58     274 .. 0.89
+   1 !  113.2   0.0   4.3e-36   9.5e-33      12     204 ..      62     265 ..      58     267 .. 0.88
 
   Alignments for each domain:
-  == domain 1  score: 128.0 bits;  conditional E-value: 1.3e-40
-                      ComM_comC  11 siifprShCdqCkkkLrfleliPilSyllqrgkCrkCkkkisliyllfElvtgllfllivisa..eleslillillslll 88 
-                                    ++++prS+C+ C + L  +e +P+lSyl +rg+C  C+++is +y+l+E+vtg lf +++ +       +  + +  +++
-  VEEI001.0321.00001.C001_04076  67 NLLIPRSRCPACGHMLPWYENVPVLSYLALRGRCSACRARISARYPLVEIVTGGLFFFCIERWglTAAGIAWCGFSAASM 146
-                                    799*********************************************************99954446677777788999 PP
+  == domain 1  score: 113.2 bits;  conditional E-value: 4.3e-36
+                      ComM_comC  12 iifprShCdqCkkkLrfleliPilSyllqrgkCrkCkkkisliyllfElvtgllfllivisa..eleslillillsllli 89 
+                                    i+++ Sh +    kL+ +e iP++S+l++rgk+r+ +k+is+ y+l+E++t +l +++v+++    + + +++l  +l+ 
+  XAOR001.0321.00001.C001_02935  62 IVVEPSHDPVTGDKLKWWENIPLFSWLMLRGKSRYSGKPISIQYPLVEVLTSILCVASVWRFgfGWQGFGAIVLSCFLVA 141
+                                    678899999999**************************************************6556************** PP
 
-                      ComM_comC  89 ilsvtDlkylevpllllilfllvlillkvl....lsllsgllsllvlflllallail.....lkeslGlGDikllavlgl 159
-                                     l+ +D  + ++p+ + ++ l + +l + l    l+l++++l++++ +l l l+         ke++G GD+kl+a lg 
-  VEEI001.0321.00001.C001_04076 147 ALACIDWDTTLLPDDITLPLLWAGLLSAALqwidLPLYDSVLGAVAGYLSLWLVYWGfklatGKEGMGYGDFKLFAALGA 226
-                                    ****************9888877776666666587799999999999999988865545555789*************** PP
+                      ComM_comC  90 lsvtDlkylevpllllilfllvlillkvl...lsllsgllsllvlflllallail.....lkeslGlGDikllavlglvl 161
+                                    +s +Dl+++++p++l ++ + + ++ ++    +++   ll++ v ++ l  +  l      ke++G GD+klla lg   
+  XAOR001.0321.00001.C001_02935 142 MSGIDLRHKLLPDQLTLPLMWLGLVGSMDnlyMPAKPALLGAAVGYVSLWTVWWLfkqltGKEGMGHGDFKLLAALGAWC 221
+                                    ******************999998655546664444555566666666655555534445689***************** PP
 
-                      ComM_comC 160 vlgvkklllilflasvigliylllalllk.skkkkplpFvPfis 202
-                                     +g + l+ i++l+svig  + + +++    ++   lpF+Pf++
-  VEEI001.0321.00001.C001_04076 227 WFGWQALVPIILLSSVIGAGVGIAMKISSrLREGGYLPFGPFLV 270
-                                    *********************999999998999999******97 PP
+                      ComM_comC 162 gvkklllilflasvigliylllalllk.skkkkplpFvPfislg 204
+                                    g+k +l i++++s++g i+    l+ k +++ +p+pF+P+++++
+  XAOR001.0321.00001.C001_02935 222 GLKGILPIILISSLVGAILGSAWLVAKgRDRATPIPFGPYLAIA 265
+                                    **********************999****************998 PP
 
 >> THHY002.0321.00001.C001_00712  D ATG TAG 779036 779587 Valid TTHT_RS03565 552 @WP_201328666.1@ TTHT_RS03565 1 779036 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   33.4  13.1   1.2e-11   2.8e-08      79     188 ..       5     115 ..       1     123 [. 0.85
-   2 ?   -1.7   0.0      0.66   1.6e+03     187     204 ..     146     163 ..     118     165 .. 0.56
+   1 !   33.4  13.1   1.2e-11   2.6e-08      79     188 ..       5     115 ..       1     123 [. 0.85
+   2 ?   -1.7   0.0      0.66   1.4e+03     187     204 ..     146     163 ..     118     165 .. 0.56
 
   Alignments for each domain:
   == domain 1  score: 33.4 bits;  conditional E-value: 1.2e-11
@@ -130,7 +130,7 @@ Domain annotation for each sequence (and alignments):
 >> PSAV001.0321.00001.C001_04743  D ATG TGA 5283064 5283546 Valid BKM03_RS25410 483 @WP_005736760.1@ BKM03_RS25410 1 528
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   16.9   3.8   1.3e-06    0.0032      81     184 ..       4     112 ..       1     149 [. 0.61
+   1 !   16.9   3.8   1.3e-06    0.0029      81     184 ..       4     112 ..       1     149 [. 0.61
 
   Alignments for each domain:
   == domain 1  score: 16.9 bits;  conditional E-value: 1.3e-06
@@ -149,14 +149,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (206 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       834  (0.0681874); expected 244.6 (0.02)
-Passed bias filter:                      269  (0.0219933); expected 244.6 (0.02)
-Passed Vit filter:                        29  (0.00237102); expected 12.2 (0.001)
-Passed Fwd filter:                         6  (0.000490557); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       759  (0.069195); expected 219.4 (0.02)
+Passed bias filter:                      250  (0.0227915); expected 219.4 (0.02)
+Passed Vit filter:                        30  (0.00273498); expected 11.0 (0.001)
+Passed Fwd filter:                         6  (0.000546996); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
 Domain search space  (domZ):               5  [number of targets reported over threshold]
-# CPU time: 0.06u 0.00s 00:00:00.06 Elapsed: 00:00:00.10
-# Mc/sec: 8053.46
+# CPU time: 0.06u 0.00s 00:00:00.06 Elapsed: 00:00:00.06
+# Mc/sec: 12069.72
 //
 [ok]

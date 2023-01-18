@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG02981.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG02981.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -15,18 +15,20 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-    1.7e-05   24.3   0.9    1.7e-05   24.3   0.9    1.5  1  THHY002.0321.00001.C001_01606  C ATG TAA 1739445 1742465 Valid 
-     0.0016   17.8   0.0     0.0016   17.8   0.0    1.2  1  THHY002.0321.00001.C001_00778  D ATG TAA 845319 846260 Valid TT
+    1.5e-05   24.3   0.9    1.5e-05   24.3   0.9    1.5  1  THHY002.0321.00001.C001_01606  C ATG TAA 1739445 1742465 Valid 
+     0.0014   17.8   0.0     0.0014   17.8   0.0    1.2  1  THHY002.0321.00001.C001_00778  D ATG TAA 845319 846260 Valid TT
+  ------ inclusion threshold ------
+      0.019   14.2   0.0      0.022   14.0   0.0    1.2  1  XAOR001.0321.00001.C001_03794  D ATG TGA 4299169 4299906 Valid 
 
 
 Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01606  C ATG TAA 1739445 1742465 Valid TTHT_RS08035 3021 @WP_201327458.1@ TTHT_RS08035 1 1739
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   24.3   0.9   2.7e-09   1.7e-05      66     118 ..      16      85 ..      12     108 .. 0.80
+   1 !   24.3   0.9   4.1e-09   1.5e-05      66     118 ..      16      85 ..      12     108 .. 0.80
 
   Alignments for each domain:
-  == domain 1  score: 24.3 bits;  conditional E-value: 2.7e-09
+  == domain 1  score: 24.3 bits;  conditional E-value: 4.1e-09
                      arCOG02981  66 tfdlpnagvlnvtVvDqdGdpVegAtVtvvsrnnaitgitestTaadGnarv...................a 118
                                     ++  +++g++  +V+D+ G+p  g tV+++s +  ++g ++ tT+adG+ r+                   +
   THHY002.0321.00001.C001_01606  16 FTFAGTTGSIVGKVTDATGAPLPGVTVVATSPS--LQGQKTTTTNADGKYRLvllppgiytlkyslagfqaT 85 
@@ -35,28 +37,40 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_00778  D ATG TAA 845319 846260 Valid TTHT_RS03895 942 @WP_201328728.1@ TTHT_RS03895 1 845319 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   17.8   0.0   2.6e-07    0.0016      71     135 ..      25      86 ..      16     261 .. 0.84
+   1 !   17.8   0.0   3.9e-07    0.0014      71     135 ..      25      86 ..      16     261 .. 0.84
 
   Alignments for each domain:
-  == domain 1  score: 17.8 bits;  conditional E-value: 2.6e-07
+  == domain 1  score: 17.8 bits;  conditional E-value: 3.9e-07
                      arCOG02981  71 nagvlnvtVvDqdGdpVegAtVtvvsrnn.aitgitestTaadGnarvavnstaskdvpasatgGt 135
                                     +ag++ ++VvD++++p eg  +t++ ++    +++ e  T+++G a+v++n  a  +v+ + ++G+
   THHY002.0321.00001.C001_00778  25 TAGMIIFKVVDENNKPLEGVKITITMKKRqSFKKVLE--TNKKGIAKVTLNI-ATYTVKFE-KEGY 86 
                                     5778889****************99999767777777..*********8877.44444433.3344 PP
+
+>> XAOR001.0321.00001.C001_03794  D ATG TGA 4299169 4299906 Valid pcaH 738 @EYR27_RS19890@WP_019302963.1@ EYR27_RS19890 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   14.0   0.0   5.9e-06     0.022      69     101 ..      83     115 ..       7     161 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 14.0 bits;  conditional E-value: 5.9e-06
+                     arCOG02981  69 lpnagvlnvtVvDqdGdpVegAtVtvvsrnnai 101
+                                    l++   ++ +V+D++G+pV++ +V v++ n+a 
+  XAOR001.0321.00001.C001_03794  83 LGERIIVSGRVLDENGRPVRNSVVEVWQCNAAG 115
+                                    455667899*******************99643 PP
 
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (150 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       340  (0.0277982); expected 244.6 (0.02)
-Passed bias filter:                      287  (0.023465); expected 244.6 (0.02)
-Passed Vit filter:                        29  (0.00237102); expected 12.2 (0.001)
-Passed Fwd filter:                         2  (0.000163519); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               2  [number of targets reported over threshold]
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       335  (0.0305406); expected 219.4 (0.02)
+Passed bias filter:                      278  (0.0253442); expected 219.4 (0.02)
+Passed Vit filter:                        35  (0.00319081); expected 11.0 (0.001)
+Passed Fwd filter:                         4  (0.000364664); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
 # CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.06
-# Mc/sec: 9509.96
+# Mc/sec: 8157.96
 //
 [ok]

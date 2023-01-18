@@ -3,3 +3,4 @@
 # i_evalue threshold= 0.001
 # coverage threshold= 0.500
 # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+XAOR001.0321.00001.C001_00877	XAOR001.0321.00001.C001	8033	149	Archaeal-T4P_arCOG02911	2.900e-04	20.400	0.828	0.758	21	133

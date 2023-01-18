@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG08270.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG08270.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -27,14 +27,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (183 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       238  (0.0194588); expected 244.6 (0.02)
-Passed bias filter:                      108  (0.00883002); expected 244.6 (0.02)
-Passed Vit filter:                         5  (0.000408797); expected 12.2 (0.001)
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       230  (0.0209682); expected 219.4 (0.02)
+Passed bias filter:                      102  (0.00929893); expected 219.4 (0.02)
+Passed Vit filter:                         6  (0.000546996); expected 11.0 (0.001)
 Passed Fwd filter:                         0  (0); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
+Initial search space (Z):              10969  [actual number of targets]
 Domain search space  (domZ):               0  [number of targets reported over threshold]
-# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.05
-# Mc/sec: 13704.30
+# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.04
+# Mc/sec: 16523.29
 //
 [ok]

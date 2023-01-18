@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG01809_IM.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG01809_IM.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -15,16 +15,16 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-    9.6e-05   20.3   3.4    0.00012   20.0   3.4    1.2  1  THHY002.0321.00001.C001_00721  D ATG TAA 787905 788765 Valid TT
+    8.6e-05   20.3   3.4    0.00011   20.0   3.4    1.2  1  THHY002.0321.00001.C001_00721  D ATG TAA 787905 788765 Valid TT
   ------ inclusion threshold ------
-      0.029   12.1   0.0      0.029   12.1   0.0    1.0  1  THHY002.0321.00001.C001_01569  C ATG TAA 1705709 1705906 Valid 
+      0.026   12.1   0.0      0.026   12.1   0.0    1.0  1  THHY002.0321.00001.C001_01569  C ATG TAA 1705709 1705906 Valid 
 
 
 Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_00721  D ATG TAA 787905 788765 Valid TTHT_RS03610 861 @WP_201328675.1@ TTHT_RS03610 1 787905 
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   20.0   3.4     2e-08   0.00012     191     383 ..      58     246 ..       2     279 .. 0.75
+   1 !   20.0   3.4     2e-08   0.00011     191     383 ..      58     246 ..       2     279 .. 0.75
 
   Alignments for each domain:
   == domain 1  score: 20.0 bits;  conditional E-value: 2e-08
@@ -46,7 +46,7 @@ Domain annotation for each sequence (and alignments):
 >> THHY002.0321.00001.C001_01569  C ATG TAA 1705709 1705906 Valid TTHT_RS07850 198 @WP_201327422.1@ TTHT_RS07850 1 17057
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   12.1   0.0   4.8e-06     0.029     192     243 ..       3      56 ..       1      64 [. 0.72
+   1 ?   12.1   0.0   4.8e-06     0.026     192     243 ..       3      56 ..       1      64 [. 0.72
 
   Alignments for each domain:
   == domain 1  score: 12.1 bits;  conditional E-value: 4.8e-06
@@ -60,14 +60,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (459 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       976  (0.0797972); expected 244.6 (0.02)
-Passed bias filter:                      402  (0.0328673); expected 244.6 (0.02)
-Passed Vit filter:                        35  (0.00286158); expected 12.2 (0.001)
-Passed Fwd filter:                         2  (0.000163519); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       888  (0.0809554); expected 219.4 (0.02)
+Passed bias filter:                      375  (0.0341873); expected 219.4 (0.02)
+Passed Vit filter:                        31  (0.00282615); expected 11.0 (0.001)
+Passed Fwd filter:                         3  (0.000273498); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
 Domain search space  (domZ):               2  [number of targets reported over threshold]
-# CPU time: 0.11u 0.00s 00:00:00.11 Elapsed: 00:00:00.10
-# Mc/sec: 16997.32
+# CPU time: 0.11u 0.00s 00:00:00.11 Elapsed: 00:00:00.11
+# Mc/sec: 14179.11
 //
 [ok]

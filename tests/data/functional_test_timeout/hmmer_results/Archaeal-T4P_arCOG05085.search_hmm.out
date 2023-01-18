@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG05085.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG05085.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -13,42 +13,28 @@
 Query:       arCOG05085  [M=172]
 Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
-    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
-    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-     0.0031   16.9   0.1     0.0068   15.8   0.1    1.5  1  VEEI001.0321.00001.C001_03636  C ATG TAG 3852592 3855651 Valid 
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence Description
+    ------- ------ -----    ------- ------ -----   ---- --  -------- -----------
+
+   [No hits detected that satisfy reporting thresholds]
 
 
 Domain annotation for each sequence (and alignments):
->> VEEI001.0321.00001.C001_03636  C ATG TAG 3852592 3855651 Valid VEIS_RS16900 3060 @WP_011811198.1@ VEIS_RS16900 1 3852
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   15.8   0.1   5.6e-07    0.0068      50     164 ..      65     172 ..      47     177 .. 0.84
 
-  Alignments for each domain:
-  == domain 1  score: 15.8 bits;  conditional E-value: 5.6e-07
-                     arCOG05085  50 elvsdGtlesavlLynnnekdeaekllesrirlknYelkignntilskesnltsnsvivsavvilnrseGWyviywnene 129
-                                     l++dG l++ + +  +++  ++++l++ +++  n ++++++ t         +  ++++++  lnr+ GW  +     +
-  VEEI001.0321.00001.C001_03636  65 MLTDDGLLKNIIQVQRQQNLPQSDELIKTKVSRLNLDIEMETGT--------GKTYCYIKTIFELNRQYGWSKFIIVVPS 136
-                                    5789**************************99888777665444........46899******************99999 PP
-
-                     arCOG05085 130 iiiskerfldes.eaynaleylnseykkpvYysknt 164
-                                    i i ++   +   +a +++e++n + +  +Y s++ 
-  VEEI001.0321.00001.C001_03636 137 IAIREGVAKSLAmTAEHFQETYNRKARFFIYNSRQL 172
-                                    999999988864267788889999999999988875 PP
-
+   [No targets detected that satisfy reporting thresholds]
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (172 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       330  (0.0269806); expected 244.6 (0.02)
-Passed bias filter:                      253  (0.0206851); expected 244.6 (0.02)
-Passed Vit filter:                        21  (0.00171695); expected 12.2 (0.001)
-Passed Fwd filter:                         1  (8.17595e-05); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               1  [number of targets reported over threshold]
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       314  (0.0286261); expected 219.4 (0.02)
+Passed bias filter:                      238  (0.0216975); expected 219.4 (0.02)
+Passed Vit filter:                        18  (0.00164099); expected 11.0 (0.001)
+Passed Fwd filter:                         0  (0); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               0  [number of targets reported over threshold]
 # CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.04
-# Mc/sec: 14353.14
+# Mc/sec: 13297.52
 //
 [ok]

@@ -1,9 +1,8 @@
-# macsyfinder 20230117.dev
+# macsyfinder 20230118.dev
 # models : TFF-SF-0.0b2
-# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all -w 5 --sequence-db tests/data/base/gembase_with_slow_genome.fa --timeout 2 --out-dir functional_test_timeout
+# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all -w 5 --sequence-db tests/data/base/gembase_w_slow_genome.fa --timeout 2 --out-dir functional_test_timeout --index-dir .
 # Loners found:
 replicon	model_fqn	function	gene_name	hit_id	hit_pos	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
-PSAV001.0321.00001.C001	TFF-SF/T4P	T4P_pilT	T4P_pilT	PSAV001.0321.00001.C001_04959	4643	mandatory	344	3.400e-179	594.500	1.000	0.991	2	342
-VEEI001.0321.00001.C001	TFF-SF/T2SS	T2SS_gspE	T2SS_gspE	VEEI001.0321.00001.C001_01835	9061	mandatory	462	8.600e-163	541.200	0.763	0.697	64	385
-VEEI001.0321.00001.C001	TFF-SF/T2SS	T2SS_gspO	T4P_pilD	VEEI001.0321.00001.C001_04076	11157	mandatory	294	2.400e-89	298.100	1.000	0.850	25	274
+PSAV001.0321.00001.C001	TFF-SF/T4P	T4P_pilT	T4P_pilT	PSAV001.0321.00001.C001_04959	4643	mandatory	344	3.100e-179	594.500	1.000	0.991	2	342
+XAOR001.0321.00001.C001	TFF-SF/T4P	T4P_pilA	T4P_pilA	XAOR001.0321.00001.C001_03253	10027	accessory	240	5.700e-06	25.900	0.718	0.233	114	169
 

@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG02416.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG02416.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -27,14 +27,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (123 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       641  (0.0524078); expected 244.6 (0.02)
-Passed bias filter:                      550  (0.0449677); expected 244.6 (0.02)
-Passed Vit filter:                        78  (0.00637724); expected 12.2 (0.001)
-Passed Fwd filter:                         5  (0.000408797); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       592  (0.0539703); expected 219.4 (0.02)
+Passed bias filter:                      501  (0.0456742); expected 219.4 (0.02)
+Passed Vit filter:                        79  (0.00720212); expected 11.0 (0.001)
+Passed Fwd filter:                         6  (0.000546996); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
 Domain search space  (domZ):               0  [number of targets reported over threshold]
-# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.08
-# Mc/sec: 5705.87
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.06
+# Mc/sec: 7261.44
 //
 [ok]

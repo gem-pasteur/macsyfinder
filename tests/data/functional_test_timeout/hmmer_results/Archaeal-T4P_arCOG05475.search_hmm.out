@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG05475.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG05475.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -13,45 +13,28 @@
 Query:       arCOG05475  [M=464]
 Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
-    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
-    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-  ------ inclusion threshold ------
-      0.019   13.6   2.1       0.09   11.3   1.6    1.9  2  VEEI001.0321.00001.C001_02944  D ATG TGA 3170661 3171332 Valid 
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence Description
+    ------- ------ -----    ------- ------ -----   ---- --  -------- -----------
+
+   [No hits detected that satisfy reporting thresholds]
 
 
 Domain annotation for each sequence (and alignments):
->> VEEI001.0321.00001.C001_02944  D ATG TGA 3170661 3171332 Valid pilV 672 @VEIS_RS13755@WP_011810556.1@ VEIS_RS13755 1 
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   11.3   1.6   7.3e-06      0.09       3      47 ..      18      62 ..      16      79 .. 0.93
-   2 ?    0.6   0.0     0.013   1.6e+02     170     214 ..     103     147 ..      89     191 .. 0.74
 
-  Alignments for each domain:
-  == domain 1  score: 11.3 bits;  conditional E-value: 7.3e-06
-                     arCOG05475  3 ielvvvlgvivlfilvlyllipafsastksevnqaqlnalAqevl 47
-                                   +e++v+++++ ++il+++ +  + +++++++ +qaq  +lA e+ 
-  VEEI001.0321.00001.C001_02944 18 LEVLVAIVILTFAILGTVGMQGYALQANREARLQAQAVMLANELA 62
-                                   79***************************************9975 PP
-
-  == domain 2  score: 0.6 bits;  conditional E-value: 0.013
-                     arCOG05475 170 vssvl.invtdysss.saavpnatveivyaivsseteGnvvktkvyl 214
-                                    +++v+  ++td+ ++  a +p+a+v++    + + te+    +k+ +
-  VEEI001.0321.00001.C001_02944 103 TTEVAqAQMTDWLARvHADLPQAKVKVCFDGAPYDTESG--LAKWDC 147
-                                    3556657888898887999*******9999888877655..445554 PP
-
+   [No targets detected that satisfy reporting thresholds]
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (464 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       379  (0.0309868); expected 244.6 (0.02)
-Passed bias filter:                      311  (0.0254272); expected 244.6 (0.02)
-Passed Vit filter:                        29  (0.00237102); expected 12.2 (0.001)
-Passed Fwd filter:                         1  (8.17595e-05); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               1  [number of targets reported over threshold]
-# CPU time: 0.10u 0.00s 00:00:00.10 Elapsed: 00:00:00.10
-# Mc/sec: 18076.68
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       332  (0.0302671); expected 219.4 (0.02)
+Passed bias filter:                      268  (0.0244325); expected 219.4 (0.02)
+Passed Vit filter:                        27  (0.00246148); expected 11.0 (0.001)
+Passed Fwd filter:                         0  (0); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               0  [number of targets reported over threshold]
+# CPU time: 0.09u 0.00s 00:00:00.09 Elapsed: 00:00:00.10
+# Mc/sec: 16459.02
 //
 [ok]

@@ -4,7 +4,7 @@
 # Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG01822.hmm
-# target sequence database:        tests/data/base/gembase_with_slow_genome.fa
+# target sequence database:        tests/data/base/gembase_w_slow_genome.fa
 # output directed to file:         functional_test_timeout/hmmer_results/Archaeal-T4P_arCOG01822.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        1
@@ -13,38 +13,28 @@
 Query:       arCOG01822  [M=154]
 Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
-    E-value  score  bias    E-value  score  bias    exp  N  Sequence                      Description
-    ------- ------ -----    ------- ------ -----   ---- --  --------                      -----------
-  ------ inclusion threshold ------
-      0.018   14.2   0.7       0.02   14.0   0.7    1.0  1  VEEI001.0321.00001.C001_02735  C ATG TGA 2961932 2962144 Valid 
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence Description
+    ------- ------ -----    ------- ------ -----   ---- --  -------- -----------
+
+   [No hits detected that satisfy reporting thresholds]
 
 
 Domain annotation for each sequence (and alignments):
->> VEEI001.0321.00001.C001_02735  C ATG TGA 2961932 2962144 Valid VEIS_RS12755 213 @WP_041950016.1@ VEIS_RS12755 1 29619
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   14.0   0.7   1.6e-06      0.02      14      52 ..       9      50 ..       7      58 .. 0.77
 
-  Alignments for each domain:
-  == domain 1  score: 14.0 bits;  conditional E-value: 1.6e-06
-                     arCOG01822 14 alllvvapvaalv...esatvtvqvsnstsgntsfegvatdf 52
-                                   +l+lv a+v+ lv    sa++t + ++++s++++++++++++
-  VEEI001.0321.00001.C001_02735  9 GLVLVLAVVGMLVkkqLSAMQTTTGTVQESSQQVQQHIQQQV 50
-                                   7999*********99977777777777777777777776665 PP
-
+   [No targets detected that satisfy reporting thresholds]
 
 
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                            1  (154 nodes)
-Target sequences:                      12231  (4044983 residues searched)
-Passed MSV filter:                       412  (0.0336849); expected 244.6 (0.02)
-Passed bias filter:                      379  (0.0309868); expected 244.6 (0.02)
-Passed Vit filter:                        50  (0.00408797); expected 12.2 (0.001)
-Passed Fwd filter:                         2  (0.000163519); expected 0.1 (1e-05)
-Initial search space (Z):              12231  [actual number of targets]
-Domain search space  (domZ):               1  [number of targets reported over threshold]
-# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.07
-# Mc/sec: 8353.22
+Target sequences:                      10969  (3693442 residues searched)
+Passed MSV filter:                       444  (0.0404777); expected 219.4 (0.02)
+Passed bias filter:                      395  (0.0360106); expected 219.4 (0.02)
+Passed Vit filter:                        47  (0.0042848); expected 11.0 (0.001)
+Passed Fwd filter:                         0  (0); expected 0.1 (1e-05)
+Initial search space (Z):              10969  [actual number of targets]
+Domain search space  (domZ):               0  [number of targets reported over threshold]
+# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.05
+# Mc/sec: 9772.45
 //
 [ok]
