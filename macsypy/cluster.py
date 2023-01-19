@@ -304,7 +304,7 @@ class Cluster:
     @property
     def loner(self):
         """
-        :return: True if this cluster is made of only hits representing same gene and this gene is tag as gene
+        :return: True if this cluster is made of only some hits representing the same gene and this gene is tag as loner
                  False otherwise:
                  - contains several hits coding for different genes
                  - contains one hit but gene is not tag as loner (max_gene_required = 1)
