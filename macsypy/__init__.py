@@ -26,10 +26,9 @@ MacSypy package contains mainly variable used in library as __version_
 and functions to intialize the logger uses by entrypoints
 """
 
-from time import strftime, localtime
 import sys
 
-__version__ = f'{strftime("%Y%m%d", localtime())}.dev'
+__version__ = '2.1.rc1'
 
 
 __citation__ = """Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
