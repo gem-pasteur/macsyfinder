@@ -28,7 +28,7 @@ and functions to intialize the logger uses by entrypoints
 
 import sys
 
-__version__ = '2.1.rc1'
+__version__ = '2.1'
 
 
 __citation__ = """Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
