@@ -24,7 +24,7 @@ copyright = "2014-2022, 'Institut Pasteur (Paris), CNRS'"
 author = u"Sophie Abby, Bertrand Néron"
 
 # The full version, including alpha/beta/rc tags
-release = '2.0'
+release = '2.1'
 
 
 # -- General configuration ---------------------------------------------------
