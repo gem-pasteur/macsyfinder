@@ -115,10 +115,11 @@ You will find complete documentation for setting up your project on readthedocs
 
 [![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
 
-## Example data set
+## Example data sets
 
-An example dataset with command lines and expected output files is available [here](https://doi.org/10.6084/m9.figshare.21581280.v1),
-and described [in the Documentation](https://macsyfinder.readthedocs.io/en/latest/user_guide/quickstart.html#an-example-data-set). 
+Two example datasets with command lines and expected output files are available [here](https://doi.org/10.6084/m9.figshare.21581280.v1)
+and [here (for a more thorough one)](https://doi.org/10.6084/m9.figshare.21716426.v1). The 1st dataset is also
+described [in the Documentation](https://macsyfinder.readthedocs.io/en/latest/user_guide/quickstart.html#an-example-data-set).
 
 ## Docker
 
