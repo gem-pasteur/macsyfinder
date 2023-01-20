@@ -133,3 +133,8 @@ An example data set
 
 	The documentation on the generated output files can be consulted :ref:`here <outputs>`.
 	See also our FAQ: :ref:`faq-search-mode`
+
+.. note::
+
+	A more comprehensive example of genome datasets with dedicated command lines and expected output files
+	can be found `here. <https://doi.org/10.6084/m9.figshare.21716426.v1>`_
