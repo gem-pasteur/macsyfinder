@@ -52,9 +52,6 @@ class Test(MacsyTest):
         if os.path.exists(cls._index_dir):
             shutil.rmtree(cls._index_dir)
 
-        logger = colorlog.getLogger('macsypy')
-        for h in logger.handlers[:]:
-            logger.removeHandler(h)
 
     def setUp(self):
         self.tmp_dir = tempfile.gettempdir()
@@ -84,6 +81,12 @@ class Test(MacsyTest):
             shutil.rmtree(self.out_dir)
         except:
             pass
+        # remove handlers
+        # otherwise at each test init_logger is called
+        # and the handlers are accumulated and produce multiple values
+        logger = colorlog.getLogger('macsypy')
+        for h in logger.handlers[:]:
+            logger.removeHandler(h)
 
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_gembase(self):
@@ -956,6 +959,26 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertFileEqual(expected_result, get_results, comment="#")
+
+
+    def test_no_sequence(self):
+
+        seq_path = self.find_data('base', 'empty.fasta')
+        args = "--db-type ordered_replicon " \
+               f"--sequence-db {seq_path} " \
+               "--replicon-topology circular " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-simple-exch " \
+               "-o {out_dir} " \
+               f"--index-dir {self._index_dir} " \
+               "--relative-path"
+        with self.assertRaises(SystemExit):
+            with self.catch_io(out=True):
+                self._macsyfinder_run(args)
+        with open(os.path.join(self.out_dir, 'macsyfinder.log')) as log_file:
+            log = log_file.readlines()[-1].strip()
+        self.assertEqual(log,
+                         f"CRITICAL : The sequence-db file '{seq_path}' does not contains sequences.")
 
 
     def test_index_dir(self):

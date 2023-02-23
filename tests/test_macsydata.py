@@ -71,7 +71,7 @@ class TestMacsydata(MacsyTest):
     def tearDown(self):
         macsydata.RemoteModelIndex.remote_exists = self._remote_exists
         try:
-            #shutil.rmtree(self.tmpdir)
+            shutil.rmtree(self.tmpdir)
             pass
         except:
             pass

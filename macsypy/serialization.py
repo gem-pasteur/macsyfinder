@@ -157,10 +157,8 @@ class TsvSolutionSerializer:
     Handle Solution (list of Systems) serialization in tsv format
     """
 
-    def __init__(self):
-        """Constructor """
-        __class__.header = 'sol_id\t' + TsvSystemSerializer.header
-        __class__.template = Template(f"$$sol_id\t{TsvSystemSerializer.template.template}")
+    header = 'sol_id\t' + TsvSystemSerializer.header
+    template = Template(f"$$sol_id\t{TsvSystemSerializer.template.template}")
 
 
     def serialize(self, solution, sol_id, hit_system_tracker):

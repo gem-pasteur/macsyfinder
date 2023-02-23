@@ -509,7 +509,6 @@ class TestConfig(MacsyTest):
         with tempfile.TemporaryDirectory() as tmpdirname:
             cfg_path = os.path.join(tmpdirname, 'macsyfinder.conf')
             cfg.save(path_or_buf=cfg_path)
-            cfg.save(path_or_buf='/tmp/macsyfinder.conf')
             new_args = Namespace()
             new_args.cfg_file = cfg_path
             restored_cfg = Config(self.defaults, new_args)
