@@ -33,8 +33,9 @@ import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.database import Indexes, fasta_iter
-from macsypy.error import MacsypyError
+from macsypy.error import MacsypyError, EmptyFileError
 from tests import MacsyTest
+
 
 class TestFastaIter(MacsyTest):
 
@@ -87,6 +88,7 @@ class TestFastaIter(MacsyTest):
             self.assertEqual(str(ctx.exception),
                              f"Error during sequence '{fasta_path}' parsing: Check the fasta format.")
 
+
 class TestIndex(MacsyTest):
 
     def setUp(self):
@@ -123,7 +125,7 @@ class TestIndex(MacsyTest):
 
     def test_build_no_idx(self):
         idx = Indexes(self.cfg)
-        my_idx =idx.build()
+        my_idx = idx.build()
         self.assertEqual(my_idx, os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"))
 
     def test_build_idx_older_than_fasta(self):
@@ -412,4 +414,27 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
                         ('VICH001.B.00001.C001_01563', 212, 47), ('VICH001.B.00001.C001_01564', 387, 48),
                         ('VICH001.B.00001.C001_01565', 414, 49)]
         self.assertListEqual(list(iter(idx)), expected_idx)
+
+
+    def test_empty_fasta(self):
+        args = argparse.Namespace()
+        args.models_dir = self.find_data('models')
+        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+        args.index_dir = args.out_dir
+
+        seq_db = "empty.fasta"
+        open(os.path.join(args.out_dir, seq_db), 'w').close()
+        args.sequence_db = os.path.join(args.out_dir, seq_db)
+
+        for db_type in 'gembase', 'ordered_replicon', 'unordered':
+            with self.subTest(db_type=db_type):
+                args.db_type = db_type
+                cfg = Config(MacsyDefaults(), args)
+                idx = Indexes(cfg)
+                with self.assertRaises(EmptyFileError) as ctx:
+                    idx.build()
+                self.assertEqual(str(ctx.exception),
+                                 f"The sequence-db file '{args.sequence_db}' does not contains sequences.")
+
+                self.assertFalse(os.path.exists(f"{args.sequence_db}.idx"))
 
