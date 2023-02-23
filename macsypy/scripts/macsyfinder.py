@@ -49,7 +49,7 @@ from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
-from macsypy.error import OptionError, Timeout
+from macsypy.error import OptionError, Timeout, EmptyFileError
 from macsypy import cluster
 from macsypy.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
     sort_model_hits, compute_best_MSHit
@@ -496,7 +496,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
     :type config: :class:`macsypy.config.Config` object
     :param model_registry: the registry of all models
     :type model_registry: :class:`macsypy.registries.ModelRegistry` object
-    :param models_def_to_detect: the defintions to detect
+    :param models_def_to_detect: the definitions to detect
     :type models_def_to_detect: list of :class:`macsypy.registries.DefinitionLocation` objects
     :param logger: The logger use to display information to the user.
                    It must be initialized. see :func:`macsypy.init_logger`
@@ -1169,7 +1169,11 @@ def main(args=None, loglevel=None):
         sys.exit(f"macsyfinder: {err}")
     _log.info(f"\nmodels used: {models_fam_name}-{models_version}")
     logger.info(f"\n{f' Searching systems ':#^70}")
-    all_systems, rejected_candidates = search_systems(config, model_registry, models_def_to_detect, logger)
+    try:
+        all_systems, rejected_candidates = search_systems(config, model_registry, models_def_to_detect, logger)
+    except EmptyFileError as err:
+        _log.critical(str(err))
+        sys.exit(f"macsyfinder: {err} Run Aborted.")
     track_multi_systems_hit = HitSystemTracker(all_systems)
     skipped_replicons = []
     
