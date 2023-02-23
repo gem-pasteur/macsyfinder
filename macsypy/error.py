@@ -67,3 +67,8 @@ class Timeout(MacsypyError):
     """
     Raised when best solution reach the timeout
     """
+
+class EmptyFileError(MacsypyError):
+    """
+    Raised when fasta file does not contains sequences
+    """

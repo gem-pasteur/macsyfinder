@@ -30,7 +30,7 @@ from itertools import groupby
 from collections import namedtuple
 import os.path
 import logging
-from macsypy.error import MacsypyError
+from macsypy.error import MacsypyError, EmptyFileError
 _log = logging.getLogger(__name__)
 
 
@@ -208,6 +208,10 @@ class Indexes:
             msg = f"unable to index the sequence dataset: {self.cfg.sequence_db()} : {err}"
             _log.critical(msg, exc_info=True)
             raise MacsypyError(msg) from err
+        if seq_nb == 0:
+            os.unlink(index_file)
+            msg = f"The sequence-db file '{self._fasta_path}' does not contains sequences."
+            raise EmptyFileError(msg)
         return index_file
 
 
