@@ -115,6 +115,8 @@ class MacsyDefaults(dict):
         self.itself_weight = kwargs.get('itself_weight', 1.0)
         self.redundancy_penalty = kwargs.get('redundancy_penalty', 1.5)
         self.timeout = kwargs.get('timeout', 0)
+        self.force_run = kwargs.get('force_run', False)
+
 
 class Config:
     """
@@ -132,7 +134,7 @@ class Config:
                 ('directories', ('models_dir', 'system_models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
                                  'res_search_suffix', 'res_extract_suffix', 'index_dir')),
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
-                             'verbosity', 'quiet', 'mute', 'worker', 'timeout')),
+                             'verbosity', 'quiet', 'mute', 'worker', 'timeout', 'force_run')),
                 ]
 
     model_opts = ('itself', 'exchangeable', 'mandatory', 'accessory', 'neutral',
