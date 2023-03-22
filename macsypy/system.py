@@ -483,6 +483,9 @@ class System(AbstractClusterizedHits):
 
     _id = itertools.count(1)
 
+    def __str__(self):
+        return self.id[14:]
+
     def __init__(self, model, clusters, redundancy_penalty=1.5):
         """
 
