@@ -376,9 +376,11 @@ class RepliconDB:
             in gembase the identifier of fasta sequence follows the following schema:
             <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
             but not in the <seq-name>.
+            for draft genome the seqname is postfix with 'b' if the sequence is border of the contig
+            or 'i' if it is inside.
             so grp_replicon allow to group sequences belonging to the same replicon.
             """
-            return "_".join(entry[0].split('_')[: -1])
+            return "_".join(entry[0].split('_')[: -1]).rstrip('ib')
 
         def parse_seq_id(seq_id):
             """

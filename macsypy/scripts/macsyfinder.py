@@ -25,6 +25,7 @@
 """
 Main entrypoint to macsyfinder
 """
+import shutil
 
 import sys
 import os
@@ -384,6 +385,14 @@ to organize the models in subsystems.""")
                              default=None,
                              help="""Path to the directory where to store output results.
 if out-dir is specified, res-search-dir will be ignored.""")
+    dir_options.add_argument('--force',
+                             dest='force_run',
+                             action='store_true',
+                             default=None,
+                             help="""force to run even the out dir already exists and is not empty.
+Use this option with caution, MSF will erase everything in out dir before to run."""
+                             )
+
     dir_options.add_argument('--index-dir',
                              action='store',
                              default=None,
@@ -1108,7 +1117,10 @@ def main(args=None, loglevel=None):
         os.makedirs(working_dir)
     else:
         if os.path.isdir(working_dir):
-            if os.listdir(working_dir):
+            if config.force_run():
+                shutil.rmtree(working_dir)
+                os.makedirs(working_dir)
+            elif os.listdir(working_dir):
                 raise ValueError(f"'{working_dir}' already exists and is not a empty")
         else:
             raise ValueError(f"'{working_dir}' already exists and is not a directory")
