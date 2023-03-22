@@ -1042,6 +1042,56 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
             os.unlink(self.out_dir)
 
 
+    def test_force(self):
+        # test if msf remove previous results when --force is set
+
+        # genetic organization of test_3.fasta
+        # gene       abc    mfp    omf    omf    abc    gspd
+        # gene id   01397  01398  01548  01562  01399  01400
+        # pos        2      3      19     27     37     38
+        # clst                 ]               [
+        # syst (abc,2), (mfp,3), (abc,37), (gspd, 38)
+        # in T12SS-simple-exch omf is not a loner
+        test_name = "functional_test_ordered_circular"
+        self.out_dir = os.path.join(self.tmp_dir, f'macsyfinder_{test_name}')
+        expected_result_dir = self.find_data("functional_test_ordered_circular")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology circular " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-simple-exch " \
+               f"-o {self.out_dir} " \
+               f"--index-dir {self._index_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        # create non empty out dir
+        os.makedirs(self.out_dir)
+        open(os.path.join(self.out_dir, 'FOO'), 'w').close()
+
+        # msf should complain about out dir
+        with self.assertRaises(ValueError) as ctx:
+            macsyfinder.main(args=args.split(), loglevel='ERROR')
+
+        args += " --force"
+
+        # msf should run without complain
+        macsyfinder.main(args=args.split(), loglevel='ERROR')
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary,
+                          self.rejected_candidates_tsv):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
+
     def test_no_models(self):
         args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
                "--db-type ordered_replicon " \

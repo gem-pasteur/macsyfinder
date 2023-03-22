@@ -71,6 +71,7 @@ class TestMacsyDefaults(MacsyTest):
                          'verbosity': 0,
                          'worker': 1,
                          'timeout': 0,
+                         'force_run': False,
                          'mandatory_weight': 1.0,
                          'accessory_weight': .5,
                          'neutral_weight': 0.0,
