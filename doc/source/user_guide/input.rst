@@ -217,6 +217,8 @@ Path options:
   -o OUT_DIR, --out-dir OUT_DIR
                         Path to the directory where to store results.
                         if out-dir is specified res-search-dir will be ignored.
+  --force               force to run even the out dir already exists and is not empty.
+                        Use this option with caution, MSF will erase everything in out dir before to run.
   --index-dir INDEX_DIR
                         Specifies the path to a directory to store/read the sequence index when the sequence-db dir
                         is not writable.
