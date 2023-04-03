@@ -445,9 +445,10 @@ _ bla bla
 
 To cite MacSyFinder:
 
-- Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
-  MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
-  PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726"""
+- Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S. 
+  MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. 
+  Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjournal.250.
+  https://peercommunityjournal.org/articles/10.24072/pcjournal.250/"""
 
         self.assertEqual(expected_citation, citation)
 
