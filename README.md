@@ -29,6 +29,9 @@ MacSyFinder v1:
 Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014). MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems. PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726
 http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
 
+## What new in MacSyFinder V2.x
+
+https://macsyfinder.readthedocs.io/en/latest/user_guide/new_v2.html
 
 ## MacSyFinder is available on pypi
 
