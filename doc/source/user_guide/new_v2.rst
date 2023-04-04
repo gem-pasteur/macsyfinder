@@ -56,7 +56,15 @@ https://github.com/gem-pasteur/macsyfinder/issues/58
 V 2.1
 =====
 
-Add few features
+Bug fix
+=======
+
+Security patch
+--------------
+
+Patch macsydata to fix CVE-2007-4559
+https://github.com/gem-pasteur/macsyfinder/pull/57
+
 
 New features
 ============
@@ -66,12 +74,6 @@ Squash cluster of loners
 
 If a cluster is made up with only loners, then the hits are treated by MSF as loners and not as regular cluster.
 
-
-Security patch
---------------
-
-Patch macsydata to fix CVE-2007-4559
-https://github.com/gem-pasteur/macsyfinder/pull/57
 
 New option --timeout
 --------------------
