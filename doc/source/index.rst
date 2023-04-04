@@ -20,8 +20,10 @@ Welcome to MacSyFinder's documentation!
 
 .. note::
 
-  A **new version of MacSyFinder (v2)** is available, see :ref:`here for an overview of the novelties<new_v2>`. The search engine was changed, and some bugs/unwanted behaviors corrected.
-  MacSyFinder's models for v2 are very similar, yet not compatible with those from v1. See here for details on :ref:`how to carry your models to v2<models_v1_v2>`.
+  A **new version of MacSyFinder (v2)** is available, see :ref:`here for an overview of the novelties<new_v2>`.
+  The search engine was changed, and some bugs/unwanted behaviors corrected.
+  MacSyFinder's models for v2 are very similar, yet not compatible with those from v1.
+  See here for details on :ref:`how to carry your models to v2<models_v1_v2>`.
 
   The search engine of v2 being much different from that of v1, we **strongly suggest** to test
   whether the results are relevant by simply "translating" the models from v1 to v2, or if the models need to be adapted to correctly function with v2.
@@ -54,9 +56,11 @@ In order to model macromolecular systems, the user:
 
   If you use MacSyFinder, please cite:
 
-  `Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014).
-  MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
-  PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726 <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726>`_
+  `Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
+  MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes.
+  Peer Community Journal, Volume 3 (2023), article no. e28.
+  doi : 10.24072/pcjournal.250.
+  https://peercommunityjournal.org/articles/10.24072/pcjournal.250/ <https://peercommunityjournal.org/articles/10.24072/pcjournal.250/>`_
 
 ==========
 User Guide
