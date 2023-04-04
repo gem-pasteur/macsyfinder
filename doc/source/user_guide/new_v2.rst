@@ -12,10 +12,81 @@
 What's new in MacSyFinder v2?
 *****************************
 
+
+
+=======
+V 2.1.1
+=======
+
+Update MSF citation, fix minor bugs and add add few features
+
+New features
+============
+
+--force option
+---------------
+
+Force MSF run even the out dir already exists and is not empty.
+Use this option with caution, MSF will erase everything in out dir before to run.
+https://github.com/gem-pasteur/macsyfinder/issues/61
+
+Minor bugs
+==========
+
+Macsyfinder with python subprocess kill main process on error
+-------------------------------------------------------------
+
+If an error occurred during HMM phase, all processes were killed as well the mother process
+but MSF stoped with an ugly traceback.
+https://github.com/gem-pasteur/macsyfinder/issues/60
+
+In Gembase format parsing
+--------------------------
+
+The genes were not well grouped by contigs for draft genomes.
+
+
+Cannot join current thread error during unit tests phase
+--------------------------------------------------------
+
+Sometimes the testsuite failed with the following error: *"cannot join current thread"*
+https://github.com/gem-pasteur/macsyfinder/issues/58
+
+=====
+V 2.1
+=====
+
+Add few features
+
+New features
+============
+
+Squash cluster of loners
+------------------------
+
+If a cluster is made up with only loners, then the hits are treated by MSF as loners and not as regular cluster.
+
+
+Security patch
+--------------
+
+Patch macsydata to fix CVE-2007-4559
+https://github.com/gem-pasteur/macsyfinder/pull/57
+
+New option --timeout
+--------------------
+
+In some case msf can take a long time to find the best solution (in 'gembase' and 'ordered_replicon mode').
+The timeout is per replicon. If this step reach the timeout, the replicon is skipped (for gembase mode the analyse of other replicons continue).
+NUMBER[SUFFIX]  NUMBER seconds. SUFFIX may be 's' for seconds (the default), 'm' for minutes, 'h' for hours or 'd' for days
+for instance 1h2m3s means 1 hour 2 min 3 sec. NUMBER must be an integer.
+
+===
+2.0
+===
+
 For Version 2, MacSyFinder was carried under `Python 3 <https://www.python.org/download/releases/3.0/>`_.
 
-
-==============================
 New features and search engine
 ==============================
 
