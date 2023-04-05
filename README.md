@@ -19,13 +19,13 @@ MacSyFinder - Detection of macromolecular systems in protein datasets using syst
 
 ## Citations
 
-MacSyFinder v2:
+MacSyFinder v2:\
 Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S. 
 MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. 
 Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjournal.250.
 https://peercommunityjournal.org/articles/10.24072/pcjournal.250/
 
-MacSyFinder v1:
+MacSyFinder v1:\
 Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014). MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems. PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726
 http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
 
