@@ -21,7 +21,6 @@ include README.md
 include COPYING
 include COPYRIGHT
 include CONTRIBUTING.md
-include CONTRIBUTORS
-include NEWS
+include CONTRIBUTORS.md
 include CITATION.yml
 
