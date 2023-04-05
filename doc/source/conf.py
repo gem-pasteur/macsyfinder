@@ -15,16 +15,16 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
-
+import macsypy
 
 # -- Project information -----------------------------------------------------
 
 project = 'MacSyFinder'
-copyright = "2014-2022, 'Institut Pasteur (Paris), CNRS'"
+copyright = "2014-2023, 'Institut Pasteur (Paris), CNRS'"
 author = u"Sophie Abby, Bertrand Néron"
 
 # The full version, including alpha/beta/rc tags
-release = '2.0'
+release = macsypy.__version__
 
 
 # -- General configuration ---------------------------------------------------
