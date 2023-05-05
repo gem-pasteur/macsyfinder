@@ -32,6 +32,7 @@ import unittest
 import itertools
 
 import colorlog
+import pandas as pd
 
 from tests import MacsyTest, which
 from macsypy.scripts import macsyfinder
@@ -158,10 +159,22 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
+        for file_name in (self.summary,
+                          self.all_systems_tsv,
+                          self.rejected_candidates_tsv,
+                          self.best_solution,
+                          self.all_best_solutions):
+            with self.subTest(file_name=file_name):
+                # that THHY002.0321.00001.C001 has_been skipped is in comment of each file
+                get_results = os.path.join(self.out_dir, file_name)
                 with open(get_results) as results:
                     lines = results.readlines()
                 self.assertEqual(lines[4],
                                  "# WARNING: The replicon 'THHY002.0321.00001.C001' has been SKIPPED. Cannot be solved before timeout.\n")
+
+                # that results don't contain results about THHY002.0321.00001.C001 replicon
+                replicons = pd.read_csv(get_results, sep='\t', comment='#').replicon.drop_duplicates()
+                self.assertEqual(len(replicons), 2)
 
     def test_only_loners(self):
         # genetic organization of MOBP1_twice.fast
