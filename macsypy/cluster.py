@@ -109,7 +109,14 @@ def _clusterize(hits, model, hit_weights, rep_info):
                 if len(cluster_scaffold) > 1:
                     # close the current scaffold if it contains at least 2 hits
                     cluster = Cluster(cluster_scaffold, model, hit_weights)
-                    clusters.append(cluster)
+                    functions = cluster.functions
+                    if len(functions) > 1:
+                        clusters.append(cluster)
+                    else:
+                        function,  = functions
+                        _log.warning(
+                            f"This cluster of {len(cluster_scaffold)} genes code for only one function {function} discard it")
+                        # clusters.append(cluster)
                 elif model.min_genes_required == 1:
                     # close the current scaffold if it contains 1 hit
                     # but it's allowed by the model
@@ -131,7 +138,11 @@ def _clusterize(hits, model, hit_weights, rep_info):
         len_scaffold = len(cluster_scaffold)
         if len_scaffold > 1:
             new_cluster = Cluster(cluster_scaffold, model, hit_weights)
-            clusters.append(new_cluster)
+            functions = new_cluster.functions
+            if len(functions) > 1:
+                clusters.append(new_cluster)
+            else:
+                _log.warning(f"This cluster of {len_scaffold} genes code for only one function {functions.pop()} skip it")
         elif len_scaffold == 1:
             # handle circularity
             # if there are clusters
@@ -346,6 +357,30 @@ class Cluster:
         return v_hit in self.hits
 
 
+    @property
+    def functions(self):
+        """
+
+        :return: The set of functions encoded by this cluster
+                 *function* mean gene name or reference gene name for exhangeables genes
+                 for instance
+                 <model vers="2.0">
+                     <gene a presence="mandatory"/>
+                     <gene b presence="accessory"/>
+                        <exchangeable>
+                            <gene c />
+                        </exchangeable>
+                     <gene/>
+                 </model>
+                 the functions for a cluster corresponding to this model wil be {'a' , 'b'}
+
+        :rtype: frozenset
+        """
+        if self._genes_roles is None:
+            self._genes_roles = frozenset({h.gene_ref.alternate_of().name for h in self.hits})
+        return self._genes_roles
+
+
     def fulfilled_function(self, *genes):
         """
 
@@ -355,8 +390,7 @@ class Cluster:
         :rtype: set of string
         """
         # we do not filter out neutral from the model
-        if self._genes_roles is None:
-            self._genes_roles = {h.gene_ref.alternate_of().name for h in self.hits}
+        genes_roles = self.functions
         functions = set()
         for gene in genes:
             if isinstance(gene, macsypy.gene.ModelGene):
@@ -365,7 +399,7 @@ class Cluster:
                 # gene is a string
                 function = gene
             functions.add(function)
-        return self._genes_roles.intersection(functions)
+        return genes_roles.intersection(functions)
 
 
     def merge(self, cluster, before=False):
