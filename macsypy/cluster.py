@@ -89,6 +89,33 @@ def _clusterize(hits, model, hit_weights, rep_info):
     :return: the clusters
     :rtype: list of :class:`macsypy.cluster.Cluster` objects.
     """
+    def do_clst(cluster_scaffold, model, hit_weights):
+        """
+
+        :param cluster_scaffold:
+        :param model:
+        :param hit_weights:
+        :return:
+        """
+        gene_types = {hit.gene_ref.name for hit in cluster_scaffold}
+        if len(gene_types) > 1:
+            if all([_hit.gene_ref.status == GeneStatus.NEUTRAL for _hit in cluster_scaffold]):
+                # we do not consider a group of neutral as a cluster
+                _log.debug(f"({', '.join([h.id for h in cluster_scaffold])}) "
+                           f"is composed of only neutral. It's not a cluster.")
+            else:
+                cluster = Cluster(cluster_scaffold, model, hit_weights)
+                clusters.append(cluster)
+        else:
+            cluster = Cluster(cluster_scaffold, model, hit_weights)
+            if cluster.loner:
+                # it's a group of one loner add as cluster
+                # it will be squashed at  next step (_get_true_loners )
+                clusters.append(cluster)
+            else:
+                _log.debug(f"({', '.join([h.id for h in cluster_scaffold])}) "
+                           f"is composed of only type of gene {cluster_scaffold[0].gene_ref.name}. It's not a cluster.")
+
     clusters = []
     cluster_scaffold = []
     # sort hits by increasing position and then descending score
@@ -108,27 +135,17 @@ def _clusterize(hits, model, hit_weights, rep_info):
             else:
                 if len(cluster_scaffold) > 1:
                     # close the current scaffold if it contains at least 2 hits
-                    cluster = Cluster(cluster_scaffold, model, hit_weights)
-                    functions = cluster.functions
-                    if len(functions) > 1:
-                        clusters.append(cluster)
-                    else:
-                        function,  = functions
-                        _log.warning(
-                            f"This cluster of {len(cluster_scaffold)} genes code for only one function {function} discard it")
-                        # clusters.append(cluster)
+                    do_clst(cluster_scaffold, model, hit_weights)
                 elif model.min_genes_required == 1:
                     # close the current scaffold if it contains 1 hit
                     # but it's allowed by the model
                     cluster = Cluster(cluster_scaffold, model, hit_weights)
                     clusters.append(cluster)
                 elif model.get_gene(cluster_scaffold[0].gene.name).loner:
-                    # close the current scaffold it contains 1 hit
-                    # to handle circularity if it's the last cluster
+                    # close the current scaffold it contains 1 hit but the model gene is tag as  a loner
                     cluster = Cluster(cluster_scaffold, model, hit_weights)
                     clusters.append(cluster)
-                    # the hit transformation in loner is perform at the end when
-                    # circularity and merging is done
+                    # the hit transformation in loner is performed at the end when circularity and merging is done
 
                 # open new scaffold
                 cluster_scaffold = [m_hit]
@@ -137,12 +154,7 @@ def _clusterize(hits, model, hit_weights, rep_info):
         # close the last current cluster
         len_scaffold = len(cluster_scaffold)
         if len_scaffold > 1:
-            new_cluster = Cluster(cluster_scaffold, model, hit_weights)
-            functions = new_cluster.functions
-            if len(functions) > 1:
-                clusters.append(new_cluster)
-            else:
-                _log.warning(f"This cluster of {len_scaffold} genes code for only one function {functions.pop()} skip it")
+            do_clst(cluster_scaffold, model, hit_weights)
         elif len_scaffold == 1:
             # handle circularity
             # if there are clusters
@@ -151,7 +163,7 @@ def _clusterize(hits, model, hit_weights, rep_info):
                 new_cluster = Cluster(cluster_scaffold, model, hit_weights)
                 clusters[0].merge(new_cluster, before=True)
             elif cluster_scaffold[0].gene_ref.loner:
-                # the hit does not collocate but it's a loner
+                # the hit does not collocate, but it's a loner
                 # handle clusters containing only one loner
                 new_cluster = Cluster(cluster_scaffold, model, hit_weights)
                 clusters.append(new_cluster)
@@ -205,7 +217,7 @@ def _get_true_loners(clusters):
         hit_weights = clusters[0].hit_weights
         for clstr in clusters:
             if clstr.loner:
-                # it's  a true Loner
+                # it's  a true Loner or a stretch of same loner
                 add_true_loner(clstr)
             else:
                 # it's a cluster of 1 hit
@@ -322,6 +334,7 @@ class Cluster:
         """
         # need this method in build_cluster before to transform ModelHit in Loner
         # so cannot rely on Loner type
+        # beware return True if several hits of same gene composed this cluster
         return len({h.gene_ref.name for h in self.hits}) == 1 and self.hits[0].gene_ref.loner
 
     @property
