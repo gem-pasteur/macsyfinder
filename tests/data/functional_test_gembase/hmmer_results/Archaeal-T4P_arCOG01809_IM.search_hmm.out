@@ -1,13 +1,13 @@
 # hmmsearch :: search profile(s) against a sequence database
-# HMMER 3.1b2 (February 2015); http://hmmer.org/
-# Copyright (C) 2015 Howard Hughes Medical Institute.
-# Freely distributed under the GNU General Public License (GPLv3).
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG01809_IM.hmm
 # target sequence database:        tests/data/base/gembase.fasta
-# output directed to file:         ./macsyfinder-20220624_11-07-19/hmmer_results/Archaeal-T4P_arCOG01809_IM.search_hmm.out
+# output directed to file:         ./macsyfinder-20230628_13-38-01/hmmer_results/Archaeal-T4P_arCOG01809_IM.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
-# number of worker threads:        0
+# number of worker threads:        1
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Query:       arCOG01809  [M=459]
@@ -63,17 +63,17 @@ Domain annotation for each sequence (and alignments):
 >> GCF_000005845_000970  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?    6.9   0.0   0.00028       2.8      37      89 ..      59     110 ..      45     131 .. 0.85
-   2 ?    4.3   0.8    0.0017        17     352     435 ..     153     235 ..     128     238 .. 0.80
+   1 ?    6.9   0.0   0.00028       2.8      37      89 ..      59     110 ..      44     131 .. 0.85
+   2 ?    4.4   0.8    0.0017        17     352     435 ..     153     235 ..     128     238 .. 0.80
 
   Alignments for each domain:
   == domain 1  score: 6.9 bits;  conditional E-value: 0.00028
             arCOG01809  37 elskefkkiynLvkkWnyslaeAcrlvakrvpskvlkdfLdRlayaidsGedl 89 
                            + +++++++ +L k  + +l+e + l+a++ psk+ + +L+ la+ ++ G  +
   GCF_000005845_000970  59 KSAEVIHQLATLLKA-GLTLSEGLALLAEQHPSKQWQALLQSLAHDLEQGIAF 110
-                           556677777777765.899****************************999655 PP
+                           556777777777766.899****************************999655 PP
 
-  == domain 2  score: 4.3 bits;  conditional E-value: 0.0017
+  == domain 2  score: 4.4 bits;  conditional E-value: 0.0017
             arCOG01809 352 RkkreqsastFvgllyglhaamafllailleiveilsnlfssletpsemsvssilifsevdiellsyllllillilsllsalai 435
                            R+  +++ s++   +++l +a+++++a+l  ++  ++ ++++++tp    +++i+++  ++ e  s ll+l+ ++l++++ l++
   GCF_000005845_000970 153 RQLTDKVKSALRYPIIILAMAIMVVVAMLHFVLPEFAAIYKTFNTPLPALTQGIMTLADFSGEW-SWLLVLFGFLLAIANKLLM 235
@@ -83,15 +83,15 @@ Domain annotation for each sequence (and alignments):
 
 Internal pipeline statistics summary:
 -------------------------------------
-Query model(s):                              1  (459 nodes)
-Target sequences:                        30128  (9463607 residues searched)
+Query model(s):                            1  (459 nodes)
+Target sequences:                      30128  (9463607 residues searched)
 Passed MSV filter:                      2420  (0.080324); expected 602.6 (0.02)
 Passed bias filter:                     1015  (0.0336896); expected 602.6 (0.02)
 Passed Vit filter:                       104  (0.00345194); expected 30.1 (0.001)
 Passed Fwd filter:                         4  (0.000132767); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
 Domain search space  (domZ):               3  [number of targets reported over threshold]
-# CPU time: 0.20u 0.00s 00:00:00.20 Elapsed: 00:00:00.20
-# Mc/sec: 21718.98
+# CPU time: 0.30u 0.00s 00:00:00.30 Elapsed: 00:00:00.26
+# Mc/sec: 16655.16
 //
 [ok]

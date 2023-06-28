@@ -1,13 +1,13 @@
 # hmmsearch :: search profile(s) against a sequence database
-# HMMER 3.1b2 (February 2015); http://hmmer.org/
-# Copyright (C) 2015 Howard Hughes Medical Institute.
-# Freely distributed under the GNU General Public License (GPLv3).
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/TFF-SF/profiles/T2SS_gspF.hmm
 # target sequence database:        tests/data/base/gembase.fasta
-# output directed to file:         ./macsyfinder-20220624_11-07-19/hmmer_results/T2SS_gspF.search_hmm.out
+# output directed to file:         ./macsyfinder-20230628_13-38-01/hmmer_results/T2SS_gspF.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
-# number of worker threads:        0
+# number of worker threads:        1
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Query:       T2SS_gspF  [M=335]
@@ -25,7 +25,7 @@ Scores for complete sequences (score includes all domains):
    2.5e-100  336.4   6.0   2.9e-100  336.2   6.0    1.0  1  GCF_000006725_023260  
     1.8e-98  330.3   9.7    2.1e-98  330.1   9.7    1.0  1  GCF_000006745_021970  
     1.2e-94  317.8   4.3    1.4e-94  317.6   4.3    1.0  1  GCF_000006745_003700  
-    8.8e-93  311.6  11.2      1e-92  311.5  11.2    1.0  1  GCF_000006765_026410  
+    8.8e-93  311.6  11.2      1e-92  311.4  11.2    1.0  1  GCF_000006765_026410  
     8.8e-83  278.8   2.6      1e-82  278.6   2.6    1.0  1  GCF_000006945_002000  
     1.1e-80  271.9   2.0    1.3e-80  271.7   2.0    1.0  1  GCF_000006925_001000  
       3e-80  270.4   3.6    3.5e-80  270.2   3.6    1.0  1  GCF_000005845_000970  
@@ -309,10 +309,10 @@ Domain annotation for each sequence (and alignments):
 >> GCF_000006765_026410  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !  311.5  11.2   5.7e-96     1e-92       2     335 .]      60     392 ..      59     392 .. 0.99
+   1 !  311.4  11.2   5.7e-96     1e-92       2     335 .]      60     392 ..      59     392 .. 0.99
 
   Alignments for each domain:
-  == domain 1  score: 311.5 bits;  conditional E-value: 5.7e-96
+  == domain 1  score: 311.4 bits;  conditional E-value: 5.7e-96
              T2SS_gspF   2 alltrqLatLlaaglpLeeaLkavaeqaekkklrsvleavrekvreGksLsdalaefpklfpelyramvaaGEasGkLeevlerladyl 90 
                            ++ +++Lat+laag+++++a++a ++ a+++kl s+l+a+ + +r+G+s+   l++    +p++++++vaaGE +G+L+ +l+++a+++
   GCF_000006765_026410  60 NMAIHELATMLAAGVSMADAVEAQERGARHPKLISALQAMANGLRQGQSFPVVLESAGLDLPRYVYQLVAAGEMTGNLAGALRDCATQM 148
@@ -486,15 +486,15 @@ Domain annotation for each sequence (and alignments):
 
 Internal pipeline statistics summary:
 -------------------------------------
-Query model(s):                              1  (335 nodes)
-Target sequences:                        30128  (9463607 residues searched)
+Query model(s):                            1  (335 nodes)
+Target sequences:                      30128  (9463607 residues searched)
 Passed MSV filter:                      1935  (0.064226); expected 602.6 (0.02)
 Passed bias filter:                     1060  (0.0351832); expected 602.6 (0.02)
 Passed Vit filter:                        96  (0.0031864); expected 30.1 (0.001)
 Passed Fwd filter:                        19  (0.000630643); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
 Domain search space  (domZ):              17  [number of targets reported over threshold]
-# CPU time: 0.17u 0.00s 00:00:00.17 Elapsed: 00:00:00.18
-# Mc/sec: 17612.82
+# CPU time: 0.22u 0.01s 00:00:00.23 Elapsed: 00:00:00.19
+# Mc/sec: 16542.19
 //
 [ok]

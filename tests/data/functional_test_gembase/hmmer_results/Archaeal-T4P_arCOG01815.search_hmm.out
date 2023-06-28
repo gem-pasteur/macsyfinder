@@ -1,13 +1,13 @@
 # hmmsearch :: search profile(s) against a sequence database
-# HMMER 3.1b2 (February 2015); http://hmmer.org/
-# Copyright (C) 2015 Howard Hughes Medical Institute.
-# Freely distributed under the GNU General Public License (GPLv3).
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG01815.hmm
 # target sequence database:        tests/data/base/gembase.fasta
-# output directed to file:         ./macsyfinder-20220624_11-07-19/hmmer_results/Archaeal-T4P_arCOG01815.search_hmm.out
+# output directed to file:         ./macsyfinder-20230628_13-38-01/hmmer_results/Archaeal-T4P_arCOG01815.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
-# number of worker threads:        0
+# number of worker threads:        1
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Query:       arCOG01815  [M=485]
@@ -15,7 +15,7 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
     ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
-    6.3e-08   32.6   4.8    2.9e-07   30.5   0.3    2.2  2  GCF_000006845_014270  
+    6.4e-08   32.6   4.8    2.9e-07   30.5   0.3    2.2  2  GCF_000006845_014270  
     5.4e-05   23.0  10.8    5.4e-05   23.0  10.8    1.9  2  GCF_000006765_042470  
       7e-05   22.6   4.6    0.00027   20.7   0.1    2.9  2  GCF_000006905_029140  
 
@@ -102,15 +102,15 @@ Domain annotation for each sequence (and alignments):
 
 Internal pipeline statistics summary:
 -------------------------------------
-Query model(s):                              1  (485 nodes)
-Target sequences:                        30128  (9463607 residues searched)
+Query model(s):                            1  (485 nodes)
+Target sequences:                      30128  (9463607 residues searched)
 Passed MSV filter:                      3492  (0.115905); expected 602.6 (0.02)
 Passed bias filter:                      983  (0.0326275); expected 602.6 (0.02)
 Passed Vit filter:                        70  (0.00232342); expected 30.1 (0.001)
 Passed Fwd filter:                         3  (9.95751e-05); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
 Domain search space  (domZ):               3  [number of targets reported over threshold]
-# CPU time: 0.23u 0.00s 00:00:00.23 Elapsed: 00:00:00.23
-# Mc/sec: 19955.87
+# CPU time: 0.28u 0.01s 00:00:00.29 Elapsed: 00:00:00.25
+# Mc/sec: 17974.21
 //
 [ok]
