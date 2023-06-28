@@ -342,6 +342,7 @@ class Cluster:
         """
         :return: True if this cluster is made of only one hit representing a multi_system gene
                  False otherwise:
+
                  - contains several hits
                  - contains one hit but gene is not tag as loner (max_gene_required = 1)
         """
@@ -363,6 +364,7 @@ class Cluster:
 
     def __contains__(self, v_hit):
         """
+
         :param v_hit: The hit to test
         :type v_hit: :class:`macsypy.hit.ModelHit` object
         :return: True if the hit is in the cluster hits, False otherwise
@@ -375,8 +377,9 @@ class Cluster:
         """
 
         :return: The set of functions encoded by this cluster
-                 *function* mean gene name or reference gene name for exhangeables genes
+                 *function* mean gene name or reference gene name for exchangeables genes
                  for instance
+
                  <model vers="2.0">
                      <gene a presence="mandatory"/>
                      <gene b presence="accessory"/>
@@ -385,6 +388,7 @@ class Cluster:
                         </exchangeable>
                      <gene/>
                  </model>
+
                  the functions for a cluster corresponding to this model wil be {'a' , 'b'}
 
         :rtype: frozenset
