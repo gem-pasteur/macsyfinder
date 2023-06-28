@@ -744,6 +744,8 @@ def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker,
     :return: None
     """
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
+    if skipped_replicons:
+        systems = [s for s in systems if s.replicon_name not in skipped_replicons]
     if systems:
         print("# Systems found:", file=sys_file)
         print(TsvSystemSerializer.header, file=sys_file)
@@ -773,6 +775,8 @@ def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker,
     """
 
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
+    if skipped_replicons:
+        systems = [s for s in systems if s.replicon_name not in skipped_replicons]
     if systems:
         print("# Systems found:\n", file=sys_file)
         for system in systems:
@@ -991,6 +995,8 @@ def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candida
     :return: None
     """
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=cand_file)
+    if skipped_replicons:
+        rejected_candidates = [rc for rc in rejected_candidates if rc.replicon_name not in skipped_replicons]
     if rejected_candidates:
         print("# Rejected candidates:\n", file=cand_file)
         for rej_cand in rejected_candidates:
@@ -1014,6 +1020,8 @@ def rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candida
     :return: None
     """
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=cand_file)
+    if skipped_replicons:
+        rejected_candidates = [rc for rc in rejected_candidates if rc.replicon_name not in skipped_replicons]
     if rejected_candidates:
         serializer = TsvRejectedCandidatesSerializer()
         rej_candidates = serializer.serialize(rejected_candidates)
@@ -1253,7 +1261,8 @@ def main(args=None, loglevel=None):
         cluster_filename = os.path.join(config.working_dir(), "rejected_candidates.txt")
         with open(cluster_filename, "w") as clst_file:
             rejected_candidates.sort(key=lambda clst: (clst.replicon_name, clst.model, clst.hits))
-            rejected_candidates_to_txt(models_fam_name, models_version, rejected_candidates, clst_file)
+            rejected_candidates_to_txt(models_fam_name, models_version, rejected_candidates, clst_file,
+                                       skipped_replicons=skipped_replicons)
         if not (all_systems or rejected_candidates):
             logger.info("No Systems found in this dataset.")
 
