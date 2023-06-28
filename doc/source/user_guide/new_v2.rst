@@ -12,7 +12,19 @@
 What's new in MacSyFinder v2?
 *****************************
 
+=======
+V 2.1.2
+=======
 
+A group of hits that respect the distance constraints but each hit represent the same
+gene on the model, is **not** considered as a *cluster*.
+
+A group of hits that respect the distance constraints but all hits
+represent a Neutral gene in model, is **not** considered as a *cluster*.
+
+If a replicon is skipped due to timeout during best_solution phase.
+The results corresponding to this replicon are not produced,
+but a warning indicating that msf skip this replicon appear in outputs.
 
 =======
 V 2.1.1
