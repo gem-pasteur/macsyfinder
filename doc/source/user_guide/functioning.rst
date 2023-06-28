@@ -108,6 +108,12 @@ Once performed for each model searched, the :ref:`next step <combinatorial-explo
 .. note::
     The clusters that do not fulfill the quorum requirements are stored in the :ref:`rejected_candidates.txt/tsv <rejected_candidates_txt>` file.
 
+.. note::
+    If several hits which co-locate have the same gene in the model. MSf does not consider them as a cluster.
+
+.. note::
+     If a group of gene which co-locate is composed solely of Neutral genes, It has not considered by MSf as a cluster.
+
 
 For *unordered* datasets: 
 -------------------------
