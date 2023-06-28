@@ -1,0 +1,55 @@
+#########################################################################
+# MacSyFinder - Detection of macromolecular systems in protein dataset  #
+#               using systems modelling and similarity search.          #
+# Authors: Sophie Abby, Bertrand Neron                                  #
+# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# See the COPYRIGHT file for details                                    #
+#                                                                       #
+# This file is part of MacSyFinder package.                             #
+#                                                                       #
+# MacSyFinder is free software: you can redistribute it and/or modify   #
+# it under the terms of the GNU General Public License as published by  #
+# the Free Software Foundation, either version 3 of the License, or     #
+# (at your option) any later version.                                   #
+#                                                                       #
+# MacSyFinder is distributed in the hope that it will be useful,        #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          #
+# GNU General Public License for more details .                         #
+#                                                                       #
+# You should have received a copy of the GNU General Public License     #
+# along with MacSyFinder (COPYING).                                     #
+# If not, see <https://www.gnu.org/licenses/>.                          #
+#########################################################################
+
+FROM ubuntu:22.10
+
+LABEL org.opencontainers.image.authors="Bertrand Neron <bneron@pasteur.fr>"
+LABEL org.label-schema.vendor='Institut Pasteur'
+LABEL org.label-schema.vcs-url='https://github.com/gem-pasteur/macsyfinder'
+LABEL license="GPLv3"
+
+USER root
+ARG DEBIAN_FRONTEND=noninteractive
+# disable use of python cache ~/.local https://peps.python.org/pep-0370/
+# for build and run
+# thank's Eric Deveaud https://github.com/EricDeveaud
+ENV PYTHONNOUSERSITE=1
+
+RUN apt-get update -y &&\
+    apt-get install -y --no-install-recommends hmmer python3.11 python3-pip
+RUN apt-get clean -y
+
+RUN pip3 install macsyfinder==2.1.1
+
+COPY --chmod=755 macsyfinder-entrypoint.sh /usr/local/bin/macsyfinder-entrypoint.sh
+
+ENV DEBIAN_FRONTEND teletype
+ENV PYTHONIOENCODING UTF-8
+
+RUN useradd -m msf
+USER msf
+WORKDIR /home/msf
+
+CMD macsyfinder --help
+ENTRYPOINT ["/usr/local/bin/macsyfinder-entrypoint.sh"]
