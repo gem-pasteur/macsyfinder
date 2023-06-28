@@ -1201,7 +1201,7 @@ Use ordered replicon to have better prediction.
 
         expected_scores = [10.5, 12.0, 9.5, 9.0, 8.5, 6.0, 5.0, 5.5, 10.5, 7.5, 7.0, 8.0, 8.06, 7.5]
         self.assertListEqual([s.score for s in systems], expected_scores)
-        self.assertEqual(len(rejected_clst), 11)
+        self.assertEqual(len(rejected_clst), 10)
 
         # test hits but No Systems
         args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 Tad -w 4" \
