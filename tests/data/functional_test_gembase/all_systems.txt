@@ -1,6 +1,6 @@
-# macsyfinder 20220624.dev
+# macsyfinder 20230628.dev
 # models : TFF-SF-0.0b2
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type gembase --sequence-db tests/data/base/gembase.fasta --models-dir tests/data/models/ --models TFF-SF all --index-dir /tmp/test_macsyfinder_index --relative-path -w 15
+# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type=gembase --sequence-db tests/data/base/gembase.fasta --models-dir tests/data/models/ --models TFF-SF all --index-dir . --relative-path
 # Systems found:
 
 system id = GCF_000005845_T4P_14
@@ -471,7 +471,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_106
+system id = GCF_000006725_T4P_40
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -488,7 +488,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -505,7 +505,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_86
+system id = GCF_000006725_T4P_20
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)]
@@ -522,7 +522,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -539,7 +539,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_127
+system id = GCF_000006725_T4P_61
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_000270', 'T4P_pilT', 4269)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -573,7 +573,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_98
+system id = GCF_000006725_T4P_32
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -607,7 +607,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_114
+system id = GCF_000006725_T4P_48
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -624,7 +624,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -641,7 +641,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_120
+system id = GCF_000006725_T4P_54
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -675,7 +675,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_116
+system id = GCF_000006725_T4P_50
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -692,7 +692,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -709,7 +709,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_82
+system id = GCF_000006725_T4P_16
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)]
@@ -743,7 +743,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_91
+system id = GCF_000006725_T4P_25
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)]
@@ -760,7 +760,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -777,7 +777,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_93
+system id = GCF_000006725_T4P_27
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)]
@@ -794,7 +794,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -811,7 +811,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_99
+system id = GCF_000006725_T4P_33
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -828,7 +828,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -845,7 +845,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_130
+system id = GCF_000006725_T4P_64
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_000270', 'T4P_pilT', 4269)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -879,7 +879,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_105
+system id = GCF_000006725_T4P_39
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -913,7 +913,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_131
+system id = GCF_000006725_T4P_65
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -947,7 +947,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_122
+system id = GCF_000006725_T4P_56
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -981,7 +981,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_107
+system id = GCF_000006725_T4P_41
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1015,7 +1015,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_119
+system id = GCF_000006725_T4P_53
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1032,7 +1032,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1049,7 +1049,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_85
+system id = GCF_000006725_T4P_19
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)]
@@ -1083,7 +1083,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_123
+system id = GCF_000006725_T4P_57
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -1117,7 +1117,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_87
+system id = GCF_000006725_T4P_21
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)]
@@ -1151,7 +1151,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_95
+system id = GCF_000006725_T4P_29
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)]
@@ -1168,7 +1168,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1185,7 +1185,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_108
+system id = GCF_000006725_T4P_42
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1202,7 +1202,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1219,7 +1219,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_109
+system id = GCF_000006725_T4P_43
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1236,7 +1236,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1253,7 +1253,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_133
+system id = GCF_000006725_T4P_67
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -1287,7 +1287,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_115
+system id = GCF_000006725_T4P_49
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1321,7 +1321,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_125
+system id = GCF_000006725_T4P_59
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -1355,7 +1355,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_92
+system id = GCF_000006725_T4P_26
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)]
@@ -1389,7 +1389,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_117
+system id = GCF_000006725_T4P_51
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_001050', 'T4P_fimT', 4347), ('GCF_000006725_001060', 'T4P_pilV', 4348), ('GCF_000006725_001070', 'T4P_pilW', 4349), ('GCF_000006725_001080', 'T4P_pilX', 4350), ('GCF_000006725_001090', 'T4P_pilY', 4351), ('GCF_000006725_001100', 'T4P_pilE', 4352)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1406,7 +1406,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1423,7 +1423,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_118
+system id = GCF_000006725_T4P_52
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1440,7 +1440,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1457,7 +1457,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_110
+system id = GCF_000006725_T4P_44
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1474,7 +1474,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1491,7 +1491,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_94
+system id = GCF_000006725_T4P_28
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)]
@@ -1508,7 +1508,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1525,7 +1525,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_112
+system id = GCF_000006725_T4P_46
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1542,7 +1542,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1559,7 +1559,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_88
+system id = GCF_000006725_T4P_22
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)]
@@ -1576,7 +1576,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1593,7 +1593,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_101
+system id = GCF_000006725_T4P_35
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1610,7 +1610,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1627,7 +1627,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_132
+system id = GCF_000006725_T4P_66
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -1661,7 +1661,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_90
+system id = GCF_000006725_T4P_24
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)]
@@ -1678,7 +1678,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1695,7 +1695,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_111
+system id = GCF_000006725_T4P_45
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1729,7 +1729,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_83
+system id = GCF_000006725_T4P_17
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)]
@@ -1746,7 +1746,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -1763,7 +1763,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_124
+system id = GCF_000006725_T4P_58
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -1797,7 +1797,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_129
+system id = GCF_000006725_T4P_63
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -1831,7 +1831,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_89
+system id = GCF_000006725_T4P_23
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)]
@@ -1865,7 +1865,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_102
+system id = GCF_000006725_T4P_36
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -1899,7 +1899,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_121
+system id = GCF_000006725_T4P_55
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -1933,7 +1933,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_128
+system id = GCF_000006725_T4P_62
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_000270', 'T4P_pilT', 4269)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -1967,7 +1967,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_84
+system id = GCF_000006725_T4P_18
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)]
@@ -2001,7 +2001,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_100
+system id = GCF_000006725_T4P_34
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -2035,7 +2035,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_126
+system id = GCF_000006725_T4P_60
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_000270', 'T4P_pilT', 4269)], [('GCF_000006725_022640', 'T4P_pilA', 6506)]
@@ -2069,7 +2069,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_96
+system id = GCF_000006725_T4P_30
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_002760', 'T4P_pilN', 4518), ('GCF_000006725_002770', 'T4P_pilO', 4519), ('GCF_000006725_002780', 'T4P_pilP', 4520), ('GCF_000006725_002790', 'T4P_pilQ', 4521)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -2103,7 +2103,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_113
+system id = GCF_000006725_T4P_47
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -2120,7 +2120,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2137,7 +2137,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_103
+system id = GCF_000006725_T4P_37
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_003310', 'T4P_fimT', 4573), ('GCF_000006725_003320', 'T4P_pilX', 4574)], [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -2154,7 +2154,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2171,7 +2171,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T2SS_81
+system id = GCF_000006725_T2SS_15
 model = TFF-SF/T2SS
 replicon = GCF_000006725
 clusters = [('GCF_000006725_008990', 'T2SS_gspF', 5141), ('GCF_000006725_009000', 'T2SS_gspH', 5142), ('GCF_000006725_009010', 'T2SS_gspI', 5143), ('GCF_000006725_009020', 'T2SS_gspJ', 5144), ('GCF_000006725_009030', 'T2SS_gspK', 5145), ('GCF_000006725_009040', 'T2SS_gspM', 5146), ('GCF_000006725_009050', 'T2SS_gspN', 5147), ('GCF_000006725_009060', 'T2SS_gspD', 5148)], [('GCF_000006725_014570', 'T4P_pilD', 5699)], [('GCF_000006725_018700', 'T2SS_gspE', 6112)]
@@ -2186,7 +2186,7 @@ mandatory genes:
 	- T2SS_gspF: 1 (T2SS_gspF)
 	- T2SS_gspG: 0 ()
 	- T2SS_gspC: 0 ()
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006725_T4P_101, GCF_000006725_T4P_103, GCF_000006725_T4P_104, GCF_000006725_T4P_106, GCF_000006725_T4P_108, GCF_000006725_T4P_109, GCF_000006725_T4P_110, GCF_000006725_T4P_112, GCF_000006725_T4P_113, GCF_000006725_T4P_114, GCF_000006725_T4P_116, GCF_000006725_T4P_117, GCF_000006725_T4P_118, GCF_000006725_T4P_119, GCF_000006725_T4P_83, GCF_000006725_T4P_86, GCF_000006725_T4P_88, GCF_000006725_T4P_90, GCF_000006725_T4P_91, GCF_000006725_T4P_93, GCF_000006725_T4P_94, GCF_000006725_T4P_95, GCF_000006725_T4P_97, GCF_000006725_T4P_99])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006725_T4P_17, GCF_000006725_T4P_20, GCF_000006725_T4P_22, GCF_000006725_T4P_24, GCF_000006725_T4P_25, GCF_000006725_T4P_27, GCF_000006725_T4P_28, GCF_000006725_T4P_29, GCF_000006725_T4P_31, GCF_000006725_T4P_33, GCF_000006725_T4P_35, GCF_000006725_T4P_37, GCF_000006725_T4P_38, GCF_000006725_T4P_40, GCF_000006725_T4P_42, GCF_000006725_T4P_43, GCF_000006725_T4P_44, GCF_000006725_T4P_46, GCF_000006725_T4P_47, GCF_000006725_T4P_48, GCF_000006725_T4P_50, GCF_000006725_T4P_51, GCF_000006725_T4P_52, GCF_000006725_T4P_53])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -2201,7 +2201,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_104
+system id = GCF_000006725_T4P_38
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_019480', 'T4P_pilV', 6190), ('GCF_000006725_019490', 'T4P_pilY', 6191), ('GCF_000006725_019500', 'T4P_pilE', 6192)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -2218,7 +2218,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2235,7 +2235,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006725_T4P_97
+system id = GCF_000006725_T4P_31
 model = TFF-SF/T4P
 replicon = GCF_000006725
 clusters = [('GCF_000006725_014570', 'T4P_pilD', 5699), ('GCF_000006725_014580', 'T4P_pilA', 5700), ('GCF_000006725_014590', 'T4P_pilE', 5701), ('GCF_000006725_014600', 'T4P_pilB', 5702)], [('GCF_000006725_000270', 'T4P_pilT', 4269)]
@@ -2252,7 +2252,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_81])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006725_T2SS_15])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2269,7 +2269,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_MSH_15
+system id = GCF_000006745_MSH_68
 model = TFF-SF/MSH
 replicon = GCF_000006745
 clusters = [('GCF_000006745_003630', 'MSH_mshI', 6931), ('GCF_000006745_003640', 'MSH_mshJ', 6932), ('GCF_000006745_003650', 'MSH_mshK', 6933), ('GCF_000006745_003660', 'MSH_mshL', 6934), ('GCF_000006745_003670', 'MSH_mshM', 6935), ('GCF_000006745_003680', 'MSH_mshN', 6936), ('GCF_000006745_003690', 'MSH_mshE', 6937), ('GCF_000006745_003700', 'MSH_mshG', 6938), ('GCF_000006745_003710', 'MSH_mshF', 6939), ('GCF_000006745_003720', 'MSH_mshB', 6940), ('GCF_000006745_003730', 'MSH_mshA', 6941), ('GCF_000006745_003740', 'MSH_mshC', 6942), ('GCF_000006745_003750', 'MSH_mshD', 6943), ('GCF_000006745_003760', 'MSH_mshO', 6944), ('GCF_000006745_003770', 'MSH_mshP', 6945), ('GCF_000006745_003780', 'MSH_mshQ', 6946)]
@@ -2302,7 +2302,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_27
+system id = GCF_000006745_T4P_80
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_004240', 'T4P_pilT', 6992), ('GCF_000006745_004250', 'T4P_pilU', 6993)], [('GCF_000006745_007820', 'T4P_pilE', 7350), ('GCF_000006745_007830', 'T4P_fimT', 7351), ('GCF_000006745_007840', 'T4P_pilW', 7352), ('GCF_000006745_007850', 'T4P_pilX', 7353), ('GCF_000006745_007860', 'T4P_pilV', 7354)], [('GCF_000006745_021950', 'T4P_pilA', 8763), ('GCF_000006745_021960', 'T4P_pilB', 8764), ('GCF_000006745_021970', 'T4P_pilC', 8765), ('GCF_000006745_021980', 'T4P_pilD', 8766)], [('GCF_000006745_023840', 'MSH_mshM', 8952), ('GCF_000006745_023870', 'T4P_pilQ', 8955), ('GCF_000006745_023880', 'T4P_pilP', 8956), ('GCF_000006745_023890', 'T4P_pilO', 8957), ('GCF_000006745_023900', 'T4P_pilN', 8958), ('GCF_000006745_023910', 'T4P_pilM', 8959)]
@@ -2319,7 +2319,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_17])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_70])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2336,7 +2336,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_25
+system id = GCF_000006745_T4P_78
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_004240', 'T4P_pilT', 6992), ('GCF_000006745_004250', 'T4P_pilU', 6993)], [('GCF_000006745_021950', 'T4P_pilA', 8763), ('GCF_000006745_021960', 'T4P_pilB', 8764), ('GCF_000006745_021970', 'T4P_pilC', 8765), ('GCF_000006745_021980', 'T4P_pilD', 8766)], [('GCF_000006745_023840', 'MSH_mshM', 8952), ('GCF_000006745_023870', 'T4P_pilQ', 8955), ('GCF_000006745_023880', 'T4P_pilP', 8956), ('GCF_000006745_023890', 'T4P_pilO', 8957), ('GCF_000006745_023900', 'T4P_pilN', 8958), ('GCF_000006745_023910', 'T4P_pilM', 8959)]
@@ -2353,7 +2353,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_17])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_70])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2370,7 +2370,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_24
+system id = GCF_000006745_T4P_77
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_004240', 'T4P_pilT', 6992), ('GCF_000006745_004250', 'T4P_pilU', 6993)], [('GCF_000006745_007820', 'T4P_pilE', 7350), ('GCF_000006745_007830', 'T4P_fimT', 7351), ('GCF_000006745_007840', 'T4P_pilW', 7352), ('GCF_000006745_007850', 'T4P_pilX', 7353), ('GCF_000006745_007860', 'T4P_pilV', 7354)], [('GCF_000006745_023840', 'MSH_mshM', 8952), ('GCF_000006745_023870', 'T4P_pilQ', 8955), ('GCF_000006745_023880', 'T4P_pilP', 8956), ('GCF_000006745_023890', 'T4P_pilO', 8957), ('GCF_000006745_023900', 'T4P_pilN', 8958), ('GCF_000006745_023910', 'T4P_pilM', 8959)]
@@ -2404,7 +2404,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_23
+system id = GCF_000006745_T4P_76
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_004240', 'T4P_pilT', 6992), ('GCF_000006745_004250', 'T4P_pilU', 6993)], [('GCF_000006745_007820', 'T4P_pilE', 7350), ('GCF_000006745_007830', 'T4P_fimT', 7351), ('GCF_000006745_007840', 'T4P_pilW', 7352), ('GCF_000006745_007850', 'T4P_pilX', 7353), ('GCF_000006745_007860', 'T4P_pilV', 7354)], [('GCF_000006745_021950', 'T4P_pilA', 8763), ('GCF_000006745_021960', 'T4P_pilB', 8764), ('GCF_000006745_021970', 'T4P_pilC', 8765), ('GCF_000006745_021980', 'T4P_pilD', 8766)]
@@ -2421,7 +2421,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_17])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_70])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2438,7 +2438,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_19
+system id = GCF_000006745_T4P_72
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_004240', 'T4P_pilT', 6992), ('GCF_000006745_004250', 'T4P_pilU', 6993)], [('GCF_000006745_023840', 'MSH_mshM', 8952), ('GCF_000006745_023870', 'T4P_pilQ', 8955), ('GCF_000006745_023880', 'T4P_pilP', 8956), ('GCF_000006745_023890', 'T4P_pilO', 8957), ('GCF_000006745_023900', 'T4P_pilN', 8958), ('GCF_000006745_023910', 'T4P_pilM', 8959)]
@@ -2472,7 +2472,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_18
+system id = GCF_000006745_T4P_71
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_004240', 'T4P_pilT', 6992), ('GCF_000006745_004250', 'T4P_pilU', 6993)], [('GCF_000006745_021950', 'T4P_pilA', 8763), ('GCF_000006745_021960', 'T4P_pilB', 8764), ('GCF_000006745_021970', 'T4P_pilC', 8765), ('GCF_000006745_021980', 'T4P_pilD', 8766)]
@@ -2489,7 +2489,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_17])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_70])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2506,7 +2506,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4bP_28
+system id = GCF_000006745_T4bP_81
 model = TFF-SF/T4bP
 replicon = GCF_000006745
 clusters = [('GCF_000006745_007540', 'T4bP_pilA', 7322), ('GCF_000006745_007550', 'T4bP_pilE', 7323), ('GCF_000006745_007570', 'T4bP_pilQ', 7325), ('GCF_000006745_007610', 'T4bP_pilB', 7329), ('GCF_000006745_007620', 'T4bP_pilC', 7330), ('GCF_000006745_007650', 'T4bP_pilD', 7333)]
@@ -2530,7 +2530,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_26
+system id = GCF_000006745_T4P_79
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_007820', 'T4P_pilE', 7350), ('GCF_000006745_007830', 'T4P_fimT', 7351), ('GCF_000006745_007840', 'T4P_pilW', 7352), ('GCF_000006745_007850', 'T4P_pilX', 7353), ('GCF_000006745_007860', 'T4P_pilV', 7354)], [('GCF_000006745_021950', 'T4P_pilA', 8763), ('GCF_000006745_021960', 'T4P_pilB', 8764), ('GCF_000006745_021970', 'T4P_pilC', 8765), ('GCF_000006745_021980', 'T4P_pilD', 8766)], [('GCF_000006745_023840', 'MSH_mshM', 8952), ('GCF_000006745_023870', 'T4P_pilQ', 8955), ('GCF_000006745_023880', 'T4P_pilP', 8956), ('GCF_000006745_023890', 'T4P_pilO', 8957), ('GCF_000006745_023900', 'T4P_pilN', 8958), ('GCF_000006745_023910', 'T4P_pilM', 8959)]
@@ -2547,7 +2547,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_17])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_70])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2564,7 +2564,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_21
+system id = GCF_000006745_T4P_74
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_007820', 'T4P_pilE', 7350), ('GCF_000006745_007830', 'T4P_fimT', 7351), ('GCF_000006745_007840', 'T4P_pilW', 7352), ('GCF_000006745_007850', 'T4P_pilX', 7353), ('GCF_000006745_007860', 'T4P_pilV', 7354)], [('GCF_000006745_023840', 'MSH_mshM', 8952), ('GCF_000006745_023870', 'T4P_pilQ', 8955), ('GCF_000006745_023880', 'T4P_pilP', 8956), ('GCF_000006745_023890', 'T4P_pilO', 8957), ('GCF_000006745_023900', 'T4P_pilN', 8958), ('GCF_000006745_023910', 'T4P_pilM', 8959)]
@@ -2598,7 +2598,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_20
+system id = GCF_000006745_T4P_73
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_007820', 'T4P_pilE', 7350), ('GCF_000006745_007830', 'T4P_fimT', 7351), ('GCF_000006745_007840', 'T4P_pilW', 7352), ('GCF_000006745_007850', 'T4P_pilX', 7353), ('GCF_000006745_007860', 'T4P_pilV', 7354)], [('GCF_000006745_021950', 'T4P_pilA', 8763), ('GCF_000006745_021960', 'T4P_pilB', 8764), ('GCF_000006745_021970', 'T4P_pilC', 8765), ('GCF_000006745_021980', 'T4P_pilD', 8766)]
@@ -2615,7 +2615,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_17])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_70])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2632,7 +2632,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T4P_22
+system id = GCF_000006745_T4P_75
 model = TFF-SF/T4P
 replicon = GCF_000006745
 clusters = [('GCF_000006745_021950', 'T4P_pilA', 8763), ('GCF_000006745_021960', 'T4P_pilB', 8764), ('GCF_000006745_021970', 'T4P_pilC', 8765), ('GCF_000006745_021980', 'T4P_pilD', 8766)], [('GCF_000006745_023840', 'MSH_mshM', 8952), ('GCF_000006745_023870', 'T4P_pilQ', 8955), ('GCF_000006745_023880', 'T4P_pilP', 8956), ('GCF_000006745_023890', 'T4P_pilO', 8957), ('GCF_000006745_023900', 'T4P_pilN', 8958), ('GCF_000006745_023910', 'T4P_pilM', 8959)]
@@ -2649,7 +2649,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_17])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006745_T2SS_70])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2666,7 +2666,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T2SS_17
+system id = GCF_000006745_T2SS_70
 model = TFF-SF/T2SS
 replicon = GCF_000006745
 clusters = [('GCF_000006745_024730', 'T2SS_gspN', 9041), ('GCF_000006745_024740', 'T2SS_gspM', 9042), ('GCF_000006745_024750', 'T2SS_gspL', 9043), ('GCF_000006745_024760', 'T2SS_gspK', 9044), ('GCF_000006745_024770', 'T2SS_gspJ', 9045), ('GCF_000006745_024780', 'T2SS_gspI', 9046), ('GCF_000006745_024790', 'T2SS_gspH', 9047), ('GCF_000006745_024800', 'T2SS_gspG', 9048), ('GCF_000006745_024810', 'T2SS_gspF', 9049), ('GCF_000006745_024820', 'T2SS_gspE', 9050), ('GCF_000006745_024830', 'T2SS_gspC', 9051)], [('GCF_000006745_021980', 'T4P_pilD', 8766)]
@@ -2681,7 +2681,7 @@ mandatory genes:
 	- T2SS_gspF: 1 (T2SS_gspF)
 	- T2SS_gspG: 1 (T2SS_gspG)
 	- T2SS_gspC: 1 (T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006745_T4P_18, GCF_000006745_T4P_20, GCF_000006745_T4P_22, GCF_000006745_T4P_23, GCF_000006745_T4P_25, GCF_000006745_T4P_26, GCF_000006745_T4P_27])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006745_T4P_71, GCF_000006745_T4P_73, GCF_000006745_T4P_75, GCF_000006745_T4P_76, GCF_000006745_T4P_78, GCF_000006745_T4P_79, GCF_000006745_T4P_80])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -2696,7 +2696,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006745_T2SS_16
+system id = GCF_000006745_T2SS_69
 model = TFF-SF/T2SS
 replicon = GCF_000006745
 clusters = [('GCF_000006745_024730', 'T2SS_gspN', 9041), ('GCF_000006745_024740', 'T2SS_gspM', 9042), ('GCF_000006745_024750', 'T2SS_gspL', 9043), ('GCF_000006745_024760', 'T2SS_gspK', 9044), ('GCF_000006745_024770', 'T2SS_gspJ', 9045), ('GCF_000006745_024780', 'T2SS_gspI', 9046), ('GCF_000006745_024790', 'T2SS_gspH', 9047), ('GCF_000006745_024800', 'T2SS_gspG', 9048), ('GCF_000006745_024810', 'T2SS_gspF', 9049), ('GCF_000006745_024820', 'T2SS_gspE', 9050), ('GCF_000006745_024830', 'T2SS_gspC', 9051)]
@@ -2726,7 +2726,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T4P_65
+system id = GCF_000006765_T4P_118
 model = TFF-SF/T4P
 replicon = GCF_000006765
 clusters = [('GCF_000006765_003910', 'T4P_pilT', 10463), ('GCF_000006765_003920', 'T4P_pilU', 10464)], [('GCF_000006765_044710', 'T4P_pilA', 14543), ('GCF_000006765_044720', 'T4P_pilB', 14544), ('GCF_000006765_044730', 'T4P_pilD', 14545)], [('GCF_000006765_044940', 'T4P_fimT', 14566), ('GCF_000006765_044950', 'T4P_fimT', 14567), ('GCF_000006765_044960', 'T4P_pilV', 14568), ('GCF_000006765_044970', 'T4P_pilW', 14569), ('GCF_000006765_044980', 'T4P_pilX', 14570), ('GCF_000006765_044990', 'T4P_pilY', 14571), ('GCF_000006765_045010', 'T4P_pilE', 14573)], [('GCF_000006765_049770', 'MSH_mshM', 15049), ('GCF_000006765_049800', 'T4P_pilQ', 15052), ('GCF_000006765_049810', 'T4P_pilP', 15053), ('GCF_000006765_049820', 'T4P_pilO', 15054), ('GCF_000006765_049830', 'T4P_pilN', 15055), ('GCF_000006765_049840', 'T4P_pilM', 15056)]
@@ -2743,7 +2743,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_43, GCF_000006765_T2SS_44, GCF_000006765_T2SS_45, GCF_000006765_T2SS_46, GCF_000006765_T2SS_47, GCF_000006765_T2SS_48, GCF_000006765_T2SS_49, GCF_000006765_T2SS_50, GCF_000006765_T2SS_51, GCF_000006765_T2SS_52, GCF_000006765_T2SS_53, GCF_000006765_T2SS_54, GCF_000006765_T2SS_55, GCF_000006765_T2SS_56, GCF_000006765_T2SS_57])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_100, GCF_000006765_T2SS_101, GCF_000006765_T2SS_102, GCF_000006765_T2SS_103, GCF_000006765_T2SS_104, GCF_000006765_T2SS_105, GCF_000006765_T2SS_106, GCF_000006765_T2SS_107, GCF_000006765_T2SS_108, GCF_000006765_T2SS_109, GCF_000006765_T2SS_110, GCF_000006765_T2SS_96, GCF_000006765_T2SS_97, GCF_000006765_T2SS_98, GCF_000006765_T2SS_99])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2760,7 +2760,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T4P_63
+system id = GCF_000006765_T4P_116
 model = TFF-SF/T4P
 replicon = GCF_000006765
 clusters = [('GCF_000006765_003910', 'T4P_pilT', 10463), ('GCF_000006765_003920', 'T4P_pilU', 10464)], [('GCF_000006765_044940', 'T4P_fimT', 14566), ('GCF_000006765_044950', 'T4P_fimT', 14567), ('GCF_000006765_044960', 'T4P_pilV', 14568), ('GCF_000006765_044970', 'T4P_pilW', 14569), ('GCF_000006765_044980', 'T4P_pilX', 14570), ('GCF_000006765_044990', 'T4P_pilY', 14571), ('GCF_000006765_045010', 'T4P_pilE', 14573)], [('GCF_000006765_049770', 'MSH_mshM', 15049), ('GCF_000006765_049800', 'T4P_pilQ', 15052), ('GCF_000006765_049810', 'T4P_pilP', 15053), ('GCF_000006765_049820', 'T4P_pilO', 15054), ('GCF_000006765_049830', 'T4P_pilN', 15055), ('GCF_000006765_049840', 'T4P_pilM', 15056)]
@@ -2794,7 +2794,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T4P_62
+system id = GCF_000006765_T4P_115
 model = TFF-SF/T4P
 replicon = GCF_000006765
 clusters = [('GCF_000006765_003910', 'T4P_pilT', 10463), ('GCF_000006765_003920', 'T4P_pilU', 10464)], [('GCF_000006765_044710', 'T4P_pilA', 14543), ('GCF_000006765_044720', 'T4P_pilB', 14544), ('GCF_000006765_044730', 'T4P_pilD', 14545)], [('GCF_000006765_049770', 'MSH_mshM', 15049), ('GCF_000006765_049800', 'T4P_pilQ', 15052), ('GCF_000006765_049810', 'T4P_pilP', 15053), ('GCF_000006765_049820', 'T4P_pilO', 15054), ('GCF_000006765_049830', 'T4P_pilN', 15055), ('GCF_000006765_049840', 'T4P_pilM', 15056)]
@@ -2811,7 +2811,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_43, GCF_000006765_T2SS_44, GCF_000006765_T2SS_45, GCF_000006765_T2SS_46, GCF_000006765_T2SS_47, GCF_000006765_T2SS_48, GCF_000006765_T2SS_49, GCF_000006765_T2SS_50, GCF_000006765_T2SS_51, GCF_000006765_T2SS_52, GCF_000006765_T2SS_53, GCF_000006765_T2SS_54, GCF_000006765_T2SS_55, GCF_000006765_T2SS_56, GCF_000006765_T2SS_57])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_100, GCF_000006765_T2SS_101, GCF_000006765_T2SS_102, GCF_000006765_T2SS_103, GCF_000006765_T2SS_104, GCF_000006765_T2SS_105, GCF_000006765_T2SS_106, GCF_000006765_T2SS_107, GCF_000006765_T2SS_108, GCF_000006765_T2SS_109, GCF_000006765_T2SS_110, GCF_000006765_T2SS_96, GCF_000006765_T2SS_97, GCF_000006765_T2SS_98, GCF_000006765_T2SS_99])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2828,7 +2828,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T4P_61
+system id = GCF_000006765_T4P_114
 model = TFF-SF/T4P
 replicon = GCF_000006765
 clusters = [('GCF_000006765_003910', 'T4P_pilT', 10463), ('GCF_000006765_003920', 'T4P_pilU', 10464)], [('GCF_000006765_044710', 'T4P_pilA', 14543), ('GCF_000006765_044720', 'T4P_pilB', 14544), ('GCF_000006765_044730', 'T4P_pilD', 14545)], [('GCF_000006765_044940', 'T4P_fimT', 14566), ('GCF_000006765_044950', 'T4P_fimT', 14567), ('GCF_000006765_044960', 'T4P_pilV', 14568), ('GCF_000006765_044970', 'T4P_pilW', 14569), ('GCF_000006765_044980', 'T4P_pilX', 14570), ('GCF_000006765_044990', 'T4P_pilY', 14571), ('GCF_000006765_045010', 'T4P_pilE', 14573)]
@@ -2845,7 +2845,7 @@ mandatory genes:
 	- T4P_pilQ: 0 ()
 	- T4P_pilN: 0 ()
 	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_43, GCF_000006765_T2SS_44, GCF_000006765_T2SS_45, GCF_000006765_T2SS_46, GCF_000006765_T2SS_47, GCF_000006765_T2SS_48, GCF_000006765_T2SS_49, GCF_000006765_T2SS_50, GCF_000006765_T2SS_51, GCF_000006765_T2SS_52, GCF_000006765_T2SS_53, GCF_000006765_T2SS_54, GCF_000006765_T2SS_55, GCF_000006765_T2SS_56, GCF_000006765_T2SS_57])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_100, GCF_000006765_T2SS_101, GCF_000006765_T2SS_102, GCF_000006765_T2SS_103, GCF_000006765_T2SS_104, GCF_000006765_T2SS_105, GCF_000006765_T2SS_106, GCF_000006765_T2SS_107, GCF_000006765_T2SS_108, GCF_000006765_T2SS_109, GCF_000006765_T2SS_110, GCF_000006765_T2SS_96, GCF_000006765_T2SS_97, GCF_000006765_T2SS_98, GCF_000006765_T2SS_99])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -2862,7 +2862,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T4P_58
+system id = GCF_000006765_T4P_111
 model = TFF-SF/T4P
 replicon = GCF_000006765
 clusters = [('GCF_000006765_003910', 'T4P_pilT', 10463), ('GCF_000006765_003920', 'T4P_pilU', 10464)], [('GCF_000006765_049770', 'MSH_mshM', 15049), ('GCF_000006765_049800', 'T4P_pilQ', 15052), ('GCF_000006765_049810', 'T4P_pilP', 15053), ('GCF_000006765_049820', 'T4P_pilO', 15054), ('GCF_000006765_049830', 'T4P_pilN', 15055), ('GCF_000006765_049840', 'T4P_pilM', 15056)]
@@ -2896,7 +2896,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_43
+system id = GCF_000006765_T2SS_96
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -2911,7 +2911,7 @@ mandatory genes:
 	- T2SS_gspF: 1 (T2SS_gspF)
 	- T2SS_gspG: 1 (T2SS_gspG)
 	- T2SS_gspC: 1 (T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -2926,7 +2926,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_29
+system id = GCF_000006765_T2SS_82
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)]
@@ -2956,7 +2956,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_46
+system id = GCF_000006765_T2SS_99
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -2971,7 +2971,7 @@ mandatory genes:
 	- T2SS_gspF: 1 (T2SS_gspF)
 	- T2SS_gspG: 1 (T2SS_gspG)
 	- T2SS_gspC: 2 (T2SS_gspC, T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -2986,7 +2986,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_31
+system id = GCF_000006765_T2SS_84
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)]
@@ -3016,7 +3016,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_47
+system id = GCF_000006765_T2SS_100
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3031,7 +3031,7 @@ mandatory genes:
 	- T2SS_gspF: 2 (T2SS_gspF, T2SS_gspF)
 	- T2SS_gspG: 2 (T2SS_gspG, T2SS_gspG)
 	- T2SS_gspC: 1 (T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -3046,7 +3046,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_32
+system id = GCF_000006765_T2SS_85
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)]
@@ -3076,7 +3076,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_52
+system id = GCF_000006765_T2SS_105
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3091,7 +3091,7 @@ mandatory genes:
 	- T2SS_gspF: 2 (T2SS_gspF, T2SS_gspF)
 	- T2SS_gspG: 2 (T2SS_gspG, T2SS_gspG)
 	- T2SS_gspC: 2 (T2SS_gspC, T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -3106,7 +3106,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_37
+system id = GCF_000006765_T2SS_90
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)]
@@ -3136,7 +3136,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_48
+system id = GCF_000006765_T2SS_101
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3151,7 +3151,7 @@ mandatory genes:
 	- T2SS_gspF: 2 (T2SS_gspF, T2SS_gspF)
 	- T2SS_gspG: 2 (T2SS_gspG, T2SS_gspG)
 	- T2SS_gspC: 2 (T2SS_gspC, T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 2 (T2SS_gspM, T2SS_gspM)
@@ -3166,7 +3166,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_33
+system id = GCF_000006765_T2SS_86
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)]
@@ -3196,7 +3196,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_53
+system id = GCF_000006765_T2SS_106
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3211,7 +3211,7 @@ mandatory genes:
 	- T2SS_gspF: 2 (T2SS_gspF, T2SS_gspF)
 	- T2SS_gspG: 2 (T2SS_gspG, T2SS_gspG)
 	- T2SS_gspC: 3 (T2SS_gspC, T2SS_gspC, T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 2 (T2SS_gspM, T2SS_gspM)
@@ -3226,7 +3226,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_38
+system id = GCF_000006765_T2SS_91
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)]
@@ -3256,7 +3256,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_54
+system id = GCF_000006765_T2SS_107
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3271,7 +3271,7 @@ mandatory genes:
 	- T2SS_gspF: 3 (T2SS_gspF, T2SS_gspF, T2SS_gspF)
 	- T2SS_gspG: 3 (T2SS_gspG, T2SS_gspG, T2SS_gspG)
 	- T2SS_gspC: 2 (T2SS_gspC, T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 2 (T2SS_gspM, T2SS_gspM)
@@ -3286,7 +3286,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_39
+system id = GCF_000006765_T2SS_92
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)]
@@ -3316,7 +3316,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_56
+system id = GCF_000006765_T2SS_109
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3331,7 +3331,7 @@ mandatory genes:
 	- T2SS_gspF: 3 (T2SS_gspF, T2SS_gspF, T2SS_gspF)
 	- T2SS_gspG: 3 (T2SS_gspG, T2SS_gspG, T2SS_gspG)
 	- T2SS_gspC: 3 (T2SS_gspC, T2SS_gspC, T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 2 (T2SS_gspM, T2SS_gspM)
@@ -3346,7 +3346,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_41
+system id = GCF_000006765_T2SS_94
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710', 'T2SS_gspH', 10743), ('GCF_000006765_006720', 'T2SS_gspC', 10744), ('GCF_000006765_006730', 'T2SS_gspI', 10745), ('GCF_000006765_006740', 'T2SS_gspG', 10746), ('GCF_000006765_006750', 'T2SS_gspK', 10747), ('GCF_000006765_006770', 'T2SS_gspM', 10749), ('GCF_000006765_006780', 'T2SS_gspD', 10750), ('GCF_000006765_006790', 'T2SS_gspE', 10751), ('GCF_000006765_006800', 'T2SS_gspF', 10752)], [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)]
@@ -3376,7 +3376,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_50
+system id = GCF_000006765_T2SS_103
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3391,7 +3391,7 @@ mandatory genes:
 	- T2SS_gspF: 1 (T2SS_gspF)
 	- T2SS_gspG: 1 (T2SS_gspG)
 	- T2SS_gspC: 2 (T2SS_gspC, T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -3406,7 +3406,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_35
+system id = GCF_000006765_T2SS_88
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)]
@@ -3436,7 +3436,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_49
+system id = GCF_000006765_T2SS_102
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3451,7 +3451,7 @@ mandatory genes:
 	- T2SS_gspF: 1 (T2SS_gspF)
 	- T2SS_gspG: 1 (T2SS_gspG)
 	- T2SS_gspC: 1 (T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 0 ()
@@ -3466,7 +3466,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_34
+system id = GCF_000006765_T2SS_87
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)]
@@ -3496,7 +3496,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_55
+system id = GCF_000006765_T2SS_108
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3511,7 +3511,7 @@ mandatory genes:
 	- T2SS_gspF: 2 (T2SS_gspF, T2SS_gspF)
 	- T2SS_gspG: 2 (T2SS_gspG, T2SS_gspG)
 	- T2SS_gspC: 2 (T2SS_gspC, T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -3526,7 +3526,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_40
+system id = GCF_000006765_T2SS_93
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470', 'T2SS_gspD', 11919)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)]
@@ -3556,7 +3556,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_57
+system id = GCF_000006765_T2SS_110
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3571,7 +3571,7 @@ mandatory genes:
 	- T2SS_gspF: 1 (T2SS_gspF)
 	- T2SS_gspG: 1 (T2SS_gspG)
 	- T2SS_gspC: 0 ()
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 0 ()
@@ -3586,7 +3586,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_51
+system id = GCF_000006765_T2SS_104
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3601,7 +3601,7 @@ mandatory genes:
 	- T2SS_gspF: 2 (T2SS_gspF, T2SS_gspF)
 	- T2SS_gspG: 2 (T2SS_gspG, T2SS_gspG)
 	- T2SS_gspC: 1 (T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -3616,7 +3616,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_42
+system id = GCF_000006765_T2SS_95
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_013660', 'T2SS_gspD', 11438)]
@@ -3646,7 +3646,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_44
+system id = GCF_000006765_T2SS_97
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3661,7 +3661,7 @@ mandatory genes:
 	- T2SS_gspF: 1 (T2SS_gspF)
 	- T2SS_gspG: 1 (T2SS_gspG)
 	- T2SS_gspC: 0 ()
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 0 ()
@@ -3676,7 +3676,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_36
+system id = GCF_000006765_T2SS_89
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)]
@@ -3706,7 +3706,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_45
+system id = GCF_000006765_T2SS_98
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
@@ -3721,7 +3721,7 @@ mandatory genes:
 	- T2SS_gspF: 1 (T2SS_gspF)
 	- T2SS_gspG: 1 (T2SS_gspG)
 	- T2SS_gspC: 1 (T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_59, GCF_000006765_T4P_61, GCF_000006765_T4P_62, GCF_000006765_T4P_64, GCF_000006765_T4P_65])
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_112, GCF_000006765_T4P_114, GCF_000006765_T4P_115, GCF_000006765_T4P_117, GCF_000006765_T4P_118])
 
 accessory genes:
 	- T2SS_gspM: 1 (T2SS_gspM)
@@ -3736,7 +3736,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_30
+system id = GCF_000006765_T2SS_83
 model = TFF-SF/T2SS
 replicon = GCF_000006765
 clusters = [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)]
@@ -3766,7 +3766,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_Tad_66
+system id = GCF_000006765_Tad_119
 model = TFF-SF/Tad
 replicon = GCF_000006765
 clusters = [('GCF_000006765_042420', 'Tad_tadV', 14314), ('GCF_000006765_042460', 'Tad_tadD', 14318), ('GCF_000006765_042470', 'Tad_tadC', 14319), ('GCF_000006765_042480', 'Tad_tadB', 14320), ('GCF_000006765_042490', 'Tad_tadA', 14321), ('GCF_000006765_042500', 'Tad_tadZ', 14322), ('GCF_000006765_042510', 'Tad_rcpA', 14323), ('GCF_000006765_042520', 'Tad_rcpC', 14324), ('GCF_000006765_042530', 'Tad_flp', 14325)]
@@ -3794,7 +3794,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T4P_64
+system id = GCF_000006765_T4P_117
 model = TFF-SF/T4P
 replicon = GCF_000006765
 clusters = [('GCF_000006765_044710', 'T4P_pilA', 14543), ('GCF_000006765_044720', 'T4P_pilB', 14544), ('GCF_000006765_044730', 'T4P_pilD', 14545)], [('GCF_000006765_044940', 'T4P_fimT', 14566), ('GCF_000006765_044950', 'T4P_fimT', 14567), ('GCF_000006765_044960', 'T4P_pilV', 14568), ('GCF_000006765_044970', 'T4P_pilW', 14569), ('GCF_000006765_044980', 'T4P_pilX', 14570), ('GCF_000006765_044990', 'T4P_pilY', 14571), ('GCF_000006765_045010', 'T4P_pilE', 14573)], [('GCF_000006765_049770', 'MSH_mshM', 15049), ('GCF_000006765_049800', 'T4P_pilQ', 15052), ('GCF_000006765_049810', 'T4P_pilP', 15053), ('GCF_000006765_049820', 'T4P_pilO', 15054), ('GCF_000006765_049830', 'T4P_pilN', 15055), ('GCF_000006765_049840', 'T4P_pilM', 15056)]
@@ -3811,7 +3811,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_43, GCF_000006765_T2SS_44, GCF_000006765_T2SS_45, GCF_000006765_T2SS_46, GCF_000006765_T2SS_47, GCF_000006765_T2SS_48, GCF_000006765_T2SS_49, GCF_000006765_T2SS_50, GCF_000006765_T2SS_51, GCF_000006765_T2SS_52, GCF_000006765_T2SS_53, GCF_000006765_T2SS_54, GCF_000006765_T2SS_55, GCF_000006765_T2SS_56, GCF_000006765_T2SS_57])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_100, GCF_000006765_T2SS_101, GCF_000006765_T2SS_102, GCF_000006765_T2SS_103, GCF_000006765_T2SS_104, GCF_000006765_T2SS_105, GCF_000006765_T2SS_106, GCF_000006765_T2SS_107, GCF_000006765_T2SS_108, GCF_000006765_T2SS_109, GCF_000006765_T2SS_110, GCF_000006765_T2SS_96, GCF_000006765_T2SS_97, GCF_000006765_T2SS_98, GCF_000006765_T2SS_99])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -3828,7 +3828,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T4P_59
+system id = GCF_000006765_T4P_112
 model = TFF-SF/T4P
 replicon = GCF_000006765
 clusters = [('GCF_000006765_044710', 'T4P_pilA', 14543), ('GCF_000006765_044720', 'T4P_pilB', 14544), ('GCF_000006765_044730', 'T4P_pilD', 14545)], [('GCF_000006765_049770', 'MSH_mshM', 15049), ('GCF_000006765_049800', 'T4P_pilQ', 15052), ('GCF_000006765_049810', 'T4P_pilP', 15053), ('GCF_000006765_049820', 'T4P_pilO', 15054), ('GCF_000006765_049830', 'T4P_pilN', 15055), ('GCF_000006765_049840', 'T4P_pilM', 15056)]
@@ -3845,7 +3845,7 @@ mandatory genes:
 	- T4P_pilQ: 1 (T4P_pilQ)
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 0 ()
-	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_43, GCF_000006765_T2SS_44, GCF_000006765_T2SS_45, GCF_000006765_T2SS_46, GCF_000006765_T2SS_47, GCF_000006765_T2SS_48, GCF_000006765_T2SS_49, GCF_000006765_T2SS_50, GCF_000006765_T2SS_51, GCF_000006765_T2SS_52, GCF_000006765_T2SS_53, GCF_000006765_T2SS_54, GCF_000006765_T2SS_55, GCF_000006765_T2SS_56, GCF_000006765_T2SS_57])
+	- T4P_pilD: 1 (T4P_pilD [GCF_000006765_T2SS_100, GCF_000006765_T2SS_101, GCF_000006765_T2SS_102, GCF_000006765_T2SS_103, GCF_000006765_T2SS_104, GCF_000006765_T2SS_105, GCF_000006765_T2SS_106, GCF_000006765_T2SS_107, GCF_000006765_T2SS_108, GCF_000006765_T2SS_109, GCF_000006765_T2SS_110, GCF_000006765_T2SS_96, GCF_000006765_T2SS_97, GCF_000006765_T2SS_98, GCF_000006765_T2SS_99])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -3862,7 +3862,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T4P_60
+system id = GCF_000006765_T4P_113
 model = TFF-SF/T4P
 replicon = GCF_000006765
 clusters = [('GCF_000006765_044940', 'T4P_fimT', 14566), ('GCF_000006765_044950', 'T4P_fimT', 14567), ('GCF_000006765_044960', 'T4P_pilV', 14568), ('GCF_000006765_044970', 'T4P_pilW', 14569), ('GCF_000006765_044980', 'T4P_pilX', 14570), ('GCF_000006765_044990', 'T4P_pilY', 14571), ('GCF_000006765_045010', 'T4P_pilE', 14573)], [('GCF_000006765_049770', 'MSH_mshM', 15049), ('GCF_000006765_049800', 'T4P_pilQ', 15052), ('GCF_000006765_049810', 'T4P_pilP', 15053), ('GCF_000006765_049820', 'T4P_pilO', 15054), ('GCF_000006765_049830', 'T4P_pilN', 15055), ('GCF_000006765_049840', 'T4P_pilM', 15056)]
@@ -3896,7 +3896,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_74
+system id = GCF_000006845_T4P_142
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_001030', 'T4P_pilQ', 15747), ('GCF_000006845_001040', 'T4P_pilP', 15748), ('GCF_000006845_001050', 'T4P_pilO', 15749), ('GCF_000006845_001060', 'T4P_pilN', 15750), ('GCF_000006845_001070', 'T4P_pilM', 15751)], [('GCF_000006845_004190', 'T4P_fimT', 16063), ('GCF_000006845_004200', 'T4P_pilV', 16064), ('GCF_000006845_004210', 'T4P_pilW', 16065), ('GCF_000006845_004220', 'T4P_pilX', 16066), ('GCF_000006845_004230', 'T4P_pilA', 16067)], [('GCF_000006845_014270', 'T4P_pilC', 17071), ('GCF_000006845_014280', 'T4P_pilD', 17072), ('GCF_000006845_014310', 'T4P_pilB', 17075)], [('GCF_000006845_016430', 'T4P_pilT', 17287), ('GCF_000006845_016440', 'T4P_pilU', 17288)]
@@ -3930,7 +3930,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_70
+system id = GCF_000006845_T4P_138
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_001030', 'T4P_pilQ', 15747), ('GCF_000006845_001040', 'T4P_pilP', 15748), ('GCF_000006845_001050', 'T4P_pilO', 15749), ('GCF_000006845_001060', 'T4P_pilN', 15750), ('GCF_000006845_001070', 'T4P_pilM', 15751)], [('GCF_000006845_004190', 'T4P_fimT', 16063), ('GCF_000006845_004200', 'T4P_pilV', 16064), ('GCF_000006845_004210', 'T4P_pilW', 16065), ('GCF_000006845_004220', 'T4P_pilX', 16066), ('GCF_000006845_004230', 'T4P_pilA', 16067)], [('GCF_000006845_014270', 'T4P_pilC', 17071), ('GCF_000006845_014280', 'T4P_pilD', 17072), ('GCF_000006845_014310', 'T4P_pilB', 17075)]
@@ -3964,7 +3964,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_78
+system id = GCF_000006845_T4P_146
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_001030', 'T4P_pilQ', 15747), ('GCF_000006845_001040', 'T4P_pilP', 15748), ('GCF_000006845_001050', 'T4P_pilO', 15749), ('GCF_000006845_001060', 'T4P_pilN', 15750), ('GCF_000006845_001070', 'T4P_pilM', 15751)], [('GCF_000006845_014270', 'T4P_pilC', 17071), ('GCF_000006845_014280', 'T4P_pilD', 17072), ('GCF_000006845_014310', 'T4P_pilB', 17075)], [('GCF_000006845_016430', 'T4P_pilT', 17287), ('GCF_000006845_016440', 'T4P_pilU', 17288)], [('GCF_000006845_012440', 'T4P_pilA', 16888)]
@@ -3998,7 +3998,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_72
+system id = GCF_000006845_T4P_140
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_001030', 'T4P_pilQ', 15747), ('GCF_000006845_001040', 'T4P_pilP', 15748), ('GCF_000006845_001050', 'T4P_pilO', 15749), ('GCF_000006845_001060', 'T4P_pilN', 15750), ('GCF_000006845_001070', 'T4P_pilM', 15751)], [('GCF_000006845_014270', 'T4P_pilC', 17071), ('GCF_000006845_014280', 'T4P_pilD', 17072), ('GCF_000006845_014310', 'T4P_pilB', 17075)], [('GCF_000006845_016430', 'T4P_pilT', 17287), ('GCF_000006845_016440', 'T4P_pilU', 17288)]
@@ -4032,7 +4032,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_71
+system id = GCF_000006845_T4P_139
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_001030', 'T4P_pilQ', 15747), ('GCF_000006845_001040', 'T4P_pilP', 15748), ('GCF_000006845_001050', 'T4P_pilO', 15749), ('GCF_000006845_001060', 'T4P_pilN', 15750), ('GCF_000006845_001070', 'T4P_pilM', 15751)], [('GCF_000006845_004190', 'T4P_fimT', 16063), ('GCF_000006845_004200', 'T4P_pilV', 16064), ('GCF_000006845_004210', 'T4P_pilW', 16065), ('GCF_000006845_004220', 'T4P_pilX', 16066), ('GCF_000006845_004230', 'T4P_pilA', 16067)], [('GCF_000006845_016430', 'T4P_pilT', 17287), ('GCF_000006845_016440', 'T4P_pilU', 17288)]
@@ -4066,7 +4066,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_75
+system id = GCF_000006845_T4P_143
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_001030', 'T4P_pilQ', 15747), ('GCF_000006845_001040', 'T4P_pilP', 15748), ('GCF_000006845_001050', 'T4P_pilO', 15749), ('GCF_000006845_001060', 'T4P_pilN', 15750), ('GCF_000006845_001070', 'T4P_pilM', 15751)], [('GCF_000006845_014270', 'T4P_pilC', 17071), ('GCF_000006845_014280', 'T4P_pilD', 17072), ('GCF_000006845_014310', 'T4P_pilB', 17075)], [('GCF_000006845_012440', 'T4P_pilA', 16888)]
@@ -4100,7 +4100,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_67
+system id = GCF_000006845_T4P_135
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_001030', 'T4P_pilQ', 15747), ('GCF_000006845_001040', 'T4P_pilP', 15748), ('GCF_000006845_001050', 'T4P_pilO', 15749), ('GCF_000006845_001060', 'T4P_pilN', 15750), ('GCF_000006845_001070', 'T4P_pilM', 15751)], [('GCF_000006845_014270', 'T4P_pilC', 17071), ('GCF_000006845_014280', 'T4P_pilD', 17072), ('GCF_000006845_014310', 'T4P_pilB', 17075)]
@@ -4134,7 +4134,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_76
+system id = GCF_000006845_T4P_144
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_001030', 'T4P_pilQ', 15747), ('GCF_000006845_001040', 'T4P_pilP', 15748), ('GCF_000006845_001050', 'T4P_pilO', 15749), ('GCF_000006845_001060', 'T4P_pilN', 15750), ('GCF_000006845_001070', 'T4P_pilM', 15751)], [('GCF_000006845_016430', 'T4P_pilT', 17287), ('GCF_000006845_016440', 'T4P_pilU', 17288)], [('GCF_000006845_012440', 'T4P_pilA', 16888)]
@@ -4168,7 +4168,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_68
+system id = GCF_000006845_T4P_136
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_001030', 'T4P_pilQ', 15747), ('GCF_000006845_001040', 'T4P_pilP', 15748), ('GCF_000006845_001050', 'T4P_pilO', 15749), ('GCF_000006845_001060', 'T4P_pilN', 15750), ('GCF_000006845_001070', 'T4P_pilM', 15751)], [('GCF_000006845_016430', 'T4P_pilT', 17287), ('GCF_000006845_016440', 'T4P_pilU', 17288)]
@@ -4202,7 +4202,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_73
+system id = GCF_000006845_T4P_141
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_004190', 'T4P_fimT', 16063), ('GCF_000006845_004200', 'T4P_pilV', 16064), ('GCF_000006845_004210', 'T4P_pilW', 16065), ('GCF_000006845_004220', 'T4P_pilX', 16066), ('GCF_000006845_004230', 'T4P_pilA', 16067)], [('GCF_000006845_014270', 'T4P_pilC', 17071), ('GCF_000006845_014280', 'T4P_pilD', 17072), ('GCF_000006845_014310', 'T4P_pilB', 17075)], [('GCF_000006845_016430', 'T4P_pilT', 17287), ('GCF_000006845_016440', 'T4P_pilU', 17288)]
@@ -4236,7 +4236,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_77
+system id = GCF_000006845_T4P_145
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_014270', 'T4P_pilC', 17071), ('GCF_000006845_014280', 'T4P_pilD', 17072), ('GCF_000006845_014310', 'T4P_pilB', 17075)], [('GCF_000006845_016430', 'T4P_pilT', 17287), ('GCF_000006845_016440', 'T4P_pilU', 17288)], [('GCF_000006845_012440', 'T4P_pilA', 16888)]
@@ -4270,7 +4270,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006845_T4P_69
+system id = GCF_000006845_T4P_137
 model = TFF-SF/T4P
 replicon = GCF_000006845
 clusters = [('GCF_000006845_014270', 'T4P_pilC', 17071), ('GCF_000006845_014280', 'T4P_pilD', 17072), ('GCF_000006845_014310', 'T4P_pilB', 17075)], [('GCF_000006845_016430', 'T4P_pilT', 17287), ('GCF_000006845_016440', 'T4P_pilU', 17288)]
@@ -4304,7 +4304,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006905_T2SS_79
+system id = GCF_000006905_T2SS_120
 model = TFF-SF/T2SS
 replicon = GCF_000006905
 clusters = [('GCF_000006905_001710', 'T2SS_gspC', 17701), ('GCF_000006905_001720', 'T2SS_gspD', 17702), ('GCF_000006905_001730', 'T2SS_gspE', 17703), ('GCF_000006905_001740', 'T2SS_gspF', 17704), ('GCF_000006905_001750', 'T2SS_gspG', 17705), ('GCF_000006905_001760', 'T2SS_gspH', 17706), ('GCF_000006905_001770', 'T2SS_gspI', 17707), ('GCF_000006905_001780', 'T2SS_gspJ', 17708), ('GCF_000006905_001790', 'T2SS_gspK', 17709), ('GCF_000006905_001800', 'T2SS_gspL', 17710), ('GCF_000006905_001810', 'T2SS_gspM', 17711), ('GCF_000006905_001820', 'T2SS_gspN', 17712), ('GCF_000006905_001830', 'T2SS_gspO', 17713)]
@@ -4334,7 +4334,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006905_Tad_80
+system id = GCF_000006905_Tad_121
 model = TFF-SF/Tad
 replicon = GCF_000006905
 clusters = [('GCF_000006905_029110', 'Tad_tadD', 20441), ('GCF_000006905_029130', 'Tad_tadC', 20443), ('GCF_000006905_029140', 'Tad_tadB', 20444), ('GCF_000006905_029150', 'Tad_tadA', 20445), ('GCF_000006905_029160', 'Tad_tadZ', 20446), ('GCF_000006905_029180', 'Tad_rcpA', 20448), ('GCF_000006905_029190', 'Tad_rcpC', 20449), ('GCF_000006905_029200', 'Tad_tadV', 20450), ('GCF_000006905_029210', 'Tad_flp', 20451), ('GCF_000006905_029230', 'Tad_tadE', 20453), ('GCF_000006905_029240', 'Tad_tadE', 20454)]
@@ -4362,7 +4362,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006925_T4P_134
+system id = GCF_000006925_T4P_122
 model = TFF-SF/T4P
 replicon = GCF_000006925
 clusters = [('GCF_000006925_001000', 'T4P_pilC', 21367), ('GCF_000006925_001010', 'T4P_pilA', 21368)], [('GCF_000006925_030310', 'T4P_pilQ', 24298), ('GCF_000006925_030330', 'T4P_pilN', 24300), ('GCF_000006925_030340', 'T4P_pilM', 24301)], [('GCF_000006925_026070', 'T4P_pilT', 23874)]
@@ -4396,7 +4396,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_146
+system id = GCF_000006945_T4P_134
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
@@ -4430,7 +4430,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_138
+system id = GCF_000006945_T4P_126
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)], [('GCF_000006945_030160', 'T4P_pilT', 28596)]
@@ -4464,7 +4464,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_140
+system id = GCF_000006945_T4P_128
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
@@ -4498,7 +4498,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_144
+system id = GCF_000006945_T4P_132
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
@@ -4532,7 +4532,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_136
+system id = GCF_000006945_T4P_124
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
@@ -4566,7 +4566,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_137
+system id = GCF_000006945_T4P_125
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)], [('GCF_000006945_030160', 'T4P_pilT', 28596)]
@@ -4600,7 +4600,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_139
+system id = GCF_000006945_T4P_127
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
@@ -4634,7 +4634,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_135
+system id = GCF_000006945_T4P_123
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
@@ -4668,7 +4668,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_143
+system id = GCF_000006945_T4P_131
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
@@ -4702,7 +4702,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_141
+system id = GCF_000006945_T4P_129
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
@@ -4736,7 +4736,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_145
+system id = GCF_000006945_T4P_133
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
@@ -4770,7 +4770,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_142
+system id = GCF_000006945_T4P_130
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
@@ -4804,12 +4804,12 @@ accessory genes:
 neutral genes:
 
 ============================================================
-# WARNING Loner: there is only 1 occurrence(s) of loner 'T4P_pilT' and 8 potential systems [GCF_000005845_T4P_14, GCF_000005845_T4P_6, GCF_000005845_T4P_12, GCF_000005845_T4P_5, GCF_000005845_T4P_11, GCF_000005845_T4P_9, GCF_000005845_T4P_13, GCF_000005845_T4P_10]
 # WARNING Loner: there is only 2 occurrence(s) of loner 'T2SS_gspO' and 8 potential systems [GCF_000005845_T4P_14, GCF_000005845_T4P_8, GCF_000005845_T4P_12, GCF_000005845_T4P_7, GCF_000005845_T4P_11, GCF_000005845_T4P_9, GCF_000005845_T4P_13, GCF_000005845_T4P_10]
-# WARNING Loner: there is only 1 occurrence(s) of loner 'T4P_pilT' and 32 potential systems [GCF_000006725_T4P_106, GCF_000006725_T4P_127, GCF_000006725_T4P_98, GCF_000006725_T4P_114, GCF_000006725_T4P_116, GCF_000006725_T4P_99, GCF_000006725_T4P_130, GCF_000006725_T4P_105, GCF_000006725_T4P_131, GCF_000006725_T4P_107, GCF_000006725_T4P_119, GCF_000006725_T4P_108, GCF_000006725_T4P_109, GCF_000006725_T4P_133, GCF_000006725_T4P_115, GCF_000006725_T4P_117, GCF_000006725_T4P_118, GCF_000006725_T4P_110, GCF_000006725_T4P_112, GCF_000006725_T4P_101, GCF_000006725_T4P_132, GCF_000006725_T4P_111, GCF_000006725_T4P_129, GCF_000006725_T4P_102, GCF_000006725_T4P_128, GCF_000006725_T4P_100, GCF_000006725_T4P_126, GCF_000006725_T4P_96, GCF_000006725_T4P_113, GCF_000006725_T4P_103, GCF_000006725_T4P_104, GCF_000006725_T4P_97]
-# WARNING Loner: there is only 2 occurrence(s) of loner 'T4P_pilA' and 14 potential systems [GCF_000006725_T4P_127, GCF_000006725_T4P_120, GCF_000006725_T4P_130, GCF_000006725_T4P_131, GCF_000006725_T4P_122, GCF_000006725_T4P_123, GCF_000006725_T4P_133, GCF_000006725_T4P_125, GCF_000006725_T4P_132, GCF_000006725_T4P_124, GCF_000006725_T4P_129, GCF_000006725_T4P_121, GCF_000006725_T4P_128, GCF_000006725_T4P_126]
-# WARNING Loner: there is only 1 occurrence(s) of loner 'T4P_pilD' and 15 potential systems [GCF_000006765_T2SS_43, GCF_000006765_T2SS_46, GCF_000006765_T2SS_47, GCF_000006765_T2SS_52, GCF_000006765_T2SS_48, GCF_000006765_T2SS_53, GCF_000006765_T2SS_54, GCF_000006765_T2SS_56, GCF_000006765_T2SS_50, GCF_000006765_T2SS_49, GCF_000006765_T2SS_55, GCF_000006765_T2SS_57, GCF_000006765_T2SS_51, GCF_000006765_T2SS_44, GCF_000006765_T2SS_45]
-# WARNING Loner: there is only 1 occurrence(s) of loner 'T2SS_gspD' and 2 potential systems [GCF_000006765_T2SS_57, GCF_000006765_T2SS_42]
-# WARNING Loner: there is only 2 occurrence(s) of loner 'T4P_pilA' and 4 potential systems [GCF_000006845_T4P_78, GCF_000006845_T4P_75, GCF_000006845_T4P_76, GCF_000006845_T4P_77]
-# WARNING Loner: there is only 1 occurrence(s) of loner 'T4P_pilT' and 8 potential systems [GCF_000006945_T4P_146, GCF_000006945_T4P_138, GCF_000006945_T4P_144, GCF_000006945_T4P_137, GCF_000006945_T4P_143, GCF_000006945_T4P_141, GCF_000006945_T4P_145, GCF_000006945_T4P_142]
-# WARNING Loner: there is only 1 occurrence(s) of loner 'T2SS_gspO' and 8 potential systems [GCF_000006945_T4P_146, GCF_000006945_T4P_140, GCF_000006945_T4P_144, GCF_000006945_T4P_139, GCF_000006945_T4P_143, GCF_000006945_T4P_141, GCF_000006945_T4P_145, GCF_000006945_T4P_142]
+# WARNING Loner: there is only 1 occurrence(s) of loner 'T4P_pilT' and 8 potential systems [GCF_000005845_T4P_14, GCF_000005845_T4P_6, GCF_000005845_T4P_12, GCF_000005845_T4P_5, GCF_000005845_T4P_11, GCF_000005845_T4P_9, GCF_000005845_T4P_13, GCF_000005845_T4P_10]
+# WARNING Loner: there is only 1 occurrence(s) of loner 'T4P_pilT' and 32 potential systems [GCF_000006725_T4P_40, GCF_000006725_T4P_61, GCF_000006725_T4P_32, GCF_000006725_T4P_48, GCF_000006725_T4P_50, GCF_000006725_T4P_33, GCF_000006725_T4P_64, GCF_000006725_T4P_39, GCF_000006725_T4P_65, GCF_000006725_T4P_41, GCF_000006725_T4P_53, GCF_000006725_T4P_42, GCF_000006725_T4P_43, GCF_000006725_T4P_67, GCF_000006725_T4P_49, GCF_000006725_T4P_51, GCF_000006725_T4P_52, GCF_000006725_T4P_44, GCF_000006725_T4P_46, GCF_000006725_T4P_35, GCF_000006725_T4P_66, GCF_000006725_T4P_45, GCF_000006725_T4P_63, GCF_000006725_T4P_36, GCF_000006725_T4P_62, GCF_000006725_T4P_34, GCF_000006725_T4P_60, GCF_000006725_T4P_30, GCF_000006725_T4P_47, GCF_000006725_T4P_37, GCF_000006725_T4P_38, GCF_000006725_T4P_31]
+# WARNING Loner: there is only 2 occurrence(s) of loner 'T4P_pilA' and 14 potential systems [GCF_000006725_T4P_61, GCF_000006725_T4P_54, GCF_000006725_T4P_64, GCF_000006725_T4P_65, GCF_000006725_T4P_56, GCF_000006725_T4P_57, GCF_000006725_T4P_67, GCF_000006725_T4P_59, GCF_000006725_T4P_66, GCF_000006725_T4P_58, GCF_000006725_T4P_63, GCF_000006725_T4P_55, GCF_000006725_T4P_62, GCF_000006725_T4P_60]
+# WARNING Loner: there is only 1 occurrence(s) of loner 'T4P_pilD' and 15 potential systems [GCF_000006765_T2SS_96, GCF_000006765_T2SS_99, GCF_000006765_T2SS_100, GCF_000006765_T2SS_105, GCF_000006765_T2SS_101, GCF_000006765_T2SS_106, GCF_000006765_T2SS_107, GCF_000006765_T2SS_109, GCF_000006765_T2SS_103, GCF_000006765_T2SS_102, GCF_000006765_T2SS_108, GCF_000006765_T2SS_110, GCF_000006765_T2SS_104, GCF_000006765_T2SS_97, GCF_000006765_T2SS_98]
+# WARNING Loner: there is only 1 occurrence(s) of loner 'T2SS_gspD' and 2 potential systems [GCF_000006765_T2SS_110, GCF_000006765_T2SS_95]
+# WARNING Loner: there is only 2 occurrence(s) of loner 'T4P_pilA' and 4 potential systems [GCF_000006845_T4P_146, GCF_000006845_T4P_143, GCF_000006845_T4P_144, GCF_000006845_T4P_145]
+# WARNING Loner: there is only 1 occurrence(s) of loner 'T4P_pilT' and 8 potential systems [GCF_000006945_T4P_134, GCF_000006945_T4P_126, GCF_000006945_T4P_132, GCF_000006945_T4P_125, GCF_000006945_T4P_131, GCF_000006945_T4P_129, GCF_000006945_T4P_133, GCF_000006945_T4P_130]
+# WARNING Loner: there is only 1 occurrence(s) of loner 'T2SS_gspO' and 8 potential systems [GCF_000006945_T4P_134, GCF_000006945_T4P_128, GCF_000006945_T4P_132, GCF_000006945_T4P_127, GCF_000006945_T4P_131, GCF_000006945_T4P_129, GCF_000006945_T4P_133, GCF_000006945_T4P_130]

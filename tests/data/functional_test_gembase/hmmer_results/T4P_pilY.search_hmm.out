@@ -1,13 +1,13 @@
 # hmmsearch :: search profile(s) against a sequence database
-# HMMER 3.1b2 (February 2015); http://hmmer.org/
-# Copyright (C) 2015 Howard Hughes Medical Institute.
-# Freely distributed under the GNU General Public License (GPLv3).
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/TFF-SF/profiles/T4P_pilY.hmm
 # target sequence database:        tests/data/base/gembase.fasta
-# output directed to file:         ./macsyfinder-20220624_11-07-19/hmmer_results/T4P_pilY.search_hmm.out
+# output directed to file:         ./macsyfinder-20230628_13-38-01/hmmer_results/T4P_pilY.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
-# number of worker threads:        0
+# number of worker threads:        1
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Query:       T4P_pilY  [M=544]
@@ -381,15 +381,15 @@ Domain annotation for each sequence (and alignments):
 
 Internal pipeline statistics summary:
 -------------------------------------
-Query model(s):                              1  (544 nodes)
-Target sequences:                        30128  (9463607 residues searched)
+Query model(s):                            1  (544 nodes)
+Target sequences:                      30128  (9463607 residues searched)
 Passed MSV filter:                       698  (0.0231678); expected 602.6 (0.02)
 Passed bias filter:                      434  (0.0144052); expected 602.6 (0.02)
 Passed Vit filter:                        47  (0.00156001); expected 30.1 (0.001)
 Passed Fwd filter:                        10  (0.000331917); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
 Domain search space  (domZ):              10  [number of targets reported over threshold]
-# CPU time: 0.27u 0.00s 00:00:00.27 Elapsed: 00:00:00.28
-# Mc/sec: 18386.44
+# CPU time: 0.30u 0.01s 00:00:00.31 Elapsed: 00:00:00.27
+# Mc/sec: 18953.12
 //
 [ok]

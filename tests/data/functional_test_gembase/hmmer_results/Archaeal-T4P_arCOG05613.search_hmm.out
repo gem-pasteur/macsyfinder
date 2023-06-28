@@ -1,13 +1,13 @@
 # hmmsearch :: search profile(s) against a sequence database
-# HMMER 3.1b2 (February 2015); http://hmmer.org/
-# Copyright (C) 2015 Howard Hughes Medical Institute.
-# Freely distributed under the GNU General Public License (GPLv3).
+# HMMER 3.3.2 (Nov 2020); http://hmmer.org/
+# Copyright (C) 2020 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG05613.hmm
 # target sequence database:        tests/data/base/gembase.fasta
-# output directed to file:         ./macsyfinder-20220624_11-07-19/hmmer_results/Archaeal-T4P_arCOG05613.search_hmm.out
+# output directed to file:         ./macsyfinder-20230628_13-38-01/hmmer_results/Archaeal-T4P_arCOG05613.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
-# number of worker threads:        0
+# number of worker threads:        1
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Query:       arCOG05613  [M=230]
@@ -66,7 +66,7 @@ Scores for complete sequences (score includes all domains):
       0.022   15.5  11.1      0.025   15.4  11.1    1.1  1  GCF_000006945_039630  
       0.023   15.5  15.9        0.1   13.3  11.8    2.3  2  GCF_000006745_032790  
       0.023   15.5   0.5      0.038   14.8   0.5    1.4  1  GCF_000006725_021280  
-      0.028   15.2   7.4      0.035   14.9   7.4    1.1  1  GCF_000006765_012210  
+      0.028   15.2   7.4      0.035   14.8   7.4    1.1  1  GCF_000006765_012210  
       0.029   15.2   1.0      0.045   14.5   1.0    1.3  1  GCF_000006925_040000  
       0.033   15.0   0.3      0.041   14.6   0.3    1.3  1  GCF_000006745_009890  
       0.036   14.8   2.6      0.056   14.2   2.6    1.3  1  GCF_000006905_010040  
@@ -306,7 +306,7 @@ Domain annotation for each sequence (and alignments):
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
    1 !   20.2  10.1   1.8e-06   0.00081      84     199 ..     308     448 ..     250     522 .. 0.65
-   2 ?    1.4  16.6         1   4.5e+02      64     200 ..     634     914 ..     617     974 .. 0.65
+   2 ?    1.5  16.6      0.94   4.2e+02      64     200 ..     634     914 ..     609     974 .. 0.66
 
   Alignments for each domain:
   == domain 1  score: 20.2 bits;  conditional E-value: 1.8e-06
@@ -320,11 +320,11 @@ Domain annotation for each sequence (and alignments):
   GCF_000006725_015570 397 igfltqqqrFAQHTEELNA--AIERLHNDKSEKDRALYDarekhTTLLAEINSL 448
                            5555555555555555555..666666555666565555777775555555553 PP
 
-  == domain 2  score: 1.4 bits;  conditional E-value: 1
+  == domain 2  score: 1.5 bits;  conditional E-value: 0.94
             arCOG05613  64 rLdeqledlkaelsqvkgnkeelenelkqlkakvkaL.....................edekkeleekieakddeieaLkaelee.... 127
                            +L +q + l   ++ + ++    ++e+++ +++++aL                      ++kke  e+++a ++ +++L+++l +    
   GCF_000006725_015570 634 TLNAQRQHLEDSMGMLGQDIGTIQRECQKQQERLDALnklgeypefadidwmslvrqiAGRKKEQ-EQLQATSNILQTLQQQLTAaqtq 721
-                           55555555556666666666666777777777777777778888888888888888874444443.34555555556666665555555 PP
+                           55555556666666666666667777777777777777778888888888888888874444443.34555555555555555555555 PP
 
             arCOG05613 128 .............vkkemdslkseleelkndnes..............................................lkakideln 157
                                             + + ks+  ++++  ++                                              l+++id+ n
@@ -975,10 +975,10 @@ Domain annotation for each sequence (and alignments):
 >> GCF_000006765_012210  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   14.9   7.4     8e-05     0.035      47     168 ..     106     231 ..      85     301 .. 0.84
+   1 ?   14.8   7.4     8e-05     0.035      47     168 ..     106     231 ..      85     301 .. 0.84
 
   Alignments for each domain:
-  == domain 1  score: 14.9 bits;  conditional E-value: 8e-05
+  == domain 1  score: 14.8 bits;  conditional E-value: 8e-05
             arCOG05613  47 alkktl....asledsieeidrLdeqledlkaelsqvkgnkeelenelkqlka...kvkaLedekkeleekieakddeieaLkaeleev 128
                            a ++      a le ++++ ++Ld+ql ++ +  s  +++ e++++e  + ++   ++++L de     +++e+ d+  +  +a  +++
   GCF_000006765_012210 106 AAEAREaaaqAALEAQRAKLETLDRQLLEQAQTISRARADGEAARAEWRRAETdwrRYRQLADEHATSRQRLENADAAHQRARAAARRA 194
@@ -1242,15 +1242,15 @@ Domain annotation for each sequence (and alignments):
 
 Internal pipeline statistics summary:
 -------------------------------------
-Query model(s):                              1  (230 nodes)
-Target sequences:                        30128  (9463607 residues searched)
+Query model(s):                            1  (230 nodes)
+Target sequences:                      30128  (9463607 residues searched)
 Passed MSV filter:                      2251  (0.0747146); expected 602.6 (0.02)
 Passed bias filter:                     1712  (0.0568242); expected 602.6 (0.02)
 Passed Vit filter:                       576  (0.0191184); expected 30.1 (0.001)
 Passed Fwd filter:                       234  (0.00776686); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
 Domain search space  (domZ):              68  [number of targets reported over threshold]
-# CPU time: 0.98u 0.00s 00:00:00.98 Elapsed: 00:00:00.99
-# Mc/sec: 2198.62
+# CPU time: 1.25u 0.01s 00:00:01.26 Elapsed: 00:00:01.22
+# Mc/sec: 1771.45
 //
 [ok]

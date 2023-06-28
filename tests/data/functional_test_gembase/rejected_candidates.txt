@@ -1,6 +1,6 @@
-# macsyfinder 20220624.dev
+# macsyfinder 20230628.dev
 # models : TFF-SF-0.0b2
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type gembase --sequence-db tests/data/base/gembase.fasta --models-dir tests/data/models/ --models TFF-SF all --index-dir /tmp/test_macsyfinder_index --relative-path -w 15
+# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type=gembase --sequence-db tests/data/base/gembase.fasta --models-dir tests/data/models/ --models TFF-SF all --index-dir . --relative-path
 # Rejected candidates:
 
 Cluster:
@@ -886,22 +886,6 @@ Cluster:
 This candidate has been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 0
 	- The quorum of genes required (5) is not reached: 1
-============================================================
-Cluster:
-- model = Archaeal-T4P
-- replicon = GCF_000006745
-- hits = (GCF_000006745_018740, Archaeal-T4P_arCOG00589, 8442), (GCF_000006745_018800, Archaeal-T4P_arCOG00589, 8448)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (3) is not reached: 0
-	- The quorum of genes required (3) is not reached: 1
-============================================================
-Cluster:
-- model = Archaeal-T4P
-- replicon = GCF_000006745
-- hits = (GCF_000006745_026670, Archaeal-T4P_arCOG02900, 9235), (GCF_000006745_026680, Archaeal-T4P_arCOG02900, 9236)
-This candidate has been rejected because:
-	- The quorum of mandatory genes required (3) is not reached: 0
-	- The quorum of genes required (3) is not reached: 1
 ============================================================
 Cluster:
 - model = ComM

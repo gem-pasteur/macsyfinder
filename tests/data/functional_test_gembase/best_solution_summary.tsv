@@ -1,6 +1,6 @@
-# macsyfinder 20220624.dev
+# macsyfinder 20230628.dev
 # models : TFF-SF-0.0b2
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type gembase --sequence-db tests/data/base/gembase.fasta --models-dir tests/data/models/ --models TFF-SF all --index-dir /tmp/test_macsyfinder_index --relative-path -w 15
+# /home/bneron/Projects/GEM/macsyfinder/py311/bin/macsyfinder --db-type=gembase --sequence-db tests/data/base/gembase.fasta --models-dir tests/data/models/ --models TFF-SF all --index-dir . --relative-path
 replicon	TFF-SF/MSH	TFF-SF/T2SS	TFF-SF/T4P	TFF-SF/T4bP	TFF-SF/Tad	TFF-SF/Archaeal-T4P	TFF-SF/ComM
 GCF_000005845	0	1	2	0	0	0	0
 GCF_000006725	0	1	1	0	0	0	0
