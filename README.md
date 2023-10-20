@@ -11,6 +11,7 @@
 [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/gempasteur/macsyfinder?label=docker&sort=semver)](https://hub.docker.com/r/gempasteur/macsyfinder)
 [![Conda](https://img.shields.io/conda/vn/bioconda/macsyfinder?style=plastic)](https://github.com/bioconda/bioconda-recipes/tree/master/recipes/macsyfinder)
 [![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/gem-pasteur/macsyfinder/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/gem-pasteur/macsyfinder)
+[![SWH](https://archive.softwareheritage.org/badge/swh:1:dir:561bfe6698ca9e58b552b4eb4e56132cac41c6f9/)](https://archive.softwareheritage.org/swh:1:dir:561bfe6698ca9e58b552b4eb4e56132cac41c6f9;origin=https://github.com/gem-pasteur/macsyfinder;visit=swh:1:snp:1bde3cb370766b10132c4e004c7cb377979928d1;anchor=swh:1:rev:868637fce184865d8e0436338af66a2648e8f6e1)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6010/badge)](https://bestpractices.coreinfrastructure.org/projects/6010)
 
 MacSyFinder - Detection of macromolecular systems in protein datasets using systems modelling and similarity search.
@@ -26,18 +27,27 @@ Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjourn
 https://peercommunityjournal.org/articles/10.24072/pcjournal.250/
 
 MacSyFinder v1:
-Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014). MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems. PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726
+Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014).
+MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
+PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726
 http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
 
 ## What new in MacSyFinder V2.x
 
 https://macsyfinder.readthedocs.io/en/latest/user_guide/new_v2.html
 
-## MacSyFinder is available on pypi
+## Installation
+
+> [!IMPORTANT]  
+> MacSYFinder requires hmmer >= 3.1 (http://hmmer.org/).
+> You need to install hmmer by yourself (except if you install macsyfinder via *conda/mamba*).
+> The other dependencies are managed by the python package manager *pip*.
+
+### MacSyFinder is available on pypi
 
 [![PyPI](https://img.shields.io/pypi/v/macsyfinder)](https://pypi.org/project/macsyfinder/)
 
-## Installation from distribution
+### Installation from distribution
 
 We encourage to install macsyfinder in a [virtualenv](https://virtualenv.pypa.io/en/latest/)
 
@@ -49,26 +59,26 @@ After creating a virtualenv dedicated to macsyfinder and activating it
 
 you can install macsyfinder as described below:
 
-### from pypi
+#### from pypi
 
     python3 -m pip install macsyfinder==x.x
 
 where `x.x` is the version number
 
-### from conda/mamba
+#### from conda/mamba
 
     mamba install -c bioconda macsyfinder=x.x
 
 where `x.x` is the version number
 
-### from git repository
+#### from git repository
 
     git clone https://github.com/gem-pasteur/macsyfinder.git
     cd macsyfinder
     python3 -m pip install .
 
 
-### for developers
+#### for developers
 
     git clone https://github.com/gem-pasteur/macsyfinder.git
     cd macsyfinder
@@ -155,8 +165,8 @@ To work with Docker you have to install models in a directory which will be moun
 
 ### How to use with apptainer (formely Singularity)
 
-As the docker image is registered in docker hub you can also use it directly with [apptainer](https://apptainer.org/docs/user/main/).
-Unlike docker you have not to worry about shared directory, your `home` and `/tmp` are automatically shared.
+As the *docker* image is registered in docker hub you can also use it directly with [apptainer](https://apptainer.org/docs/user/main/).
+Unlike *docker* you have not to worry about shared directory, your `home` and `/tmp` are automatically shared.
 
     apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsydata install --target my_models MODELS
     apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsyfinder --db-type gembase --models-dir=my_models --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
