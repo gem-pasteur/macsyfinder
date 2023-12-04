@@ -24,7 +24,6 @@ import sys
 import os
 import glob
 import argparse
-from typing import List, Dict
 from itertools import groupby
 from dataclasses import dataclass
 from textwrap import dedent
@@ -121,7 +120,7 @@ class HmmProfile:
     Handle the HMM output files
     """
 
-    def __init__(self, gene_name, gene_profile_lg, hmmer_output, cfg):
+    def __init__(self, gene_name: str, gene_profile_lg: int, hmmer_output: str, cfg: Config):
         """
         :param gene: the gene corresponding to the profile search reported here
         :type gene: :class:`macsypy.gene.CoreGene` object
@@ -136,7 +135,7 @@ class HmmProfile:
         self.cfg = cfg
 
 
-    def parse(self) -> List[LightHit]:
+    def parse(self) -> list[LightHit]:
         """
         parse a hmm output file and extract all hits and do some basic computation (coverage profile)
 
@@ -168,7 +167,7 @@ class HmmProfile:
         return hits
 
 
-    def _build_my_db(self, hmm_output: str) -> Dict:
+    def _build_my_db(self, hmm_output: str) -> dict:
         """
         Build the keys of a dictionary object to store sequence identifiers of hits.
 
@@ -185,7 +184,7 @@ class HmmProfile:
         return db
 
 
-    def _fill_my_db(self, macsyfinder_idx: str, db: Dict) -> None:
+    def _fill_my_db(self, macsyfinder_idx: str, db: dict[str: tuple[int, int]]) -> None:
         """
         Fill the dictionary with information on the matched sequences
 
@@ -220,7 +219,7 @@ class HmmProfile:
         return line.startswith(">>")
 
 
-    def _parse_hmm_header(self, h_grp) -> str:
+    def _parse_hmm_header(self, h_grp: str) -> str:
         """
         :param h_grp: the sequence of string return by groupby function representing the header of a hit
         :type h_grp: sequence of string (<itertools._grouper object at 0x7ff9912e3b50>)
@@ -232,8 +231,9 @@ class HmmProfile:
         return hit_id
 
 
-    def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_threshold, replicon_name,
-                        position_hit, i_evalue_sel, b_grp):
+    def _parse_hmm_body(self, hit_id: str, gene_profile_lg: int, seq_lg: int,
+                        coverage_threshold:float, replicon_name: str,
+                        position_hit: int, i_evalue_sel: float, b_grp:list[list[str]]):
         """
         Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected
         ("coverage_profile" and "i_evalue_select" command-line parameters)
@@ -302,7 +302,7 @@ class HmmProfile:
                         raise ValueError(msg) from err
 
 
-def header(cmd: List[str]) -> str:
+def header(cmd: list[str]) -> str:
     """
 
     :param cmd: the command use dto launch this analyse
@@ -314,7 +314,7 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
     return header
 
 
-def init_logger(level='INFO', out=True):
+def init_logger(level: str | int ='INFO', out: bool = True):
     """
 
     :param level: The logger threshold could be a positive int or string
@@ -364,7 +364,7 @@ def verbosity_to_log_level(verbosity: int) -> int:
     return level
 
 
-def parse_args(args:  List[str]) -> argparse.Namespace:
+def parse_args(args:  list[str]) -> argparse.Namespace:
     """
 
     :param args: The arguments provided on the command line
@@ -456,7 +456,7 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
     return parsed_args
 
 
-def main(args=None, log_level=None) -> None:
+def main(args: list[str] | None = None, log_level: str | int | None = None) -> None:
     """
     main entry point to macsyprofile
 
