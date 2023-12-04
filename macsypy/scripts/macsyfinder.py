@@ -34,6 +34,7 @@ import logging
 import itertools
 import signal
 import time
+import typing
 
 from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
@@ -74,7 +75,7 @@ def alarm_handler(signum, frame):
     raise Timeout()
 
 
-def get_version_message():
+def get_version_message() -> str:
     """
     :return: the long description of the macsyfinder version
     :rtype: str
@@ -98,7 +99,7 @@ macsydata cite <model>
     return vers_msg
 
 
-def list_models(args):
+def list_models(args: argparse.Namespace) -> str:
     """
     :param args: The command line argument once parsed
     :type args: :class:`argparse.Namespace` object
@@ -118,7 +119,7 @@ def list_models(args):
     return str(registry)
 
 
-def parse_args(args):
+def parse_args(args: list[str]) -> tuple[argparse.ArgumentParser, argparse.Namespace]:
     """
 
     :param args: The arguments provided on the command line
@@ -588,7 +589,10 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         return [], []
 
 
-def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logger):
+def _search_in_ordered_replicon(hits_by_replicon: dict[str: list[macsypy.hit.CoreHit]],
+                                models_to_detect: list[macsypy.model.Model],
+                                config: Config,
+                                logger: logging.Logger) -> tuple[list[System], list[macsypy.system.RejectedCandidate]]:
     """
 
     :param hits_by_replicon:
@@ -676,7 +680,9 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
     return all_systems, all_rejected_candidates
 
 
-def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
+def _search_in_unordered_replicon(hits_by_replicon: dict[str: list[macsypy.hit.CoreHit]],
+                                  models_to_detect: list[macsypy.model.Model],
+                                  logger: logging.Logger) -> tuple[list[LikelySystem], list[macsypy.hit.ModelHit]]:
     """
 
     :param hits_by_replicon:
@@ -713,7 +719,7 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
     return likely_systems, rejected_hits
 
 
-def _outfile_header(models_fam_name, models_version, skipped_replicons=None):
+def _outfile_header(models_fam_name: str, models_version: str, skipped_replicons: list[str] | None = None):
     """
     :return: The 2 first lines of each result file
     :rtype: str
@@ -729,7 +735,9 @@ def _outfile_header(models_fam_name, models_version, skipped_replicons=None):
     return header
 
 
-def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker, sys_file, skipped_replicons=None):
+def systems_to_tsv(models_fam_name: str, models_version: str, systems: list[System],
+                   hit_system_tracker: HitSystemTracker, sys_file: typing.IO,
+                   skipped_replicons: list[str] | None = None) -> None:
     """
     print systems occurrences in a file in tabulated  format
 
@@ -759,7 +767,10 @@ def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker,
         print("# No Systems found", file=sys_file)
 
 
-def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker, sys_file, skipped_replicons=None):
+def systems_to_txt(models_fam_name: str, models_version: str,
+                   systems: list[System],
+                   hit_system_tracker: HitSystemTracker,
+                   sys_file: typing.IO, skipped_replicons: list[str] | None = None) -> None:
     """
     print systems occurrences in a file in human readable format
 
@@ -791,7 +802,9 @@ def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker,
         print("# No Systems found", file=sys_file)
 
 
-def solutions_to_tsv(models_fam_name, models_version, solutions, hit_system_tracker, sys_file, skipped_replicons=None):
+def solutions_to_tsv(models_fam_name: str, models_version: str, solutions: list[macsypy.solution.Solution],
+                     hit_system_tracker: HitSystemTracker,
+                     sys_file: typing.IO, skipped_replicons: list[str] | None = None) -> None:
     """
     print solution in a file in tabulated format
     A solution is a set of systems which represents an optimal combination of
@@ -823,7 +836,7 @@ def solutions_to_tsv(models_fam_name, models_version, solutions, hit_system_trac
         print("# No Systems found", file=sys_file)
 
 
-def _loner_warning(systems):
+def _loner_warning(systems: list[System]) -> list[str]:
     """
     :param systems: sequence of systems
     :return: warning for loner which have less occurrences than systems occurrences in which this lone is used
@@ -851,8 +864,10 @@ def _loner_warning(systems):
     return warnings
 
 
-def summary_best_solution(models_fam_name, models_version, best_solution_path, sys_file, models_fqn, replicon_names,
-                          skipped_replicons=None):
+def summary_best_solution(models_fam_name: str, models_version: str,
+                          best_solution_path: str, sys_file: typing.IO,
+                          models_fqn: str, replicon_names: str,
+                          skipped_replicons: list[str] | None = None) -> None:
     """
     do a summary of best_solution in best_solution_path and write it on out_path
     a summary compute the number of system occurrence for each model and each replicon
@@ -876,7 +891,7 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
     skipped_replicons = skipped_replicons if skipped_replicons else set()
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
 
-    def fill_replicon(summary):
+    def fill_replicon(summary: pd.DataFrame) -> pd.DataFrame:
         """
         add row with 0 for all models for lacking replicons
 
@@ -894,7 +909,7 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
         summary.index.name = index_name
         return summary
 
-    def fill_models(summary):
+    def fill_models(summary: pd.DataFrame) -> pd.DataFrame:
         """
         add columns for lacking models (it means no occurence found)
 
@@ -931,7 +946,7 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
     summary.to_csv(sys_file, sep='\t')
 
 
-def loners_to_tsv(models_fam_name, models_version, systems, sys_file):
+def loners_to_tsv(models_fam_name: str, models_version: str, systems:list[System], sys_file:typing.IO):
     """
     get loners from valid systems and save them on file
 
@@ -956,7 +971,7 @@ def loners_to_tsv(models_fam_name, models_version, systems, sys_file):
         print("# No Loners found", file=sys_file)
 
 
-def multisystems_to_tsv(models_fam_name, models_version, systems, sys_file):
+def multisystems_to_tsv(models_fam_name:str, models_version:str, systems:list[System], sys_file:typing.IO):
     """
     get multisystems from valid systems and save them on file
 
@@ -981,8 +996,10 @@ def multisystems_to_tsv(models_fam_name, models_version, systems, sys_file):
         print("# No Multisystems found", file=sys_file)
 
 
-def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candidates, cand_file,
-                               skipped_replicons=None):
+def rejected_candidates_to_txt(models_fam_name: str, models_version: str,
+                               rejected_candidates: list[macsypy.system.RejectedCandidate],
+                               cand_file: typing.IO,
+                               skipped_replicons: list[str] | None = None):
     """
     print rejected clusters in a file
 
@@ -1006,8 +1023,10 @@ def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candida
         print("# No Rejected candidates", file=cand_file)
 
 
-def rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candidates, cand_file,
-                               skipped_replicons=None):
+def rejected_candidates_to_tsv(models_fam_name: str, models_version: str,
+                               rejected_candidates: list[macsypy.system.RejectedCandidate],
+                               cand_file: typing.IO,
+                               skipped_replicons: list[str] | None = None):
     """
     print rejected clusters in a file
 
@@ -1031,7 +1050,10 @@ def rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candida
         print("# No Rejected candidates", file=cand_file)
 
 
-def likely_systems_to_txt(models_fam_name, models_version, likely_systems, hit_system_tracker, sys_file):
+def likely_systems_to_txt(models_fam_name: str, models_version: str,
+                          likely_systems: list[macsypy.system.LikelySystem],
+                          hit_system_tracker: HitSystemTracker,
+                          sys_file: typing.IO):
     """
     print likely systems occurrences (from unordered replicon)
     in a file in text human readable format
@@ -1052,7 +1074,10 @@ def likely_systems_to_txt(models_fam_name, models_version, likely_systems, hit_s
         print("# No Likely Systems found", file=sys_file)
 
 
-def likely_systems_to_tsv(models_fam_name, models_version, likely_systems, hit_system_tracker, sys_file):
+def likely_systems_to_tsv(models_fam_name : str, models_version: str,
+                          likely_systems: list[macsypy.system.LikelySystem],
+                          hit_system_tracker: HitSystemTracker,
+                          sys_file: typing.IO) -> None:
     """
     print likely systems occurrences (from unordered replicon)
     in a file in tabulated separeted value (tsv) format
@@ -1076,7 +1101,9 @@ def likely_systems_to_tsv(models_fam_name, models_version, likely_systems, hit_s
         print("# No Likely Systems found", file=sys_file)
 
 
-def unlikely_systems_to_txt(models_fam_name, models_version, unlikely_systems, sys_file):
+def unlikely_systems_to_txt(models_fam_name: str, models_version: str,
+                            unlikely_systems: list[macsypy.system.UnlikelySystem],
+                            sys_file: typing.IO):
     """
     print hits (from unordered replicon) which probably does not make a system occurrences
     in a file in human readable format
@@ -1097,7 +1124,7 @@ def unlikely_systems_to_txt(models_fam_name, models_version, unlikely_systems, s
         print("# No Unlikely Systems found", file=sys_file)
 
 
-def main(args=None, loglevel=None):
+def main(args: list[str] | None = None, loglevel: str | int | None = None):
     """
     main entry point to MacSyFinder do some check before to launch :func:`main_search_systems` which is
     the real function that perform a search
