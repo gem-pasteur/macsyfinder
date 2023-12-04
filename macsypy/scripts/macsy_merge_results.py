@@ -24,6 +24,8 @@
 
 import os
 import sys
+import typing
+
 import macsypy
 import argparse
 from typing import List
@@ -34,7 +36,7 @@ import pandas as pd
 from macsypy.config import MacsyDefaults
 
 
-def get_warning(path):
+def get_warning(path: str) -> list[str]:
     """
 
     :param path: the path of the result file to parse
@@ -56,7 +58,8 @@ def get_warning(path):
 
 
 def merge_files(files: List[str], out: str, header: str,
-                ignore: str = None, keep_first: str = None, skip_until=None) -> None:
+                ignore: str | None = None, keep_first: str | None= None,
+                skip_until: typing.Callable | None = None) -> None:
     """
 
     :param files: the list of files to merge
@@ -70,7 +73,7 @@ def merge_files(files: List[str], out: str, header: str,
     :param str header: The header of the merged file
     :return:
     """
-    def get_header(result: bool, warnings):
+    def get_header(result: bool, warnings: list[str]):
         res_or_not = header if result else f"No {header}"
         header_str = f"""# parallel_msf {macsypy.__version__}
 # merged {os.path.basename(files[0])}
@@ -117,7 +120,8 @@ def merge_files(files: List[str], out: str, header: str,
 
 
 def merge_and_reindex(files: List[str], out: str,  header: str,
-                      comment: str = None,  skip_until=None) -> None:
+                      comment: str | None = None,
+                      skip_until: typing.Callable | None = None) -> None:
     """
     merge all_best_solutions and reindex the sol_id column
 
@@ -317,7 +321,7 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
     return parsed_args
 
 
-def main(args=None, log_level=None) -> None:
+def main(args: list[str] | None = None, log_level: int | str | None = None) -> None:
     """
     main entry point to macsy_merge_results
 
