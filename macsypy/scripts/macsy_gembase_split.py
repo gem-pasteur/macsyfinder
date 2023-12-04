@@ -25,6 +25,7 @@
 import sys
 import os.path
 import argparse
+import typing
 from itertools import groupby
 
 import colorlog
@@ -35,7 +36,7 @@ import macsypy
 from macsypy.config import MacsyDefaults
 
 
-def copy_chunk(fh_in, out, start, stop):
+def copy_chunk(fh_in: typing.IO, out: typing.IO, start: int, stop: int):
     """
     Copy file from fh_in to out from position start to stop
 
@@ -54,7 +55,7 @@ def copy_chunk(fh_in, out, start, stop):
             f_out.write(content)
 
 
-def split(seq_index, genome_path, outdir='.'):
+def split(seq_index: dict[str: tuple[int, int]], genome_path: str, outdir: str = '.') -> str:
     """
     split a file with different replicons in gembase format
     in several files with one replicon per file
@@ -66,7 +67,7 @@ def split(seq_index, genome_path, outdir='.'):
     :return: the list of created replicons files
     :rtype: list of string
     """
-    def grp_replicon(line):
+    def grp_replicon(line: str) -> str:
         """
         in gembase the identifier of fasta sequence follows the following schema:
         <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
@@ -89,7 +90,7 @@ def split(seq_index, genome_path, outdir='.'):
     return all_seq_files
 
 
-def index_seq(genome_path):
+def index_seq(genome_path: str) -> dict[str: tuple[int, int]]:
     """
     Index the sequence in the file represented by genome_path
 
@@ -121,7 +122,7 @@ def index_seq(genome_path):
     return index
 
 
-def parse_args(args):
+def parse_args(args: list[str]) -> argparse.Namespace:
     """
     :param args: The arguments passed on the command line (without the name of the program)
                  Typically sys.argv[1:]
@@ -157,7 +158,7 @@ def parse_args(args):
     return parsed_args
 
 
-def main(args=None, log_level=None):
+def main(args: list[str] | None = None, log_level: int | str | None = None):
     """
     main entry point to macsy_gembase_split
 
