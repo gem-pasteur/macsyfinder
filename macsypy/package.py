@@ -36,7 +36,6 @@ import json
 import shutil
 import tarfile
 import copy
-from typing import List, Dict, Tuple, Optional
 
 import certifi
 import yaml
@@ -65,7 +64,7 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
         return super(AbstractModelIndex, cls).__new__(cls)
 
 
-    def __init__(self, cache: str = ''):
+    def __init__(self, cache: str | None = None):
         """
 
         """
@@ -93,24 +92,19 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
 
         with tarfile.open(path, 'r:gz') as tar:
             tar_dir_name = tar.next().name
-            def is_within_directory(directory, target):
-                
+
+            def is_within_directory(directory: str, target: str) -> bool:
                 abs_directory = os.path.abspath(directory)
                 abs_target = os.path.abspath(target)
-            
                 prefix = os.path.commonprefix([abs_directory, abs_target])
-                
                 return prefix == abs_directory
             
-            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
-            
+            def safe_extract(tar, path: str = ".", members=None, *, numeric_owner=False):
                 for member in tar.getmembers():
                     member_path = os.path.join(path, member.name)
                     if not is_within_directory(path, member_path):
                         raise Exception("Attempted Path Traversal in Tar File")
-            
-                tar.extractall(path, members, numeric_owner=numeric_owner) 
-                
+                tar.extractall(path, members, numeric_owner=numeric_owner)
             
             safe_extract(tar, path=dest_dir)
 
@@ -129,7 +123,7 @@ class LocalModelIndex(AbstractModelIndex):
     It allow to manage installation from a local package (tarball)
     """
 
-    def __init__(self, cache=None) -> None:
+    def __init__(self, cache: str | None = None) -> None:
         """
 
         """
@@ -142,7 +136,7 @@ class RemoteModelIndex(AbstractModelIndex):
     This class allow to interact with ModelIndex on github
     """
 
-    def __init__(self, org: str = "macsy-models", cache=None) -> None:
+    def __init__(self, org: str = "macsy-models", cache: str | None = None) -> None:
         """
 
         :param org: The name of the organization on github where are stored the models
@@ -155,7 +149,7 @@ class RemoteModelIndex(AbstractModelIndex):
             raise ValueError(f"the '{self.org_name}' organization does not exist.")
 
 
-    def _url_json(self, url: str) -> Dict:
+    def _url_json(self, url: str) -> dict:
         """
         Get the url, deserialize the data as json
 
@@ -194,7 +188,7 @@ class RemoteModelIndex(AbstractModelIndex):
                 raise err from None
 
 
-    def get_metadata(self, pack_name: str, vers: str = 'latest') -> Dict:
+    def get_metadata(self, pack_name: str, vers: str = 'latest') -> dict:
         """
         Fetch the metadata_path from a remote package
 
@@ -228,7 +222,7 @@ class RemoteModelIndex(AbstractModelIndex):
         return metadata
 
 
-    def list_packages(self) -> List[str]:
+    def list_packages(self) -> list[str]:
         """
         list all model packages available on a model repos
 
@@ -240,7 +234,7 @@ class RemoteModelIndex(AbstractModelIndex):
         return [p['name'] for p in packages if p['name'] != '.github']
 
 
-    def list_package_vers(self, pack_name: str) -> List[str]:
+    def list_package_vers(self, pack_name: str) -> list[str]:
         """
         List all available versions from github model repos for a given package
 
@@ -260,7 +254,7 @@ class RemoteModelIndex(AbstractModelIndex):
         return [v['name'] for v in tags]
 
 
-    def download(self, pack_name: str, vers: str, dest: str = None) -> str:
+    def download(self, pack_name: str, vers: str, dest: str | None = None) -> str:
         """
         Download a package from a github repos and save it as
         <remote cache>/<organization name>/<package name>/<vers>.tar.gz
@@ -318,12 +312,12 @@ class Package:
         """
         self.path: str = os.path.realpath(path)
         self.metadata_path: str = os.path.join(self.path, 'metadata.yml')
-        self._metadata: Dict = None
+        self._metadata: dict | None = None
         self.name: str = os.path.basename(self.path)
         self.readme: str = self._find_readme()
 
 
-    def _find_readme(self) -> Optional[str]:
+    def _find_readme(self) -> str | None:
         """
         find the README file
 
@@ -336,7 +330,7 @@ class Package:
         return None
 
     @property
-    def metadata(self) -> Dict:
+    def metadata(self) -> dict:
         """
 
         :return: The parsed metadata as a dict
@@ -347,7 +341,7 @@ class Package:
         return copy.deepcopy(self._metadata)
 
 
-    def _load_metadata(self) -> Dict:
+    def _load_metadata(self) -> dict:
         """
         Open the metadata_path file and de-serialize it's content
         :return:
@@ -357,7 +351,7 @@ class Package:
         return metadata
 
 
-    def check(self) -> Tuple[List[str], List[str]]:
+    def check(self) -> tuple[list[str], list[str]]:
         """
         Check the QA of this package
         """
@@ -372,7 +366,7 @@ class Package:
         return all_errors, all_warnings
 
 
-    def _check_structure(self) -> Tuple[List[str], List[str]]:
+    def _check_structure(self) -> tuple[list[str], list[str]]:
         """
         Check the QA structure of the package
 
@@ -409,7 +403,7 @@ class Package:
         return errors, warnings
 
 
-    def _check_model_consistency(self) -> Tuple[List, List]:
+    def _check_model_consistency(self) -> tuple[list, list]:
         """
         check if each xml seems well write, each genes have an associated profile, etc
 
@@ -453,7 +447,7 @@ class Package:
         return errors, warnings
 
 
-    def _check_model_conf(self) -> Tuple[List[str], List[str]]:
+    def _check_model_conf(self) -> tuple[list[str], list[str]]:
         """
         check if a model configuration file is present in the package (model_conf.xml)
         if the syntax of this file is good.
@@ -475,7 +469,7 @@ class Package:
         return errors, warnings
 
 
-    def _check_metadata(self) -> Tuple[List[str], List[str]]:
+    def _check_metadata(self) -> tuple[list[str], list[str]]:
         """
         Check the QA of package metadata_path
 
@@ -546,7 +540,7 @@ This data are released under {metadata['license']}
         return info
 
 
-def parse_arch_path(path: str) -> Tuple[str, str]:
+def parse_arch_path(path: str) -> tuple[str, str]:
     """
 
     :param str path: the path to the archive

@@ -33,7 +33,6 @@ import argparse
 import shutil
 import textwrap
 import time
-from typing import List, Tuple, Dict, Optional
 import pathlib
 import logging
 import xml.etree.ElementTree as ET
@@ -53,7 +52,7 @@ from macsypy import licenses
 _log = None
 
 
-def get_version_message():
+def get_version_message() -> str:
     """
     :return: the long description of the macsyfinder version
     :rtype: str
@@ -122,8 +121,8 @@ def do_search(args: argparse.Namespace) -> None:
         _log.critical(str(err))
 
 
-def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: List[str],
-                         match_case: bool = False) -> List[Tuple[str, str, Dict]]:
+def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: list[str],
+                         match_case: bool = False) -> list[tuple[str, str, dict]]:
     """
 
     :param pattern: the substring to search packages names
@@ -149,7 +148,8 @@ def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: List[
     return results
 
 
-def _search_in_desc(pattern: str, remote: RemoteModelIndex, packages: List[str], match_case: bool = False):
+def _search_in_desc(pattern: str, remote: RemoteModelIndex, packages: list[str],
+                    match_case: bool = False) -> tuple[str, str, str]:
     """
 
     :param pattern: the substring to search packages descriptions
@@ -206,7 +206,7 @@ def do_download(args: argparse.Namespace) -> str:
         _log.critical(str(err))
 
 
-def _find_all_installed_packages(models_dir=None) -> ModelRegistry:
+def _find_all_installed_packages(models_dir: list[str] | None = None) -> ModelRegistry:
     """
     :return: all models installed
     """
@@ -226,7 +226,7 @@ def _find_all_installed_packages(models_dir=None) -> ModelRegistry:
     return registry
 
 
-def _find_installed_package(pack_name, models_dir=None) -> Optional[ModelLocation]:
+def _find_installed_package(pack_name: str, models_dir=None) -> ModelLocation | None:
     """
     search if a package names *pack_name* is already installed
 
@@ -248,6 +248,8 @@ def do_install(args: argparse.Namespace) -> None:
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
     :rtype: None
+    :raise RuntimeError:
+    :raise ValueError:
     """
     def clean_cache(model_index):
         if args.no_clean:
@@ -257,6 +259,7 @@ def do_install(args: argparse.Namespace) -> None:
             shutil.rmtree(model_index.cache)
         except Exception:
             _log.warning(f"Cannot clean cache '{model_index.cache}': {err}")
+
     def create_dir(path):
         if os.path.exists(path) and not os.path.isdir(path):
             clean_cache(model_index)
@@ -410,7 +413,7 @@ for the system wide models installation please refer to the documentation.
     clean_cache(model_index)
 
 
-def _get_remote_available_versions(pack_name, org):
+def _get_remote_available_versions(pack_name: str, org: str) -> list[str]:
     remote = RemoteModelIndex(org=org)
     all_versions = remote.list_package_vers(pack_name)
     return all_versions
@@ -427,6 +430,7 @@ def do_uninstall(args: argparse.Namespace) -> None:
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
     :rtype: None
+    :raise ValueError:
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
@@ -447,6 +451,7 @@ def do_info(args: argparse.Namespace) -> None:
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
     :rtype: None
+    :raise ValueError:
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
@@ -675,7 +680,7 @@ def do_init_package(args: argparse.Namespace) -> None:
     :return: None
     """
 
-    def create_package_dir(package_name: str, models_dir: str = None) -> str:
+    def create_package_dir(package_name: str, models_dir: str | None = None) -> str:
         """
 
         :param str package_name:
@@ -691,8 +696,8 @@ def do_init_package(args: argparse.Namespace) -> None:
         return pack_path
 
     def add_metadata(pack_dir: str, maintainer: str, email: str,
-                     desc: str = None, license: str = None,
-                     c_date: str = None, c_holders: str = None) -> None:
+                     desc: str | None = None, license: str | None = None,
+                     c_date: str | None = None, c_holders: str | None = None) -> None:
         """
 
         :param pack_dir: the package directory path
@@ -724,8 +729,7 @@ def do_init_package(args: argparse.Namespace) -> None:
         with open(os.path.join(pack_dir, 'metadata.yml'), 'w') as metafile:
             yaml.dump(metadata, metafile)
 
-
-    def add_def_skeleton(license: str =None) -> None:
+    def add_def_skeleton(license: str | None = None) -> None:
         """
         Create a example of model definition
 
@@ -805,7 +809,6 @@ def do_init_package(args: argparse.Namespace) -> None:
             with open(def_path, 'w') as def_path:
                 def_path.writelines(definition)
 
-
     def add_license(pack_dir: str, license_text: str):
         """
         Create a license file
@@ -816,7 +819,6 @@ def do_init_package(args: argparse.Namespace) -> None:
         """
         with open(os.path.join(pack_dir, 'LICENSE'), 'w') as license_file:
             license_file.write(license_text)
-
 
     def add_copyright(pack_dir: str, pack_name: str, date: str, holders: str, desc: str):
         """
@@ -836,7 +838,6 @@ Copyright (c) {date} {holders}
 """
         with open(os.path.join(pack_dir, 'COPYRIGHT'), 'w') as copyright_file:
             copyright_file.write(text)
-
 
     def add_readme(pack_dir: str, pack_name: str, desc: str):
         """
@@ -862,8 +863,7 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
         with open(os.path.join(pack_dir, 'README.md'), 'w') as readme_file:
             readme_file.write(text)
 
-
-    def create_model_conf(pack_dir: str, license: str = None):
+    def create_model_conf(pack_dir: str, license: str = None) -> None:
         """
 
         :param pack_dir: The path of the package directory
@@ -1270,7 +1270,7 @@ def cmd_name(args: argparse.Namespace) -> str:
     return f"macsydata {func_name}"
 
 
-def init_logger(level='INFO', out=True):
+def init_logger(level: int | str = 'INFO', out: bool = True) -> logging.Logger:
     """
 
     :param level: The logger threshold could be a positive int or string
