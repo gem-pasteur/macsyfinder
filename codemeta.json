@@ -1,0 +1,150 @@
+{
+    "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+    "@type": "SoftwareSourceCode",
+    "license": "https://spdx.org/licenses/GPL-3.0+",
+    "codeRepository": "git+https://github.com/gem-pasteur/macsyfinder.git",
+    "contIntegration": "https://github.com/gem-pasteur/macsyfinder/actions",
+    "dateCreated": "2013-11-04",
+    "datePublished": "2014-10-17",
+    "dateModified": "2023-06-28",
+    "downloadUrl": "https://pypi.org/project/MacSyFinder/",
+    "issueTracker": "https://github.com/gem-pasteur/macsyfinder/issues",
+    "name": "macsyfinder",
+    "version": "2.1.2",
+    "description": "Detection of macromolecular systems in bacterial protein datasets using systems modelling and similarity search.",
+    "applicationCategory": "Biology",
+    "developmentStatus": "active",
+    "referencePublication": "https://doi.org/10.24072/pcjournal.250",
+    "funder": {
+        "@type": "Organization",
+        "name": "Institut Pasteur Paris"
+    },
+    "keywords": [
+        "bioinformatics",
+        "functional genomics",
+        "gene functional annotation"
+    ],
+    "programmingLanguage": [
+        "Python"
+    ],
+    "operatingSystem": [
+        "Linux",
+        "BSD",
+        "macOS"
+    ],
+    "softwareRequirements": [
+        "Python >= 3.7",
+        "hmmer >= 3.1"
+    ],
+    "relatedLink": [
+        "https://pypi.org/project/MacSyFinder/",
+        "https://hub.docker.com/r/gempasteur/macsyfinder"
+    ],
+    "author": [
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/ 0000-0002-0220-0482 ",
+            "givenName": "Bertrand",
+            "familyName": "Néron",
+            "email": "bneron@pasteur.fr",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Institut Pasteur, Université Paris Cité, Bioinformatics and Biostatistics HUB, Paris, France "
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/ 0000-0002-5231-3346 ",
+            "givenName": "Sophie",
+            "familyName": "Abby",
+            "email": "sophie.abby@univ-grenoble-alpes.fr",
+            "affiliation": {
+                "@type": "Organization",
+                "name": " Univ. Grenoble Alpes, CNRS, UMR 5525, VetAgro Sup, Grenoble INP, TIMC, 38000 Grenoble, France "
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/ 0000-0001-7704-822X ",
+            "givenName": "Eduardo",
+            "familyName": "Rocha",
+            "email": "erocha@pasteur.fr",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Institut Pasteur, Université Paris Cité, CNRS UMR3525, Microbial Evolutionary Genomics, Paris, France"
+            }
+        }
+    ],
+    "contributor": [
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/ 0000-0002-7552-1009 ",
+            "givenName": "Hervé",
+            "familyName": "Ménager",
+            "email": "hmenager@pasteur.fr",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Institut Pasteur, Université Paris Cité, Bioinformatics and Biostatistics HUB, Paris, France "
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://github.com/fjossandon",
+            "givenName": "Franscisco J,",
+            "familyName": "Ossandon",
+            "email": "fco.j.ossandon@gmail.com",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Biome Makers Inc."
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/0000-0003-2277-689X",
+            "givenName": "Rémi",
+            "familyName": "Denise",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "APC Microbiome Institute: Cork, IE "
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/ 0000-0001-7389-447X ",
+            "givenName": "Marie",
+            "familyName": "Touchon",
+            "email": "mtouchon@pasteur.fr",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Institut Pasteur, Université Paris Cité, CNRS UMR3525, Microbial Evolutionary Genomics, Paris, France"
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/ 0000-0003-4797-6185 ",
+            "givenName": "Amandine",
+            "familyName": "Perrin",
+            "email": "aperrin@pasteur.fr",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Institut Pasteur, Université Paris Cité, CNRS UMR3525, Microbial Evolutionary Genomics, Paris, France"
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://orcid.org/ 0000-0002-0930-8920 ",
+            "givenName": "Yoann",
+            "familyName": "Dufresne",
+            "email": "yoann.dufresne@pasteur.fr",
+            "affiliation": {
+                "@type": "Organization",
+                "name": "Institut Pasteur, Université Paris Cité, SeqBio, Paris, France "
+            }
+        },
+        {
+            "@type": "Person",
+            "@id": "https://github.com/TrellixVulnTeam",
+            "givenName": "TrellixVulnTeam"
+        }
+    ]
+}
