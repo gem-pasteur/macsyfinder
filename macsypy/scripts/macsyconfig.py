@@ -32,12 +32,14 @@ import sys
 import os.path
 import argparse
 import shutil
+import typing
 from dataclasses import dataclass
 from configparser import ConfigParser
 
 from colorama import Fore, Style
 from colorama import init as col_init
 
+import macsypy.config
 from macsypy import __version__ as msf_vers
 from macsypy.config import MacsyDefaults
 from macsypy.error import MacsypyError
@@ -48,10 +50,10 @@ class ConfigParserWithComments(ConfigParser):
     Extend ConfigParser to allow comment in serialization
     """
 
-    def add_comment(self, section, option, comment,
-                    comment_nb=itertools.count(1),
-                    add_space_before=False,
-                    add_space_after=True):
+    def add_comment(self, section: str, option: str, comment: str,
+                    comment_nb: int =itertools.count(1),
+                    add_space_before: bool = False,
+                    add_space_after: bool = True) -> None:
         """
         Write a comment in .ini-format (start line with #)
 
@@ -69,7 +71,7 @@ class ConfigParserWithComments(ConfigParser):
             comment = comment + '\n'
         self.set(section, f"{option}_{next(comment_nb)}_comment", comment)
 
-    def write(self, file):
+    def write(self, file: typing.IO) -> None:
         """
         Write an .ini-format representation of the configuration state.
 
@@ -82,7 +84,7 @@ class ConfigParserWithComments(ConfigParser):
         file.write("\n")
 
 
-    def _write_item(self, file, key, value):
+    def _write_item(self, file: typing.IO, key: str, value: str):
         if key.endswith('_comment'):
             file.write(f"{value}")
         else:
@@ -103,11 +105,13 @@ class Theme:
     EXPLANATION: str = Style.RESET_ALL
     DEFAULT: str = Style.BRIGHT + Fore.GREEN
 
+
 # default theme = dark bg
 theme = Theme()
 
 
-def _validator(cast_func, raw, default, sequence=False):
+def _validator(cast_func: typing.Callable,
+               raw: typing.Any, default: typing.Any, sequence: bool = False) -> typing.Any:
     if raw == '':
         if default is None:
             raise MacsypyError('Please enter some value')
@@ -126,7 +130,7 @@ def _validator(cast_func, raw, default, sequence=False):
     return value
 
 
-def check_exe(raw, default, expected, sequence=False):
+def check_exe(raw: str, default: str, expected, sequence: bool = False) -> str:
     """
     Check if value point to an executable
 
@@ -145,7 +149,7 @@ def check_exe(raw, default, expected, sequence=False):
     return _validator(exe, raw, default, sequence=sequence)
 
 
-def check_positive_int(raw, default, expected, sequence=False):
+def check_positive_int(raw: str, default: int, expected, sequence: bool = False) -> int:
     """
     Check if value can be cast in integer >=0
 
@@ -163,7 +167,7 @@ def check_positive_int(raw, default, expected, sequence=False):
     return _validator(positive_int, raw, default, sequence=sequence)
 
 
-def check_float(raw, default, expected, sequence=False):
+def check_float(raw: str, default: float, expected, sequence: bool = False) -> float:
     """
     Check if value can be cast in float
 
@@ -176,7 +180,7 @@ def check_float(raw, default, expected, sequence=False):
     return _validator(float, raw, default, sequence=sequence)
 
 
-def check_str(raw, default, expected, sequence=False):
+def check_str(raw: str, default: str, expected, sequence: bool = False) -> str:
     """
     Check if value can be cast in str
 
@@ -189,7 +193,7 @@ def check_str(raw, default, expected, sequence=False):
     return _validator(str, raw, default, sequence=sequence)
 
 
-def check_bool(raw, default, expected, sequence=False):
+def check_bool(raw: str, default: bool, expected, sequence: bool = False) -> bool:
     """
     Check if value can be cast in str
 
@@ -199,7 +203,7 @@ def check_bool(raw, default, expected, sequence=False):
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
     """
-    def bool_cast(raw):
+    def bool_cast(raw: str) -> bool:
         raw = str(raw).lower()
         if raw in ('false', 'no', '0'):
             casted = False
@@ -211,7 +215,7 @@ def check_bool(raw, default, expected, sequence=False):
     return _validator(bool_cast, raw, default, sequence=sequence)
 
 
-def check_dir(raw, default, expected, sequence=False):
+def check_dir(raw: str, default: str, expected, sequence: bool = False) -> str:
     """
     Check if value point to a directory
 
@@ -221,7 +225,7 @@ def check_dir(raw, default, expected, sequence=False):
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
     """
-    def path(value):
+    def path(value: str) -> str:
         if os.path.exists(value):
             if os.path.isdir(value):
                 return value
@@ -232,7 +236,7 @@ def check_dir(raw, default, expected, sequence=False):
     return _validator(path, raw, default, sequence=sequence)
 
 
-def check_file(raw, default, expected, sequence=False):
+def check_file(raw: str, default: str, expected, sequence: bool = False) -> str:
     """
     Check if value point to a file
 
@@ -255,7 +259,7 @@ def check_file(raw, default, expected, sequence=False):
     return _validator(path, raw, default, sequence=sequence)
 
 
-def check_choice(raw, default, expected, sequence=False):
+def check_choice(raw: str, default: str, expected: list[str], sequence: bool = False) -> str:
     """
     Check if value is in list of expected values
 
@@ -265,7 +269,7 @@ def check_choice(raw, default, expected, sequence=False):
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
     """
-    def isin(value):
+    def isin(value: str):
         if value not in expected:
             raise ValueError(f"Authorized values are {expected}.")
         if value.lower() == 'none':
@@ -274,11 +278,14 @@ def check_choice(raw, default, expected, sequence=False):
     return _validator(isin, raw, default, sequence=sequence)
 
 
-def ask(question, validator, default=None, expected=None,
-        explanation='',
-        sequence=False,
-        question_color=None,
-        retry=2):
+def ask(question: str,
+        validator: typing.Callable,
+        default: typing.Any = None,
+        expected: typing.Any = None,
+        explanation: str = '',
+        sequence: bool = False,
+        question_color: Theme | None = None,
+        retry: int = 2):
     """
     ask a question on the terminal and return the user response
     check if the user response is allowed (right type, among allowed values, ...)
@@ -334,7 +341,10 @@ def ask(question, validator, default=None, expected=None,
     return val
 
 
-def set_section(sec_name, options, config, defaults, use_defaults=False):
+def set_section(sec_name: str, options: dict,
+                config: ConfigParserWithComments,
+                defaults: macsypy.config.MacsyDefaults,
+                use_defaults: bool = False) -> ConfigParserWithComments:
     """
     iter over options of a section
     ask question for each option
@@ -388,7 +398,9 @@ def set_section(sec_name, options, config, defaults, use_defaults=False):
     return config
 
 
-def set_path_options(config, defaults, use_defaults=False):
+def set_path_options(config: ConfigParserWithComments,
+                     defaults: macsypy.config.MacsyDefaults,
+                     use_defaults: bool = False) -> None:
     """
     Options for directories section
 
