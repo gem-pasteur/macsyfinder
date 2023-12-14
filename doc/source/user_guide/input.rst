@@ -45,6 +45,11 @@ or "circular" for detection. The default is set to "circular".
   With the "gembase" format, it is possible to specify a topology per replicon with a topology file
   (see :ref:`gembase_convention` and :ref:`topology-files`).
 
+.. note::
+
+    MSF can also read *.gz* compressed files; it will uncompress them on the fly.
+    The compressed files must end with the *.gz* extension.
+    For the `hmmsearch` step You need to have `gunzip` installed on your system for this to work.
 
 
 .. _command-line-label:
