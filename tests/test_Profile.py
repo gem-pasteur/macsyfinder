@@ -36,6 +36,8 @@ from macsypy.model import Model
 from macsypy.profile import ProfileFactory
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
+from macsypy.error import MacsypyError
+
 from tests import MacsyTest, which
 
 
@@ -67,7 +69,7 @@ class TestProfile(MacsyTest):
 
 
     def test_len(self):
-        model = Model("foo/T2SS", 10)
+        model = Model("functional/T12SS-simple-exch", 10)
 
         gene_name = 'abc'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
@@ -77,6 +79,42 @@ class TestProfile(MacsyTest):
         profile = Profile(gene, self.cfg, path)
         self.assertEqual(len(profile), 501)
 
+        ###########################
+        # test compressed profile #
+        ###########################
+        model = Model("functional_gzip/T12SS-simple-exch", 10)
+
+        gene_name = 'abc'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene = ModelGene(c_gene, model)
+
+        path = self.model_location.get_profile(gene_name)
+        profile = Profile(gene, self.cfg, path)
+        self.assertEqual(len(profile), 501)
+
+        model = Model("foo/compressed_profile", 10)
+        gene_name = 'abc'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene = ModelGene(c_gene, model)
+        for ext in 'bz2', 'zip':
+            with self.subTest(ext=ext):
+                path = self.find_data('models', 'foo', 'profiles', f'{ext}.hmm.{ext}')
+                with self.catch_log(log_name='macsypy'):
+                    with self.assertRaises(ValueError) as ctx:
+                        Profile(gene, self.cfg, path)
+                    self.assertEqual(str(ctx.exception),
+                                     f"MacSyFinder does not support '{ext}' compression (only gzip).")
+
+        ###################
+        # unreadable gzip #
+        ###################
+        path = self.find_data('models', 'foo', 'profiles', 'bad_ext.hmm.gz')
+        with self.catch_log(log_name='macsypy'):
+            with self.assertRaises(MacsypyError) as ctx:
+                Profile(gene, self.cfg, path)
+            self.assertEqual(str(ctx.exception),
+                            f"Cannot read profile {path}: Not a gzipped file (b'BZ')"
+                             )
 
     def test_ga_threshold(self):
         # No GA threshold
@@ -89,6 +127,7 @@ class TestProfile(MacsyTest):
         profile = Profile(gene, self.cfg, path)
         self.assertFalse(profile.ga_threshold)
 
+        model = Model("foo/T2SS", 10)
         # GA threshold line ends with ;
         gene_name = 'T5aSS_PF03797'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)

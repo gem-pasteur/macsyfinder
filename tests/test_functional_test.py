@@ -245,6 +245,45 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                              os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
 
+    def test_gzip(self):
+        # genetic organization of test_3.fasta.gz
+        # gene       abc    mfp    omf    omf    abc    gspd
+        # gene id   01397  01398  01548  01562  01399  01400
+        # pos        2      3      19     27     37     38
+        # clst                 ]               [
+        # syst (abc,2), (mfp,3), (abc,37), (gspd, 38)
+        # in T12SS-simple-exch omf is not a loner
+
+        # the input data: hmm profile and sequence-db, are gziped
+
+        expected_result_dir = self.find_data("functional_test_gzip")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology circular " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional_gzip T12SS-simple-exch " \
+               "-o {out_dir} " \
+               f"--index-dir {self._index_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary,
+                          self.rejected_candidates_tsv):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
+
+
+
     def test_ordered_linear(self):
         # genetic organization of test_3.fasta
         # gene       abc    mfp    omf    omf    abc    gspd

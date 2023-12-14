@@ -30,6 +30,7 @@ import unittest
 import shutil
 import tempfile
 import argparse
+import gzip
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.database import Indexes, fasta_iter
@@ -128,6 +129,46 @@ class TestIndex(MacsyTest):
         my_idx = idx.build()
         self.assertEqual(my_idx, os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"))
 
+
+    def test_build_idx_gzip_seq(self):
+        args = argparse.Namespace()
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+        seq_db_ori = self.find_data("base", "test_1.fasta")
+        seq_db_gz = os.path.join(args.out_dir, os.path.basename(seq_db_ori)) + ".gz"
+        with open(seq_db_ori, 'rb') as f_in:
+            with gzip.open(seq_db_gz, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+
+        args.index_dir = args.out_dir
+        args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db_gz))
+        cfg = Config(MacsyDefaults(), args)
+
+        idx = Indexes(cfg)
+        my_idx = idx.build()
+        self.assertEqual(my_idx, os.path.join(os.path.dirname(cfg.sequence_db()), idx.name + ".idx"))
+
+        for ext in '.bz2', '.zip':
+            seq_db_compressed = os.path.join(args.out_dir, os.path.basename(seq_db_ori)) + ext
+            shutil.copyfile(seq_db_gz, seq_db_compressed)
+            args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db_compressed))
+            cfg = Config(MacsyDefaults(), args)
+            with self.subTest(ext=ext):
+                with self.catch_log(log_name='macsypy') as log:
+                    with self.assertRaises(ValueError) as ctx:
+                        idx = Indexes(cfg)
+                        idx.build()
+                    exp_msg = f"MacSyFinder does not support '{ext[1:]}' compression (only gzip)."
+                    self.assertEqual(str(ctx.exception),
+                                     exp_msg
+                                     )
+                    msg_log = log.get_value().strip()
+                    self.assertEqual(msg_log,
+                                     exp_msg
+                                     )
+
+
     def test_build_idx_older_than_fasta(self):
         # test if idx.build
         # if index is present and newer than fasta the index are not rebuild
@@ -173,6 +214,8 @@ class TestIndex(MacsyTest):
 
 
     def test_build_with_idx(self):
+        # test building index if some index already exists
+
         idx = Indexes(self.cfg)
         # case new style idx
         with open(os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"), 'w') as idx_file:
