@@ -227,10 +227,15 @@ class ModelLocation:
         all_profiles = {}
         for profile in os.listdir(path):
             profile_path = os.path.join(path, profile)
+            compressed_suffix = f"{profile_suffix}.gz"
             if os.path.isfile(profile_path):
-                base, ext = os.path.splitext(profile)
-                if ext == profile_suffix:
-                    all_profiles[base] = profile_path if relative_path else os.path.abspath(profile_path)
+                if profile.endswith(profile_suffix):
+                    base = profile.strip(profile_suffix)
+                elif profile.endswith(compressed_suffix):
+                    base = profile.strip(compressed_suffix)
+                else:
+                    continue
+                all_profiles[base] = profile_path if relative_path else os.path.abspath(profile_path)
         return all_profiles
 
     def __lt__(self, other):
