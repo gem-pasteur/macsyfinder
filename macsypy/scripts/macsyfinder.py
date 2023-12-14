@@ -174,7 +174,7 @@ If the name 'all' is in the list of models, all models from the family will be s
     genome_options.add_argument("--sequence-db",
                                 action='store',
                                 default=None,
-                                help="""Path to the sequence dataset in fasta format.
+                                help="""Path to the sequence dataset in fasta format (gzip files are supported).
 (required unless --previous-run is set)
 """)
 
