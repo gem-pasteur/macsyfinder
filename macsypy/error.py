@@ -31,13 +31,10 @@ class MacsypyError(Exception):
     The base class for MacSyFinder specific exceptions.
     """
 
-
-
 class MacsydataError(MacsypyError):
     """
     Raised when error is encounter during model package handling
     """
-
 
 
 class MacsyDataLimitError(MacsydataError):

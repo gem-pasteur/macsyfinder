@@ -27,6 +27,7 @@ Manage HMM profiles and hmmsearch execution
 """
 
 import os
+import gzip
 import logging
 _log = logging.getLogger(__name__)
 
@@ -114,31 +115,48 @@ class Profile:
         """
         length = None
         ga_threshold = False
-        with open(self.path) as hmm_file:
-            for line in hmm_file:
-                if line.startswith('LENG'):
-                    length = int(line.split()[1])
-                elif line.startswith('GA'):
-                    try:
-                        header, thld_1, thld_2 = line.split()
-                    except ValueError:
-                        _log.warning(f"{self.gene.name} GA score is not well formatted. expected: "
-                                     f"'GA float float' got '{line.rstrip()}'.")
-                        _log.warning(f"GA score will not used for gene '{self.gene.name}'.")
-                        continue
-                    if thld_2.endswith(';'):
-                        thld_2 = thld_2[:-1]
-                    try:
-                        thld_1 = float(thld_1)
-                        thld_2 = float(thld_2)
-                        ga_threshold = True
-                    except ValueError:
-                        _log.warning(f"{self.gene.name} GA score is not well formatted "
-                                     f"expected 2 floats got '{thld_1}' '{thld_2}'.")
-                        _log.warning(f"GA score will not used for gene '{self.gene.name}'.")
-                        continue
-                elif line.startswith('STATS LOCAL'):
-                    break
+
+        _, ext = os.path.splitext(self.path)
+        if ext == '.gz':
+            my_open = gzip.open
+        elif ext == '.bz2' or ext == '.zip':
+            msg = f"MacSyFinder does not support '{ext[1:]}' compression (only gzip)."
+            _log.critical(msg)
+            raise ValueError(msg)
+        else:
+            # I assumed it's a hmm not compressed
+            my_open = open
+        try:
+            with my_open(self.path, 'rt') as hmm_file:
+                for line in hmm_file:
+                    if line.startswith('LENG'):
+                        length = int(line.split()[1])
+                    elif line.startswith('GA'):
+                        try:
+                            header, thld_1, thld_2 = line.split()
+                        except ValueError:
+                            _log.warning(f"{self.gene.name} GA score is not well formatted. expected: "
+                                         f"'GA float float' got '{line.rstrip()}'.")
+                            _log.warning(f"GA score will not used for gene '{self.gene.name}'.")
+                            continue
+                        if thld_2.endswith(';'):
+                            thld_2 = thld_2[:-1]
+                        try:
+                            thld_1 = float(thld_1)
+                            thld_2 = float(thld_2)
+                            ga_threshold = True
+                        except ValueError:
+                            _log.warning(f"{self.gene.name} GA score is not well formatted "
+                                         f"expected 2 floats got '{thld_1}' '{thld_2}'.")
+                            _log.warning(f"GA score will not used for gene '{self.gene.name}'.")
+                            continue
+                    elif line.startswith('STATS LOCAL'):
+                        break
+        except Exception as err:
+            msg = f'Cannot read profile {self.path}: {err}'
+            _log.critical(msg)
+            raise MacsypyError(msg)
+
         return length, ga_threshold
 
 

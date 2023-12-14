@@ -68,7 +68,7 @@ def alarm_handler(signum, frame):
     _log.critical("Timeout is over. Aborting")
     for h in _log.handlers:
         h.flush()
-    # I exit wit 0 otherwise in parallel_msf the job will be retry
+    # I exit with 0 otherwise in parallel_msf the job will be retry
     # on an other machine. we don't want that.
     #sys.exit(0)
     raise Timeout()
@@ -111,7 +111,7 @@ def list_models(args):
     registry = ModelRegistry()
     for model_dir in model_dirs:
         try:
-            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix):
+            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix()):
                 registry.add(model_loc)
         except PermissionError as err:
             _log.warning(f"{model_dir} is not readable: {err} : skip it.")
