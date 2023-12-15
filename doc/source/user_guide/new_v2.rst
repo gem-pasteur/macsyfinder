@@ -13,6 +13,22 @@ What's new in MacSyFinder v2?
 *****************************
 
 =======
+V 2.1.x
+=======
+
+features
+========
+
+Support of *gziped* files
+-------------------------
+
+MSF can also read *.gz* compressed files both for hmm profiles and sequences in fasta.
+It will uncompress them on the fly.
+The compressed files must end with the *.gz* extension.
+For the `hmmsearch` step You need to have `gunzip` installed on your system for this to work.
+
+
+=======
 V 2.1.2
 =======
 
