@@ -12,19 +12,35 @@
 What's new in MacSyFinder v2?
 *****************************
 
-=======
-V 2.1.2
-=======
+======
+master
+======
 
+Features
+========
+
+Support of *gziped* files
+-------------------------
+
+MSF can also read *.gz* compressed files both for hmm profiles and sequences in fasta.
+It will uncompress them on the fly.
+The compressed files must end with the *.gz* extension.
+For the `hmmsearch` step You need to have `gunzip` installed on your system for this to work.
+
+search engine
+-------------
 A group of hits that respect the distance constraints but each hit represent the same
 gene on the model, is **not** considered as a *cluster*.
 
 A group of hits that respect the distance constraints but all hits
 represent a Neutral gene in model, is **not** considered as a *cluster*.
 
+timeout improvement
+-------------------
 If a replicon is skipped due to timeout during best_solution phase.
 The results corresponding to this replicon are not produced,
 but a warning indicating that msf skip this replicon appear in outputs.
+
 
 =======
 V 2.1.1
