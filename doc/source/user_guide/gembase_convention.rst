@@ -64,6 +64,13 @@ This input file contains 3 replicons: PlasmidA (which 2 first protein identifier
 ChromosomeA (which 2 first protein identifiers are 0001 and 0020) and NC_001548 (which first protein identifier is 0015).
 MacSyFinder search results will thus be reported for each of these three replicons. 
 
+.. warning::
+
+    This `gembase` format is old and not compliant with the `gembase` format produced by
+    `PanACoTA <https://github.com/gem-pasteur/PanACoTA>`_.
+    The support of the new `gembase` format is in the road map.
+
+
 .. _topology-files:
 
 **************
