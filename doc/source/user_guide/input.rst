@@ -19,6 +19,8 @@ Input dataset
 =============
 
 The input dataset must be a set of protein sequences in **Fasta format** (see http://en.wikipedia.org/wiki/FASTA_format).
+(The fasta file can be compressed in *gzip* format see note below)
+
 
 The :ref:`base section<config-base-label>` in the configuration file (see :ref:`config-definition-label`)
 can be used to specify **the path** and the **type of dataset** to deal with,
