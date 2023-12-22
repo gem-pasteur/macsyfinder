@@ -25,12 +25,14 @@
 """
 Module to handle sequences and their indexes
 """
-import gzip
 from itertools import groupby
 from collections import namedtuple
 import os.path
 import logging
-from macsypy.error import MacsypyError, EmptyFileError
+
+from .error import MacsypyError, EmptyFileError
+from .utils import open_compressed
+
 _log = logging.getLogger(__name__)
 
 
@@ -194,19 +196,8 @@ class Indexes:
 
         """
         index_file = os.path.join(index_dir, self.name + ".idx")
-        _, ext = os.path.splitext(self._fasta_path)
-        if ext == '.gz':
-            my_open = gzip.open
-        elif ext == '.bz2' or ext == '.zip':
-            msg = f"MacSyFinder does not support '{ext[1:]}' compression (only gzip)."
-            _log.critical(msg)
-            raise ValueError(msg)
-        else:
-            # I assumed it's a fasta not compressed
-            my_open = open
-
         try:
-            with my_open(self._fasta_path, 'rt') as fasta_file:
+            with open_compressed(self._fasta_path, 'rt') as fasta_file:
                 with open(index_file, 'w') as my_base:
                     my_base.write(self._fasta_path + '\n')
                     f_iter = fasta_iter(fasta_file)
@@ -215,6 +206,10 @@ class Indexes:
                         seq_nb += 1
                         my_base.write(f"{seq_id}{self._field_separator}{length:d}{self._field_separator}{seq_nb:d}\n")
                     my_base.flush()
+        except ValueError as err:
+            msg = f"Cannot index '{self._fasta_path}': {err}"
+            _log.critical(msg)
+            raise MacsypyError(msg)
         except Exception as err:
             msg = f"unable to index the sequence dataset: {self.cfg.sequence_db()} : {err}"
             _log.critical(msg, exc_info=True)
