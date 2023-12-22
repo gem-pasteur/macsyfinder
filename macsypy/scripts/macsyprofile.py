@@ -34,8 +34,10 @@ import colorlog
 import macsypy
 from macsypy.config import MacsyDefaults, Config
 from macsypy.database import Indexes
-from macsypy.hit import get_best_hits
+from macsypy.hit import get_best_hits, CoreHit
 from macsypy.registries import split_def_name
+from macsypy.utils import get_replicon_names
+
 
 # _log is set in main func
 _log = None
@@ -142,10 +144,8 @@ class HmmProfile:
         :return: The list of extracted hits
         """
         all_hits = []
-        idx = Indexes(self.cfg)
-        macsyfinder_idx = idx.build()
         my_db = self._build_my_db(self._hmmer_raw_out)
-        self._fill_my_db(macsyfinder_idx, my_db)
+        self._fill_my_db(my_db)
 
         with open(self._hmmer_raw_out, 'r') as hmm_out:
             i_evalue_sel = self.cfg.i_evalue_sel()
@@ -167,14 +167,12 @@ class HmmProfile:
         return hits
 
 
-    def _build_my_db(self, hmm_output: str) -> dict:
+    def _build_my_db(self, hmm_output: str) -> dict[str: None]:
         """
         Build the keys of a dictionary object to store sequence identifiers of hits.
 
         :param hmm_output: the path to the hmmsearch output to parse.
-        :type hmm_output: string
         :return: a dictionary containing a key for each sequence id of the hits
-        :rtype: dict
         """
         db = {}
         with open(hmm_output) as hmm_file:
@@ -184,12 +182,10 @@ class HmmProfile:
         return db
 
 
-    def _fill_my_db(self, macsyfinder_idx: str, db: dict[str: tuple[int, int]]) -> None:
+    def _fill_my_db(self, db: dict[str: tuple[int, int]]) -> None:
         """
         Fill the dictionary with information on the matched sequences
 
-        :param macsyfinder_idx: the path the macsyfinder index corresponding to the dataset
-        :type  macsyfinder_idx: string
         :param db: the database containing all sequence id of the hits.
         :type db: dict
         """
@@ -201,20 +197,20 @@ class HmmProfile:
 
 
     def _get_replicon_name(self, hit_id: str) -> str:
-
-        replicon_name = {'unordered': 'unordered',
-                         'ordered_replicon': 'UserReplicon',
-                         'gembase': "_".join(hit_id.split('_')[:-1])}
-        return replicon_name[self.cfg.db_type()]
+        db_type = self.cfg.db_type()
+        if db_type == 'gembase':
+            *replicon_name, seq_name = hit_id.split('_')
+            replicon_name = "_".join(replicon_name)
+        else:
+            replicon_name = get_replicon_names(self.cfg.sequence_db(), db_type)[0]
+        return replicon_name
 
 
     def _hit_start(self, line: str) -> bool:
         """
         :param line: the line to parse
-        :type line: string
         :return: True if it's the beginning of a new hit in Hmmer raw output files.
          False otherwise
-        :rtype: boolean.
         """
         return line.startswith(">>")
 
