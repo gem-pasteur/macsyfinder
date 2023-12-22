@@ -1,0 +1,6 @@
+<model inter_gene_max_space="1" vers="2.0">
+    <gene name="gzip" presence="accessory" />
+    <gene name="bzip2" presence="accessory" />
+    <gene name="zip" presence="accessory" />
+    <gene name="bad_ext" presence="accessory" />
+</model>
