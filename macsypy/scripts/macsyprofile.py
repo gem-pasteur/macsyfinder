@@ -46,7 +46,6 @@ _log = None
 def get_version_message() -> str:
     """
     :return: the long description of the macsyfinder version
-    :rtype: str
     """
     version = macsypy.__version__
     vers_msg = f"""macsyprofile {version}
@@ -67,9 +66,8 @@ def get_profile_len(path: str) -> int:
     """
     Parse the HMM profile to extract the length and the presence of GA bit threshold
 
-    :param str path: The path to the hmm profile used to produced the hmm search output to analyse
+    :param path: The path to the hmm profile used to produced the hmm search output to analyse
     :return: the length, presence of ga bit threshold
-    :rtype: tuple(int length, bool ga_threshold)
     """
     with open(path) as file:
         for line in file:
@@ -82,10 +80,9 @@ def get_profile_len(path: str) -> int:
 def get_gene_name(path: str, suffix: str) -> str:
     """
 
-    :param str path: The path to the hmm output to analyse
-    :param str suffix: the suffix of the hmm output file
+    :param path: The path to the hmm output to analyse
+    :param suffix: the suffix of the hmm output file
     :return: the name of the analysed gene
-    :rtype: str
     """
     file_name = os.path.basename(path)
     gene_name = file_name.replace(suffix, '')
@@ -125,11 +122,8 @@ class HmmProfile:
     def __init__(self, gene_name: str, gene_profile_lg: int, hmmer_output: str, cfg: Config):
         """
         :param gene: the gene corresponding to the profile search reported here
-        :type gene: :class:`macsypy.gene.CoreGene` object
         :param hmmer_output: The path to the raw Hmmer output file
-        :type hmmer_output: string
         :param cfg: the configuration object
-        :type cfg: :class:`macsypy.config.Config` object
         """
         self.gene_name = gene_name
         self._hmmer_raw_out = hmmer_output
@@ -158,7 +152,6 @@ class HmmProfile:
                 seq_lg, position_hit = my_db[hit_id]
 
                 replicon_name = self._get_replicon_name(hit_id)
-
                 body = next(hmm_hits)
                 l_hit = self._parse_hmm_body(hit_id, self.gene_profile_lg, seq_lg, coverage_threshold,
                                          replicon_name, position_hit, i_evalue_sel, body)
@@ -218,9 +211,7 @@ class HmmProfile:
     def _parse_hmm_header(self, h_grp: str) -> str:
         """
         :param h_grp: the sequence of string return by groupby function representing the header of a hit
-        :type h_grp: sequence of string (<itertools._grouper object at 0x7ff9912e3b50>)
         :returns: the sequence identifier from a set of lines that corresponds to a single hit
-        :rtype: string
         """
         for line in h_grp:
             hit_id = line.split()[1]
@@ -229,24 +220,21 @@ class HmmProfile:
 
     def _parse_hmm_body(self, hit_id: str, gene_profile_lg: int, seq_lg: int,
                         coverage_threshold:float, replicon_name: str,
-                        position_hit: int, i_evalue_sel: float, b_grp:list[list[str]]):
+                        position_hit: int, i_evalue_sel: float, b_grp:list[list[str]]) -> list[CoreHit]:
         """
         Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected
         ("coverage_profile" and "i_evalue_select" command-line parameters)
 
-        :param str hit_id: the sequence identifier
-        :param int gene_profile_lg: the length of the profile matched
-        :paramint  seq_lg: the length of the sequence
-        :param float coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment
+        :param hit_id: the sequence identifier
+        :param gene_profile_lg: the length of the profile matched
+        :param seq_lg: the length of the sequence
+        :param coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment
                                         for hit selection.
-        :param str replicon_name: the identifier of the replicon
-        :param int position_hit: the rank of the sequence matched in the input dataset file
-        :param float i_evalue_sel: the maximal i-evalue (independent evalue) for hit selection
+        :param replicon_name: the identifier of the replicon
+        :param position_hit: the rank of the sequence matched in the input dataset file
+        :param i_evalue_sel: the maximal i-evalue (independent evalue) for hit selection
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
-        :type b_grp: list of list of strings
         :returns: a sequence of hits
-        :rtype: list of :class:`macsypy.report.CoreHit` objects
-
         """
         first_line = next(b_grp)
         if not first_line.startswith('   #    score'):
@@ -317,7 +305,6 @@ def init_logger(level: str | int ='INFO', out: bool = True):
                   among: 'CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'
     :param out: if the log message must be displayed
     :return: logger
-    :rtype: :class:`logging.Logger` instance
     """
     logger = colorlog.getLogger('macsyprofile')
     if isinstance(level, str):
@@ -353,7 +340,7 @@ def init_logger(level: str | int ='INFO', out: bool = True):
 def verbosity_to_log_level(verbosity: int) -> int:
     """
     transform the number of -v option in loglevel
-    :param int verbosity: number of -v option on the command line
+    :param verbosity: number of -v option on the command line
     :return: an int corresponding to a logging level
     """
     level = max((logging.INFO - (10 * verbosity), 1))
@@ -364,9 +351,7 @@ def parse_args(args:  list[str]) -> argparse.Namespace:
     """
 
     :param args: The arguments provided on the command line
-    :type args: List of strings [without the program name]
     :return: The arguments parsed
-    :rtype: :class:`aprgparse.Namespace` object.
     """
     msf_def = MacsyDefaults()
     parser = argparse.ArgumentParser(
@@ -457,9 +442,7 @@ def main(args: list[str] | None = None, log_level: str | int | None = None) -> N
     main entry point to macsyprofile
 
     :param args: the arguments passed on the command line without the program name
-    :type args: List of string
     :param log_level: the output verbosity
-    :type log_level: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """
     global _log
     args = sys.argv[1:] if args is None else args
