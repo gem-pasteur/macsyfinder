@@ -59,11 +59,11 @@ def get_def_to_detect(models, model_registry):
     return def_to_detect, model_family, model_vers
 
 
-def get_replicon_names(genomee_path, db_type):
+def get_replicon_names(genome_path, db_type) -> list[str]:
     if db_type == 'gembase':
-        return _get_gembase_replicon_names(genomee_path)
+        return _get_gembase_replicon_names(genome_path)
     elif db_type in ('ordered_replicon', 'unordered'):
-        return [os.path.splitext(os.path.basename(genomee_path))[0]]
+        return [os.path.splitext(os.path.basename(genome_path))[0]]
     else:
         raise MacsypyError(f"Invalid genome type: {db_type}")
 
