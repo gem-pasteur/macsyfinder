@@ -27,7 +27,6 @@ Manage HMM profiles and hmmsearch execution
 """
 
 import os
-import gzip
 import logging
 _log = logging.getLogger(__name__)
 
@@ -36,6 +35,7 @@ from threading import Lock
 
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 from .error import MacsypyError
+from .utils import open_compressed
 
 
 class ProfileFactory:
@@ -116,18 +116,8 @@ class Profile:
         length = None
         ga_threshold = False
 
-        _, ext = os.path.splitext(self.path)
-        if ext == '.gz':
-            my_open = gzip.open
-        elif ext == '.bz2' or ext == '.zip':
-            msg = f"MacSyFinder does not support '{ext[1:]}' compression (only gzip)."
-            _log.critical(msg)
-            raise ValueError(msg)
-        else:
-            # I assumed it's a hmm not compressed
-            my_open = open
         try:
-            with my_open(self.path, 'rt') as hmm_file:
+            with open_compressed(self.path, 'rt') as hmm_file:
                 for line in hmm_file:
                     if line.startswith('LENG'):
                         length = int(line.split()[1])
