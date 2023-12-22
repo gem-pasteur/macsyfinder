@@ -100,10 +100,11 @@ class TestProfile(MacsyTest):
             with self.subTest(ext=ext):
                 path = self.find_data('models', 'foo', 'profiles', f'{ext}.hmm.{ext}')
                 with self.catch_log(log_name='macsypy'):
-                    with self.assertRaises(ValueError) as ctx:
+                    with self.assertRaises(MacsypyError) as ctx:
                         Profile(gene, self.cfg, path)
                     self.assertEqual(str(ctx.exception),
-                                     f"MacSyFinder does not support '{ext}' compression (only gzip).")
+                                     f"Cannot read profile {path}: MacSyFinder does not support '{ext}' compression "
+                                     f"(only gzip).")
 
         ###################
         # unreadable gzip #

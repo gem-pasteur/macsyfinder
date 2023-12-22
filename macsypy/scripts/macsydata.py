@@ -765,14 +765,7 @@ def do_init_package(args: argparse.Namespace) -> None:
                              "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html\n")
         model.append(comment)
         tree = ET.ElementTree(model)
-        try:
-            ET.indent(model)
-        except AttributeError:
-            # workaround as ET.indent appear in python3.9
-            from macsypy.utils import indent_wrapper
-            ET.indent = indent_wrapper(type(tree))
-            ET.indent(model)
-
+        ET.indent(model)
         def_path = os.path.join(pack_dir, 'definitions', 'model_example.xml')
         tree.write(def_path,
                    encoding='UTF-8',
@@ -876,14 +869,7 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
         tree = ET.ElementTree(model_conf)
         conf_path = os.path.join(pack_dir, 'model_conf.xml')
 
-        try:
-            ET.indent(model_conf)
-        except AttributeError:
-            # workaround as ET.indent appear in python3.9
-            from macsypy.utils import indent_wrapper
-            ET.indent = indent_wrapper(type(tree))
-            ET.indent(model_conf)
-
+        ET.indent(model_conf)
         tree.write(conf_path,
                    encoding='UTF-8',
                    xml_declaration=True)
