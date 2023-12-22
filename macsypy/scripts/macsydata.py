@@ -104,7 +104,6 @@ def do_search(args: argparse.Namespace) -> None:
     option --match-case is set.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
     try:
@@ -183,7 +182,6 @@ def do_download(args: argparse.Namespace) -> str:
 
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
-    :rtype: None
     """
     try:
         remote = RemoteModelIndex(org=args.org)
@@ -232,7 +230,6 @@ def _find_installed_package(pack_name: str, models_dir=None) -> ModelLocation | 
 
     :param pack_name: the name of the family model to search
     :return: The model location corresponding to the `pack_name`
-    :rtype: :class:`macsypy.registries.ModelLocation` object
     """
     registry = _find_all_installed_packages(models_dir)
     try:
@@ -246,8 +243,6 @@ def do_install(args: argparse.Namespace) -> None:
     Install new models in macsyfinder local models repository.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     :raise RuntimeError:
     :raise ValueError:
     """
@@ -428,8 +423,6 @@ def do_uninstall(args: argparse.Namespace) -> None:
     Remove models from macsyfinder local models repository.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     :raise ValueError:
     """
     pack_name = args.package
@@ -449,8 +442,6 @@ def do_info(args: argparse.Namespace) -> None:
     Show information about installed model.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     :raise ValueError:
     """
     pack_name = args.package
@@ -470,8 +461,6 @@ def do_list(args: argparse.Namespace) -> None:
     List installed models.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     """
     registry = _find_all_installed_packages(models_dir=args.models_dir)
     for model_loc in registry.models():
@@ -497,7 +486,9 @@ def do_list(args: argparse.Namespace) -> None:
 
 def do_freeze(args: argparse.Namespace) -> None:
     """
-    display all models installed with there respective version, in requirement format.
+    display all models installed with their respective version, in requirement format.
+
+    :param args: the arguments passed on the command line
     """
     registry = _find_all_installed_packages()
     for model_loc in sorted(registry.models(), key=lambda ml: ml.name.lower()):
@@ -514,8 +505,6 @@ def do_cite(args: argparse.Namespace) -> None:
     How to cite an installed model.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
@@ -545,10 +534,9 @@ To cite MacSyFinder:
 def do_help(args: argparse.Namespace) -> None:
     """
     Display on stdout the content of readme file
-    if the readme file does nopt exists display a message to the user see :meth:`macsypy.package.help`
+    if the readme file does not exists display a message to the user see :meth:`macsypy.package.help`
 
     :param args: the arguments passed on the command line (the package name)
-    :type args: :class:`argparse.Namespace` object
     :return: None
     :raise ValueError: if the package name is not known.
     """
@@ -567,7 +555,6 @@ def do_check(args: argparse.Namespace) -> None:
     """
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
     pack = Package(args.path)
@@ -621,8 +608,6 @@ def do_show_definition(args: argparse.Namespace) -> None:
     display all models contains in *TXSS+/bacterial subpackage*
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     """
     def display_definition(path):
         return open(path, 'r').read()
@@ -686,7 +671,6 @@ def do_init_package(args: argparse.Namespace) -> None:
         :param str package_name:
         :param models_dir: the path where to create the new package
         :return: the path of the package directory
-        :rtype: str
         """
         pack_path = package_name if not models_dir else os.path.join(models_dir, package_name)
         if not os.path.exists(pack_path):
@@ -707,7 +691,6 @@ def do_init_package(args: argparse.Namespace) -> None:
         :param license: the license choosed
         :param c_date: the date of the copyright
         :param c_holders: the holders of the copyright
-        :return: None
         """
         metadata = {
             'maintainer': {
@@ -734,7 +717,6 @@ def do_init_package(args: argparse.Namespace) -> None:
         Create a example of model definition
 
         :param license: the text of the license
-        :return: None
         """
         model = ET.Element('model',
                            attrib={'inter_gene_max_space': "5",
@@ -815,7 +797,6 @@ def do_init_package(args: argparse.Namespace) -> None:
 
         :param pack_dir: the package directory path
         :param license_text: the text of the license
-        :return: None
         """
         with open(os.path.join(pack_dir, 'LICENSE'), 'w') as license_file:
             license_file.write(license_text)
@@ -828,7 +809,6 @@ def do_init_package(args: argparse.Namespace) -> None:
         :param str date: The date (year) of package creation
         :param str holders: The copyright holders
         :param str desc: One line description of the package
-        :return: None
         """
         desc = desc if desc is not None else ''
         head = textwrap.fill(f"{pack_name} - {desc}")
@@ -845,7 +825,6 @@ Copyright (c) {date} {holders}
         :param str pack_dir: The path of package directory
         :param str pack_name: The name of the package
         :param str desc: One line description of the package
-        :return: None
         """
         desc = desc if desc is not None else ''
         text = f"""
@@ -868,7 +847,6 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
 
         :param pack_dir: The path of the package directory
         :param license: The text of the chosen license
-        :return: None
         """
         msf_defaults = MacsyDefaults()
         model_conf = ET.Element('model_config')
@@ -986,7 +964,6 @@ def build_arg_parser() -> argparse.ArgumentParser:
     """
     Build argument parser.
 
-    :rtype: :class:`argparse.ArgumentParser` object
     """
 
     parser = argparse.ArgumentParser(
@@ -1262,8 +1239,6 @@ def cmd_name(args: argparse.Namespace) -> str:
         macsydata uninstall
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: str
     """
     assert 'func' in args
     func_name = args.func.__name__.replace('do_', '')
@@ -1277,7 +1252,6 @@ def init_logger(level: int | str = 'INFO', out: bool = True) -> logging.Logger:
                   among: 'CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'
     :param out: if the log message must be displayed
     :return: logger
-    :rtype: :class:`logging.Logger` instance
     """
 
     logger = colorlog.getLogger('macsydata')
@@ -1317,7 +1291,7 @@ def init_logger(level: int | str = 'INFO', out: bool = True) -> logging.Logger:
 def verbosity_to_log_level(verbosity: int) -> int:
     """
     transform the number of -v option in loglevel
-    :param int verbosity: number of -v option on the command line
+    :param verbosity: number of -v option on the command line
     :return: an int corresponding to a logging level
     """
     level = max((logging.INFO - (10 * verbosity), 1))
@@ -1329,8 +1303,6 @@ def main(args=None) -> None:
     Main entry point.
 
     :param args: the arguments passed on the command line (before parsing)
-    :type args: list
-    :rtype: int
     """
     global _log
     args = sys.argv[1:] if args is None else args

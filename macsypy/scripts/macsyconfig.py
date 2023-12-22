@@ -2,7 +2,7 @@
 #  MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #                using systems modelling and similarity search.          #
 #  Authors: Sophie Abby, Bertrand Neron                                  #
-#  Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
+#  Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 #  See the COPYRIGHT file for details                                    #
 #                                                                        #
 #  This file is part of MacSyFinder package.                             #
@@ -21,6 +21,7 @@
 #  along with MacSyFinder (COPYING).                                     #
 #  If not, see <https://www.gnu.org/licenses/>.                          #
 ##########################################################################
+
 """
 Entrypoint for macsyconfig command
 which generate a MacSyFinder config file
@@ -93,7 +94,7 @@ class ConfigParserWithComments(ConfigParser):
 
 @dataclass(frozen=True)
 class Theme:
-    """Handle color combination to hylight interactive question"""
+    """Handle color combination to highlight interactive question"""
 
     ERROR: str = Style.BRIGHT + Fore.RED
     WARN: str = Fore.YELLOW
@@ -265,7 +266,7 @@ def check_choice(raw: str, default: str, expected: list[str], sequence: bool = F
 
     :param str raw: the value return by the user
     :param str default: the default value for the option
-    :param expected: the allowed vlaues for this option
+    :param expected: the allowed values for this option
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
     """
@@ -292,13 +293,11 @@ def ask(question: str,
 
     :param str question: The question to prompt to the user on the terminal
     :param validator: what validator to be used to check the user response
-    :type validator: a function define in this module starting by check\_
     :param default: the default value
     :param expected: the values allowed (can be a list of value
     :param str explanation: some explanation about the option
     :param bool sequence: True if the parameter accept a sequence of value (comma separated values)
     :param question_color: the color of the question display to the user
-    :type question_color: an attribute of :class:`macsypy.scripts.macsyconfig.Theme`
     :param int retry: The number of time to repeat the question if the response is rejected
     :return: the value casted in right type
     """
@@ -353,11 +352,9 @@ def set_section(sec_name: str, options: dict,
     :param str sec_name: the name of the section
     :param dict options: a dictionnary with the options to set up for this section
     :param config: The config to fill in.
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: The user skip this section so use defaults to set in config object
-    :return:
+    :return: configuration
     """
 
     config.add_section(sec_name)
@@ -405,9 +402,7 @@ def set_path_options(config: ConfigParserWithComments,
     Options for directories section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'system_models_dir': {'question': "The directory where to store the models",
@@ -459,14 +454,12 @@ this option specify where to create these directories."""},
     set_section('directories', options, config, defaults, use_defaults=use_defaults)
 
 
-def set_hmmer_options(config, defaults, use_defaults=False):
+def set_hmmer_options(config: ConfigParserWithComments, defaults: MacsyDefaults, use_defaults: bool = False) -> None:
     """
     Options for hmmer section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'hmmer': {'question': "The binary used to search the data bank with the profiles.",
@@ -517,14 +510,12 @@ with the profile to allow the hit selection for systems detection."""}
     set_section('hmmer', options, config, defaults, use_defaults=use_defaults)
 
 
-def set_general_options(config, defaults, use_defaults=False):
+def set_general_options(config: ConfigParserWithComments, defaults: MacsyDefaults, use_defaults: bool = False) -> None:
     """
     Options for general section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'log_level': {'question': "The verbosity of the output",
@@ -557,14 +548,12 @@ def set_general_options(config, defaults, use_defaults=False):
     set_section('general', options, config, defaults, use_defaults=use_defaults)
 
 
-def set_score_options(config, defaults, use_defaults=False):
+def set_score_options(config: ConfigParserWithComments, defaults: MacsyDefaults, use_defaults: bool = False) -> None:
     """
     Options for scoring section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'mandatory_weight': {'question': "The weight of a mandatory component in cluster scoring.",
@@ -604,14 +593,12 @@ def set_score_options(config, defaults, use_defaults=False):
     set_section('score_opt', options, config, defaults, use_defaults=use_defaults)
 
 
-def set_base_options(config, defaults, use_defaults=False):
+def set_base_options(config: ConfigParserWithComments, defaults: MacsyDefaults, use_defaults: bool = False) -> None:
     """
     Options for base section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'db_type': {'question': "The type sequence to analyze",
@@ -643,8 +630,10 @@ But you can still specify another sequence file with --sequence-db option."""}
     set_section('base', options, config, defaults, use_defaults=use_defaults)
 
 
-def prolog():
-    """return the text displayed to the user when the configuration file is generated"""
+def prolog() -> str:
+    """
+    :return: the text displayed to the user when the configuration file is generated
+    """
     rep = f"""{theme.EMPHASIZE}Welcome to the MacSyFinder {msf_vers} configuration utility.{theme.RESET}
 
 Please enter values for the following settings (just press Enter to
@@ -653,8 +642,10 @@ accept a default value, if one is given in brackets).
     return rep
 
 
-def epilog(path):
-    """return the text to the user before to start the configuration"""
+def epilog(path: str) -> str:
+    """
+    :return: the text to the user before to start the configuration
+    """
     rep = f"""A configuration file '{theme.EMPHASIZE}{path}{theme.RESET}' has been generated..
 Place it in canonical location
  {theme.QUESTION}*{theme.RESET} in /etc/macsyfinder for system wide configuration {theme.WARN}(must named macsyfinder.conf){theme.RESET}
@@ -669,26 +660,23 @@ Place it in canonical location
     return rep
 
 
-def serialize(config, path):
+def serialize(config: ConfigParserWithComments, path: str) -> None:
     """
     save the configuration on file
 
     :param config: the config to save
-    :type config: :class:`ConfigParserWithComments` object
     :param str path: where to store the configuration
     """
     with open(path, 'w') as file:
         config.write(file)
 
 
-def parse_args(args):
+def parse_args(args: list[str]) -> argparse.Namespace:
     """
     parse command line
 
     :param args: the command line arguments
-    :type args: list of string
     :return:
-    :rtype: :class:`argparse.Namespace` object
     """
     parser = argparse.ArgumentParser()
     theme_option = parser.add_mutually_exclusive_group()
@@ -709,11 +697,11 @@ def parse_args(args):
     return parsed_args
 
 
-def main(args=None) -> None:
+def main(args: list[str] | None = None) -> None:
     """
     The main entrypoint of the script
 
-    :param args:
+    :param args: the command line arguments.
     """
     args = sys.argv[1:] if args is None else args
     parsed_args = parse_args(args)
