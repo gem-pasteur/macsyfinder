@@ -202,11 +202,10 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         gspD_hmmer_path = self.find_data('hmm', 'gspD.search_hmm.out')
 
         idx = Indexes(cfg)
-        macsyfinder_idx = idx.build()
         hmm_prof = macsyprofile.HmmProfile(gene_name, 596, gspD_hmmer_path, cfg)
 
         db = hmm_prof._build_my_db(gspD_hmmer_path)
-        hmm_prof._fill_my_db(macsyfinder_idx, db)
+        hmm_prof._fill_my_db(db)
         self.assertDictEqual(db, {'PSAE001c01_031420': (658, 73),
                                   'PSAE001c01_051090': (714, 75),
                                   'PSAE001c01_018920': (776, 71),
