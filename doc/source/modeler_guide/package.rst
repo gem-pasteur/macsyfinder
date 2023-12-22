@@ -53,6 +53,7 @@ A macsy-model package follows the following structure: ::
         |_______ profiles
                      |________ geneA.hmm
                      |________ geneB.hmm
+                     |________ geneC.hmm.gz
 
 
 If the package contains sub-families: ::
@@ -76,6 +77,7 @@ If the package contains sub-families: ::
         |_______ profiles
                      |________ geneA.hmm
                      |________ geneB.hmm
+                     |________ geneC.hmm.gz
 
 
 For examples of macsy-model packages, please visit https://github.com/macsy-models
@@ -91,6 +93,13 @@ It will create for you:
 * a COPYRIGHT file if `--holders` option is set.
 * a directory `definitions` with an example of model definition (model_example.xml to remove before publishing).
 * a directory `profiles` where to put the hmm profiles corresponding to the models genes.
+
+.. note::
+
+    MSF can also read *.gz* compressed files; it will uncompress them on the fly.
+    The compressed files must end with the *.gz* extension.
+    For the `hmmsearch` step You need to have `gunzip` installed on your system for this to work.
+
 
 README.md
 ---------

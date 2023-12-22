@@ -1,0 +1,4 @@
+# macsyfinder 20231214.dev
+# models : functional_gzip-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py311/bin/macsyfinder --db-type ordered_replicon --replicon-topology circular --models-dir tests/data/models/ -m functional_gzip T12SS-simple-exch --relative-path --sequence-db tests/data/base/test_3.fasta -o functional_test_gzip
+# No Multisystems found

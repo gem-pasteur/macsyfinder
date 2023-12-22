@@ -69,7 +69,7 @@ def alarm_handler(signum, frame):
     _log.critical("Timeout is over. Aborting")
     for h in _log.handlers:
         h.flush()
-    # I exit wit 0 otherwise in parallel_msf the job will be retry
+    # I exit with 0 otherwise in parallel_msf the job will be retry
     # on an other machine. we don't want that.
     #sys.exit(0)
     raise Timeout()
@@ -112,7 +112,7 @@ def list_models(args: argparse.Namespace) -> str:
     registry = ModelRegistry()
     for model_dir in model_dirs:
         try:
-            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix):
+            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix()):
                 registry.add(model_loc)
         except PermissionError as err:
             _log.warning(f"{model_dir} is not readable: {err} : skip it.")
@@ -175,7 +175,7 @@ If the name 'all' is in the list of models, all models from the family will be s
     genome_options.add_argument("--sequence-db",
                                 action='store',
                                 default=None,
-                                help="""Path to the sequence dataset in fasta format.
+                                help="""Path to the sequence dataset in fasta format (gzip files are supported).
 (required unless --previous-run is set)
 """)
 

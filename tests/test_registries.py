@@ -135,6 +135,15 @@ class ModelLocationTest(MacsyTest):
                                                    },
                                }
 
+        self.compressed_models = {'name': 'gziped',
+                                  'profiles': ('prof_1.hmm', 'prof_2.hmm.gz'),
+                                  'not_profiles': ('not_a_profile',),
+                                  'definitions': {'def_1.xml': None,
+                                                  'def_2.xml': None
+                                                 },
+                                  'not_definitions': {'not_a_def': None},
+                                 }
+
 
     def tearDown(self):
         try:
@@ -145,8 +154,13 @@ class ModelLocationTest(MacsyTest):
         del logger.manager.loggerDict['macsypy.registries']
         del logger.manager.loggerDict['macsypy']
 
+
     def test_ModelLocation(self):
         # test new way to specify profiles and definitions
+
+        #######################
+        # test simple package #
+        #######################
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(path=simple_dir)
         self.assertEqual(model_loc.name, self.simple_models['name'])
@@ -158,6 +172,9 @@ class ModelLocationTest(MacsyTest):
         self.assertSetEqual(set(model_loc._definitions.keys()),
                             {os.path.splitext(m)[0] for m in self.simple_models['definitions']})
 
+        ########################
+        # test complex package #
+        ########################
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
         model_loc = ModelLocation(path=complex_dir)
         self.assertEqual(model_loc.name, self.complex_models['name'])
@@ -180,6 +197,18 @@ class ModelLocationTest(MacsyTest):
 
             self.assertSetEqual({ssm.path for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {os.path.join(complex_dir, 'definitions', subdef_name, ssm) for ssm in subdef})
+
+        #####################
+        # test gzip profile #
+        #####################
+        compressed_dir = _create_fake_models_tree(self.root_models_dir, self.compressed_models)
+        model_loc = ModelLocation(path=compressed_dir)
+        self.assertEqual(model_loc.name, self.compressed_models['name'])
+        self.assertEqual(model_loc.path, compressed_dir)
+        self.assertDictEqual(model_loc._profiles,
+                             {p.rstrip('.hmm.gz'): os.path.join(compressed_dir, 'profiles', p)
+                              for p in self.compressed_models['profiles']})
+
 
     def test_version(self):
         # test new way to specify profiles and definitions
