@@ -24,9 +24,11 @@
 
 import itertools
 import networkx as nx
+from typing import Generator
 
-from macsypy.system import RejectedCandidate
-
+from .system import System, RejectedCandidate
+from .cluster import Cluster
+from .hit import Loner, LonerMultiSystem
 
 class Solution:
     """
@@ -40,7 +42,10 @@ class Solution:
         4. The hits position (is used ti give predictable output for unit tests)
     """
 
-    def __init__(self, systems):
+    def __init__(self, systems:list[System]) -> None:
+        """
+        :param systems: The list of system that composed this solution
+        """
         self._systems = self._sorted_systems(systems)
         self._score = sum([syst.score for syst in self.systems])
         self._average_woleness = sum([sys.wholeness for sys in self.systems]) / len(self.systems)
@@ -48,7 +53,7 @@ class Solution:
         self._hits_positions = [h.position for syst in self.systems for h in syst.hits]
 
 
-    def _sorted_systems(self, systems):
+    def _sorted_systems(self, systems: list[System]) -> list[System]:
         """
         sort the systems following the positions of th hits that composed the systems
 
@@ -65,53 +70,53 @@ class Solution:
 
 
     @property
-    def systems(self):
+    def systems(self) -> list[System]:
         """"a sorted list of the *systems* that composed the solution"""
         return self._systems[:]
 
 
     @property
-    def score(self):
+    def score(self) -> float:
         """The score of this solution"""
         return self._score
 
 
     @property
-    def average_wholeness(self):
+    def average_wholeness(self) -> float:
         """The average of the systems wholeness"""
         return self._average_woleness
 
 
     @property
-    def hits_number(self):
+    def hits_number(self) -> int:
         """The sum of the hits of each systems in this solution"""
         return self._hits_number
 
     @property
-    def hits_positions(self):
+    def hits_positions(self) -> list[int]:
         """The list of position of all hits of the solution"""
         return self._hits_positions
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.systems)
 
 
-    def __gt__(self, other):
+    def __gt__(self, other) -> bool:
         return (self.hits_number, len(self), self.average_wholeness, self.hits_positions) > \
                (other.hits_number, len(other), other.average_wholeness, other.hits_positions)
 
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         return (self.hits_number, len(self), self.average_wholeness, self.hits_positions) < \
                (other.hits_number, len(other), other.average_wholeness, other.hits_positions)
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return self.hits_number == other.hits_number and \
                len(self) == len(other) and \
                self.average_wholeness == other.average_wholeness and \
                self.hits_positions == other.hits_positions
 
-    def __iter__(self):
+    def __iter__(self) -> Generator:
         """
         Solution allow to iterate over the systems
         
@@ -120,13 +125,12 @@ class Solution:
         return (s for s in self.systems)
 
 
-def find_best_solutions(systems):
+def find_best_solutions(systems: list[System]) -> tuple[list[list[System]], float]:
     """
     Among the systems choose the combination of systems which does not share :class:`macsypy.hit.CoreHit`
     and maximize the sum of systems scores
 
     :param systems: the systems to analyse
-    :type systems: list of :class:`macsypy.system.System` object
     :return: the list of list of systems which represent one best solution and the it's score
     :rtype: tuple of 2 elements the best solution and it's score
             ([[:class:`macsypy.system.System`, ...], [:class:`macsypy.system.System`, ...]], float score)
@@ -169,18 +173,19 @@ def find_best_solutions(systems):
     return solutions, max_score
 
 
-def combine_clusters(clusters, true_loners, multi_loci=False):
+def combine_clusters(clusters: Cluster,
+                     true_loners: dict[str: Loner | LonerMultiSystem],
+                     multi_loci: bool = False) -> list[tuple[Cluster]]:
     """
     generate the combinations of clusters, with loners and multi systems
 
     :param clusters: the clusters to combines
-    :type clusters: list of :class:`macsypy.cluster.Cluster` object
     :param true_loners: the multi-systems hits
     :type true_loners: dict the name of the function code by hit gene_ref.alternate_of as key
                               and 1 :class:`macsypy.cluster.Cluster` with the best a
                               :class:`macsypy.hit.Loner` or
                               :class:`macsypy.hit.LonerMultiSystem` hit  as value
-    :param bool multi_loci: True if the model is multi_loci false otherwise
+    :param multi_loci: True if the model is multi_loci false otherwise
     :return: all available combination of clusters
     :rtype: List of combination. a combination is a tuple of :class:`macsypy.cluster.Cluster` objects
     """
@@ -220,13 +225,13 @@ def combine_clusters(clusters, true_loners, multi_loci=False):
     return cluster_combinations
 
 
-def combine_multisystems(rejected_candidates, multi_systems):
+def combine_multisystems(rejected_candidates: list[RejectedCandidate], multi_systems: list[Cluster]):
     """
 
     :param rejected_candidates:
     :param multi_systems: sequence of :class:`macsypy.cluster.Cluster`
                           each cluster must be composed of only one :class:`macsypy.hit.MultiSystem` object
-    :return: list of cluster combination with teh multisystem
+    :return: list of cluster combination with the multisystem
     :rtype: [(:class:`macsypy.cluster.Cluster` cluster1, cluster2, ...),
              (:class:`macsypy.cluster.Cluster` cluster3, cluster4, ...)]
     """

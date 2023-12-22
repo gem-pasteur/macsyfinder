@@ -29,7 +29,10 @@ This module focus on the way to serialize the different macsyfinder modules
 import abc
 from string import Template
 
-from macsypy.gene import GeneStatus
+from .gene import GeneStatus
+from .system import System, RejectedCandidate, LikelySystem, UnlikelySystem, HitSystemTracker
+from .solution import Solution
+from .hit import Loner, MultiSystem
 
 
 class SystemSerializer(metaclass=abc.ABCMeta):
@@ -38,7 +41,7 @@ class SystemSerializer(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def serialize(self, system, hit_system_tracker):
+    def serialize(self, system: System, hit_system_tracker: HitSystemTracker):
         pass
 
 
@@ -48,7 +51,7 @@ class TxtSystemSerializer(SystemSerializer):
     """
 
 
-    def serialize(self, system, hit_system_tracker):
+    def serialize(self, system: System, hit_system_tracker: HitSystemTracker) -> str:
         """
         :return: a string representation of system readable by human
         """
@@ -102,7 +105,7 @@ class TsvSystemSerializer(SystemSerializer):
                         "\t$mh_end_match\t$mh_counterpart\t$used_in_systems\n")
 
 
-    def serialize(self, system, hit_system_tracker):
+    def serialize(self, system: System, hit_system_tracker: HitSystemTracker) -> HitSystemTracker:
         r"""
         :param :class:`macsypy.system.System` system: The system to serialize.
         :param hit_system_tracker: The hit_system_tracker which allow to know for each hit
@@ -161,13 +164,11 @@ class TsvSolutionSerializer:
     template = Template(f"$$sol_id\t{TsvSystemSerializer.template.template}")
 
 
-    def serialize(self, solution, sol_id, hit_system_tracker):
+    def serialize(self, solution: Solution, sol_id: int, hit_system_tracker: HitSystemTracker) -> str:
         """
         :param solution: the solution to serialize
-        :type solution: list of :class:`macsypy.system.System` object
-        :param int sol_id: the solution identifier
+        :param sol_id: the solution identifier
         :param hit_system_tracker:
-        :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
         :return: a serialisation of this solution (a list of systems) in tabulated separated value format
                  each line represent a hit and have the same structure as system serialization
                  :meth:`macsypy.serialization.TsvSystemSerializer.serialize` but with an extra column
@@ -189,13 +190,11 @@ class TxtLikelySystemSerializer(SystemSerializer):
     """
 
 
-    def serialize(self, system, hit_system_tracker):
+    def serialize(self, system: LikelySystem, hit_system_tracker: HitSystemTracker):
         """
-        :param :class:`macsypy.system.LikelySystem` system: The likely system to serialize.
-                                                            Use only for unordered db-type
+        :param system: The likely system to serialize. Used only for unordered db-type
         :param hit_system_tracker: The hit_system_tracker which allow to know for each hit
                in which system it is implied.
-        :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
         :return: a string representation of system readable by human
         """
         hits = ", ".join([str((h.id, h.gene.name, h.position)) for h in system.hits])
@@ -252,13 +251,11 @@ class TsvLikelySystemSerializer(SystemSerializer):
                         "\t$mh_end_match\t$used_in_systems\n")
 
 
-    def serialize(self, system, hit_system_tracker):
+    def serialize(self, system: LikelySystem, hit_system_tracker: HitSystemTracker) -> str:
         r"""
-        :param :class:`macsypy.system.LikelySystem` system: The likely system to serialize.
-                                                            Use only for unordered db-type
+        :param system: The likely system to serialize. Used only for unordered db-type
         :param hit_system_tracker: The hit_system_tracker which allow to know for each hit
                in which system it is implied.
-        :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
 
@@ -309,10 +306,9 @@ class TxtUnikelySystemSerializer(SystemSerializer):
     """
 
 
-    def serialize(self, system):
+    def serialize(self, system: UnlikelySystem) -> str:
         """
         :param system: The unlikely system to serialize. (used only if db-type is "unordered_replicon")
-        :type system: :class:`macsypy.system.UnlikelySystem` object
         :return: a string representation of system readable by human
         """
         hits = ", ".join([str((h.id, h.gene.name, h.position)) for h in system.hits])
@@ -345,7 +341,7 @@ class TsvSpecialHitSerializer:
     Serialize special hits: :class:`macsypy.hit.Loner` and :class:`macsypy.hit.MultiSystem` in tsv format
     """
 
-    def serialize(self, best_hits):
+    def serialize(self, best_hits: list[Loner] | list[MultiSystem]):
         """
         :param best_hits: the special hits to serialized
         :type best_hits: sequence of :class:`macsypy.hit.Loner` or :class:`macsypy.hit.MultiSystem` objects
@@ -377,10 +373,9 @@ class TsvRejectedCandidatesSerializer:
     Serialize Rejected Cluster in tsv format
     """
 
-    def serialize(self, candidates):
+    def serialize(self, candidates: list[RejectedCandidate]) -> str:
         """
         :param candidates: list of rejected candidates to serialize
-        :type candidates: [ :class:`macsypy.system.RejectedCandidate` object, ...]
         """
         s = ""
         if candidates:

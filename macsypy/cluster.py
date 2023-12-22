@@ -398,7 +398,7 @@ class Cluster:
         return self._genes_roles
 
 
-    def fulfilled_function(self, *genes):
+    def fulfilled_function(self, *genes) -> set[str]:
         """
 
         :param gene: The genes which must be tested.

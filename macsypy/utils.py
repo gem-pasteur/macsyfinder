@@ -28,21 +28,21 @@ Some macsyfinder helper functions
 
 import os
 import os.path
+import xml.etree.ElementTree
 from itertools import groupby
+from typing import Callable
 
-from .registries import DefinitionLocation
+from .registries import DefinitionLocation, ModelRegistry
 from .error import MacsypyError
 
 
-def get_def_to_detect(models, model_registry):
+def get_def_to_detect(models: list[tuple[str, tuple[str]]], model_registry: ModelRegistry) -> list[DefinitionLocation]:
     """
     :param models: the list of models to detect as returned by config.models.
     :type models: list of tuple with the following structure:
                   [('model_fqn', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
     :param model_registry: the models registry for this run.
-    :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
     :return: the definitions to parse
-    :rtype: list of :class:`macsypy.registries.DefinitionLocation` objects
     :raise ValueError: if a model name provided in models is not in model_registry.
     """
     root, def_names = models
@@ -68,15 +68,14 @@ def get_replicon_names(genome_path, db_type) -> list[str]:
         raise MacsypyError(f"Invalid genome type: {db_type}")
 
 
-def _get_gembase_replicon_names(genome_path):
+def _get_gembase_replicon_names(genome_path: str) -> list[str]:
     """
     parse gembase file and get the list of replicon identifiers
 
-    :param str genome_path: The path to a file containing sequence in **gembase** format
+    :param genome_path: The path to a file containing sequence in **gembase** format
     :return: the list of replicon identifiers
-    :rtype: list of str
     """
-    def grp_replicon(ids):
+    def grp_replicon(ids: str) -> str:
         """
         in gembase the identifier of fasta sequence follows the following schema:
         <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
@@ -94,13 +93,12 @@ def _get_gembase_replicon_names(genome_path):
     return replicons
 
 
-def threads_available():
+def threads_available() -> int:
     """
 
     :return: The maximal number of threads available.
              It's nice with cluster scheduler or linux.
              On Mac it use the number of physical cores
-    :rtype: int
     """
     if hasattr(os, "sched_getaffinity"):
         threads_nb = len(os.sched_getaffinity(0))
@@ -109,18 +107,17 @@ def threads_available():
     return threads_nb
 
 
-def indent_wrapper(ElementTree):
+def indent_wrapper(ElementTree: xml.etree.ElementTree.ElementTree) -> Callable:
     """
     xml.etree.ElementTree implement ident only from python 3.9
     below the code from python 3.9 to inject it in ET at runtime
 
     :param ElementTree: ElementTree class
-    :type ElementTree: class
     :return: function indent
     :rtype: function
     """
 
-    def indent(tree, space="  ", level=0):
+    def indent(tree: xml.etree.ElementTree.ElementTree | xml.etree.ElementTree.Element, space: str = "  ", level: int = 0):
         """Indent an XML document by inserting newlines and indentation space
         after elements.
 
@@ -172,7 +169,7 @@ def indent_wrapper(ElementTree):
     return indent
 
 
-def parse_time(user_time):
+def parse_time(user_time: int | str) -> int:
     """
     parse user friendly time and return it in seconds
     user time supports units as s h m d for sec min hour day
@@ -181,9 +178,7 @@ def parse_time(user_time):
     all terms will be converted in seconds and added
 
     :param user_time:
-    :type user_time: int or str
     :return: seconds
-    :rtype: int
     :raise: ValueError if user_time is not parseable
     """
     try:
