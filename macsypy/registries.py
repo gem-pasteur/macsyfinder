@@ -27,7 +27,6 @@ Manage the Models locations: Profiles and defintions
 """
 
 import os
-import pathlib
 import colorlog
 _log = colorlog.getLogger(__name__)
 
