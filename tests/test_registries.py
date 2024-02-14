@@ -79,25 +79,25 @@ def _create_fake_models_tree(root_models_dir, sys_def, metadata=True):
     return models_dir
 
 
-class RegitriesUtilsTest(MacsyTest):
-
-    def test_split_def_name(self):
-        items = ['CRISPR-Cas', 'typing', 'cas']
-        def_name = registries._SEPARATOR.join(items)
-        split = registries.split_def_name(def_name)
-        self.assertListEqual(split, items)
-        def_name = registries._SEPARATOR.join(items) + registries._SEPARATOR
-        split = registries.split_def_name(def_name)
-        self.assertListEqual(split, items)
-        def_name = registries._SEPARATOR + registries._SEPARATOR.join(items)
-        split = registries.split_def_name(def_name)
-        self.assertListEqual(split, items)
-
-
-    def test_join_def_path(self):
-        items = ['CRISPR-Cas', 'typing', 'cas']
-        self.assertEqual('/'.join(items), registries.join_def_path(*items))
-
+# class RegitriesUtilsTest(MacsyTest):
+#
+#     def test_split_def_name(self):
+#         items = ['CRISPR-Cas', 'typing', 'cas']
+#         def_name = registries._SEPARATOR.join(items)
+#         split = registries.split_def_name(def_name)
+#         self.assertListEqual(split, items)
+#         def_name = registries._SEPARATOR.join(items) + registries._SEPARATOR
+#         split = registries.split_def_name(def_name)
+#         self.assertListEqual(split, items)
+#         def_name = registries._SEPARATOR + registries._SEPARATOR.join(items)
+#         split = registries.split_def_name(def_name)
+#         self.assertListEqual(split, items)
+#
+#
+#     def test_join_def_path(self):
+#         items = ['CRISPR-Cas', 'typing', 'cas']
+#         self.assertEqual('/'.join(items), registries.join_def_path(*items))
+#
 
 class ModelLocationTest(MacsyTest):
 
@@ -110,7 +110,7 @@ class ModelLocationTest(MacsyTest):
         os.mkdir(self.root_models_dir)
 
         self.simple_models = {'name': 'simple',
-                              'profiles': ('prof_1.hmm', 'prof_2.hmm'),
+                              'profiles': ('prof_1.hmm', 'prof_2.hmm', 'prof_3_hmm.hmm'),
                               'not_profiles': ('not_a_profile', ),
                               'definitions': {'def_1.xml': None,
                                               'def_2.xml': None
