@@ -28,6 +28,8 @@ Some macsyfinder helper functions
 
 import os
 import os.path
+import gzip
+import contextlib
 from itertools import groupby
 
 from .registries import DefinitionLocation
@@ -207,3 +209,23 @@ def parse_time(user_time):
             raise ValueError("Not valid time format. Units allowed h/m/s.")
     return time
 
+
+@contextlib.contextmanager
+def open_compressed(path: str, mode: str = 'rt') -> str:
+    """
+
+    :param path: the path to open
+    :param mode: the opening mode by default read text
+    :yield: the content of the file line by line
+    """
+    _, ext = os.path.splitext(path)
+    if ext == '.gz':
+        my_open = gzip.open
+    elif ext == '.bz2' or ext == '.zip':
+        msg = f"MacSyFinder does not support '{ext[1:]}' compression (only gzip)."
+        raise ValueError(msg)
+    else:
+        # I assumed it's a fasta not compressed
+        my_open = open
+    with my_open(path, mode) as f:
+        yield f

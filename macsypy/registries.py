@@ -27,6 +27,7 @@ Manage the Models locations: Profiles and defintions
 """
 
 import os
+import pathlib
 import colorlog
 _log = colorlog.getLogger(__name__)
 
@@ -230,13 +231,15 @@ class ModelLocation:
             compressed_suffix = f"{profile_suffix}.gz"
             if os.path.isfile(profile_path):
                 if profile.endswith(profile_suffix):
-                    base = profile.strip(profile_suffix)
+                    base, _ = profile.rsplit('.', maxsplit=1)
                 elif profile.endswith(compressed_suffix):
-                    base = profile.strip(compressed_suffix)
+                    base, *_ = profile.rsplit('.', maxsplit=2)
+                    # cannot use this solution for all cases because some profile have name like PF05930.13.hmm
                 else:
                     continue
                 all_profiles[base] = profile_path if relative_path else os.path.abspath(profile_path)
         return all_profiles
+
 
     def __lt__(self, other):
         return self.name < other.name
