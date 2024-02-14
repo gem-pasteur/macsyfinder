@@ -11,6 +11,16 @@
 *****************************
 What's new in MacSyFinder v2?
 *****************************
+=======
+V 2.1.4
+=======
+
+
+Minor bugs
+----------
+
+- when profile name ends with `hmm`, then the profile was not retrieved by msf (https://github.com/gem-pasteur/macsyfinder/issues/69).
+
 
 =======
 V 2.1.3
