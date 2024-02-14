@@ -1,0 +1,66 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: MacSyFinder
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Bertrand
+    family-names: Néron
+    email: bneron@pasteur.fr
+    affiliation: >-
+      Bioinformatics and Biostatistics Hub, Institut
+      Pasteur, Université de Paris Cité, 75015 Paris, France
+    orcid: 'https://orcid.org/0000-0002-0220-0482'
+  - given-names: Rémi
+    family-names: Denise
+    orcid: 'https://orcid.org/0000-0003-2277-689X'
+    affiliation: >-
+      APC Microbiome Ireland & School of Microbiology,
+      University College Cork, Cork, Ireland 
+  - given-names: Charles
+    family-names: Coluzzi
+    orcid: 'https://orcid.org/0000-0003-2238-0836'
+    affiliation: >-
+      Institut Pasteur, Université Paris Cité, CNRS UMR3525,
+      Microbial Evolutionary Genomics, Paris, France 
+  - orcid: 'https://orcid.org/0000-0001-7389-447X'
+    given-names: Marie
+    family-names: Touchon
+    affiliation: >-
+      Institut Pasteur, Université Paris Cité, CNRS UMR3525,
+      Microbial Evolutionary Genomics, Paris, France
+  - orcid: 'https://orcid.org/0000-0001-7704-822X'
+    given-names: Eduardo
+    family-names: Rocha
+    name-particle: PC
+    affiliation: >-
+      Institut Pasteur, Université Paris Cité, CNRS UMR3525,
+      Microbial Evolutionary Genomics, Paris, France
+    email: erocha@pasteur.fr
+  - given-names: Sophie
+    family-names: Abby
+    orcid: 'https://orcid.org/0000-0002-5231-3346'
+    affiliation: >-
+      Univ. Grenoble Alpes, CNRS, UMR 5525, VetAgro Sup,
+      Grenoble INP, TIMC, 38000 Grenoble, France
+    email: sophie.abby@univ-grenoble-alpes.fr
+identifiers:
+  - type: swh
+    value: 'swh:1:dir:2bf72b3c2c51c8bc29b936189f041ac6c63f4551'
+    description: 'The Software Heritage identifier for version '
+repository-code: 'https://github.com/gem-pasteur/macsyfinder'
+abstract: >-
+  MacSyFinder is a program to model and detect
+  macromolecular systems, genetic pathways… in protein
+  datasets. 
+keywords:
+  - bioinformatic
+  - genomic
+  - functional genomics
+  - gene functional annotation
+  - peotein function prediction
+license: AGPL-3.0
