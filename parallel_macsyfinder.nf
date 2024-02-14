@@ -250,7 +250,7 @@ workflow {
     hmmer, e_value_search, no_cut_ga, i_value_sel, coverage_profile,
     mandatory_weight, accessory_weight, exchangeable_weight, redundancy_penalty, out_of_cluster,
     models_dir, index_dir, res_search_suffix, res_extract_suffix,profile_suffix,
-    cfg_file, debug)
+    cfg_file, debug, timeout)
 
     results = merge_results(results_per_replicon.toList())
 }
