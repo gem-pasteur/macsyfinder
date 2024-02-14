@@ -125,7 +125,7 @@ class MacsyTest(unittest.TestCase):
 
     @staticmethod
     def remove_red_ansi_color(colored_msg):
-        red_pattern = "^\\x1b\[0?1;31m(.*)\\x1b\[0m$"
+        red_pattern = r"^\x1b\[0?1;31m(.*)\x1b\[0m$"
         msg = re.match(red_pattern, colored_msg).groups()[0]
         return msg
 
