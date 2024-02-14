@@ -889,8 +889,9 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
         computed_replicons = set(summary.index)
         lacking_replicons = set(replicon_names) - computed_replicons - set(skipped_replicons)
         lacking_replicons = sorted(lacking_replicons)
-        rows = pd.DataFrame({models: [0 * len(lacking_replicons)] for models in summary.columns}, index=lacking_replicons)
-        summary = pd.concat([summary, rows], ignore_index=False)
+        if lacking_replicons:
+            rows = pd.DataFrame({models: [0 * len(lacking_replicons)] for models in summary.columns}, index=lacking_replicons)
+            summary = pd.concat([summary, rows], ignore_index=False)
         summary.index.name = index_name
         return summary
 
