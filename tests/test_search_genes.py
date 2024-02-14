@@ -38,7 +38,7 @@ from macsypy.registries import ModelLocation
 from macsypy.profile import ProfileFactory
 from macsypy.database import Indexes
 from macsypy.search_genes import search_genes, worker_cpu
-from tests import MacsyTest, which
+from tests import MacsyTest
 
 
 class TestSearchGenes(MacsyTest):
@@ -115,7 +115,7 @@ class TestSearchGenes(MacsyTest):
                          "'CoreGene' object has no attribute 'core_gene'")
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search(self):
         gene_name = "abc"
         model_foo = Model("foo", 10)
@@ -131,7 +131,7 @@ class TestSearchGenes(MacsyTest):
         self.assertEqual(expected_hit[0], report[0].hits[0])
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search_recover(self):
         # first job searching using hmmsearch
         gene_name = "abc"

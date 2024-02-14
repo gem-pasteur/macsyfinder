@@ -38,7 +38,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from macsypy.error import MacsypyError
 
-from tests import MacsyTest, which
+from tests import MacsyTest
 
 
 class TestProfile(MacsyTest):
@@ -191,7 +191,7 @@ class TestProfile(MacsyTest):
         self.assertEqual(str(profile), s)
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_execute_hmm_with_GA(self):
         for db_type in ("gembase", "ordered_replicon", "unordered"):
             self.cfg._set_db_type(db_type)
@@ -224,7 +224,7 @@ class TestProfile(MacsyTest):
             self.assertIs(report, report_bis)
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_execute_hmm_protected_path(self):
         # create a hmmdir with space in name
         self.cfg.hmmer_dir = lambda: 'hmmer results'
@@ -259,7 +259,7 @@ class TestProfile(MacsyTest):
             self.assertEqual("# model-specific thresholding:     GA cutoffs", l.strip())
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_execute_hmm_w_GA_n_nocutga(self):
             # case GA threshold in profile but --no-cut-ga is set
             args = argparse.Namespace()
@@ -286,7 +286,7 @@ class TestProfile(MacsyTest):
                 self.assertEqual("# sequence reporting threshold:    E-value <= 0.5", l.strip())
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_execute_hmm_wo_GA(self):
             # case cut-ga but no GA threshold in hmmprofile
             model = Model("foo/T2SS", 10)
