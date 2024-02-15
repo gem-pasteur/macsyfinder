@@ -21,6 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+from __future__ import annotations # to allow to use a Type in type hint before it's definition
 
 """
 Manage the Models locations: Profiles and defintions
@@ -36,15 +37,13 @@ import yaml
 _SEPARATOR = '/'
 
 
-def split_def_name(fqn):
+def split_def_name(fqn: str) -> list[str]:
     """
     :param fqn: the fully qualified de name of a DefinitionLocation object
            the follow the schema model_name/<def_name>*/def_name
            for instance CRISPR-Cas/typing/cas
-    :type fqn: string
     :return: the list of components of the def path
              ['CRISPR-Cas', 'typing', 'cas']
-    :rtype: list of string
     """
     split = fqn.split(_SEPARATOR)
     if split[0] == '':  # '/foo/bar'
@@ -54,18 +53,17 @@ def split_def_name(fqn):
     return split
 
 
-def join_def_path(*args):
+def join_def_path(*args: str) -> str:
     """
     join different elements of the definition path
     :param str args: the elements of the definition path, each elements must be a string
     :return: The return value is the concatenation of different elements of args with one
     separator
-    :rtype: string
     """
     return _SEPARATOR.join(args)
 
 
-def scan_models_dir(models_dir, profile_suffix=".hmm", relative_path=False):
+def scan_models_dir(models_dir: str, profile_suffix: str = ".hmm", relative_path: bool = False) -> list[ModelLocation]:
     """
 
     :param str models_dir: The path to the directory where are stored the models
@@ -92,32 +90,28 @@ class ModelRegistry:
     overload with the location specify in the macsyfinder configuration (either in config file or command line)
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._registry = {}
 
 
-    def add(self, model_loc):
+    def add(self, model_loc: ModelLocation) -> None:
         """
         :param model_loc: the model location to add to the registry
-        :type model_loc: :class:`ModelLocation` object
         """
         self._registry[model_loc.name] = model_loc
 
 
-    def models(self):
+    def models(self) -> list[ModelLocation]:
         """
         :returns: the list of models
-        :rtype: list of :class:`ModelLocation` object
         """
         return sorted(list(self._registry.values()))  # level 0 like TXSS ou CRISPR_Cas
 
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> ModelLocation:
         """
         :param name:
-        :type name: string
         :returns: the model corresponding to name.
-        :rtype: :class:`ModelLocation` object.
         :raise KeyError: if name does not match any ModelLocation registered.
         """
         if name in self._registry:
@@ -126,7 +120,7 @@ class ModelRegistry:
             raise KeyError(f"No such model definition: '{name}'")
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         rep = ''
 
         def model_to_str(model, pad):
@@ -154,11 +148,11 @@ class ModelLocation:
     and the paths to corresponding to the profiles.
     """
 
-    def __init__(self, path=None, profile_suffix='.hmm', relative_path=False):
+    def __init__(self, path: str = None, profile_suffix: str = '.hmm', relative_path: bool = False) -> None:
         """
-        :param str path: if it's an installed model, path is the absolute path to a model family.
-        :param str profile_suffix: the suffix of hmm files
-        :param bool relative_path: True if you want to work with relative path, False to work with absolute path.
+        :param path: if it's an installed model, path is the absolute path to a model family.
+        :param profile_suffix: the suffix of hmm files
+        :param relative_path: True if you want to work with relative path, False to work with absolute path.
         """
         self._path = path
         self.name = os.path.basename(path)
@@ -178,17 +172,14 @@ class ModelLocation:
                 self._definitions[new_def.name] = new_def
 
 
-    def _scan_definitions(self, parent_def=None, def_path=None):
+    def _scan_definitions(self, parent_def: DefinitionLocation = None, def_path: str = None) -> DefinitionLocation:
         """
         Scan recursively the definitions tree on the file model and store
         them.
 
-        :param model_def: the current model definition to add new submodel location
-        :type model_def: :class:`DefinitionLocation`
+        :param parent_def: the current model definition to add new submodel location
         :param def_path: the absolute path to analyse
-        :type def_path: string
         :returns: a definition location
-        :rtype: :class:`DefinitionLocation` object
         """
         if os.path.isfile(def_path):
             base, ext = os.path.splitext(def_path)
@@ -220,9 +211,14 @@ class ModelLocation:
             return new_def
 
 
-    def _scan_profiles(self, path, profile_suffix='.hmm', relative_path=False):
+    def _scan_profiles(self, path: str, profile_suffix: str = '.hmm', relative_path: bool = False) -> dict[str: str]:
         """
         Store all hmm profiles associated to the model
+
+        :param path: the path to a directory containing hmm profiles
+        :param profile_suffix: the extension of hmm profile file
+        :param relative_path: True if the path is relative, False otherwise.
+        :return: all profiles found in the path
         """
         all_profiles = {}
         for profile in os.listdir(path):
@@ -240,22 +236,22 @@ class ModelLocation:
         return all_profiles
 
 
-    def __lt__(self, other):
+    def __lt__(self, other: ModelLocation) -> bool:
         return self.name < other.name
 
-    def __gt__(self, other):
+    def __gt__(self, other: ModelLocation) -> bool:
         return self.name > other.name
 
-    def __eq__(self, other):
-        return self._path, self.name, self._profiles, self._definitions == \
-               other.path, other.name, other._profiles, other._definitions
+    def __eq__(self, other: ModelLocation) -> bool:
+        return (self._path, self.name, self._profiles, self._definitions ==
+                other.path, other.name, other._profiles, other._definitions)
 
     @property
-    def path(self):
+    def path(self) -> str:
         return self._path
 
 
-    def _get_version(self, path):
+    def _get_version(self, path: str) -> str | None:
         metadata_path = os.path.join(path, "metadata.yml")
         try:
             with open(metadata_path) as file:
@@ -265,8 +261,9 @@ class ModelLocation:
             _log.warning(f"The models package '{self.name}' is not versioned contact the package manager to fix it.")
             return None
 
+
     @property
-    def version(self):
+    def version(self) -> str:
         """
 
         :return: The version of the models
@@ -274,7 +271,7 @@ class ModelLocation:
         return self._version
 
 
-    def get_definition(self, fqn):
+    def get_definition(self, fqn: str) -> DefinitionLocation:
         """
         :param fqn: the fully qualified name of the definition to retrieve.
                      it's complete path without extension.
@@ -284,9 +281,7 @@ class ModelLocation:
                      for
                      models/CRISPR-Cas/definitions/typing/CAS.xml:
                      the name is CRISPR-Cas/typing/CAS
-        :type fqn: string.
         :returns: the definition corresponding to the given name.
-        :rtype: a :class:`DefinitionLocation` object.
         :raise: valueError if fqn does not match with any model definition.
         """
         name_path = [item for item in fqn.split(_SEPARATOR) if item]
@@ -302,13 +297,11 @@ class ModelLocation:
         return definition
 
 
-    def get_all_definitions(self, root_def_name=None):
+    def get_all_definitions(self, root_def_name: str = None) -> list[DefinitionLocation]:
         """
         :name root_def_name: The name of the root definition to get sub definitions.
                         If root_def is None, return all definitions for this set of models
-        :param root_def_name: string
         :return: the list of definitions or subdefinitions if root_def is specified for this model.
-        :rtype: list of :class:`macsypy.registries.DefinitionLocation` object
         :raise ValueError: if root_def_name does not match with any definitions
         """
         if root_def_name is None:
@@ -323,7 +316,7 @@ class ModelLocation:
         return all_defs
 
 
-    def get_definitions(self):
+    def get_definitions(self) -> list[DefinitionLocation]:
         """
         :return: the list of the definitions of this modelLocation.
                  It return the 1rst level only (not recursive).
@@ -332,36 +325,33 @@ class ModelLocation:
         if self._definitions is not None:
             return sorted(list(self._definitions.values()))
         else:
-            return {}
+            return []
 
 
-    def get_profile(self, name):
+    def get_profile(self, name: str) -> str:
         """
         :param name: the name of the profile to retrieve (without extension).
-        :type name: string.
         :returns: the absolute path of the hmm profile.
-        :rtype: string.
         :raise: KeyError if name does not match with any profiles.
         """
         return self._profiles[name]
 
 
-    def get_profiles_names(self):
+    def get_profiles_names(self) -> list[str]:
         """
         :return: The list of profiles name (without extension) for this model location
-        :rtype: str
         """
         return list(self._profiles.keys())
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
 class MetaDefLoc(type):
 
     @property
-    def separator(cls):
+    def separator(cls) -> str:
         return cls._SEPARATOR
 
 
@@ -377,49 +367,57 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
 
     _SEPARATOR = '/'
 
-    def __init__(self, name=None, fqn=None, subdefinitions=None, path=None):
+    def __init__(self,
+                 name: str| None = None,
+                 fqn: str| None = None,
+                 subdefinitions: DefinitionLocation | None = None,
+                 path: str | None = None) -> None:
         super().__init__(name=name, fqn=fqn, subdefinitions=subdefinitions, path=path)
         self.__dict__ = self  # allow to use dot notation to access to property here name or subdefinitions ...
 
+
     @classmethod
-    def split_fqn(cls, fqn):
+    def split_fqn(cls, fqn: str) -> list[str]:
         """
-        :param str fqn: the fully qualified name of a defintion
+        :param fqn: the fully qualified name of a defintion
         :return: each member of the fully qn in list.
         """
         return [f for f in fqn.split(cls.separator) if f]
 
+
     @classmethod
-    def root_name(cls, fqn):
+    def root_name(cls, fqn: str) -> str:
         """
         :param str fqn: the fully qualified name of a defintion
         :return: the root name of this definition (family name)
         """
         return cls.split_fqn(fqn)[0]
 
+
     @property
-    def family_name(self):
+    def family_name(self) -> str:
         """
         :return: the models family name which is the name of the package
         """
         return self.__class__.root_name(self.fqn)
 
+
     def __hash__(self):
         return hash((self.fqn, self.path))
 
-    def add_subdefinition(self, subdefinition):
+
+    def add_subdefinition(self, subdefinition: DefinitionLocation) -> None:
         """
         add new sub category of definitions to this definition
 
         :param subdefinition: the new definition to add as subdefinition.
-        :type subdefinition: :class:`DefinitionLocation` object
         """
         if self.subdefinitions is None:
             self.subdefinitions = {}
         self.subdefinitions[subdefinition.name] = subdefinition
 
 
-    def all(self):
+    def all(self) -> list[DefinitionLocation]:
         """
         :return: the defintion and all recursivelly all subdefintions
         """
@@ -433,14 +431,14 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
             return all_leaf
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def __eq__(self, other):
+    def __eq__(self, other: DefinitionLocation) -> bool:
         return self.fqn, self.path, self.subdefinitions == other.fqn, other.path, other.subdefinitions
 
-    def __lt__(self, other):
+    def __lt__(self, other: DefinitionLocation) -> bool:
         return self.fqn < other.fqn
 
-    def __gt__(self, other):
+    def __gt__(self, other: DefinitionLocation) -> bool:
         return self.fqn > other.fqn

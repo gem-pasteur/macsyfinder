@@ -345,7 +345,7 @@ class ModelLocationTest(MacsyTest):
 
         model_loc._definitions = None
         defs = model_loc.get_definitions()
-        self.assertEqual({}, defs)
+        self.assertEqual([], defs)
 
         model_loc._definitions = {'foo': 'bar'}
         defs = model_loc.get_definitions()
