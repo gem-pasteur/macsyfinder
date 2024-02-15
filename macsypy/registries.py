@@ -402,7 +402,7 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
         return self.__class__.root_name(self.fqn)
 
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((self.fqn, self.path))
 
 

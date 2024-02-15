@@ -190,7 +190,7 @@ class Model(metaclass=MetaModel):
         return rep
 
 
-    def __hash__(self) -> str:
+    def __hash__(self) -> int:
         """
 
         :return:
