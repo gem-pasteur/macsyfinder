@@ -509,7 +509,7 @@ def sort_model_hits(model_hits: Iterable[ModelHit]) -> dict[str: list[ModelHit]]
     return ms_registry
 
 
-def compute_best_MSHit(ms_registry: dict[str: list[ModelHit]]) -> list[MultiSystem | LonerMultiSystem]:
+def compute_best_MSHit(ms_registry: dict[str: list[MultiSystem | LonerMultiSystem]]) -> list[MultiSystem | LonerMultiSystem]:
     """
 
     :param ms_registry:
@@ -526,7 +526,7 @@ def compute_best_MSHit(ms_registry: dict[str: list[ModelHit]]) -> list[MultiSyst
     return best_multisystem_hits
 
 
-def get_best_hits(hits: CoreHit | ModelHit,
+def get_best_hits(hits: Iterable[CoreHit | ModelHit],
                   key: Literal['score', 'i_eval', 'profile_coverage'] = 'score') -> list[CoreHit | ModelHit]:
     """
     If several hits match the same protein, keep only the best match based either on
