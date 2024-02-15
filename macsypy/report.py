@@ -35,11 +35,11 @@ from threading import Lock
 from itertools import groupby
 from typing import Iterator
 
-from .database import Indexes, RepliconDB
+from .database import Indexes
 from .hit import CoreHit
 from .error import MacsypyError
 
-from .gene import CoreGene, ModelGene
+from .gene import CoreGene
 from .config import Config
 
 class HMMReport(metaclass=abc.ABCMeta):
