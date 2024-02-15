@@ -25,6 +25,7 @@
 """
 Manage HMM profiles and hmmsearch execution
 """
+from __future__ import annotations
 
 import os
 import logging
@@ -33,9 +34,13 @@ _log = logging.getLogger(__name__)
 from subprocess import Popen
 from threading import Lock
 
-from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
+from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport, HMMReport
 from .error import MacsypyError
 from .utils import open_compressed
+
+from .config import Config
+from .gene import CoreGene
+from .registries import ModelLocation
 
 
 class ProfileFactory:
@@ -48,19 +53,16 @@ class ProfileFactory:
 
     """
 
-    def __init__(self, cfg):
+    def __init__(self, cfg: Config) -> None:
         self._profiles = {}
         self.cfg = cfg
 
-    def get_profile(self, gene, model_location):
+    def get_profile(self, gene: CoreGene, model_location: ModelLocation) -> Profile:
         """
         :param gene: the gene associated to this profile
-        :type gene: :class:`macsypy.gene.Gene` or :class:`macsypy.gene.Homolog` or :class:`macsypy.gene.Analog` object
         :param model_location: The where to get the profile
-        :type model_location: :class:`macsypy.registries.ModelLocation` object.
         :return: the profile corresponding to the name.
                  If the profile already exists, return it. Otherwise build it, store it and return it.
-        :rtype: :class:`macsypy.profile.Profile` object
         """
         key = (model_location.name, gene.name)
         if key in self._profiles:
@@ -80,15 +82,12 @@ class Profile:
     Handle a HMM protein profile
     """
 
-    def __init__(self, gene, cfg, path):
+    def __init__(self, gene: CoreGene, cfg: Config, path: str) -> None:
         """
 
         :param gene: the gene corresponding to this profile
-        :type gene: :class:`macsypy.secretion.Gene` object
         :param cfg: the configuration
-        :type cfg: :class:`macsypy.config.Config` object
         :param path: the path to the hmm profile.
-        :type path: string
         """
         self.gene = gene
         self.path = path
@@ -99,19 +98,19 @@ class Profile:
         self._lock = Lock()
 
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         :return: the length of the HMM protein profile
         :rtype: int
         """
         return self.len
 
-    def _profile_features(self):
+
+    def _profile_features(self) -> tuple[int, bool]:
         """
         Parse the HMM profile to extract the length and the presence of GA bit threshold
 
         :return: the length, presence of ga bit threshold
-        :rtype: tuple(int length, bool ga_threshold)
         """
         length = None
         ga_threshold = False
@@ -150,20 +149,19 @@ class Profile:
         return length, ga_threshold
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Print the name of the corresponding gene and the path to the HMM profile.
         """
         return f"{self.gene.name} : {self.path}"
 
 
-    def execute(self, cpu=1):
+    def execute(self, cpu: int =1) -> HMMReport:
         """
         Launch the Hmmer search (hmmsearch executable) with this profile
 
-        :param int cpu: the number of cpu to use for hmmsearch (must be >= 1)
+        :param cpu: the number of cpu to use for hmmsearch (must be >= 1)
         :return: an object storing information on the results of the HMM search (HMMReport)
-        :rtype:  :class:`macsypy.report.HMMReport` object
         """
         with self._lock:
             # the results of HMM is cached 
