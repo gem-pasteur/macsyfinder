@@ -52,7 +52,7 @@ class HMMReport(metaclass=abc.ABCMeta):
     or not ("unordered" db_type).
     """
 
-    def __init__(self, gene: CoreGene, hmmer_output: CoreGene, cfg: Config) -> None:
+    def __init__(self, gene: CoreGene, hmmer_output: str, cfg: Config) -> None:
         """
         :param gene: the gene corresponding to the profile search reported here
         :param hmmer_output: The path to the raw Hmmer output file
