@@ -21,16 +21,18 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
+from __future__ import annotations
 
 import logging
 _log = logging.getLogger(__name__)
 from itertools import chain
 
+from typing import Iterator, Callable
+
 from .error import ModelInconsistencyError
 from .registries import DefinitionLocation
-from .hit import ModelHit
-from .gene import GeneStatus
+from .hit import CoreHit, ModelHit
+from .gene import GeneStatus, ModelGene
 
 
 class ModelBank:
@@ -38,16 +40,14 @@ class ModelBank:
     Store all Models objects.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._model_bank = {}
 
 
-    def __getitem__(self, fqn):
+    def __getitem__(self, fqn: str) -> Model:
         """
         :param fqn: the fully qualified name of the model
-        :type fqn: string
         :return: the model corresponding to the fqn.
-        :rtype: :class:`macsypy.model.Model` object
         :raise KeyError: if the model corresponding to the name does not exists
         """
         if fqn in self._model_bank:
@@ -56,37 +56,33 @@ class ModelBank:
             raise KeyError(fqn)
 
 
-    def __contains__(self, model):
+    def __contains__(self, model: Model) -> bool:
         """
         Implement the membership test operator
 
         :param model: the model to test
-        :type model: :class:`macsypy.model.Model` object
         :return: True if the model is in the Model factory, False otherwise
-        :rtype: boolean
         """
         return model in self._model_bank.values()
 
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator:
         """
-        Return an iterator object on the models contained in the bank
+        :return: an iterator object on the models contained in the bank
         """
         return iter(self._model_bank.values())
 
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         :return: the number of models stored in the bank
-        :rtype: integer
         """
         return len(self._model_bank)
 
 
-    def add_model(self, model):
+    def add_model(self, model: Model) -> None:
         """
         :param model: the model to add
-        :type model: :class:`macsypy.model.Model` object
         :raise: KeyError if a model with the same name is already registered.
         """
         if model.fqn in self._model_bank:
@@ -102,7 +98,7 @@ class MetaModel(type):
     The type of genes are defined in the model itself via *_gene_category* class attribute.
     """
 
-    def getter_maker(cat):
+    def getter_maker(cat: str) -> Callable:
         """
         Create a property which allow to access to the gene corresponding of the cat of the model
 
@@ -114,7 +110,7 @@ class MetaModel(type):
         return getter
 
 
-    def setter_maker(cat):
+    def setter_maker(cat: str) -> Callable:
         """
         Create the method add_<cat>_gene which allow to add gene in the right category of the model
 
@@ -154,23 +150,17 @@ class Model(metaclass=MetaModel):
     _gene_category = ('mandatory', 'accessory', 'neutral', 'forbidden')
 
 
-    def __init__(self, fqn, inter_gene_max_space, min_mandatory_genes_required=None,
-                 min_genes_required=None, max_nb_genes=None, multi_loci=False):
+    def __init__(self, fqn: str, inter_gene_max_space: int, min_mandatory_genes_required: int = None,
+                 min_genes_required: int = None, max_nb_genes: int = None, multi_loci: bool = False) -> None:
         """
         :param fqn: the fully qualified name of the model CRISPR-Cas/sub-typing/CAS-TypeIE
-        :type fqn: string
         :param inter_gene_max_space: the maximum distance between two genes (**co-localization** parameter)
-        :type inter_gene_max_space: integer
         :param min_mandatory_genes_required: the quorum of mandatory genes to define this model
-        :type min_mandatory_genes_required: integer
         :param min_genes_required: the quorum of genes to define this model
-        :type min_genes_required: integer
         :param max_nb_genes: The number of gene to be considered as full system
                              Used to compute the wholeness.
                              If None the mx_nb_genes = mandatory + accessory
-        :type max_nb_genes: integer
-        :param multi_loci:
-        :type multi_loci: boolean
+        :param multi_loci: if the systems can split in different loci on the genome
         :raise ModelInconsistencyError: if an error is found in model logic.
                                         For instance *genes_required* > *min_mandatory_genes_required*
         """
@@ -189,7 +179,7 @@ class Model(metaclass=MetaModel):
         self._multi_loci = multi_loci
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         rep = f"name: {self.name}\n"
         rep += f"fqn: {self.fqn}\n"
         for cat in self._gene_category:
@@ -200,7 +190,7 @@ class Model(metaclass=MetaModel):
         return rep
 
 
-    def __hash__(self):
+    def __hash__(self) -> str:
         """
 
         :return:
@@ -208,59 +198,53 @@ class Model(metaclass=MetaModel):
         return hash(self.fqn)
 
 
-    def __lt__(self, other):
+    def __lt__(self, other: Model) -> bool:
         """
         :param other: the other model to compare
         :return: True if this fully qualified name is lesser than to other fully qualified name.
                  False otherwise.
-        :rtype: boolean
         """
         return self.fqn < other.fqn
 
 
-    def __gt__(self, other):
+    def __gt__(self, other: Model) -> bool:
         """
         :param other: the other model to compare
         :return: True if this fully qualified name is greater than to other fully qualified name.
                  False otherwise.
-        :rtype: boolean
         """
         return self.fqn > other.fqn
 
 
-    def __eq__(self, other):
+    def __eq__(self, other: Model) -> bool:
         """
         :param other: the other model to compare
         :return: True if this fully qualified name is equal to other fully qualified name.
                  False otherwise.
-        :rtype: boolean
         """
         return self.fqn == other.fqn
 
 
     @property
-    def name(self):
+    def name(self) -> str:
         """
-
         :return: the short name of this model
         """
         return self._name
 
 
     @property
-    def family_name(self):
+    def family_name(self) -> str:
         """
         :return: the family name of the model for instance 'CRISPRCas' or 'TXSS'
-        :rtype: str
         """
         return DefinitionLocation.root_name(self.fqn)
 
 
     @property
-    def inter_gene_max_space(self):
+    def inter_gene_max_space(self) -> int:
         """
         :return: set the maximum distance allowed between 2 genes for this model
-        :rtype: integer
         """
         # self._inter_gene_max_space come from the definition (xml)
         # cfg_inter_gene_max_space come from the configuration command line option or conf file
@@ -269,10 +253,9 @@ class Model(metaclass=MetaModel):
 
 
     @property
-    def min_mandatory_genes_required(self):
+    def min_mandatory_genes_required(self) -> int:
         """
         :return: get the quorum of mandatory genes required for this model
-        :rtype: integer
         """
         if self._min_mandatory_genes_required is None:
             return len(self.mandatory_genes)
@@ -280,7 +263,7 @@ class Model(metaclass=MetaModel):
 
 
     @property
-    def min_genes_required(self):
+    def min_genes_required(self) -> int:
         """
         :return: get the minimum number of genes to assess for the model presence.
         :rtype: integer
@@ -289,11 +272,11 @@ class Model(metaclass=MetaModel):
             return len(self.mandatory_genes)
         return self._min_genes_required
 
+
     @property
-    def max_nb_genes(self):
+    def max_nb_genes(self) -> int:
         """
         :return: the maximum number of genes to assess the model presence.
-        :rtype: int (or None)
         """
         if self._max_nb_genes is None:
             max_nb_genes = len(self.mandatory_genes) + len(self.accessory_genes)
@@ -301,22 +284,20 @@ class Model(metaclass=MetaModel):
             max_nb_genes = self._max_nb_genes
         return max_nb_genes
 
+
     @property
-    def multi_loci(self):
+    def multi_loci(self) -> bool:
         """
         :return: True if the model is authorized to be inferred from multiple loci, False otherwise
-        :rtype: boolean
         """
 
         return self._multi_loci
 
 
-    def get_gene(self, gene_name):
+    def get_gene(self, gene_name: str) -> ModelGene:
         """
         :param gene_name: the name of the gene to get
-        :type gene_name: string
         :return: the gene corresponding to gene_name.
-        :rtype: a :class:`macsypy.gene.ModelGene` object.
         :raise: KeyError the model does not contain any gene with name gene_name.
         """
         # create a dict with genes from all categories
@@ -332,13 +313,12 @@ class Model(metaclass=MetaModel):
         raise KeyError(f"Model {self.name} does not contain gene {gene_name}")
 
 
-    def genes(self, exchangeable=False):
+    def genes(self, exchangeable: bool = False) -> set[ModelGene]:
         """
-        :param bool exchangeable: include exchageables if True
+        :param exchangeable: include exchageables if True
         :return: all the genes described in the model.
                  with exchangeables if exchageable is True.
                  otherwise only "first level" genes.
-        :rtype: set of :class:`macsypy.gene.ModelGene` objects.
         """
         # we assume that a gene cannot appear twice in a model
         primary_genes = {g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
@@ -351,12 +331,12 @@ class Model(metaclass=MetaModel):
         return all_genes
 
 
-    def filter(self, hits):
+    def filter(self, hits: list[CoreHit]) -> list[ModelHit]:
         """
-        filter out the hits according to this model.
+        filter out the hits according to this model and cast them in ModelHit.
         The filtering is based on the name of CoreGene associated to hit
         and the name of ModelGene of the model
-        (the name of the ModelGene is the name of the CoreGene embed in the ModelGene)
+        (the name of the ModelGene is the name of the CoreGene embeded in the ModelGene)
         only the hits related to genes implied in the model are kept.
 
         :param hits: list of hits to filter
