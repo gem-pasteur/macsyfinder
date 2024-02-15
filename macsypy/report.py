@@ -42,6 +42,7 @@ from .error import MacsypyError
 from .gene import CoreGene
 from .config import Config
 
+
 class HMMReport(metaclass=abc.ABCMeta):
     """
     Handle the results from the HMM search. Extract a synthetic report from the raw hmmer output,
