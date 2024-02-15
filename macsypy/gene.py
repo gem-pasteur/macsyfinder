@@ -29,10 +29,12 @@ _log = logging.getLogger(__name__)
 
 from .error import MacsypyError
 
-from typing import Iterator, Any
+from typing import Iterator, Any, TYPE_CHECKING
+
 from .registries import ModelLocation
-from .profile import Profile
-from  .model import Model
+if TYPE_CHECKING:
+    from .model import Model
+    from .profile import Profile
 
 
 class GeneBank:

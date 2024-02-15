@@ -26,6 +26,7 @@
 Manage HMM profiles and hmmsearch execution
 """
 from __future__ import annotations
+from typing import TYPE_CHECKING
 
 import os
 import logging
