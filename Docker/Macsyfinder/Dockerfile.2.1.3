@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -22,7 +22,7 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-FROM ubuntu:22.10
+FROM python:3.12.1-slim-bookworm
 
 LABEL org.opencontainers.image.authors="Bertrand Neron <bneron@pasteur.fr>"
 LABEL org.label-schema.vendor='Institut Pasteur'
@@ -31,23 +31,18 @@ LABEL license="GPLv3"
 
 USER root
 ARG DEBIAN_FRONTEND=noninteractive
-
 # disable use of python cache ~/.local https://peps.python.org/pep-0370/
 # for build and run
 # thank's Eric Deveaud https://github.com/EricDeveaud
 ENV PYTHONNOUSERSITE=1
 
 RUN apt-get update -y &&\
-    apt-get install -y --no-install-recommends hmmer python3.11 python3-pip git
+    apt-get install -y --no-install-recommends hmmer
 RUN apt-get clean -y
 
-RUN cd /tmp &&\
-    git clone https://github.com/gem-pasteur/macsyfinder.git &&\
-    cd macsyfinder &&\
-    python3 -m pip install . &&\
-    install -m 755 Docker/Macsyfinder/macsyfinder-entrypoint.sh /usr/local/bin &&\
-    cd /tmp &&\
-    rm -Rf macsyfinder
+RUN pip3 install macsyfinder==2.1.3
+
+COPY --chmod=755 macsyfinder-entrypoint.sh /usr/local/bin/macsyfinder-entrypoint.sh
 
 ENV DEBIAN_FRONTEND teletype
 ENV PYTHONIOENCODING UTF-8

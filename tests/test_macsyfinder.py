@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -49,7 +49,7 @@ from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
-from tests import MacsyTest, which
+from tests import MacsyTest
 
 
 class TestMacsyfinder(MacsyTest):
@@ -1168,7 +1168,7 @@ Use ordered replicon to have better prediction.
         self.assertListEqual(args.min_genes_required, [['TXSScan/T2SS', '15'], ['TXSScan/Flagellum', '10']])
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search_systems(self):
         logger = logging.getLogger('macsypy.macsyfinder')
         macsypy.logger_set_level(level='ERROR')
@@ -1264,7 +1264,7 @@ Use ordered replicon to have better prediction.
         self.assertEqual([r.id for r in rejected_clst],
                          ['VICH001.B.00001.C001_T12SS-multisystem_1'])
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_db_type_set_to_gembase(self):
         logger = logging.getLogger('macsypy.macsyfinder')
         macsypy.logger_set_level(level='WARNING')
@@ -1292,7 +1292,7 @@ Use ordered replicon to have better prediction.
                          f"Most of replicons contains only ONE sequence are you sure that '{seq_db}' is a 'gembase'.")
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search_systems_unordered(self):
         logger = logging.getLogger('macsypy.macsyfinder')
         macsypy.logger_set_level(level='ERROR')

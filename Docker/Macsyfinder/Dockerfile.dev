@@ -44,6 +44,7 @@ RUN apt-get clean -y
 RUN cd /tmp &&\
     git clone https://github.com/gem-pasteur/macsyfinder.git &&\
     cd macsyfinder &&\
+    git checkout dev &&\
     python3 -m pip install . &&\
     install -m 755 Docker/Macsyfinder/macsyfinder-entrypoint.sh /usr/local/bin &&\
     cd /tmp &&\

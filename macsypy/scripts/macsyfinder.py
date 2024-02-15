@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -899,8 +899,9 @@ def summary_best_solution(models_fam_name: str, models_version: str,
         computed_replicons = set(summary.index)
         lacking_replicons = set(replicon_names) - computed_replicons - set(skipped_replicons)
         lacking_replicons = sorted(lacking_replicons)
-        rows = pd.DataFrame({models: [0 * len(lacking_replicons)] for models in summary.columns}, index=lacking_replicons)
-        summary = pd.concat([summary, rows], ignore_index=False)
+        if lacking_replicons:
+            rows = pd.DataFrame({models: [0 * len(lacking_replicons)] for models in summary.columns}, index=lacking_replicons)
+            summary = pd.concat([summary, rows], ignore_index=False)
         summary.index.name = index_name
         return summary
 

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -34,7 +34,7 @@ import itertools
 import colorlog
 import pandas as pd
 
-from tests import MacsyTest, which
+from tests import MacsyTest
 from macsypy.scripts import macsyfinder
 from macsypy.error import OptionError
 from macsypy.system import System, AbstractUnordered, RejectedCandidate
@@ -89,7 +89,7 @@ class Test(MacsyTest):
         for h in logger.handlers[:]:
             logger.removeHandler(h)
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_gembase(self):
         """
 
@@ -128,7 +128,7 @@ class Test(MacsyTest):
         get_results = os.path.join(self.out_dir, self.rejected_candidates_txt)
         self.assertFileEqual(expected_result, get_results, comment="#")
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_timeout(self):
         """
 

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -125,7 +125,7 @@ class MacsyTest(unittest.TestCase):
 
     @staticmethod
     def remove_red_ansi_color(colored_msg):
-        red_pattern = "^\\x1b\[0?1;31m(.*)\\x1b\[0m$"
+        red_pattern = r"^\x1b\[0?1;31m(.*)\x1b\[0m$"
         msg = re.match(red_pattern, colored_msg).groups()[0]
         return msg
 
@@ -316,28 +316,3 @@ class LoggerWrapper(object):
 
     def get_value(self):
         return self.logger.handlers[0].stream.getvalue()
-
-
-def which(name, flags=os.X_OK):
-    """
-    Search PATH for executable files with the given name.
-
-    :param name: the name of the executable to search
-    :type name: str
-    :param flags: os mod the name must have, default is executable (os.X_OK).
-    :type flags: os file mode R_OK|R_OK|W_OK|X_OK
-    :return: the path of the executable
-    :rtype: string or None
-    """
-    result = None
-    path = os.environ.get('PATH', None)
-    if path is None:
-        return result
-    for p in os.environ.get('PATH', '').split(os.pathsep):
-        p = os.path.join(p, name)
-        if platform.system() == 'Windows':
-            p += '.exe'
-        if os.access(p, flags):
-            result = p
-            break
-    return result
