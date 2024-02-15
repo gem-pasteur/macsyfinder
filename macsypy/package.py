@@ -64,7 +64,7 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
         return super(AbstractModelIndex, cls).__new__(cls)
 
 
-    def __init__(self, cache: str | None = None):
+    def __init__(self, cache: str | None = None) -> None:
         """
 
         """
@@ -330,7 +330,7 @@ class Package:
         return None
 
     @property
-    def metadata(self) -> dict:
+    def metadata(self) -> dict[str: str]:
         """
 
         :return: The parsed metadata as a dict
@@ -341,7 +341,7 @@ class Package:
         return copy.deepcopy(self._metadata)
 
 
-    def _load_metadata(self) -> dict:
+    def _load_metadata(self) -> dict[str: str]:
         """
         Open the metadata_path file and de-serialize it's content
         :return:
