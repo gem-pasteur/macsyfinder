@@ -36,7 +36,7 @@ import macsypy
 from macsypy.config import MacsyDefaults
 
 
-def copy_chunk(fh_in: typing.IO, out: typing.IO, start: int, stop: int):
+def copy_chunk(fh_in: typing.IO, out: typing.IO, start: int, stop: int) -> None:
     """
     Copy file from fh_in to out from position start to stop
 

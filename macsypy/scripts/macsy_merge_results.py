@@ -24,11 +24,10 @@
 
 import os
 import sys
-import typing
 
 import macsypy
 import argparse
-from typing import List
+from typing import Literal, Callable
 
 import colorlog
 import pandas as pd
@@ -57,20 +56,23 @@ def get_warning(path: str) -> list[str]:
     return warn_to_report
 
 
-def merge_files(files: List[str], out: str, header: str,
-                ignore: str | None = None, keep_first: str | None= None,
-                skip_until: typing.Callable | None = None) -> None:
+def merge_files(files: list[str],
+                out: str,
+                header: str,
+                ignore: str | None = None,
+                keep_first: str | None= None,
+                skip_until: Callable | None = None) -> None:
     """
 
     :param files: the list of files to merge
     :type files: list of str
-    :param str out: the path to the merged file
-    :param str ignore: a string which start the lines to ignore
-    :param str keep_first: a string which start the line which must be keep
+    :param out: the path to the merged file
+    :param ignore: a string which start the lines to ignore
+    :param keep_first: a string which start the line which must be keep
                        only the first time
     :param skip_until: skip all lines until the condition is True
     :type skip_until: a fonction which test the line
-    :param str header: The header of the merged file
+    :param header: The header of the merged file
     :return:
     """
     def get_header(result: bool, warnings: list[str]):
@@ -119,17 +121,21 @@ def merge_files(files: List[str], out: str, header: str,
             f_out.write(get_header(False, warnings) + '\n')
 
 
-def merge_and_reindex(files: List[str], out: str,  header: str,
+def merge_and_reindex(files: list[str],
+                      out: str,
+                      header: str,
                       comment: str | None = None,
-                      skip_until: typing.Callable | None = None) -> None:
+                      skip_until: Callable | None = None) -> None:
     """
     merge all_best_solutions and reindex the sol_id column
 
     :param files: the list of files to merge
     :type files: list of str
-    :param str out: the path to the merged file
-    :param str ignore: a string which start the lines to ignore
-    :param str header: The header of the merged file
+    :param out: the path to the merged file
+    :param ignore: a string which start the lines to ignore
+    :param header: The header of the merged file
+    :param comment: the char that indicate that is a comment line
+    :param skip_until: skip the parsing from the first line until the callable become False
     """
     def get_header(result: bool, warnings):
         res_or_not = header if result else f"No {header}"
@@ -192,12 +198,12 @@ def merge_and_reindex(files: List[str], out: str,  header: str,
             f_out.write(get_header(False, warnings) + '\n')
 
 
-def merge_summary(files: List[str], out: str, header: str = "") -> None:
+def merge_summary(files: list[str], out: str, header: str = "") -> None:
     """
 
     :param files: the list of files to merge
-    :param str out: the path to the merged file
-    :param str header: The header of the merged file
+    :param out: the path to the merged file
+    :param header: The header of the merged file
     :return:
     """
     warnings = []
@@ -221,12 +227,11 @@ def merge_summary(files: List[str], out: str, header: str = "") -> None:
         merged.to_csv(f_out, sep="\t")
 
 
-def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
+def merge_results(results_dirs: list[str], out_dir: str = '.') -> None:
     """
 
     :param results_dirs: The list of macsyfinder results directories to merge
-    :type results_dirs: list of str
-    :param str out_dir: the path to the directory where to store the merged files
+    :param out_dir: the path to the directory where to store the merged files
     """
     filename_to_merge, ext = 'all_best_solutions', 'tsv'
     out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
@@ -275,13 +280,11 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
     merge_summary(all_summary_files, out_file, header='Best Solution Summary')
 
 
-def parse_args(args:  List[str]) -> argparse.Namespace:
+def parse_args(args: list[str]) -> argparse.Namespace:
     """
 
     :param args: the arguments passed on the command line without the first elemnet
-    :type args: list of str
     :return: the command line and options arguments parsed
-    :rtype: :class:`argparse.Namespace` object
     """
     description = """Merge the different files from several macsyfinder results in one.
     
@@ -321,12 +324,12 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
     return parsed_args
 
 
-def main(args: list[str] | None = None, log_level: int | str | None = None) -> None:
+def main(args: list[str] | None = None,
+         log_level: Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int | None = None) -> None:
     """
     main entry point to macsy_merge_results
 
     :param args: the arguments passed on the command line
-    :type args: list of str
     :param log_level: the output verbosity
     :type log_level: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """

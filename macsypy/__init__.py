@@ -87,7 +87,7 @@ def init_logger(log_file: str = None, out: bool = True) -> list[logging.Handler]
 def logger_set_level(level: Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int = 'INFO'):
     """
     Set the level and the formatter to the logger 'macsypy'
-    
+
     :param level:
     :type level: str among (NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL) or a positive integer
     """
