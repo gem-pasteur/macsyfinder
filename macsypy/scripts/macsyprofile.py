@@ -28,6 +28,7 @@ from itertools import groupby
 from dataclasses import dataclass
 from textwrap import dedent
 import logging
+import typing
 
 import colorlog
 
@@ -66,7 +67,7 @@ def get_profile_len(path: str) -> int:
     """
     Parse the HMM profile to extract the length and the presence of GA bit threshold
 
-    :param path: The path to the hmm profile used to produced the hmm search output to analyse
+    :param path: The path to the hmm profile used to produce the hmm search output to analyse
     :return: the length, presence of ga bit threshold
     """
     with open(path) as file:
@@ -180,7 +181,6 @@ class HmmProfile:
         Fill the dictionary with information on the matched sequences
 
         :param db: the database containing all sequence id of the hits.
-        :type db: dict
         """
         idx = Indexes(self.cfg)
         idx.build()
@@ -298,7 +298,8 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
     return header
 
 
-def init_logger(level: str | int ='INFO', out: bool = True):
+def init_logger(level: typing.Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int ='INFO',
+                out: bool = True):
     """
 
     :param level: The logger threshold could be a positive int or string
@@ -347,7 +348,7 @@ def verbosity_to_log_level(verbosity: int) -> int:
     return level
 
 
-def parse_args(args:  list[str]) -> argparse.Namespace:
+def parse_args(args: list[str]) -> argparse.Namespace:
     """
 
     :param args: The arguments provided on the command line
