@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM python:3.10-slim-bookworm
 
 MAINTAINER Bertrand Neron <bneron@pasteur.fr>
 
@@ -7,7 +7,7 @@ USER root
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update -y &&\
-    apt install -y --no-install-recommends hmmer python3 python3-pip
+    apt install -y --no-install-recommends hmmer
 RUN apt clean -y
 
 ENV DEBIAN_FRONTEND teletype
