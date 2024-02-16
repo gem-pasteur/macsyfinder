@@ -21,6 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+from __future__ import annotations
 
 """
 Module to build and manage Clusters of Hit
@@ -29,22 +30,27 @@ A cluster is a set of hits each of which hits less than inter_gene_max_space fro
 
 import itertools
 import logging
+from typing import Any
 
 import macsypy.gene
 
 from .error import MacsypyError
 from .gene import GeneStatus
-from .hit import Loner, LonerMultiSystem, get_best_hit_4_func
+from .hit import Loner, LonerMultiSystem, get_best_hit_4_func, ModelHit, CoreHit, HitWeight
+
+from .database import RepliconInfo
+from .model import Model
+from .gene import ModelGene
 
 _log = logging.getLogger(__name__)
 
 
-def _colocates(h1, h2, rep_info):
+def _colocates(h1: ModelHit, h2: ModelHit, rep_info: RepliconInfo) -> bool:
     """
     compute the distance (in number of gene between) between 2 hits
 
-    :param :class:`macsypy.hit.ModelHit` h1: the first hit to compute inter hit distance
-    :param :class:`macsypy.hit.ModelHit` h2: the second hit to compute inter hit distance
+    :param h1: the first hit to compute inter hit distance
+    :param h2: the second hit to compute inter hit distance
     :return: True if the 2 hits spaced by lesser or equal genes than inter_gene_max_space.
              Managed circularity.
     """
@@ -74,7 +80,7 @@ def _colocates(h1, h2, rep_info):
     return False
 
 
-def _clusterize(hits, model, hit_weights, rep_info):
+def _clusterize(hits: list[ModelHit], model: Model, hit_weights: HitWeight, rep_info: RepliconInfo):
     """
     clusterize hit regarding the distance between them
 
@@ -89,13 +95,16 @@ def _clusterize(hits, model, hit_weights, rep_info):
     :return: the clusters
     :rtype: list of :class:`macsypy.cluster.Cluster` objects.
     """
-    def do_clst(cluster_scaffold, model, hit_weights):
+    def do_clst(clusters: list[Cluster], cluster_scaffold: list[ModelHit], model: Model, hit_weights: HitWeight) -> None:
         """
+        transform a list of ModelHit in a cluster if the hit colocalize and they are not all neutral
+        and they do not code for same gene
+        add the new cluster to the clusters
 
         :param cluster_scaffold:
         :param model:
         :param hit_weights:
-        :return:
+        :return: None
         """
         gene_types = {hit.gene_ref.name for hit in cluster_scaffold}
         if len(gene_types) > 1:
@@ -116,6 +125,7 @@ def _clusterize(hits, model, hit_weights, rep_info):
                 _log.debug(f"({', '.join([h.id for h in cluster_scaffold])}) "
                            f"is composed of only type of gene {cluster_scaffold[0].gene_ref.name}. It's not a cluster.")
 
+
     clusters = []
     cluster_scaffold = []
     # sort hits by increasing position and then descending score
@@ -135,7 +145,7 @@ def _clusterize(hits, model, hit_weights, rep_info):
             else:
                 if len(cluster_scaffold) > 1:
                     # close the current scaffold if it contains at least 2 hits
-                    do_clst(cluster_scaffold, model, hit_weights)
+                    do_clst(clusters, cluster_scaffold, model, hit_weights)
                 elif model.min_genes_required == 1:
                     # close the current scaffold if it contains 1 hit
                     # but it's allowed by the model
@@ -154,7 +164,7 @@ def _clusterize(hits, model, hit_weights, rep_info):
         # close the last current cluster
         len_scaffold = len(cluster_scaffold)
         if len_scaffold > 1:
-            do_clst(cluster_scaffold, model, hit_weights)
+            do_clst(clusters, cluster_scaffold, model, hit_weights)
         elif len_scaffold == 1:
             # handle circularity
             # if there are clusters
@@ -181,13 +191,12 @@ def _clusterize(hits, model, hit_weights, rep_info):
     return clusters
 
 
-def _get_true_loners(clusters):
+def _get_true_loners(clusters: list[Cluster]) -> tuple[dict[str: Loner | LonerMultiSystem], list[Cluster]]:
     """
     We call a True Loner a Cluster composed of one or several hit related to the same gene tagged as loner
     (by opposition with hit representing a gene tagged loner but include in cluster with several other genes)
 
     :param clusters: the clusters
-    :type clusters: list of :class:`macsypy.cluster.Cluster` objects.
     :return: tuple of 2 elts
 
              * dict containing true clusters  {str func_name : :class:`macsypy.hit.Loner | :class:`macsypy.hit.LonerMultiSystem` object}
@@ -245,7 +254,8 @@ def _get_true_loners(clusters):
     return true_loners, true_clusters
 
 
-def build_clusters(hits, rep_info, model, hit_weights):
+def build_clusters(hits: list[ModelHit], rep_info: RepliconInfo, model: Model, hit_weights: HitWeight) \
+        -> tuple[dict[str: Loner | LonerMultiSystem], list[Cluster]]:
     """
     From a list of filtered hits, and replicon information (topology, length),
     build all lists of hits that satisfied the constraints:
@@ -259,11 +269,8 @@ def build_clusters(hits, rep_info, model, hit_weights):
     Except for loner genes which are allowed to be alone in a cluster
 
     :param hits: list of filtered hits
-    :type hits: list of :class:`macsypy.hit.ModelHit` objects
     :param rep_info: the replicon to analyse
-    :type rep_info: :class:`macsypy.Indexes.RepliconInfo` object
     :param model: the model to study
-    :type model: :class:`macsypy.model.Model` object
     :return: list of regular clusters,
              the special clusters (loners not in cluster and multi systems)
     :rtype: tuple with 2 elements
@@ -294,13 +301,12 @@ class Cluster:
 
     _id = itertools.count(1)
 
-    def __init__(self, hits, model, hit_weights):
+    def __init__(self, hits: list[CoreHit | ModelHit], model, hit_weights) -> None:
         """
 
         :param hits: the hits constituting this cluster
-        :type hits: [ :class:`macsypy.hit.CoreHit` | :class:`macsypy.hit.ModelHit`, ... ]
         :param model: the model associated to this cluster
-        :type model: :class:`macsypy.model.Model`
+        :param hit_weights: the weight of the hit to compute the score
         """
         self.hits = hits
         self.model = model
@@ -310,22 +316,21 @@ class Cluster:
         self._hit_weights = hit_weights
         self.id = f"c{next(self._id)}"
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.hits)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: str) -> Any:
         return self.hits[item]
 
     @property
-    def hit_weights(self):
+    def hit_weights(self) -> HitWeight:
         """
         :return: the different weight for the hits used to compute the score
-        :rtype: :class:`macsypy.hit.HitWeight`
         """
         return self._hit_weights
 
     @property
-    def loner(self):
+    def loner(self) -> bool:
         """
         :return: True if this cluster is made of only some hits representing the same gene and this gene is tag as loner
                  False otherwise:
@@ -338,7 +343,7 @@ class Cluster:
         return len({h.gene_ref.name for h in self.hits}) == 1 and self.hits[0].gene_ref.loner
 
     @property
-    def multi_system(self):
+    def multi_system(self) -> bool:
         """
         :return: True if this cluster is made of only one hit representing a multi_system gene
                  False otherwise:
@@ -351,7 +356,7 @@ class Cluster:
         return len(self) == 1 and self.hits[0].gene_ref.multi_system
 
 
-    def _check_replicon_consistency(self):
+    def _check_replicon_consistency(self) -> None:
         """
         :raise: MacsypyError if all hits of a cluster are NOT related to the same replicon
         """
@@ -362,18 +367,17 @@ class Cluster:
             raise MacsypyError(msg)
 
 
-    def __contains__(self, v_hit):
+    def __contains__(self, m_hit: ModelHit) -> bool:
         """
 
-        :param v_hit: The hit to test
-        :type v_hit: :class:`macsypy.hit.ModelHit` object
+        :param m_hit: The hit to test
         :return: True if the hit is in the cluster hits, False otherwise
         """
-        return v_hit in self.hits
+        return m_hit in self.hits
 
 
     @property
-    def functions(self):
+    def functions(self) -> frozenset[str]:
         """
 
         :return: The set of functions encoded by this cluster
@@ -390,15 +394,13 @@ class Cluster:
                  </model>
 
                  the functions for a cluster corresponding to this model wil be {'a' , 'b'}
-
-        :rtype: frozenset
         """
         if self._genes_roles is None:
             self._genes_roles = frozenset({h.gene_ref.alternate_of().name for h in self.hits})
         return self._genes_roles
 
 
-    def fulfilled_function(self, *genes) -> set[str]:
+    def fulfilled_function(self, *genes: ModelGene | str) -> set[str]:
         """
 
         :param gene: The genes which must be tested.
@@ -419,15 +421,13 @@ class Cluster:
         return genes_roles.intersection(functions)
 
 
-    def merge(self, cluster, before=False):
+    def merge(self, cluster: Cluster, before: bool = False) -> None:
         """
-        merge the cluster in this one. (do it in place)
+        merge the cluster param in this one. (do it in place)
 
         :param cluster:
-        :type cluster: :class:`macsypy.cluster.Cluster` object
         :param bool before: If False the hits of the cluster will be add at the end of this one,
                             Otherwise the cluster hits will be inserted before the hits of this one.
-        :return: None
         :raise MacsypyError: if the two clusters have not the same model
         """
         if cluster.model != self.model:
@@ -439,9 +439,8 @@ class Cluster:
                 self.hits.extend(cluster.hits)
 
     @property
-    def replicon_name(self):
+    def replicon_name(self) -> str:
         """
-
         :return: The name of the replicon where this cluster is located
         :rtype: str
         """
@@ -449,11 +448,9 @@ class Cluster:
 
 
     @property
-    def score(self):
+    def score(self) -> float:
         """
-
         :return: The score for this cluster
-        :rtype: float
         """
         if self._score is not None:
             return self._score
@@ -511,7 +508,7 @@ class Cluster:
         return score
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
 
         :return: a string representation of this cluster
@@ -522,14 +519,12 @@ class Cluster:
 - hits = {', '.join([f"({h.id}, {h.gene.name}, {h.position})" for h in self.hits])}"""
         return rep
 
-    def replace(self, old, new):
+    def replace(self, old: ModelHit, new: ModelHit) -> None:
         """
-        replace hit old in this cluster by new one. (work in place)
+        replace hit old in this cluster by new one. (do it in place)
 
         :param old: the hit to replace
-        :type old: :class:`macsypy.hit.ModelHit` object.
         :param new: the new hit
-        :type new: :class:`macsypy.hit.ModelHit` object.
         :return: None
         """
         idx = self.hits.index(old)
