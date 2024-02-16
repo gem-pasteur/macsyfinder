@@ -36,6 +36,7 @@ import time
 import pathlib
 import logging
 import xml.etree.ElementTree as ET
+import typing
 
 import colorlog
 import yaml
@@ -104,7 +105,6 @@ def do_search(args: argparse.Namespace) -> None:
     option --match-case is set.
 
     :param args: the arguments passed on the command line
-    :rtype: None
     """
     try:
         remote = RemoteModelIndex(org=args.org)
@@ -120,7 +120,9 @@ def do_search(args: argparse.Namespace) -> None:
         _log.critical(str(err))
 
 
-def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: list[str],
+def _search_in_pack_name(pattern: str,
+                         remote: RemoteModelIndex,
+                         packages: list[str],
                          match_case: bool = False) -> list[tuple[str, str, dict]]:
     """
 
@@ -147,7 +149,9 @@ def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: list[
     return results
 
 
-def _search_in_desc(pattern: str, remote: RemoteModelIndex, packages: list[str],
+def _search_in_desc(pattern: str,
+                    remote: RemoteModelIndex,
+                    packages: list[str],
                     match_case: bool = False) -> tuple[str, str, str]:
     """
 
@@ -224,7 +228,7 @@ def _find_all_installed_packages(models_dir: list[str] | None = None) -> ModelRe
     return registry
 
 
-def _find_installed_package(pack_name: str, models_dir=None) -> ModelLocation | None:
+def _find_installed_package(pack_name: str, models_dir: list[str] | None = None) -> ModelLocation | None:
     """
     search if a package names *pack_name* is already installed
 
@@ -243,8 +247,8 @@ def do_install(args: argparse.Namespace) -> None:
     Install new models in macsyfinder local models repository.
 
     :param args: the arguments passed on the command line
-    :raise RuntimeError:
-    :raise ValueError:
+    :raise RuntimeError: if there is problem is installed package
+    :raise ValueError: if the package and/or version is not found
     """
     def clean_cache(model_index):
         if args.no_clean:
@@ -409,6 +413,12 @@ for the system wide models installation please refer to the documentation.
 
 
 def _get_remote_available_versions(pack_name: str, org: str) -> list[str]:
+    """
+    Ask the organization org the available version for the package pack_name
+    :param pack_name: the name of the package
+    :param org: The remote organization to query
+    :return: list of available version for the package
+    """
     remote = RemoteModelIndex(org=org)
     all_versions = remote.list_package_vers(pack_name)
     return all_versions
@@ -423,7 +433,7 @@ def do_uninstall(args: argparse.Namespace) -> None:
     Remove models from macsyfinder local models repository.
 
     :param args: the arguments passed on the command line
-    :raise ValueError:
+    :raise ValueError: if the package is not found locally
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
@@ -442,7 +452,7 @@ def do_info(args: argparse.Namespace) -> None:
     Show information about installed model.
 
     :param args: the arguments passed on the command line
-    :raise ValueError:
+    :raise ValueError: if the package is not found locally
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
@@ -688,7 +698,7 @@ def do_init_package(args: argparse.Namespace) -> None:
         :param maintainer: the maintainer name
         :param email: the maintainer email
         :param desc: a One line description of the package
-        :param license: the license choosed
+        :param license: the license chosen
         :param c_date: the date of the copyright
         :param c_holders: the holders of the copyright
         """
@@ -714,7 +724,7 @@ def do_init_package(args: argparse.Namespace) -> None:
 
     def add_def_skeleton(license: str | None = None) -> None:
         """
-        Create a example of model definition
+        Create an example of model definition
 
         :param license: the text of the license
         """
@@ -796,12 +806,11 @@ def do_init_package(args: argparse.Namespace) -> None:
 
     def add_copyright(pack_dir: str, pack_name: str, date: str, holders: str, desc: str):
         """
-
-        :param str pack_dir: The path of package directory
-        :param str pack_name: The name of the package
-        :param str date: The date (year) of package creation
-        :param str holders: The copyright holders
-        :param str desc: One line description of the package
+        :param pack_dir: The path of package directory
+        :param pack_name: The name of the package
+        :param date: The date (year) of package creation
+        :param holders: The copyright holders
+        :param desc: One line description of the package
         """
         desc = desc if desc is not None else ''
         head = textwrap.fill(f"{pack_name} - {desc}")
@@ -814,10 +823,9 @@ Copyright (c) {date} {holders}
 
     def add_readme(pack_dir: str, pack_name: str, desc: str):
         """
-
-        :param str pack_dir: The path of package directory
-        :param str pack_name: The name of the package
-        :param str desc: One line description of the package
+        :param pack_dir: The path of package directory
+        :param pack_name: The name of the package
+        :param desc: One line description of the package
         """
         desc = desc if desc is not None else ''
         text = f"""
@@ -1231,7 +1239,8 @@ def cmd_name(args: argparse.Namespace) -> str:
     return f"macsydata {func_name}"
 
 
-def init_logger(level: int | str = 'INFO', out: bool = True) -> logging.Logger:
+def init_logger(level: typing.Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int = 'INFO',
+                out: bool = True) -> logging.Logger:
     """
 
     :param level: The logger threshold could be a positive int or string
@@ -1284,7 +1293,7 @@ def verbosity_to_log_level(verbosity: int) -> int:
     return level
 
 
-def main(args=None) -> None:
+def main(args: list[str] = None) -> None:
     """
     Main entry point.
 
