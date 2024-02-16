@@ -36,14 +36,14 @@ import macsypy
 from macsypy.config import MacsyDefaults
 
 
-def copy_chunk(fh_in: typing.IO, out: typing.IO, start: int, stop: int) -> None:
+def copy_chunk(fh_in: typing.IO, out: str, start: int, stop: int) -> None:
     """
     Copy file from fh_in to out from position start to stop
 
     :param fh_in: the source file
     :type fh_in: file like object
-    :param str out: the destination file name
-    :param int start: the position to start the copy
+    :param out: the destination file name
+    :param start: the position to start the copy
     :param stop: the position to end the copy
     """
     chunk_size = 1024
@@ -55,7 +55,7 @@ def copy_chunk(fh_in: typing.IO, out: typing.IO, start: int, stop: int) -> None:
             f_out.write(content)
 
 
-def split(seq_index: dict[str: tuple[int, int]], genome_path: str, outdir: str = '.') -> str:
+def split(seq_index: dict[str: tuple[int, int]], genome_path: str, outdir: str = '.') -> list[str]:
     """
     split a file with different replicons in gembase format
     in several files with one replicon per file

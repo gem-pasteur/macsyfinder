@@ -40,7 +40,6 @@ import copy
 import certifi
 import yaml
 import colorlog
-_log = colorlog.getLogger(__name__)
 
 from .config import NoneConfig
 from .registries import ModelLocation, ModelRegistry
@@ -50,6 +49,8 @@ from .model import ModelBank
 from .gene import GeneBank
 from .model_conf_parser import ModelConfParser
 from .error import MacsydataError, MacsyDataLimitError, MacsypyError
+
+_log = colorlog.getLogger(__name__)
 
 
 class AbstractModelIndex(metaclass=abc.ABCMeta):
@@ -280,7 +281,8 @@ class RemoteModelIndex(AbstractModelIndex):
         else:
             tmp_archive_path = os.path.join(dest, f"{pack_name}-{vers}.tar.gz")
         try:
-            with urllib.request.urlopen(url, context=self._context) as response, open(tmp_archive_path, 'wb') as out_file:
+            with (urllib.request.urlopen(url, context=self._context) as response,
+                  open(tmp_archive_path, 'wb') as out_file):
                 shutil.copyfileobj(response, out_file)
         except urllib.error.HTTPError as err:
             if 400 <= err.code < 500:

@@ -21,7 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-from __future__ import annotations # to allow to use a Type in type hint before it's definition
+from __future__ import annotations  # to allow to use a Type in type hint before it's definition
 
 """
 Manage the Models locations: Profiles and defintions
@@ -29,10 +29,10 @@ Manage the Models locations: Profiles and defintions
 
 import os
 import colorlog
-_log = colorlog.getLogger(__name__)
 
 import yaml
 
+_log = colorlog.getLogger(__name__)
 
 _SEPARATOR = '/'
 
@@ -368,8 +368,8 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
     _SEPARATOR = '/'
 
     def __init__(self,
-                 name: str| None = None,
-                 fqn: str| None = None,
+                 name: str | None = None,
+                 fqn: str | None = None,
                  subdefinitions: DefinitionLocation | None = None,
                  path: str | None = None) -> None:
         super().__init__(name=name, fqn=fqn, subdefinitions=subdefinitions, path=path)

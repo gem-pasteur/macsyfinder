@@ -122,7 +122,7 @@ class HmmProfile:
 
     def __init__(self, gene_name: str, gene_profile_lg: int, hmmer_output: str, cfg: Config):
         """
-        :param gene: the gene corresponding to the profile search reported here
+        :param gene_name: the name of the gene corresponding to the profile search reported here
         :param hmmer_output: The path to the raw Hmmer output file
         :param cfg: the configuration object
         """
@@ -154,8 +154,9 @@ class HmmProfile:
 
                 replicon_name = self._get_replicon_name(hit_id)
                 body = next(hmm_hits)
-                l_hit = self._parse_hmm_body(hit_id, self.gene_profile_lg, seq_lg, coverage_threshold,
-                                         replicon_name, position_hit, i_evalue_sel, body)
+                l_hit = self._parse_hmm_body(hit_id, self.gene_profile_lg, seq_lg,
+                                             coverage_threshold, replicon_name,
+                                             position_hit, i_evalue_sel, body)
                 all_hits += l_hit
             hits = sorted(all_hits, key=lambda h: - h.score)
         return hits
@@ -220,7 +221,7 @@ class HmmProfile:
 
     def _parse_hmm_body(self, hit_id: str, gene_profile_lg: int, seq_lg: int,
                         coverage_threshold:float, replicon_name: str,
-                        position_hit: int, i_evalue_sel: float, b_grp:list[list[str]]) -> list[CoreHit]:
+                        position_hit: int, i_evalue_sel: float, b_grp: list[list[str]]) -> list[CoreHit]:
         """
         Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected
         ("coverage_profile" and "i_evalue_select" command-line parameters)
@@ -412,7 +413,8 @@ the hit selection for systems detection. (default no threshold)"""
     parser.add_argument('--index-dir',
                         action='store',
                         default=None,
-                        help="Specifies the path to a directory to store/read the sequence index when the sequence-db dir is not writable.")
+                        help="Specifies the path to a directory to store/read the sequence index when "
+                             "the sequence-db dir is not writable.")
 
     parser.add_argument('-f', '--force',
                         action='store_true',

@@ -109,4 +109,3 @@ def name_2_url(licence_name: str):
     """
     acronym = licence_name.strip('cc-')
     return f"http://creativecommons.org/licenses/{acronym}/4.0/"
-

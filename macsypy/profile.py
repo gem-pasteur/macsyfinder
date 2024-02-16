@@ -29,8 +29,6 @@ from __future__ import annotations
 
 import os
 import logging
-_log = logging.getLogger(__name__)
-
 from subprocess import Popen
 from threading import Lock
 
@@ -38,9 +36,11 @@ from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport, HMMRep
 from .error import MacsypyError
 from .utils import open_compressed
 
-from .config import Config
+from .config import Config, NoneConfig
 from .gene import CoreGene
 from .registries import ModelLocation
+
+_log = logging.getLogger(__name__)
 
 
 class ProfileFactory:
@@ -49,11 +49,11 @@ class ProfileFactory:
     The profile_factory must be used. The profile_factory ensures there is only one instance
     of profile for a given name.
     To get a profile, use the method get_profile. If the profile is already cached, this instance is returned.
-    Otherwise a new profile is built, stored in the profile_factory and then returned.
+    Otherwise, a new profile is built, stored in the profile_factory and then returned.
 
     """
 
-    def __init__(self, cfg: Config) -> None:
+    def __init__(self, cfg: Config | NoneConfig) -> None:
         self._profiles = {}
         self.cfg = cfg
 
@@ -156,7 +156,7 @@ class Profile:
         return f"{self.gene.name} : {self.path}"
 
 
-    def execute(self, cpu: int =1) -> HMMReport | None:
+    def execute(self, cpu: int = 1) -> HMMReport | None:
         """
         Launch the Hmmer search (hmmsearch executable) with this profile
 

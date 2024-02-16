@@ -106,7 +106,7 @@ class TsvSystemSerializer(SystemSerializer):
                         "\t$mh_end_match\t$mh_counterpart\t$used_in_systems\n")
 
 
-    def serialize(self, system: System, hit_system_tracker: HitSystemTracker) -> HitSystemTracker:
+    def serialize(self, system: System, hit_system_tracker: HitSystemTracker) -> str:
         r"""
         :param :class:`macsypy.system.System` system: The system to serialize.
         :param hit_system_tracker: The hit_system_tracker which allow to know for each hit
@@ -387,7 +387,8 @@ class TsvRejectedCandidatesSerializer:
                 for cluster in candidate.clusters:
                     for hit in cluster.hits:
                         row = f"{candidate.id}\t{candidate.replicon_name}\t{candidate.model.fqn}\t" \
-                              f"{cluster.id}\t{hit.id}\t{hit.position}\t{hit.gene_ref.name}\t{hit.gene_ref.alternate_of().name}\t" \
+                              f"{cluster.id}\t{hit.id}\t{hit.position}\t{hit.gene_ref.name}" \
+                              f"\t{hit.gene_ref.alternate_of().name}\t" \
                               f"{reasons}\n"
                         s += row
                 s += '\n'

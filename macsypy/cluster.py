@@ -322,7 +322,7 @@ class Cluster:
     def __len__(self) -> int:
         return len(self.hits)
 
-    def __getitem__(self, item: str) -> Any:
+    def __getitem__(self, item: str) -> CoreHit | ModelHit:
         return self.hits[item]
 
     @property
@@ -403,7 +403,7 @@ class Cluster:
         return self._genes_roles
 
 
-    def fulfilled_function(self, *genes: ModelGene | str) -> set[str]:
+    def fulfilled_function(self, *genes: ModelGene | str) -> frozenset[str]:
         """
 
         :param genes: The genes which must be tested.

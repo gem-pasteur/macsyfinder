@@ -287,7 +287,7 @@ class AbstractCounterpartHit(ModelHit, metaclass=abc.ABCMeta):
     def counterpart(self, counterparts: Iterable[ModelHit]):
         """
 
-        :param counterpart:
+        :param counterparts: The other ModelHit that can be functionally equivalent
         """
         if not counterparts:
             self._counterpart = set()
@@ -324,9 +324,9 @@ class Loner(AbstractCounterpartHit):
 
     def __init__(self,
                  hit: CoreHit | ModelHit,
-                 gene_ref: ModelGene=None,
-                 gene_status: GeneStatus=None,
-                 counterpart: Iterable[CoreHit]=None) -> None:
+                 gene_ref: ModelGene = None,
+                 gene_status: GeneStatus = None,
+                 counterpart: Iterable[CoreHit] = None) -> None:
         """
         hit that is outside a cluster, the gene_ref is a loner
 
@@ -403,8 +403,8 @@ class LonerMultiSystem(Loner, MultiSystem):
 
     def __init__(self, hit: CoreHit | ModelHit,
                  gene_ref: ModelGene = None,
-                 gene_status: GeneStatus=None,
-                 counterpart: Iterable[CoreHit]=None):
+                 gene_status: GeneStatus = None,
+                 counterpart: Iterable[CoreHit] = None):
         """
         hit that is outside a cluster, the gene_ref is loner and multi_system
 
@@ -456,7 +456,7 @@ class HitWeight:
     out_of_cluster: float = 0.7
 
 
-def get_best_hit_4_func(function: str, hits: Iterable[ModelHit], key: str ='score') -> ModelHit:
+def get_best_hit_4_func(function: str, hits: Iterable[ModelHit], key: str = 'score') -> ModelHit:
     """
     select the best Loner among several ones encoding for same function
 

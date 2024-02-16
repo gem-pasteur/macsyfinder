@@ -30,7 +30,6 @@ from itertools import chain
 from operator import attrgetter
 from typing import Callable, Iterable
 import logging
-_log = logging.getLogger(__name__)
 
 from .model import Model
 from .hit import ModelHit, Loner, MultiSystem, LonerMultiSystem
@@ -38,6 +37,7 @@ from .gene import GeneStatus, ModelGene
 from .cluster import Cluster
 from .error import MacsypyError
 
+_log = logging.getLogger(__name__)
 
 
 class MetaSetOfHits(abc.ABCMeta):
@@ -70,7 +70,7 @@ class MetaSetOfHits(abc.ABCMeta):
         """
         Create a property which allow to access to the gene corresponding of the cat of the model
 
-        :param cat: the type of gene category to which we create the getter
+        :param status: the type of gene category to which we create the getter
         :return: unbound method
         """
         def getter(self):
@@ -181,7 +181,9 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
 
 class AbstractClusterizedHits(AbstractSetOfHits):
     """
+    Modelize SetOfHits that colocalize.
 
+    should be inherited
     """
 
     def __init__(self, model: Model, clusters: Cluster | list[Cluster]):
@@ -196,7 +198,7 @@ class AbstractClusterizedHits(AbstractSetOfHits):
     def fulfilled_function(self, *genes: ModelGene | str) -> set[str]:
         """
 
-        :param gene: The genes which must be tested.
+        :param genes: The genes which must be tested.
         :type genes: :class:`macsypy.gene.ModelGene` object or string representing the gene name
         :return: the common functions between genes and this system.
         :rtype: set of string
@@ -307,7 +309,7 @@ class System(AbstractClusterizedHits):
         for clst in loner_multi_syst_clsts:
             loner_or_ms = clst.hits[0]  # len(clst) == 1
             funct = loner_or_ms.gene_ref.alternate_of().name
-            if not funct in regular_functions:
+            if funct not in regular_functions:
                 _log.debug(f"{funct} is not already in regular clusters {regular_functions}")
                 # call the cluster score
                 # because it's in this method that the out of cluster penalty is applied
@@ -427,7 +429,7 @@ class System(AbstractClusterizedHits):
             for ch in common_hits:
                 other_hit = other_hits[ch]
                 my_hit = my_hits[ch]
-                if not(other_hit.multi_model and my_hit.multi_model):
+                if not (other_hit.multi_model and my_hit.multi_model):
                     return False
             return True
 
@@ -520,17 +522,16 @@ class AbstractUnordered(AbstractSetOfHits):
     _id = itertools.count(1)
 
     def __init__(self, model: Model,
-                 mandatory_hits: ModelHit,
-                 accessory_hits: ModelHit,
-                 neutral_hits: ModelHit,
-                 forbidden_hits: ModelHit) -> None:
+                 mandatory_hits: list[ModelHit],
+                 accessory_hits: list[ModelHit],
+                 neutral_hits: list[ModelHit],
+                 forbidden_hits: list[ModelHit]) -> None:
         """
-        :param model:  The model which has ben used to build this system
+        :param model:  The model which has been used to build this system
         :param mandatory_hits: The list of mandatory hits (encode for a gene tagged as mandatory)
         :param accessory_hits: The list of accessory hits (encode for a gene tagged as accessory)
         :param neutral_hits: The list of neutral hits (encode for a gene tagged as neutral)
         :param forbidden_hits: The list of hits that are forbidden
-        :param reasons: the reasons why this set of hits has been rejected
         """
         self._mandatory_hits = mandatory_hits
         self._accessory_hits = accessory_hits
@@ -572,7 +573,7 @@ class AbstractUnordered(AbstractSetOfHits):
         return self._neutral_hits[:]
 
     @property
-    def forbidden_hits(self) -> ModelHit:
+    def forbidden_hits(self) -> list[ModelHit]:
         """
         :return: The list of forbidden hits
         """
@@ -585,7 +586,6 @@ class AbstractUnordered(AbstractSetOfHits):
         """
 
         return self._mandatory_hits + self._accessory_hits + self._neutral_hits
-
 
 
 class LikelySystem(AbstractUnordered):
@@ -626,10 +626,10 @@ class UnlikelySystem(AbstractUnordered):
 
 
     def __init__(self, model: Model,
-                 mandatory_hits: ModelHit,
-                 accessory_hits: ModelHit,
-                 neutral_hits: ModelHit,
-                 forbidden_hits: ModelHit,
+                 mandatory_hits: list[ModelHit],
+                 accessory_hits: list[ModelHit],
+                 neutral_hits: list[ModelHit],
+                 forbidden_hits: list[ModelHit],
                  reasons: list[str]) -> None:
         """
 
@@ -700,7 +700,7 @@ class MatchMaker(metaclass=abc.ABCMeta):
         return map
 
 
-    def sort_hits_by_status(self, hits: list[ModelHit]) \
+    def sort_hits_by_status(self, hits: Iterable[ModelHit]) \
             -> tuple[list[ModelHit], list[ModelHit], list[ModelHit], list[ModelHit]]:
         """
         sort :class:`macsypy.hit.ModelHit` according the
@@ -811,7 +811,7 @@ class OrderedMatchMaker(MatchMaker):
             one_clst_allowed_hits = [mh for hits in one_clst_allowed_hits for mh in hits]
             one_clst_allowed_hits.sort(key=attrgetter('position'))
             valid_clusters.append(Cluster(one_clst_allowed_hits + one_clst_forbidden_hits,
-                                          self._model, cluster._hit_weights))
+                                          self._model, cluster.hit_weights))
 
         mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.present_genes()
         # the count is finished
@@ -886,8 +886,8 @@ class UnorderedMatchMaker(MatchMaker):
             _log.debug(msg)
         if len(mandatory_genes) < self._model.min_mandatory_genes_required:
             is_a_potential_system = False
-            msg = f'The quorum of mandatory genes required ({self._model.min_mandatory_genes_required}) is not reached: ' \
-                  f'{len(mandatory_genes)}'
+            msg = (f'The quorum of mandatory genes required ({self._model.min_mandatory_genes_required}) '
+                   f'is not reached: {len(mandatory_genes)}')
             reasons.append(msg)
             _log.debug(msg)
         if len(accessory_genes) + len(mandatory_genes) < self._model.min_genes_required:
@@ -922,4 +922,3 @@ class HitSystemTracker(dict):
                 if c_hit not in self:
                     self[c_hit] = set()
                 self[c_hit].add(system)
-

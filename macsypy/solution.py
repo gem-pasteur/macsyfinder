@@ -30,6 +30,7 @@ from .system import System, RejectedCandidate
 from .cluster import Cluster
 from .hit import Loner, LonerMultiSystem
 
+
 class Solution:
     """
     Handle Solution, a solution is a set of compatible Systems
@@ -42,7 +43,7 @@ class Solution:
         4. The hits position (is used ti give predictable output for unit tests)
     """
 
-    def __init__(self, systems:list[System]) -> None:
+    def __init__(self, systems: list[System]) -> None:
         """
         :param systems: The list of system that composed this solution
         """
@@ -163,7 +164,7 @@ def find_best_solutions(systems: list[System]) -> tuple[list[Solution], float]:
         current_score = sum([s.score for s in c])
         if max_score is None or (current_score > max_score):
             max_score = current_score
-            best_solutions = [Solution(c)] # this solution is better start a new best_solutions
+            best_solutions = [Solution(c)]  # this solution is better start a new best_solutions
         elif current_score == max_score:
             best_solutions.append(Solution(c))
     # sort the solutions (cliques)
@@ -248,4 +249,3 @@ def combine_multisystems(rejected_candidates: list[RejectedCandidate], multi_sys
             if not rej_cand.fulfilled_function(*functions):
                 new_comb.append(tuple(rej_cand.clusters + list(one_ms_combination)))
     return new_comb
-

@@ -280,6 +280,7 @@ def check_choice(raw: str, default: str, expected: list[str], sequence: bool = F
     :param raw: the value return by the user
     :param default: the default value for the option
     :param expected: the allowed values for this option
+    :param sequence: True if parameter accept a sequence of value, False otherwise
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
     """
@@ -298,7 +299,7 @@ def ask(question: str,
         expected: typing.Any = None,
         explanation: str = '',
         sequence: bool = False,
-        question_color: Theme | None = None,
+        question_color: str | None = None,
         retry: int = 2):
     """
     ask a question on the terminal and return the user response
@@ -347,7 +348,7 @@ def ask(question: str,
         print(err)
         if retry > 0:
             print(f"{theme.RETRY}* {err}{theme.RESET}")
-            return ask(question, validator, default=default, expected=expected, retry=retry -1)
+            return ask(question, validator, default=default, expected=expected, retry=retry - 1)
         else:
             raise RuntimeError(f'{theme.ERROR}Too many error. Exiting{theme.RESET}') from None
     return val
@@ -398,7 +399,8 @@ def set_section(sec_name: str,
         if value == defaults[opt_name]:
             if isinstance(value, type([])):
                 value = ', '.join([str(item) for item in value])
-            config.add_comment(sec_name, opt_name, f"{opt_name} = {value}", add_space_before=False, add_space_after=True)
+            config.add_comment(sec_name, opt_name, f"{opt_name} = {value}",
+                               add_space_before=False, add_space_after=True)
         else:
             if isinstance(value, type([])):
                 config.set(sec_name, opt_name, ', '.join([str(item) for item in value]))

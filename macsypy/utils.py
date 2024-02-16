@@ -122,7 +122,7 @@ def parse_time(user_time: int | str) -> int:
     """
     try:
         user_time = int(user_time)
-        return user_time # user time has no units , it's seconds
+        return user_time  # user time has no units , it's seconds
     except ValueError:
         pass
     import re
@@ -130,7 +130,7 @@ def parse_time(user_time: int | str) -> int:
                        'm': lambda x: x * 60,
                        'h': lambda x: x * 3600,
                        'd': lambda x: x * 86400
-    }
+                       }
     time_parts = re.findall(r'(\d+)(\D+)', user_time)
     time = 0
     for value, unit in time_parts:

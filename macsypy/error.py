@@ -26,10 +26,12 @@
 Manage MacSyFinder specific errors
 """
 
+
 class MacsypyError(Exception):
     """
     The base class for MacSyFinder specific exceptions.
     """
+
 
 class MacsydataError(MacsypyError):
     """
@@ -60,10 +62,12 @@ class SystemDetectionError(MacsypyError):
     Raised when the detection of systems from Hits encountered a problem.
     """
 
+
 class Timeout(MacsypyError):
     """
     Raised when best solution reach the timeout
     """
+
 
 class EmptyFileError(MacsypyError):
     """

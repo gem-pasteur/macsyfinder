@@ -41,7 +41,6 @@ from textwrap import dedent
 
 import colorlog
 
-_log = colorlog.getLogger('macsypy')
 import pandas as pd
 
 import macsypy
@@ -62,8 +61,11 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
-from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
-    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCandidatesSerializer
+from macsypy.serialization import (TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer,
+                                   TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer,
+                                   TsvSpecialHitSerializer, TsvRejectedCandidatesSerializer)
+
+_log = colorlog.getLogger('macsypy')
 
 
 def alarm_handler(signum: signal.Signals, frame) -> None:

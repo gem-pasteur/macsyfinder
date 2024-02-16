@@ -479,7 +479,7 @@ class Config:
             print(serialize(), file=path_or_buf)
 
 
-    def _set_db_type(self, value: DBType ) -> None:
+    def _set_db_type(self, value: DBType) -> None:
         """
         set value for 'db_type' option
 
@@ -632,7 +632,7 @@ class Config:
         else:
             return None
 
-    def _set_models(self, value: str | list [str] | list[str]) -> None:
+    def _set_models(self, value: str | list[str, list[str]]) -> None:
         """
         :param value: The models to search as return by the command line parsing or
                       the configuration files
@@ -851,7 +851,7 @@ class NoneConfig:
 
     def __getattr__(self, prop):
         if prop in ('multi_loci', 'min_mandatory_genes_required', 'max_nb_genes',
-                        'inter_gene_max_space', 'min_genes_required'):
+                    'inter_gene_max_space', 'min_genes_required'):
             return lambda x: None
         else:
             return lambda: None

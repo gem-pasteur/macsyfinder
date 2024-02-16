@@ -24,11 +24,11 @@
 
 import xml.etree.ElementTree as Et
 import logging
-_log = logging.getLogger(__name__)
-
 from typing import Any, Callable
 
 from macsypy.error import MacsypyError
+
+_log = logging.getLogger(__name__)
 
 
 class ModelConfParser:

@@ -24,15 +24,15 @@
 from __future__ import annotations
 
 import logging
-_log = logging.getLogger(__name__)
 from itertools import chain
-
 from typing import Iterator, Callable
 
 from .error import ModelInconsistencyError
 from .registries import DefinitionLocation
 from .hit import CoreHit, ModelHit
 from .gene import GeneStatus, ModelGene
+
+_log = logging.getLogger(__name__)
 
 
 class ModelBank:
@@ -102,7 +102,7 @@ class MetaModel(type):
         """
         Create a property which allow to access to the gene corresponding of the cat of the model
 
-        :param str cat: the type of gene category to which we create the getter
+        :param cat: the type of gene category to which we create the getter
         :return: unbound method
         """
         def getter(self):
@@ -114,7 +114,7 @@ class MetaModel(type):
         """
         Create the method add_<cat>_gene which allow to add gene in the right category of the model
 
-        :param str cat: the type of gene category to which we create the mutator
+        :param cat: the type of gene category to which we create the mutator
         :return: unbound method
         """
         def setter(self, gene):

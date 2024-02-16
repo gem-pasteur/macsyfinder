@@ -29,7 +29,6 @@ Module use to parse XML model defintion and create a python Model and Genes, ...
 import os.path
 import xml.etree.ElementTree as Et
 import logging
-_log = logging.getLogger(__name__)
 
 from .model import Model, ModelBank
 from .gene import ModelGene, GeneBank
@@ -40,6 +39,8 @@ from typing import Any
 from .config import Config, NoneConfig
 from .registries import ModelRegistry, DefinitionLocation, ModelLocation
 from .profile import ProfileFactory
+
+_log = logging.getLogger(__name__)
 
 
 class DefinitionParser:

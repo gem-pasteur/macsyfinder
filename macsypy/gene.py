@@ -25,16 +25,16 @@ from __future__ import annotations
 
 from enum import Enum
 import logging
-_log = logging.getLogger(__name__)
 
 from .error import MacsypyError
 
 from typing import Iterator, Any, TYPE_CHECKING
-
 from .registries import ModelLocation
 if TYPE_CHECKING:
     from .model import Model
-    from .profile import Profile
+    from .profile import ProfileFactory, Profile
+
+_log = logging.getLogger(__name__)
 
 
 class GeneBank:
@@ -89,7 +89,7 @@ class GeneBank:
         return [f"{fam}/{gen_nam}" for fam, gen_nam in self._genes_bank]
 
 
-    def add_new_gene(self, model_location: ModelLocation, name: str, profile_factory: Profile) -> None:
+    def add_new_gene(self, model_location: ModelLocation, name: str, profile_factory: ProfileFactory) -> None:
         """
         Create a gene and store it in the bank. If the same gene (same name) is add twice,
         it is created only the first time.
@@ -109,7 +109,7 @@ class CoreGene:
     Modelize gene attach to a profile.
     It can be only one instance with the the same name (familly name, gene name)
     """
-    def __init__(self, model_location: ModelLocation, name: str, profile_factory: Profile) -> None:
+    def __init__(self, model_location: ModelLocation, name: str, profile_factory: ProfileFactory) -> None:
         self._name = name
         self._model_family_name = model_location.name
         self._profile = profile_factory.get_profile(self, model_location)
@@ -287,7 +287,8 @@ class ModelGene:
     @property
     def multi_model(self) -> bool:
         """
-        :return: True if this Gene can belong to different occurrences of systems from different model :class:`macsypy.model.Model`
+        :return: True if this Gene can belong to different occurrences of systems from different
+                 model :class:`macsypy.model.Model`
                 (and can be used for multiple System assessments), False otherwise.
         :rtype: boolean.
         """
@@ -354,8 +355,8 @@ class Exchangeable(ModelGene):
                          loner=loner if loner is not None else gene_ref.loner,
                          multi_system=multi_system if multi_system is not None else gene_ref.multi_system,
                          multi_model=multi_model if multi_model is not None else gene_ref.multi_model,
-                         inter_gene_max_space=inter_gene_max_space if inter_gene_max_space is not None \
-                             else gene_ref.inter_gene_max_space)
+                         inter_gene_max_space=inter_gene_max_space if inter_gene_max_space is not None
+                         else gene_ref.inter_gene_max_space)
         self._ref = gene_ref
 
 

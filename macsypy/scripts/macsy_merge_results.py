@@ -60,7 +60,7 @@ def merge_files(files: list[str],
                 out: str,
                 header: str,
                 ignore: str | None = None,
-                keep_first: str | None= None,
+                keep_first: str | None = None,
                 skip_until: Callable | None = None) -> None:
     """
 
@@ -132,7 +132,6 @@ def merge_and_reindex(files: list[str],
     :param files: the list of files to merge
     :type files: list of str
     :param out: the path to the merged file
-    :param ignore: a string which start the lines to ignore
     :param header: The header of the merged file
     :param comment: the char that indicate that is a comment line
     :param skip_until: skip the parsing from the first line until the callable become False
@@ -243,11 +242,11 @@ def merge_results(results_dirs: list[str], out_dir: str = '.') -> None:
                       comment='#')
 
     for filename_to_merge, ext, header, first_col in [('best_solution', 'tsv', 'Systems', 'replicon'),
-                                           ('all_systems', 'tsv', 'Systems', 'replicon'),
-                                           ('best_solution_multisystems', 'tsv', 'Multisystems', 'replicon'),
-                                           ('best_solution_loners', 'tsv', 'Loners', 'replicon'),
-                                           ('rejected_candidates', 'tsv', 'Rejected', 'candidate_id'),
-                                           ]:
+                                                      ('all_systems', 'tsv', 'Systems', 'replicon'),
+                                                      ('best_solution_multisystems', 'tsv', 'Multisystems', 'replicon'),
+                                                      ('best_solution_loners', 'tsv', 'Loners', 'replicon'),
+                                                      ('rejected_candidates', 'tsv', 'Rejected', 'candidate_id'),
+                                                      ]:
         out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
         _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
         best_solution_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
@@ -299,8 +298,8 @@ def parse_args(args: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description=description)
     parser.add_argument('results_dirs',
-                         nargs='+',
-                         help='Path to the macsyfinder results directories to merge eg : path/to/macsyfinder-date-hour')
+                        nargs='+',
+                        help='Path to the macsyfinder results directories to merge eg : path/to/macsyfinder-date-hour')
     parser.add_argument('-o', '--out-dir',
                         default='.',
                         help='The path to the directory where to write merged files.')

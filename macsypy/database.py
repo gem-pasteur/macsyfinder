@@ -33,13 +33,14 @@ import logging
 from .error import MacsypyError, EmptyFileError
 from .utils import open_compressed
 
-_log = logging.getLogger(__name__)
 
 from typing import TextIO, Iterator, Literal, TypeAlias, Any
 from .config import Config
 
-Topology: TypeAlias = Literal['linear', 'ciircular']
+_log = logging.getLogger(__name__)
 
+
+Topology: TypeAlias = Literal['linear', 'ciircular']
 
 
 def fasta_iter(fasta_file: TextIO) -> Iterator[tuple[str, str, int]]:
@@ -79,7 +80,7 @@ class Indexes:
 
     _field_separator = "^^"
 
-    def __init__(self, cfg:Config) -> None:
+    def __init__(self, cfg: Config) -> None:
         """
         The constructor retrieves the file of indexes in the case they are not present
         or the user asked for build indexes (--idx)

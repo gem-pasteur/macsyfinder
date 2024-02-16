@@ -28,8 +28,6 @@ Extract informations from the results of hmmsearch
 
 import os
 import logging
-_log = logging.getLogger(__name__)
-
 import abc
 from threading import Lock
 from itertools import groupby
@@ -41,6 +39,8 @@ from .error import MacsypyError
 
 from .gene import CoreGene
 from .config import Config
+
+_log = logging.getLogger(__name__)
 
 
 class HMMReport(metaclass=abc.ABCMeta):
@@ -286,7 +286,6 @@ class GeneralHMMReport(HMMReport):
         return super()._get_replicon_name(hit_id)
 
 
-
 class OrderedHMMReport(HMMReport):
     """
     Handle HMM report. Extract a synthetic report from the raw hmmer output.
@@ -294,6 +293,7 @@ class OrderedHMMReport(HMMReport):
     """
     def _get_replicon_name(self, hit_id: str) -> str:
         return super()._get_replicon_name(hit_id)
+
 
 class GembaseHMMReport(HMMReport):
     """
