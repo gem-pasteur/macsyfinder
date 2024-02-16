@@ -21,13 +21,14 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+from __future__ import annotations
 
 import abc
 import itertools
 import statistics
 from itertools import chain
 from operator import attrgetter
-from typing import Callable, Self, Iterable
+from typing import Callable, Iterable
 import logging
 _log = logging.getLogger(__name__)
 
@@ -387,15 +388,13 @@ class System(AbstractClusterizedHits):
     def multi_loci(self) -> bool:
         """
         :return: True if the systems is encoded in multiple loci. False otherwise
-        :rtype: bool
         """
         return self.loci_nb > 1
 
 
-    def is_compatible(self, other: Self) -> bool:
+    def is_compatible(self, other: System) -> bool:
         """
         :param other: the other systems to test compatibility
-        :type other: :class:`macsypy.system.System` object
         :return: True if other system is compatible with this one. False otherwise.
                  Two systems are compatible if they do not share :class:`macsypy.hit.CoreHit`
                  except hit corresponding to a multi_system gene in the model.
