@@ -273,6 +273,7 @@ def build_clusters(hits: list[ModelHit],
     :param hits: list of filtered hits
     :param rep_info: the replicon to analyse
     :param model: the model to study
+    :param hit_weights: the hit weight needed to compute the cluster score
     :return: list of regular clusters,
              the special clusters (loners not in cluster and multi systems)
     :rtype: tuple with 2 elements
@@ -405,10 +406,8 @@ class Cluster:
     def fulfilled_function(self, *genes: ModelGene | str) -> set[str]:
         """
 
-        :param gene: The genes which must be tested.
-        :type genes: :class:`macsypy.gene.ModelGene` object or string representing the gene name
+        :param genes: The genes which must be tested.
         :return: the common functions between genes and this cluster.
-        :rtype: set of string
         """
         # we do not filter out neutral from the model
         genes_roles = self.functions

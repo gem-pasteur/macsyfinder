@@ -68,7 +68,7 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
         """
 
         """
-        self.org_name: str = None
+        self.org_name: str | None = None
         if cache:
             self.cache: str = cache
         else:

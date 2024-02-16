@@ -36,7 +36,8 @@ from .registries import DefinitionLocation, ModelRegistry
 from .error import MacsypyError
 
 
-def get_def_to_detect(models: list[tuple[str, tuple[str]]], model_registry: ModelRegistry) -> list[DefinitionLocation]:
+def get_def_to_detect(models: list[tuple[str, tuple[str]]],
+                      model_registry: ModelRegistry) -> tuple[list[DefinitionLocation], str, str]:
     """
     :param models: the list of models to detect as returned by config.models.
     :type models: list of tuple with the following structure:

@@ -420,12 +420,12 @@ class Config:
             raise AttributeError(f"config object has no attribute '{option_name}'")
 
 
-    def _str_2_tuple(self, value: str) -> list[tuple[str, int]]:
+    def _str_2_tuple(self, value: str) -> list[tuple[str, str]]:
         """
         transform a string with syntax {model_fqn int} in list of tuple
 
         :param str value: the string to parse
-        :return: [(model_fqn, int), ...]
+        :return: [(model_fqn, value as str), ...]
         """
         try:
             it = iter(value.split())

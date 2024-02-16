@@ -26,7 +26,6 @@
 Manage HMM profiles and hmmsearch execution
 """
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
 import os
 import logging
@@ -157,7 +156,7 @@ class Profile:
         return f"{self.gene.name} : {self.path}"
 
 
-    def execute(self, cpu: int =1) -> HMMReport:
+    def execute(self, cpu: int =1) -> HMMReport | None:
         """
         Launch the Hmmer search (hmmsearch executable) with this profile
 

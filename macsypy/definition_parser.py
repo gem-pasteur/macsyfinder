@@ -37,7 +37,7 @@ from .gene import Exchangeable
 from .error import MacsypyError, ModelInconsistencyError
 
 from typing import Any
-from .config import Config
+from .config import Config, NoneConfig
 from .registries import ModelRegistry, DefinitionLocation, ModelLocation
 from .profile import ProfileFactory
 
@@ -48,7 +48,7 @@ class DefinitionParser:
     """
 
     def __init__(self,
-                 cfg: Config,
+                 cfg: Config | NoneConfig,
                  model_bank: ModelBank,
                  gene_bank: GeneBank,
                  model_registry: ModelRegistry,

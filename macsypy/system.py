@@ -353,12 +353,11 @@ class System(AbstractClusterizedHits):
         return hits
 
     @property
-    def loci_num(self) -> int:
+    def loci_num(self) -> list[int]:
         """
         :return: the number of the corresponding locus for each cluster
                  the cluster made of only one Loner are not considered as a loci
                  so these clusters have a negative locus_num
-        :rtype: list of int
         """
         loci = []
         loci_num = 0
