@@ -125,16 +125,15 @@ class Solution:
         return (s for s in self.systems)
 
 
-def find_best_solutions(systems: list[System]) -> tuple[list[list[System]], float]:
+def find_best_solutions(systems: list[System]) -> tuple[list[Solution], float]:
     """
     Among the systems choose the combination of systems which does not share :class:`macsypy.hit.CoreHit`
     and maximize the sum of systems scores
 
     :param systems: the systems to analyse
     :return: the list of list of systems which represent one best solution and the it's score
-    :rtype: tuple of 2 elements the best solution and it's score
-            ([[:class:`macsypy.system.System`, ...], [:class:`macsypy.system.System`, ...]], float score)
-            The inner list represent a best solution
+    :rtype: tuple of 2 elements the best solutions and it's score
+
     """
 
     G = nx.Graph()
@@ -153,7 +152,6 @@ def find_best_solutions(systems: list[System]) -> tuple[list[list[System]], floa
     # 124 015 680 cliques
     cliques = nx.algorithms.clique.find_cliques(G)
     max_score = None
-    max_cliques = []
     for c in cliques:
         # it is important to sum the score of clusters
         # and creat a solution object only for solution I want to keep
@@ -165,15 +163,15 @@ def find_best_solutions(systems: list[System]) -> tuple[list[list[System]], floa
         current_score = sum([s.score for s in c])
         if max_score is None or (current_score > max_score):
             max_score = current_score
-            max_cliques = [Solution(c)]
+            best_solutions = [Solution(c)] # this solution is better start a new best_solutions
         elif current_score == max_score:
-            max_cliques.append(Solution(c))
+            best_solutions.append(Solution(c))
     # sort the solutions (cliques)
-    solutions = sorted(max_cliques, reverse=True)
+    solutions = sorted(best_solutions, reverse=True)
     return solutions, max_score
 
 
-def combine_clusters(clusters: Cluster,
+def combine_clusters(clusters: list[Cluster],
                      true_loners: dict[str: Loner | LonerMultiSystem],
                      multi_loci: bool = False) -> list[tuple[Cluster]]:
     """

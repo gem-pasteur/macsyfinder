@@ -254,8 +254,10 @@ def _get_true_loners(clusters: list[Cluster]) -> tuple[dict[str: Loner | LonerMu
     return true_loners, true_clusters
 
 
-def build_clusters(hits: list[ModelHit], rep_info: RepliconInfo, model: Model, hit_weights: HitWeight) \
-        -> tuple[dict[str: Loner | LonerMultiSystem], list[Cluster]]:
+def build_clusters(hits: list[ModelHit],
+                   rep_info: RepliconInfo,
+                   model: Model,
+                   hit_weights: HitWeight) -> tuple[list[Cluster], dict[str: Loner | LonerMultiSystem]]:
     """
     From a list of filtered hits, and replicon information (topology, length),
     build all lists of hits that satisfied the constraints:

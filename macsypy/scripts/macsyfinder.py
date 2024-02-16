@@ -56,7 +56,7 @@ from macsypy import cluster
 from macsypy.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
     sort_model_hits, compute_best_MSHit
 from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, \
-                            HitSystemTracker, RejectedCandidate, AbstractSetOfHits
+                            HitSystemTracker, RejectedCandidate
 from macsypy.utils import get_def_to_detect, get_replicon_names, parse_time
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
@@ -85,7 +85,6 @@ def alarm_handler(signum: signal.Signals, frame) -> None:
 def get_version_message() -> str:
     """
     :return: the long description of the macsyfinder version
-    :rtype: str
     """
     version = macsypy.__version__
     py_vers = sys.version.replace('\n', ' ')
@@ -497,7 +496,7 @@ for instance 1h2m3s means 1 hour 2 min 3 sec. NUMBER must be an integer.
 def search_systems(config: Config,
                    model_registry: ModelRegistry,
                    models_def_to_detect: list[DefinitionLocation],
-                   logger: logging.Logger) -> tuple[list[AbstractSetOfHits]]:
+                   logger: logging.Logger) -> tuple[list[System | LikelySystem], list[RejectedCandidate] | list[UnlikelySystem]]:
     """
     Do the job, this function is the orchestrator of all the macsyfinder mechanics
     at the end several files are produced containing the results
@@ -557,7 +556,6 @@ def search_systems(config: Config,
         all_reports = search_genes(all_genes, config)
     except Exception as err:
         raise err
-        sys.exit(str(err))
     #############################################
     # end of parallel code
     #############################################
@@ -585,9 +583,9 @@ def search_systems(config: Config,
                                                                                        config, logger)
             return systems, rejected_candidates
         elif db_type == "unordered":
-            likely_systems, rejected_hits = _search_in_unordered_replicon(hits_by_replicon, models_to_detect,
+            likely_systems, unlikely_systems = _search_in_unordered_replicon(hits_by_replicon, models_to_detect,
                                                                           logger)
-            return likely_systems, rejected_hits
+            return likely_systems, unlikely_systems
         else:
             assert False, f"dbtype have an invalid value {db_type}"
     else:
@@ -687,12 +685,11 @@ def _search_in_ordered_replicon(hits_by_replicon: dict[str: list[macsypy.hit.Cor
 
 def _search_in_unordered_replicon(hits_by_replicon: dict[str: list[macsypy.hit.CoreHit]],
                                   models_to_detect: list[macsypy.model.Model],
-                                  logger: logging.Logger) -> tuple[list[LikelySystem], list[macsypy.hit.ModelHit]]:
+                                  logger: logging.Logger) -> tuple[list[LikelySystem], list[UnlikelySystem]]:
     """
 
     :param hits_by_replicon: the hits sort by replicon and position
     :param models_to_detect: the models to search
-    :param config: MSF configuration
     :param logger: the logger
     """
     likely_systems = []
@@ -802,7 +799,9 @@ def systems_to_txt(models_fam_name: str, models_version: str,
         print("# No Systems found", file=sys_file)
 
 
-def solutions_to_tsv(models_fam_name: str, models_version: str, solutions: list[macsypy.solution.Solution],
+def solutions_to_tsv(models_fam_name: str,
+                     models_version: str,
+                     solutions: list[macsypy.solution.Solution],
                      hit_system_tracker: HitSystemTracker,
                      sys_file: typing.IO, skipped_replicons: list[str] | None = None) -> None:
     """
@@ -861,9 +860,12 @@ def _loner_warning(systems: list[System]) -> list[str]:
     return warnings
 
 
-def summary_best_solution(models_fam_name: str, models_version: str,
-                          best_solution_path: str, sys_file: typing.IO,
-                          models_fqn: str, replicon_names: str,
+def summary_best_solution(models_fam_name: str,
+                          models_version: str,
+                          best_solution_path: str,
+                          sys_file: typing.IO,
+                          models_fqn: list[str],
+                          replicon_names: list[str],
                           skipped_replicons: list[str] | None = None) -> None:
     """
     do a summary of best_solution in best_solution_path and write it on out_path
@@ -882,7 +884,7 @@ def summary_best_solution(models_fam_name: str, models_version: str,
     :param str best_solution_path: the path to the best_solution file in tsv format
     :param sys_file: the file where to save the summary
     :param models_fqn: the fully qualified names of the models
-    :param replicon_names: the name of the replicons used
+    :param replicon_names: the names of the replicons used
     :param skipped_replicons: the replicons name for which msf reach the timeout
     """
     skipped_replicons = skipped_replicons if skipped_replicons else set()
@@ -904,6 +906,7 @@ def summary_best_solution(models_fam_name: str, models_version: str,
             summary = pd.concat([summary, rows], ignore_index=False)
         summary.index.name = index_name
         return summary
+
 
     def fill_models(summary: pd.DataFrame) -> pd.DataFrame:
         """
@@ -1117,7 +1120,8 @@ def unlikely_systems_to_txt(models_fam_name: str, models_version: str,
         print("# No Unlikely Systems found", file=sys_file)
 
 
-def main(args: list[str] | None = None, loglevel: str | int | None = None):
+def main(args: list[str] | None = None,
+         loglevel: typing.Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int | None = None):
     """
     main entry point to MacSyFinder do some check before to launch :func:`main_search_systems` which is
     the real function that perform a search

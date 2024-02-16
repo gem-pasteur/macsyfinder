@@ -27,12 +27,12 @@ import itertools
 import statistics
 from itertools import chain
 from operator import attrgetter
-from typing import Callable, Self
+from typing import Callable, Self, Iterable
 import logging
 _log = logging.getLogger(__name__)
 
 from .model import Model
-from .hit import ModelHit, MultiSystem, LonerMultiSystem
+from .hit import ModelHit, Loner, MultiSystem, LonerMultiSystem
 from .gene import GeneStatus, ModelGene
 from .cluster import Cluster
 from .error import MacsypyError
@@ -434,7 +434,7 @@ class System(AbstractClusterizedHits):
             return True
 
 
-    def get_loners(self) -> set[ModelHit]:
+    def get_loners(self) -> set[Loner | LonerMultiSystem]:
         """
         :return: The True Loners (Loner which not colocalize with an other hit) belonging to the systems
         """
@@ -789,7 +789,7 @@ class OrderedMatchMaker(MatchMaker):
         super().__init__(model)
 
 
-    def match(self, clusters: list[Cluster]) -> System | RejectedCandidate:
+    def match(self, clusters: Iterable[Cluster]) -> System | RejectedCandidate:
         """
         Check a set of clusters fill model constraints.
         If yes create a :class:`macsypy.system.System` otherwise create
@@ -860,7 +860,7 @@ class OrderedMatchMaker(MatchMaker):
 
 class UnorderedMatchMaker(MatchMaker):
 
-    def match(self, hits: ModelHit) -> LikelySystem | UnlikelySystem:
+    def match(self, hits: Iterable[ModelHit]) -> LikelySystem | UnlikelySystem:
         """
         :param hits: the hits to check
         """

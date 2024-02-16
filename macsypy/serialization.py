@@ -27,6 +27,7 @@ This module focus on the way to serialize the different macsyfinder modules
 """
 
 import abc
+import typing
 from string import Template
 
 from .gene import GeneStatus
@@ -341,7 +342,7 @@ class TsvSpecialHitSerializer:
     Serialize special hits: :class:`macsypy.hit.Loner` and :class:`macsypy.hit.MultiSystem` in tsv format
     """
 
-    def serialize(self, best_hits: list[Loner] | list[MultiSystem]):
+    def serialize(self, best_hits: typing.Iterable[Loner] | typing.Iterable[MultiSystem]):
         """
         :param best_hits: the special hits to serialized
         :type best_hits: sequence of :class:`macsypy.hit.Loner` or :class:`macsypy.hit.MultiSystem` objects
