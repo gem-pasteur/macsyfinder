@@ -11,7 +11,7 @@
     "issueTracker": "https://github.com/gem-pasteur/macsyfinder/issues",
     "name": "macsyfinder",
     "version": "2.1.4",
-    "description": "Detection of macromolecular systems in bacterial protein datasets using systems modelling and similarity search.",
+    "description": "MacSyFinder is a program to model and detect macromolecular systems, genetic pathways… in prokaryotes protein datasets."
     "applicationCategory": "Biology",
     "developmentStatus": "active",
     "referencePublication": "https://doi.org/10.24072/pcjournal.250",
