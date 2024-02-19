@@ -90,7 +90,7 @@ class Solution:
 
     @property
     def hits_number(self) -> int:
-        """The sum of the hits of each systems in this solution"""
+        """The sum of the hits of each system in this solution"""
         return self._hits_number
 
     @property
@@ -132,7 +132,7 @@ def find_best_solutions(systems: list[System]) -> tuple[list[Solution], float]:
     and maximize the sum of systems scores
 
     :param systems: the systems to analyse
-    :return: the list of list of systems which represent one best solution and the it's score
+    :return: the list of :class:`macsypy.solution.Solution` which represent one best solution then it's score.
     :rtype: tuple of 2 elements the best solutions and it's score
 
     """

@@ -113,7 +113,7 @@ class DefinitionParser:
 
     def _check_syntax(self, model_node: Et.ElementTree, path: str) -> None:
         """
-        Check if the definition does not contains logical error which is allowed by syntax
+        Check if the definition does not contain logical error which is allowed by syntax
         and absence of explicit grammar.
 
         :param model_node: the node corresponding to the model
@@ -310,7 +310,7 @@ class DefinitionParser:
     def _parse_genes(self, model: Model, model_node: Et.ElementTree) -> None:
         """
         Create genes belonging to the models.
-        Each gene is directly added to the model in it's right category ('mandatory, accessory, ...)
+        Each gene is directly added to the model in its right category ('mandatory, accessory, ...)
 
         :param model: the Model currently parsing
         :param model_node: the element 'model'

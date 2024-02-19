@@ -41,7 +41,7 @@ class MacsydataError(MacsypyError):
 
 class MacsyDataLimitError(MacsydataError):
     """
-    Raised when the maximum number of github api call is reached
+    Raised when the maximum number of GitHub api call is reached
     """
 
 

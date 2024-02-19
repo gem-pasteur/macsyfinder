@@ -99,7 +99,7 @@ def threads_available() -> int:
 
     :return: The maximal number of threads available.
              It's nice with cluster scheduler or linux.
-             On Mac it use the number of physical cores
+             On Mac it uses the number of physical cores
     """
     if hasattr(os, "sched_getaffinity"):
         threads_nb = len(os.sched_getaffinity(0))
@@ -110,7 +110,7 @@ def threads_available() -> int:
 
 def parse_time(user_time: int | str) -> int:
     """
-    parse user friendly time and return it in seconds
+    parse user-friendly time and return it in seconds
     user time supports units as s h m d for sec min hour day
     or a combination of them
     1h10m50s means 1 hour 10 minutes 50 seconds

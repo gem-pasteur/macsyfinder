@@ -131,7 +131,7 @@ def parse_args(args: list[str]) -> argparse.Namespace:
     :rtype: a :class:`argparse.Namespace` object.
     """
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
-                                     description="Split a gembase protein file in several files, one per replicon." )
+                                     description="Split a gembase protein file in several files, one per replicon.")
     parser.add_argument('genome_path',
                         help='Path to the genomes file (in gembase format), eg : path/to/file.fst or file.fst')
 

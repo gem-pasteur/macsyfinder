@@ -60,7 +60,7 @@ class ConfigParserWithComments(ConfigParser):
         """
         Write a comment in .ini-format (start line with #)
 
-        :param section: the name of the sction
+        :param section: the name of the section
         :param option: the name of the option
         :param comment: the comment linked to this option
         :param comment_nb: the identifier of the comment by default an integer

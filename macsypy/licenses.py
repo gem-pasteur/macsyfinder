@@ -29,7 +29,7 @@ def _preambule(PN: str, authors: str, cr_date: str, cr_holders: str, short_desc:
     :param cr_date: the date of the copyright (year)
     :param cr_holders: the holders of the copyright
     :param short_desc: One line description of the package
-    :return: The preambule of the licence declaration
+    :return: The preamble of the licence declaration
     """
     short_desc = f"\n{PN} {short_desc}" if short_desc else ''
 

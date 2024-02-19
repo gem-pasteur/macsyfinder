@@ -164,7 +164,7 @@ class Indexes:
 
         :param build: if check the index-dir permissions to write
         :return: The directory where read or write the indexes
-        :raise ValueError: if the directory specify by --index-dir option does not exists
+        :raise ValueError: if the directory specify by --index-dir option does not exist
                            or if build = True index-dir is not writable
         """
         index_dir = self.cfg.index_dir()
@@ -228,7 +228,7 @@ class Indexes:
         :raise MacsypyError: if the indexes are not buid
         :return: an iterator on the indexes
 
-        To use it the index must be build.
+        To use it the index must be built.
         """
         path = self.find_my_indexes()
         if path is None:
@@ -289,7 +289,7 @@ class RepliconDB:
         :type cfg: :class:`macsypy.config.Config` object
 
         .. note ::
-            This class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon'
+            This class can be instanced only if the db_type is 'gembase' or 'ordered_replicon'
         """
         self.cfg = cfg
         assert self.cfg.db_type() in ('gembase', 'ordered_replicon')
@@ -327,7 +327,7 @@ class RepliconDB:
         | >07700ES100A0cP01_ C ATG TGA 91521 94826 Valid icmF1 3306 _PA0077_NP_248767.1_ PA0077 1 91521 94826
         | MQSLAEVSAPDAASVAT
 
-        :return: False if most of replicon contains only one seaquence, True otherwise
+        :return: False if most replicon contains only one sequence, True otherwise
         """
         all_len = [rep.max - rep.min for rep in self._DB.values()]
         replicon_with_one_seq = all_len.count(0)
@@ -389,7 +389,7 @@ class RepliconDB:
 
         def parse_seq_id(seq_id):
             """
-            parse a gemabse sequence id (.idx)
+            parse a gembase sequence id (.idx)
             seq_id has the following format <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
             but not in the <seq-name>.
             """

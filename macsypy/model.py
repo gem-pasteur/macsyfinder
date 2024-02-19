@@ -48,7 +48,7 @@ class ModelBank:
         """
         :param fqn: the fully qualified name of the model
         :return: the model corresponding to the fqn.
-        :raise KeyError: if the model corresponding to the name does not exists
+        :raise KeyError: if the model corresponding to the name does not exist
         """
         if fqn in self._model_bank:
             return self._model_bank[fqn]
@@ -315,9 +315,9 @@ class Model(metaclass=MetaModel):
 
     def genes(self, exchangeable: bool = False) -> set[ModelGene]:
         """
-        :param exchangeable: include exchageables if True
+        :param exchangeable: include exchangeable if True
         :return: all the genes described in the model.
-                 with exchangeables if exchageable is True.
+                 with exchangeables if exchangeable is True.
                  otherwise only "first level" genes.
         """
         # we assume that a gene cannot appear twice in a model
@@ -336,7 +336,7 @@ class Model(metaclass=MetaModel):
         filter out the hits according to this model and cast them in ModelHit.
         The filtering is based on the name of CoreGene associated to hit
         and the name of ModelGene of the model
-        (the name of the ModelGene is the name of the CoreGene embeded in the ModelGene)
+        (the name of the ModelGene is the name of the CoreGene embedded in the ModelGene)
         only the hits related to genes implied in the model are kept.
 
         :param hits: list of hits to filter
