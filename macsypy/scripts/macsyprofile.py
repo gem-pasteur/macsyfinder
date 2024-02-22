@@ -49,7 +49,8 @@ def get_version_message() -> str:
     :return: the long description of the macsyfinder version
     """
     version = macsypy.__version__
-    vers_msg = f"""macsyprofile {version}
+    commit = macsypy.__commit__
+    vers_msg = f"""macsyprofile {version} {commit}
 Python {sys.version}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).

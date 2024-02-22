@@ -89,8 +89,9 @@ def get_version_message() -> str:
     :return: the long description of the macsyfinder version
     """
     version = macsypy.__version__
+    commit = macsypy.__commit__
     py_vers = sys.version.replace('\n', ' ')
-    vers_msg = f"""Macsyfinder {version}
+    vers_msg = f"""Macsyfinder {version} {commit}
 using:
 - Python {py_vers}
 - NetworkX {macsypy.solution.nx.__version__}
@@ -727,7 +728,7 @@ def _outfile_header(models_fam_name: str, models_version: str, skipped_replicons
     """
     :return: The 2 first lines of each result file
     """
-    header = f"""# macsyfinder {macsypy.__version__}
+    header = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {models_fam_name}-{models_version}
 # {' '.join(sys.argv)}"""
     if skipped_replicons:

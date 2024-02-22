@@ -59,7 +59,8 @@ def get_version_message() -> str:
     :rtype: str
     """
     msf_ver = macsypy.__version__
-    vers_msg = f"""Macsydata {msf_ver}
+    commit = macsypy.__commit__
+    vers_msg = f"""Macsydata {msf_ver} {commit}
 Python {sys.version}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).

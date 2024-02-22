@@ -164,7 +164,7 @@ def open_compressed(path: str, mode: str = 'rt') -> str:
         yield f
 
 
-def get_git_revision_short_hash():
+def get_git_revision_short_hash() -> str:
     """
     :return: the git commit number (short version)
     :rtype: str
@@ -173,6 +173,6 @@ def get_git_revision_short_hash():
         short_hash = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],
                                              cwd=os.path.dirname(os.path.abspath(__file__)))
     except subprocess.CalledProcessError:
-        short_hash = 'not_git'
+        short_hash = ''
     short_hash = str(short_hash, "utf-8").strip()
     return short_hash

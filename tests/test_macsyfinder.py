@@ -110,7 +110,7 @@ set_2
     def test_systems_to_txt(self):
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Systems found
@@ -154,7 +154,7 @@ set_2
                           [Cluster([v_hit_1, v_hit_2], model, HitWeight(**cfg.hit_weights()))],
                           cfg.redundancy_penalty())
 
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
@@ -220,7 +220,7 @@ neutral genes:
                               cfg.redundancy_penalty())
             model_fam_name = 'foo'
             model_vers = '0.0b2'
-            system_tsv = f"""# macsyfinder {macsypy.__version__}
+            system_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
@@ -245,7 +245,7 @@ neutral genes:
             self.assertMultiLineEqual(system_tsv, f_out.getvalue())
 
             # test No system found
-            system_str = f"""# macsyfinder {macsypy.__version__}
+            system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Systems found
@@ -305,7 +305,7 @@ neutral genes:
                           cfg.redundancy_penalty())
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        loner_tsv = f"""# macsyfinder {macsypy.__version__}
+        loner_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Loners found:
@@ -326,7 +326,7 @@ neutral genes:
         self.assertMultiLineEqual(loner_tsv, f_out.getvalue())
 
         # test No system found
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Loners found
@@ -385,7 +385,7 @@ neutral genes:
                           cfg.redundancy_penalty())
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        multisystem_tsv = f"""# macsyfinder {macsypy.__version__}
+        multisystem_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Multisystems found:
@@ -407,7 +407,7 @@ neutral genes:
                                   f_out.getvalue())
 
         # test No system found
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Multisystems found
@@ -606,7 +606,7 @@ neutral genes:
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        sol_tsv = f"""# macsyfinder {macsypy.__version__}
+        sol_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
@@ -737,7 +737,7 @@ neutral genes:
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Rejected candidates:
@@ -760,7 +760,7 @@ This candidate has been rejected because:
         self.maxDiff = None
         self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
-        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Rejected candidates
@@ -810,7 +810,7 @@ This candidate has been rejected because:
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Rejected candidates found:
@@ -832,7 +832,7 @@ This candidate has been rejected because:
         self.maxDiff = None
         self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
-        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Rejected candidates
@@ -890,7 +890,7 @@ This candidate has been rejected because:
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
@@ -927,7 +927,7 @@ Use ordered replicon to have better prediction.
 
         f_out = StringIO()
         likely_systems_to_txt(model_fam_name, model_vers, [], track_multi_systems_hit, f_out)
-        expected_out = f"""# macsyfinder {macsypy.__version__}
+        expected_out = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Likely Systems found
@@ -983,7 +983,7 @@ Use ordered replicon to have better prediction.
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        sol_tsv = f"""# macsyfinder {macsypy.__version__}
+        sol_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Likely Systems found:"""
@@ -1013,7 +1013,7 @@ Use ordered replicon to have better prediction.
 
         f_out = StringIO()
         likely_systems_to_tsv(model_fam_name, model_vers, [], track_multi_systems_hit, f_out)
-        expected_out = f"""# macsyfinder {macsypy.__version__}
+        expected_out = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Likely Systems found
@@ -1070,7 +1070,7 @@ Use ordered replicon to have better prediction.
         model_fam_name = 'foo'
         model_vers = '0.0b2'
 
-        exp_txt = f"""# macsyfinder {macsypy.__version__}
+        exp_txt = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Unlikely Systems found:
@@ -1107,7 +1107,7 @@ Use ordered replicon to have better prediction.
 
         f_out = StringIO()
         unlikely_systems_to_txt(model_fam_name, model_vers, [], f_out)
-        expected_out = f"""# macsyfinder {macsypy.__version__}
+        expected_out = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Unlikely Systems found
