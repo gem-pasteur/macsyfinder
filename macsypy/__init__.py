@@ -28,18 +28,36 @@ and functions to intialize the logger uses by entrypoints
 import logging
 from time import strftime, localtime
 import sys
+import os
+import subprocess
 
 from typing import Literal
-from .utils import get_git_revision_short_hash
+
 
 __version__ = f'{strftime("%Y%m%d", localtime())}.dev'
 
-__commit__ = get_git_revision_short_hash()
 
 __citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S. 
 MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. 
 Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjournal.250.
 https://peercommunityjournal.org/articles/10.24072/pcjournal.250/"""
+
+
+def get_git_revision_short_hash() -> str:
+    """
+    :return: the git commit number (short version)
+    :rtype: str
+    """
+    try:
+        short_hash = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],
+                                             cwd=os.path.dirname(os.path.abspath(__file__)))
+        short_hash = str(short_hash, "utf-8").strip()
+    except Exception:
+        short_hash = ''
+    return short_hash
+
+
+__commit__ = f'{get_git_revision_short_hash()}'
 
 
 def init_logger(log_file: str = None, out: bool = True) -> list[logging.Handler]:

@@ -30,7 +30,6 @@ import os
 import os.path
 import gzip
 import contextlib
-import subprocess
 from itertools import groupby
 
 from .registries import DefinitionLocation, ModelRegistry
@@ -162,17 +161,3 @@ def open_compressed(path: str, mode: str = 'rt') -> str:
         my_open = open
     with my_open(path, mode) as f:
         yield f
-
-
-def get_git_revision_short_hash() -> str:
-    """
-    :return: the git commit number (short version)
-    :rtype: str
-    """
-    try:
-        short_hash = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],
-                                             cwd=os.path.dirname(os.path.abspath(__file__)))
-    except subprocess.CalledProcessError:
-        short_hash = ''
-    short_hash = str(short_hash, "utf-8").strip()
-    return short_hash
