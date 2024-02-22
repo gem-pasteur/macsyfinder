@@ -30,9 +30,10 @@ from time import strftime, localtime
 import sys
 
 from typing import Literal
+from .utils import get_git_revision_short_hash
 
 
-__version__ = f'{strftime("%Y%m%d", localtime())}.dev'
+__version__ = f'{strftime("%Y%m%d", localtime())}_{get_git_revision_short_hash()}.dev'
 
 
 __citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S. 
