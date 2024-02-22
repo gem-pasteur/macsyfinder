@@ -173,7 +173,7 @@ class RemoteModelIndex(AbstractModelIndex):
         """
         check if the remote exists and is an organization
 
-        :return: True if the Remote url point to a github Organization, False otherwise
+        :return: True if the Remote url point to a GitHub Organization, False otherwise
         """
         try:
             url = f"{self.base_url}/orgs/{self.org_name}"
@@ -237,7 +237,7 @@ class RemoteModelIndex(AbstractModelIndex):
 
     def list_package_vers(self, pack_name: str) -> list[str]:
         """
-        List all available versions from github model repos for a given package
+        List all available versions from GitHub model repos for a given package
 
         :param str pack_name: the name of the package
         :return: the list of the versions
@@ -257,13 +257,13 @@ class RemoteModelIndex(AbstractModelIndex):
 
     def download(self, pack_name: str, vers: str, dest: str | None = None) -> str:
         """
-        Download a package from a github repos and save it as
+        Download a package from a GitHub repos and save it as
         <remote cache>/<organization name>/<package name>/<vers>.tar.gz
 
         :param str pack_name: the name of the package to download
         :param str vers: the version of the package to download
         :param str dest: The path to the directory where save the package
-                         This directory must exists
+                         This directory must exist
                          If dest is None, the macsyfinder cache will be used
         :return: The package archive path.
         """
@@ -297,11 +297,11 @@ class Package:
     """
     This class Modelize a package of Models
     a package is a directory with the name of the models family
-    it must contains at least
+    it must contain at least
     - a subdirectory definitions
     - a subdirectory profiles
     - a file metadata.yml
-    it is also recomanded to add a file
+    it is also recommended to add a file
     for licensing and copyright and a README.
     for further explanation see TODO
 
@@ -407,7 +407,7 @@ class Package:
 
     def _check_model_consistency(self) -> tuple[list, list]:
         """
-        check if each xml seems well write, each genes have an associated profile, etc
+        check if each xml seems well write, each genes have an associated profile, etc.
 
         :return:
         """

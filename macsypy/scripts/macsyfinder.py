@@ -505,7 +505,7 @@ def search_systems(config: Config,
 
       - macsyfinder.conf: The set of variables used to runt this job
       - macsyfinder.systems: The list of the potential systems
-      - macsyfinder.rejected_cluster: The list of all clusters and clustrs combination
+      - macsyfinder.rejected_cluster: The list of all clusters and clusters combination
                                       which has been rejected and the reason
       - macsyfinder.log: the copy of the standard output
 
@@ -773,7 +773,7 @@ def systems_to_txt(models_fam_name: str, models_version: str,
                    hit_system_tracker: HitSystemTracker,
                    sys_file: typing.IO, skipped_replicons: list[str] | None = None) -> None:
     """
-    print systems occurrences in a file in human readable format
+    print systems occurrences in a file in human-readable format
 
     :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
     :param models_version: the version of the models

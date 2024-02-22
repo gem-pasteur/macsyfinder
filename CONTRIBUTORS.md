@@ -25,3 +25,12 @@ This is a list of people who have made contributions to Macsyfinder.
 * Marie Touchon <https://research.pasteur.fr/en/member/marie-touchon/> :bulb: :umbrella:
 * Amandine Perrin <https://github.com/orgs/gem-pasteur/people/asetGem> :computer:
 * Yoann Dufresne <https://research.pasteur.fr/en/member/yoann-dufresne/> :bulb:
+
+
+
+* Ezra Herman <https://github.com/ezherman> :bug:
+* Nelle Varoquaux <https://github.com/NelleV> :bug:
+* Nicolas CELLIER <https://github.com/celliern> :bug:
+* Nilesh Patra <https://github.com/nileshpatra> :bug: :computer:
+* Antônio Camargo <https://github.com/apcamargo> :bug:
+* TrellixVulnTeam <https://github.com/TrellixVulnTeam> :computer:

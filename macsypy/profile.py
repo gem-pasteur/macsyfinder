@@ -61,8 +61,8 @@ class ProfileFactory:
         """
         :param gene: the gene associated to this profile
         :param model_location: The where to get the profile
-        :return: the profile corresponding to the name.
-                 If the profile already exists, return it. Otherwise build it, store it and return it.
+        :return: The profile corresponding to the name.
+                 If the profile already exists, return it. Otherwise, build it, store it and return it.
         """
         key = (model_location.name, gene.name)
         if key in self._profiles:

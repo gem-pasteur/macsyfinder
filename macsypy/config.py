@@ -156,9 +156,9 @@ class Config:
 
         The config object is populated in several steps, the rules of precedence are
 
-        system wide conf < user home conf < model conf < (project conf | previous run) < command line
+        system-wide conf < user home conf < model conf < (project conf | previous run) < command line
 
-        system wide conf = etc/macsyfinder/macsyfinder.conf
+        system-wide conf = etc/macsyfinder/macsyfinder.conf
         user home conf = ~/.macsyfinder/macsyfinder.conf
         model conf = model_conf.xml at the root of the model package
         project conf = macsyfinder.conf  where the analysis is run
@@ -279,7 +279,7 @@ class Config:
 
     def _set_system_wide_config(self, config_path: str) -> None:
         """
-        set the options from the system wide configuration file
+        set the options from the system-wide configuration file
 
         :param config_path:
         """
@@ -501,7 +501,7 @@ class Config:
         :param value: the string parse representing the model fully qualified name
                       and it's associated value and so on
                       the model_fqn is a string, the associated value must be cast in int
-        :raise ValueError: if value is not well formed
+        :raise ValueError: if value is not well-formed
         """
         opt = {}
         if isinstance(value, str):
@@ -536,7 +536,7 @@ class Config:
         :param str value: the string parse representing the model fully qualified name
                           and it's associated value and so on
                           the model_fqn is a string, the associated value must be cast in int
-        :raise ValueError: if value is not well formed
+        :raise ValueError: if value is not well-formed
         """
         opt = {}
         if isinstance(value, str):
@@ -571,7 +571,7 @@ class Config:
         :param value: the string parse representing the model fully qualified name
                       and it's associated value and so on
                       the model_fqn is a string, the associated value must be cast in int
-        :raise ValueError: if value is not well formed
+        :raise ValueError: if value is not well-formed
         """
         opt = {}
         if isinstance(value, str):
@@ -605,7 +605,7 @@ class Config:
         :param value: the string parse representing the model fully qualified name
                       and it's associated value and so on
                       the model_fqn is a string, the associated value must be cast in int
-        :raise ValueError: if value is not well formed
+        :raise ValueError: if value is not well-formed
         """
         opt = {}
         if isinstance(value, str):
@@ -845,7 +845,7 @@ class Config:
 
 class NoneConfig:
     """
-    Minimalist Config object just use in some special case wher config is require by api
+    Minimalist Config object just use in some special case where config is required by api
     but not used for instance in :class:`macsypy.package.Package`
     """
 

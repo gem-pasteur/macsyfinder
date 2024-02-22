@@ -39,7 +39,7 @@ _log = logging.getLogger(__name__)
 
 class GeneBank:
     """
-    Store all Gene objects. Ensure that genes are instanciated only once.
+    Store all Gene objects. Ensure that genes are instanced only once.
     """
 
     def __init__(self) -> None:
@@ -91,7 +91,7 @@ class GeneBank:
 
     def add_new_gene(self, model_location: ModelLocation, name: str, profile_factory: ProfileFactory) -> None:
         """
-        Create a gene and store it in the bank. If the same gene (same name) is add twice,
+        Create a gene and store it in the bank. If the same gene (same name) is added twice,
         it is created only the first time.
 
         :param model_location: the location where the model family can be found.
@@ -106,8 +106,8 @@ class GeneBank:
 
 class CoreGene:
     """
-    Modelize gene attach to a profile.
-    It can be only one instance with the the same name (familly name, gene name)
+    Modeling gene attached to a profile.
+    It can be only one instance with the same name (familly name, gene name)
     """
     def __init__(self, model_location: ModelLocation, name: str, profile_factory: ProfileFactory) -> None:
         self._name = name
@@ -120,7 +120,7 @@ class CoreGene:
     @property
     def name(self) -> str:
         """
-        The name of the gene a hmm profile with the same name must exists.
+        The name of the gene a hmm profile with the same name must exist.
         """
         return self._name
 
@@ -160,7 +160,7 @@ class ModelGene:
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :param multi_system: True if this Gene can belong to different occurrences of this System.
         :param inter_gene_max_space: the maximum space between this Gene and another gene of the System.
-        :param multi_model: True if this Gene is allowing to appear in several system occurence from diferent model.
+        :param multi_model: True if this Gene is allowing to appear in several system occurrence from different model.
         """
         if not isinstance(gene, CoreGene):
             raise MacsypyError(f"The ModeleGene gene argument must be a CoreGene not {type(gene)}.")
@@ -336,7 +336,7 @@ class ModelGene:
 
 class Exchangeable(ModelGene):
     """
-    Handle Exchangeables. Exchangeable are ModelGene which can replaced functionally an other ModelGene.
+    Handle Exchangeables. Exchangeable are ModelGene which can replaced functionally another ModelGene.
     Biologically it can be Homolog or Analog
     """
 

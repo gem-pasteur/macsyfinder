@@ -173,7 +173,7 @@ class TsvSolutionSerializer:
         :return: a serialisation of this solution (a list of systems) in tabulated separated value format
                  each line represent a hit and have the same structure as system serialization
                  :meth:`macsypy.serialization.TsvSystemSerializer.serialize` but with an extra column
-                 sol_id which is a technical id to identified the different solutions.
+                 sol_id which is a technical id to identify the different solutions.
         """
         tsv = ''
         sys_ser = TsvSystemSerializer()

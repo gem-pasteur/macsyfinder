@@ -101,7 +101,7 @@ def do_search(args: argparse.Namespace) -> None:
     Search macsy-models for Model in a remote index.
     by default search in package name,
     if option -S is set search also in description
-    by default the search is case insensitive except if
+    by default the search is case-insensitive except if
     option --match-case is set.
 
     :param args: the arguments passed on the command line
@@ -129,7 +129,7 @@ def _search_in_pack_name(pattern: str,
     :param pattern: the substring to search packages names
     :param remote: the uri of the macsy-models index
     :param packages: list of packages to search in
-    :param match_case: True if the search is case sensitive, False otherwise
+    :param match_case: True if the search is case-sensitive, False otherwise
     :return:
     """
     results = []
@@ -158,7 +158,7 @@ def _search_in_desc(pattern: str,
     :param pattern: the substring to search packages descriptions
     :param remote: the uri of the macsy-models index
     :param packages: list of packages to search in
-    :param match_case: True if the search is case sensitive, False otherwise
+    :param match_case: True if the search is case-sensitive, False otherwise
     :return:
     """
     results = []
@@ -182,7 +182,7 @@ def _search_in_desc(pattern: str,
 
 def do_download(args: argparse.Namespace) -> str:
     """
-    Download tarball from remote models repository.
+    Download tarball from remote models' repository.
 
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
@@ -544,7 +544,7 @@ To cite MacSyFinder:
 def do_help(args: argparse.Namespace) -> None:
     """
     Display on stdout the content of readme file
-    if the readme file does not exists display a message to the user see :meth:`macsypy.package.help`
+    if the readme file does not exist display a message to the user see :meth:`macsypy.package.help`
 
     :param args: the arguments passed on the command line (the package name)
     :return: None

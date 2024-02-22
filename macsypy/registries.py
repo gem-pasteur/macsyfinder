@@ -24,7 +24,7 @@
 from __future__ import annotations  # to allow to use a Type in type hint before it's definition
 
 """
-Manage the Models locations: Profiles and defintions
+Manage the Models locations: Profiles and definitions
 """
 
 import os
@@ -56,7 +56,7 @@ def split_def_name(fqn: str) -> list[str]:
 def join_def_path(*args: str) -> str:
     """
     join different elements of the definition path
-    :param str args: the elements of the definition path, each elements must be a string
+    :param str args: the elements of the definition path, each element must be a string
     :return: The return value is the concatenation of different elements of args with one
     separator
     """
@@ -86,8 +86,8 @@ def scan_models_dir(models_dir: str, profile_suffix: str = ".hmm", relative_path
 class ModelRegistry:
     """
     scan canonical directories to register the different models available in global macsyfinder
-    share data location (depending installation /usr/share/data/models) or can be
-    overload with the location specify in the macsyfinder configuration (either in config file or command line)
+    share data location (depending on installation /usr/share/data/models) or can be
+    overloaded with the location specify in the macsyfinder configuration (either in config file or command line)
     """
 
     def __init__(self) -> None:
@@ -143,7 +143,7 @@ class ModelRegistry:
 
 class ModelLocation:
     """
-    Handle where are store Models. Models are organized in families and sub families.
+    Handle where are store Models. Models are organized in families and subfamilies.
     each family match to a ModelLocation. a ModelLocation contains the path toward the definitions
     and the paths to corresponding to the profiles.
     """
@@ -319,7 +319,7 @@ class ModelLocation:
     def get_definitions(self) -> list[DefinitionLocation]:
         """
         :return: the list of the definitions of this modelLocation.
-                 It return the 1rst level only (not recursive).
+                 It returns the 1rst level only (not recursive).
                  For recursive explorations see :meth:`macsypy.registries.ModelLocation.get_all_definitions`
         """
         if self._definitions is not None:
@@ -362,7 +362,7 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
 
     name: the fully qualified definitions name like TXSS/T3SS or CRISPR-cas/Typing/Cas
     path: the absolute path to the definitions or set of definitions
-    subdefinitions: the subdefintions if it exists
+    subdefinitions: the subdefinitions if it exists
     """
 
     _SEPARATOR = '/'
@@ -379,7 +379,7 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
     @classmethod
     def split_fqn(cls, fqn: str) -> list[str]:
         """
-        :param fqn: the fully qualified name of a defintion
+        :param fqn: the fully qualified name of a definition
         :return: each member of the fully qn in list.
         """
         return [f for f in fqn.split(cls.separator) if f]
@@ -388,7 +388,7 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
     @classmethod
     def root_name(cls, fqn: str) -> str:
         """
-        :param str fqn: the fully qualified name of a defintion
+        :param str fqn: the fully qualified name of a definition
         :return: the root name of this definition (family name)
         """
         return cls.split_fqn(fqn)[0]
@@ -419,7 +419,7 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
 
     def all(self) -> list[DefinitionLocation]:
         """
-        :return: the defintion and all recursivelly all subdefintions
+        :return: the definition and all recursively all subdefinitions
         """
         if not self.subdefinitions:
             return [self]

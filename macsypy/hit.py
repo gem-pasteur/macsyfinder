@@ -38,7 +38,7 @@ _log = logging.getLogger(__name__)
 class CoreHit:
     """
     Handle the hits filtered from the Hmmer search.
-    The hits are instanciated by :py:meth:`HMMReport.extract` method
+    The hits are instanced by :py:meth:`HMMReport.extract` method
     In one run of MacSyFinder, there exists only one CoreHit per gene
     These hits are independent of any :class:`macsypy.model.Model` instance.
     """
@@ -162,8 +162,8 @@ class ModelHit:
         """
         :param hit: a match between a hmm profile and a replicon
         :param gene_ref: The ModelGene link to this hit
-                         The ModeleGene have the same name than the CoreGene
-                         But one hit can be link to several ModelGene (several Model)
+                         The ModeleGene have the same name as the CoreGene
+                         But one hit can be linked to several ModelGene (several Model)
                          To know for what gene this hit play role use the
                          :meth:`macsypy.gene.ModelGene.alternate_of` ::
 
@@ -332,15 +332,15 @@ class Loner(AbstractCounterpartHit):
 
         :param hit: a match between a hmm profile and a replicon
         :param gene_ref: The ModelGene link to this hit
-                         The ModeleGene have the same name than the CoreGene
-                         But one hit can be link to several ModelGene (several Model)
+                         The ModeleGene have the same name as the CoreGene
+                         But one hit can be linked to several ModelGene (several Model)
                          To know for what gene this hit play role use the
                          :meth:`macsypy.gene.ModelGene.alternate_of` ::
 
                             hit.gene_ref.alternate_of()
 
         :param gene_status:
-        :param counterpart: the other occurence of the gene or exchangeable in the replicon
+        :param counterpart: the other occurrence of the gene or exchangeable in the replicon
         """
         super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
 
@@ -370,8 +370,8 @@ class MultiSystem(AbstractCounterpartHit):
 
         :param hit: a match between a hmm profile and a replicon
         :param gene_ref: The ModelGene link to this hit
-                         The ModeleGene have the same name than the CoreGene
-                         But one hit can be link to several ModelGene (several Model)
+                         The ModeleGene have the same name as the CoreGene
+                         But one hit can be linked to several ModelGene (several Model)
                          To know for what gene this hit play role use the
                          :meth:`macsypy.gene.ModelGene.alternate_of` ::
 
@@ -410,8 +410,8 @@ class LonerMultiSystem(Loner, MultiSystem):
 
         :param hit: a match between a hmm profile and a replicon
         :param gene_ref: The ModelGene link to this hit
-                         The ModeleGene have the same name than the CoreGene
-                         But one hit can be link to several ModelGene (several Model)
+                         The ModeleGene have the same name as the CoreGene
+                         But one hit can be linked to several ModelGene (several Model)
                          To know for what gene this hit play role use the
                          :meth:`macsypy.gene.ModelGene.alternate_of` ::
 
@@ -436,7 +436,7 @@ class LonerMultiSystem(Loner, MultiSystem):
 class HitWeight:
     """
     The weight to compute the cluster and system score
-    see user documentation macsyfinder functionning for further details
+    see user documentation macsyfinder functioning for further details
     by default
 
         * itself = 1

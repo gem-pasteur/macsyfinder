@@ -266,7 +266,7 @@ def build_clusters(hits: list[ModelHit],
         * loner
         * multi_system
 
-    If Yes create a cluster
+    If Yes create a cluster.
     A cluster contains at least two hits separated by less or equal than max_gene_inter_space
     Except for loner genes which are allowed to be alone in a cluster
 
@@ -427,7 +427,7 @@ class Cluster:
         merge the cluster param in this one. (do it in place)
 
         :param cluster:
-        :param bool before: If False the hits of the cluster will be add at the end of this one,
+        :param bool before: If False the hits of the cluster will be added at the end of this one,
                             Otherwise the cluster hits will be inserted before the hits of this one.
         :raise MacsypyError: if the two clusters have not the same model
         """

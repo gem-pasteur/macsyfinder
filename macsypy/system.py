@@ -169,7 +169,7 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
 
         :return: a score indicating the genes ratio of the model which have at least one hit
                  by default full system is mandatory + accessory ('neutral' genes do not count)
-                 but for special corner case it can be sepcified in model definition (xml)
+                 but for special corner case it can be specified in model definition (xml)
                  or on the command line
         """
         # model completude
@@ -212,7 +212,7 @@ class AbstractClusterizedHits(AbstractSetOfHits):
 
 class System(AbstractClusterizedHits):
     """
-    Modelize as system. a system is an occurrence of a given model on a replicon.
+    Modeling as system. a system is an occurrence of a given model on a replicon.
     """
 
     _supported_status = (GeneStatus.MANDATORY,
@@ -227,7 +227,7 @@ class System(AbstractClusterizedHits):
     def __init__(self, model: Model, clusters: list[Cluster], redundancy_penalty: float = 1.5) -> None:
         """
 
-        :param model:  The model which has ben used to build this system
+        :param model:  The model which has been used to build this system
         :type model: :class:`macsypy.model.Model` object
         :param clusters: The list of cluster that form this system
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
@@ -436,7 +436,7 @@ class System(AbstractClusterizedHits):
 
     def get_loners(self) -> set[Loner | LonerMultiSystem]:
         """
-        :return: The True Loners (Loner which not colocalize with an other hit) belonging to the systems
+        :return: The True Loners (Loner which not colocalize with another hit) belonging to the systems
         """
         # a model hit is a loner only if it's a true loner
         return {mh for mh in self.hits if mh.loner}
@@ -597,7 +597,7 @@ class LikelySystem(AbstractUnordered):
     .. note:
         do not forget that this class inherits from MetaSetOfHits
         so the getter to mandatory, accessory, neutral, forbidden is dynamically injected
-        by the meta class base on  _supported_status
+        by the metaclass base on  _supported_status
     """
 
     _supported_status = (GeneStatus.MANDATORY,
@@ -633,7 +633,7 @@ class UnlikelySystem(AbstractUnordered):
                  reasons: list[str]) -> None:
         """
 
-        :param model:  The model which has ben used to build this system
+        :param model:  The model which has been used to build this system
         :param mandatory_hits: The list of mandatory hits (encode for a gene tagged as mandatory)
         :param accessory_hits: The list of accessory hits (encode for a gene tagged as accessory)
         :param neutral_hits: The list of neutral hits (encode for a gene tagged as neutral)
@@ -703,8 +703,7 @@ class MatchMaker(metaclass=abc.ABCMeta):
     def sort_hits_by_status(self, hits: Iterable[ModelHit]) \
             -> tuple[list[ModelHit], list[ModelHit], list[ModelHit], list[ModelHit]]:
         """
-        sort :class:`macsypy.hit.ModelHit` according the
-        the status of the gene the hit code for.
+        sort :class:`macsypy.hit.ModelHit` according the status of the gene the hit code for.
 
         :param hits: list of :class:`macsypy.hit.ModelHit` object
         :return: the valid hits according their status ([mandatory, ], [accessory, ], [neutral, ], [forbidden ])
