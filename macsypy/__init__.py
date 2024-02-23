@@ -45,7 +45,7 @@ https://peercommunityjournal.org/articles/10.24072/pcjournal.250/"""
 
 def get_git_revision_short_hash() -> str:
     """
-    :return: the git commit number (short version)
+    :return: the git commit number (short version) or empty string if this not a git repository
     :rtype: str
     """
     try:
