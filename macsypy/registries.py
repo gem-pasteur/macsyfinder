@@ -239,8 +239,10 @@ class ModelLocation:
     def __lt__(self, other: ModelLocation) -> bool:
         return self.name < other.name
 
+
     def __gt__(self, other: ModelLocation) -> bool:
         return self.name > other.name
+
 
     def __eq__(self, other: ModelLocation) -> bool:
         return (self._path, self.name, self._profiles, self._definitions ==
@@ -259,7 +261,6 @@ class ModelLocation:
         except FileNotFoundError:
             _log.warning(f"The models package '{self.name}' is not versioned contact the package manager to fix it.")
             return None
-
 
 
     @property

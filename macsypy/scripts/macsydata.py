@@ -616,8 +616,8 @@ I'll be really happy, if you fix warnings above, before to publish these models.
             _log.info("for instance if you want to add the models to 'macsy-models'")
             _log.log(25, "\tgit remote add origin https://github.com/macsy-models/")
 
-        _log.log(25, f"\tgit tag {pack.metadata.vers}")
-        _log.log(25, f"\tgit push origin {pack.metadata.vers}")
+        _log.log(25, f"\tgit tag <tag vers>  # check https://macsyfinder.readthedocs.io/en/latest/modeler_guide/publish_package.html#sharing-your-models")
+        _log.log(25, f"\tgit push origin <tag vers>")
 
 
 def do_show_definition(args: argparse.Namespace) -> None:
