@@ -1,5 +1,7 @@
-cite: Place here how to cite this package, it can hold several citation
-copyright: Copyright (c) 2022 Pasteur
+cite:
+- Place here how to cite this package, it can hold several citation
+- citation 2 (optional)
+copyright: 2022, Pasteur
 doc: where to find documentation about this package
 license: http://creativecommons.org/licenses/by-nc-sa/4.0/
 maintainer:
