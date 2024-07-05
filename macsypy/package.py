@@ -499,6 +499,11 @@ class Package:
         for item in nice_to_have:
             if not getattr(data, item):
                 warnings.append(f"It's better if the field '{item}' is setup in '{self.metadata_path}' file.")
+
+        if data.vers:
+            warnings.append(f"The field 'vers' is not required anymore.\n"
+                            f"  It will be ignored and set by macsydata during installation phase according "
+                            f"to the git tag.")
         return errors, warnings
 
 
