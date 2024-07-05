@@ -132,7 +132,7 @@ It is in `YAML <https://en.wikipedia.org/wiki/YAML>`_ format and must have the f
       name: The name of the person who maintains/to contact for further information. (required)
       email: The email of the maintainer (required)
     short_desc: A one line description of the package (can e.g. be used for *macsydata* searches) (required)
-    vers: The package version (required)
+    vers: The package version (DEPRECATED)
     cite: The publication(s) to cite by the user when the package is used (optional, used by `macsydata cite`)
     doc: Where to find extended documentation (optional)
     license: The license under the package is released (optional but highly recommended)
@@ -147,7 +147,6 @@ For example:
        name: first name last name
        email: login@my_domain.com
     short_desc: Models for 15 types of secretion systems or bacterial appendages (T1SS, T2SS, T3SS, T4P, pT4SSt, pT4SSi, T5aSS, T5bSS, T5bSS, T6SSi, T6SSii, T6SSiii, Flagellum, Tad, T9SS).
-    vers: 0.0a1
     cite:
        - |
          Abby Sophie S., Cury Jean, Guglielmini Julien, Néron Bertrand, Touchon Marie, Rocha Eduardo P. C. (2016).
@@ -158,14 +157,20 @@ For example:
     license: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
     copyright: 2014-2022, Institut Pasteur, CNRS
 
-.. warning::
-    This `metadata.yml` file is **mandatory**. Without this file your archive/repository will not be considered as a *macsy-model package*.
 
 .. note::
 
     * *-* specify an item of yaml list
     * *|* is used to specify a single item but over multiple lines.
 
+
+.. error::
+    This `metadata.yml` file is **mandatory**. Without this file your archive/repository will not be considered as a *macsy-model package*.
+
+
+.. warning::
+
+    The field *vers* (the package version) is deprecated. *macsydata install* rely only on the git tag.
 
 
 .. _model_configuration:

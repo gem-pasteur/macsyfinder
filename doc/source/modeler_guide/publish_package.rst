@@ -69,8 +69,10 @@ Several steps are needed to publish your model:
         * https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
         * https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/specification.html#standard-versioning-schemes
 
-   If your package is in version *2.0.1* the tag must be `2.0.1`.
-   The version or tag must **NOT** start with letter as `v2.0.1` or `my_package-2.0.1`.
+   .. important::
+
+        If your package is in version *2.0.1* the tag must be `2.0.1`.
+        The version or tag must **NOT** start with letter as `v2.0.1` or `my_package-2.0.1`.
 
    .. warning::
 
