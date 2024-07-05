@@ -39,14 +39,13 @@ import xml.etree.ElementTree as ET
 import typing
 
 import colorlog
-import yaml
 from packaging import requirements, specifiers, version
 
 import macsypy
-from macsypy.error import MacsyDataLimitError
+from macsypy.error import MacsydataError, MacsyDataLimitError
 from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry, ModelLocation, scan_models_dir
-from macsypy.package import RemoteModelIndex, LocalModelIndex, Package, parse_arch_path
+from macsypy.package import RemoteModelIndex, LocalModelIndex, Package, parse_arch_path, Metadata
 from macsypy import licenses
 
 # _log is set in main func
@@ -288,7 +287,7 @@ def do_install(args: argparse.Namespace) -> None:
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         try:
-            local_vers = version.Version(pack.metadata['vers'])
+            local_vers = version.Version(pack.metadata.vers)
         except FileNotFoundError:
             _log.error(f"{pack_name} locally installed is corrupted.")
             _log.warning(f"You can fix it by removing '{inst_pack_loc.path}'.")
@@ -360,7 +359,25 @@ def do_install(args: argparse.Namespace) -> None:
 
     _log.info(f"Extracting {pack_name} ({target_vers}).")
     cached_pack = model_index.unarchive_package(arch_path)
+
     _log.debug(f"package is chached at {cached_pack}")
+    # we do not rely on vers in metadat any longer
+    # but we inject the version from the version specify in package name
+    # the package name is set by github according to the tag
+    _log.debug(f"injecting version in metadata")
+    metadata_path = os.path.join(cached_pack, Metadata.name)
+    if not os.path.exists(metadata_path):
+        maintainer_loc = f" ({model_index.repos_url})"
+        clean_cache(model_index)
+
+        _log.error(f"Failed to install '{pack_name}-{target_vers}' : The package has no 'metadata.yml' file.")
+        _log.warning(f"Please contact the package maintainer.{maintainer_loc}")
+        sys.tracebacklimit = 0
+        raise MacsydataError() from None
+
+    metadata = Metadata.load(metadata_path)
+    metadata.vers = target_vers
+    metadata.save(metadata_path)
 
     if args.user:
         dest = os.path.realpath(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
@@ -477,7 +494,7 @@ def do_list(args: argparse.Namespace) -> None:
     for model_loc in registry.models():
         try:
             pack = Package(model_loc.path)
-            pack_vers = pack.metadata['vers']
+            pack_vers = pack.metadata.vers
             model_path = f"   ({model_loc.path})" if args.long else ""
             if args.outdated or args.uptodate:
                 remote = RemoteModelIndex(org=args.org)
@@ -505,7 +522,7 @@ def do_freeze(args: argparse.Namespace) -> None:
     for model_loc in sorted(registry.models(), key=lambda ml: ml.name.lower()):
         try:
             pack = Package(model_loc.path)
-            pack_vers = pack.metadata['vers']
+            pack_vers = pack.metadata.vers
             print(f"{model_loc.name}=={pack_vers}")
         except Exception:
             pass
@@ -521,7 +538,7 @@ def do_cite(args: argparse.Namespace) -> None:
     inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
-        pack_citations = pack.metadata['cite']
+        pack_citations = pack.metadata.cite
         pack_citations = [cite.replace('\n', '\n  ') for cite in pack_citations]
         pack_citations = '\n- '.join(pack_citations)
         pack_citations = '_ ' + pack_citations.rstrip()
@@ -599,8 +616,8 @@ I'll be really happy, if you fix warnings above, before to publish these models.
             _log.info("for instance if you want to add the models to 'macsy-models'")
             _log.log(25, "\tgit remote add origin https://github.com/macsy-models/")
 
-        _log.log(25, f"\tgit tag {pack.metadata['vers']}")
-        _log.log(25, f"\tgit push origin {pack.metadata['vers']}")
+        _log.log(25, f"\tgit tag {pack.metadata.vers}")
+        _log.log(25, f"\tgit push origin {pack.metadata.vers}")
 
 
 def do_show_definition(args: argparse.Namespace) -> None:
@@ -690,6 +707,7 @@ def do_init_package(args: argparse.Namespace) -> None:
             raise ValueError(f"{pack_path} already exist.")
         return pack_path
 
+
     def add_metadata(pack_dir: str, maintainer: str, email: str,
                      desc: str | None = None, license: str | None = None,
                      c_date: str | None = None, c_holders: str | None = None) -> None:
@@ -703,25 +721,26 @@ def do_init_package(args: argparse.Namespace) -> None:
         :param c_date: the date of the copyright
         :param c_holders: the holders of the copyright
         """
-        metadata = {
-            'maintainer': {
-                'name': maintainer,
-                'email': email
-            },
-            'short_desc': desc,
-            'cite': 'Place here how to cite this package, it can hold several citation',
-            'doc': 'where to find documentation about this package',
-            'vers': '0.1b1',
-        }
+        desc = desc if desc else "description in one line of this package"
+        metadata = Metadata(maintainer, email, desc)
+        metadata.cite = ['Place here how to cite this package, it can hold several citation',
+                         'citation 2 (optional)']
+        metadata.doc = 'where to find documentation about this package'
+        metadata.vers= '0.1b1'
 
-        if copyright:
-            metadata['copyright'] = f"Copyright (c) {c_date} {c_holders}"
-
+        if c_date:
+            metadata.copyright_date = c_date
+        else:
+            metadata.copyright_date = str(time.localtime().tm_year)
+        if c_holders:
+            metadata.copyright_holder = c_holders
+        else:
+            metadata.copyright_holder = "copyright holders <My institution>"
         if license:
-            metadata['license'] = licenses.name_2_url(license)
+            metadata.license = licenses.name_2_url(license)
 
-        with open(os.path.join(pack_dir, 'metadata.yml'), 'w') as metafile:
-            yaml.dump(metadata, metafile)
+        metadata.save(os.path.join(pack_dir, Metadata.name))
+
 
     def add_def_skeleton(license: str | None = None) -> None:
         """
