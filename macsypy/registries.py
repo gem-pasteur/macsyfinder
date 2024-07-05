@@ -252,14 +252,19 @@ class ModelLocation:
 
 
     def _get_version(self, path: str) -> str | None:
+        from macsypy.package import Metadata
         metadata_path = os.path.join(path, "metadata.yml")
-        try:
-            with open(metadata_path) as file:
-                metadata = yaml.safe_load(file)
-            return metadata['vers']
-        except (FileNotFoundError, KeyError):
-            _log.warning(f"The models package '{self.name}' is not versioned contact the package manager to fix it.")
-            return None
+        metadata = Metadata.load(metadata_path)
+        return metadata.vers
+        # try:
+        #     with open(metadata_path) as file:
+        #         metadata = yaml.safe_load(file)
+        #     return metadata['vers']
+        # except FileNotFoundError:
+        #     _log.warning(f"The models package '{self.name}' is not versioned contact the package manager to fix it.")
+        #     return None
+        # except KeyError:
+        #     return ''
 
 
     @property
