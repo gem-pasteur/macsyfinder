@@ -21,6 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+from __future__ import annotations
 
 """
 This module allow to manage Packages of MacSyFinder models
@@ -50,6 +51,7 @@ from .gene import GeneBank
 from .model_conf_parser import ModelConfParser
 from .error import MacsydataError, MacsyDataLimitError, MacsypyError
 
+
 _log = colorlog.getLogger(__name__)
 
 
@@ -58,12 +60,6 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
     This the base class for ModelIndex.
     This class cannot be implemented, it must be subclassed
     """
-
-    def __new__(cls, *args, **kwargs):
-        if cls.__bases__ == (object,):
-            raise TypeError(f'{cls.__name__} is abstract cannot be instantiated.')
-        return super(AbstractModelIndex, cls).__new__(cls)
-
 
     def __init__(self, cache: str | None = None) -> None:
         """
@@ -74,6 +70,12 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
             self.cache: str = cache
         else:
             self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
+
+
+    @property
+    @abc.abstractmethod
+    def repos_url(self) -> str:
+        raise NotImplemented()
 
 
     def unarchive_package(self, path: str) -> str:
@@ -100,7 +102,7 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
                 prefix = os.path.commonprefix([abs_directory, abs_target])
                 return prefix == abs_directory
             
-            def safe_extract(tar, path: str = ".", members=None, *, numeric_owner=False):
+            def safe_extract(tar: tarfile.TarFile, path: str = ".", members=None, *, numeric_owner=False):
                 for member in tar.getmembers():
                     member_path = os.path.join(path, member.name)
                     if not is_within_directory(path, member_path):
@@ -130,6 +132,10 @@ class LocalModelIndex(AbstractModelIndex):
         """
         super().__init__(cache=cache)
         self.org_name: str = 'local'
+
+    @property
+    def repos_url(self) -> str:
+        return "local"
 
 
 class RemoteModelIndex(AbstractModelIndex):
@@ -167,6 +173,10 @@ class RemoteModelIndex(AbstractModelIndex):
                 raise err
         data = json.loads(req.decode('utf-8'))
         return data
+
+    @property
+    def repos_url(self) -> str:
+        return f"{self.base_url.replace('api.', '', 1)}/{self.org_name}"
 
 
     def remote_exists(self) -> bool:
