@@ -30,7 +30,7 @@ Manage the Models locations: Profiles and definitions
 import os
 import colorlog
 
-import yaml
+from .metadata import Metadata
 
 _log = colorlog.getLogger(__name__)
 
@@ -252,19 +252,14 @@ class ModelLocation:
 
 
     def _get_version(self, path: str) -> str | None:
-        from macsypy.package import Metadata
         metadata_path = os.path.join(path, "metadata.yml")
-        metadata = Metadata.load(metadata_path)
-        return metadata.vers
-        # try:
-        #     with open(metadata_path) as file:
-        #         metadata = yaml.safe_load(file)
-        #     return metadata['vers']
-        # except FileNotFoundError:
-        #     _log.warning(f"The models package '{self.name}' is not versioned contact the package manager to fix it.")
-        #     return None
-        # except KeyError:
-        #     return ''
+        try:
+            metadata = Metadata.load(metadata_path)
+            return metadata.vers
+        except FileNotFoundError:
+            _log.warning(f"The models package '{self.name}' is not versioned contact the package manager to fix it.")
+            return None
+
 
 
     @property

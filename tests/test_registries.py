@@ -27,13 +27,13 @@ import os
 import shutil
 import tempfile
 import argparse
-import yaml
 import colorlog
 
 import macsypy
 from macsypy.config import Config, MacsyDefaults
 from macsypy import registries
 from macsypy.registries import ModelLocation, DefinitionLocation, ModelRegistry, scan_models_dir
+from macsypy.package import Metadata
 from tests import MacsyTest
 
 
@@ -72,9 +72,12 @@ def _create_fake_models_tree(root_models_dir, sys_def, metadata=True):
     create_tree(sys_def['not_definitions'], def_dir)
 
     if metadata:
-        with open(os.path.join(models_dir, "metadata.yml"), 'w') as file:
-            metadata = {'vers': '1.0'}
-            yaml.dump(metadata, file)
+        meta = Metadata('maintainer_name',
+                        'maintainer@email.org',
+                        'fake package')
+        meta.vers = '1.0'
+        meta_path = os.path.join(models_dir, "metadata.yml")
+        meta.save(meta_path)
 
     return models_dir
 
