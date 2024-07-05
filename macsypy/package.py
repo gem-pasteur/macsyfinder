@@ -36,7 +36,7 @@ import urllib.parse
 import json
 import shutil
 import tarfile
-import copy
+import re
 
 import certifi
 import yaml
@@ -303,6 +303,171 @@ class RemoteModelIndex(AbstractModelIndex):
         return tmp_archive_path
 
 
+class Metadata:
+
+    name = 'metadata.yml'
+
+    def __init__(self, maintainer_name, maintainer_email, short_desc) -> None:
+        self.maintainer = maintainer_name, maintainer_email
+        self.short_desc = short_desc
+        self.cite = []
+        self.vers = None
+        self.doc = ''
+        self.license = ''
+        self.copyright_date = ''
+        self.copyright_holder = ''
+
+    @staticmethod
+    def load(path: str) -> Metadata:
+        with open(path) as raw_metadata:
+            data = yaml.safe_load(raw_metadata)
+            try:
+                new_meta = Metadata(data['maintainer']['name'],
+                                    data['maintainer']['email'],
+                                    data['short_desc'])
+            except KeyError:
+                msgs = []
+                if 'short_desc' not in data:
+                    msgs.append(f"The metadata file '{path}' is not valid: the element 'short_desc' "
+                                f"is required.")
+                if 'maintainer' not in data:
+                    msgs.append(f"The metadata file '{path}' is not valid: the element 'maintainer' "
+                                f"is required.")
+                elif 'name' not in data['maintainer'] or 'email' not in data['maintainer']:
+                    msgs.append(f"The metadata file '{path}' is not valid: "
+                                f"the element 'email' must have fields 'name' and 'email'.")
+                raise ValueError('\n- ' + '\n- '.join(msgs)) from None
+
+            for attr in 'cite', 'vers', 'doc', 'license', 'copyright':
+                if attr in data:
+                    if attr == 'copyright':
+                        m = re.match(r'(\d+)([-, ]*)(\d*)(.*)', data['copyright'].strip())
+                        if m:
+                            date_from, date_sep, date_to, holder = m.groups()
+                            if date_to:
+                                new_meta.copyright_date = f"{date_from}{date_sep}{date_to}"
+                            elif date_from:
+                                new_meta.copyright_date = f"{date_from}"
+                            new_meta.copyright_holder = holder.strip(' ,;.')
+                    else:
+                        setattr(new_meta, attr, data[attr])
+        return new_meta
+
+
+    def save(self, path: str) -> None:
+
+        yaml_dict = dict()
+        yaml_dict['maintainer'] = self.maintainer
+        yaml_dict['short_desc'] = self.short_desc
+        if self.cite:
+            yaml_dict['cite'] = self.cite
+        if self.doc:
+            yaml_dict['doc'] = self.doc
+        if self.license:
+            yaml_dict['license'] = self.license
+        if self._copyright_holder:
+            yaml_dict['copyright'] = f"{self.copyright_date}, {self.copyright_holder}"
+        if self.vers:
+            yaml_dict['vers'] = self.vers
+
+        with open(path, 'w') as metafile:
+            yaml.dump(yaml_dict, metafile, allow_unicode=True, indent=2)
+
+    @property
+    def maintainer(self) -> dict:
+        return self._maintainer.copy()
+
+
+    @maintainer.setter
+    def maintainer(self, maintainer: tuple[str, str]) -> None:
+        if isinstance(maintainer, (list, tuple)) and len(maintainer) == 2 and all(maintainer):
+            self._maintainer = {'name': maintainer[0], 'email': maintainer[1]}
+        else:
+            raise ValueError("fields 'name' and 'email' are mandatory for maintainer.")
+
+
+    @property
+    def short_desc(self) -> str:
+        return self._short_desc
+
+
+    @short_desc.setter
+    def short_desc(self, desc: str) -> None:
+        if not desc:
+            raise ValueError("The field 'short_desc' is mandatory.")
+        self._short_desc = desc.replace('\n', ' ')
+
+
+    @property
+    def cite(self) -> list[str]:
+        return self._cite
+
+    @cite.setter
+    def cite(self, citations: list[str]) -> None:
+        if citations:
+            self._cite = citations
+        else:
+            self._cite = []
+
+    @property
+    def doc(self) -> str:
+        return self._doc
+
+    @doc.setter
+    def doc(self, doc_link: str) -> None:
+        self._doc = doc_link
+
+
+    @property
+    def vers(self) -> str | None:
+        return self._vers
+
+
+    @vers.setter
+    def vers(self, vers: str) -> None:
+        if vers:
+            self._vers = str(vers)
+        else:
+            self._vers = None
+
+
+    @property
+    def license(self) -> str:
+        return self._license
+
+
+    @license.setter
+    def license(self, license_val: str) -> None:
+        self._license = license_val
+
+
+    @property
+    def copyright_date(self) -> str:
+        return self._copyright_date
+
+
+    @copyright_date.setter
+    def copyright_date(self, value: str):
+        self._copyright_date = str(value)
+
+
+    @property
+    def copyright_holder(self) -> str:
+        return self._copyright_holder
+
+
+    @copyright_holder.setter
+    def copyright_holder(self, value: str):
+        self._copyright_holder = value
+
+    @property
+    def copyright(self) -> str:
+        if self.copyright_holder:
+            return f"{self.copyright_date}, {self.copyright_holder}"
+        else:
+            return ''
+
+
 class Package:
     """
     This class Modelize a package of Models
@@ -313,7 +478,7 @@ class Package:
     - a file metadata.yml
     it is also recommended to add a file
     for licensing and copyright and a README.
-    for further explanation see TODO
+    for further explanation see documentation: modeler guide > package
 
     """
 
@@ -323,8 +488,8 @@ class Package:
         :param str path: The of the package root directory
         """
         self.path: str = os.path.realpath(path)
-        self.metadata_path: str = os.path.join(self.path, 'metadata.yml')
-        self._metadata: dict | None = None
+        self.metadata_path: str = os.path.join(self.path, Metadata.name)
+        self._metadata: Metadata | None = None
         self.name: str = os.path.basename(self.path)
         self.readme: str = self._find_readme()
 
@@ -349,8 +514,7 @@ class Package:
         """
         if not self._metadata:
             self._metadata = self._load_metadata()
-        # to avoid side effect
-        return copy.deepcopy(self._metadata)
+        return self._metadata
 
 
     def _load_metadata(self) -> dict[str: str]:
@@ -358,8 +522,7 @@ class Package:
         Open the metadata_path file and de-serialize it's content
         :return:
         """
-        with open(self.metadata_path) as raw_metadata:
-            metadata = yaml.safe_load(raw_metadata)
+        metadata = Metadata.load(self.metadata_path)
         return metadata
 
 
@@ -491,19 +654,16 @@ class Package:
         _log.info(f"Checking '{self.name}' {self.metadata_path}")
         errors = []
         warnings = []
-        data = self._load_metadata()
-        must_have = ("maintainer", "short_desc", "vers")
+        try:
+            data = self._load_metadata()
+        except ValueError as err:
+            errors.extend([msg for msg in err.args[0].split('\n') if msg])
+            return errors, warnings
+
         nice_to_have = ("cite", "doc", "license", "copyright")
-        for item in must_have:
-            if item not in data:
-                errors.append(f"field '{item}' is mandatory in {self.metadata_path}.")
         for item in nice_to_have:
-            if item not in data:
-                warnings.append(f"It's better if the field '{item}' is setup in {self.metadata_path} file")
-        if "maintainer" in data:
-            for item in ("name", "email"):
-                if item not in data["maintainer"]:
-                    errors.append(f"field 'maintainer.{item}' is mandatory in {self.metadata_path}.")
+            if not getattr(data, item):
+                warnings.append(f"It's better if the field '{item}' is setup in '{self.metadata_path}' file.")
         return errors, warnings
 
 
@@ -524,29 +684,30 @@ class Package:
         :return: some information about the package
         """
         metadata = self._load_metadata()
-        if 'cite' not in metadata:
-            metadata['cite'] = ["No citation available\n"]
-        if 'doc' not in metadata:
-            metadata['doc'] = "No documentation available"
-        if 'license' not in metadata:
-            metadata['license'] = "No license available"
-        copyrights = f"copyright: {metadata['copyright']}" if 'copyright' in metadata else ''
+        if metadata.cite:
+            cite = '\n'.join([f"\t- {c}".replace('\n', '\n\t  ') for c in metadata.cite]).rstrip()
+        else:
+            cite = "\t- No citation available"
+        doc = metadata.doc if metadata.doc else "No documentation available"
+        license = metadata.license if metadata.license else "No license available"
+        copyrights = f"copyright: {metadata.copyright_date}, {metadata.copyright_holder}" \
+            if metadata.copyright else ''
         pack_name = self.name
-        cite = '\n'.join([f"\t- {c}".replace('\n', '\n\t  ') for c in metadata['cite']]).rstrip()
+
         info = f"""
-{pack_name} ({metadata['vers']})
+{pack_name} ({metadata.vers})
 
-maintainer: {metadata['maintainer']['name']} <{metadata['maintainer']['email']}>
+maintainer: {metadata.maintainer['name']} <{metadata.maintainer['email']}>
 
-{metadata['short_desc']}
+{metadata.short_desc}
 
 how to cite:
 {cite}
 
 documentation
-\t{metadata['doc']}
+\t{doc}
 
-This data are released under {metadata['license']}
+This data are released under {license}
 {copyrights}
 """
         return info
