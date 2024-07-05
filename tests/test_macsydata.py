@@ -38,7 +38,7 @@ from macsypy.registries import scan_models_dir, ModelRegistry
 
 from tests import MacsyTest
 from macsypy.scripts import macsydata
-from macsypy.error import MacsyDataLimitError
+from macsypy.error import MacsydataError, MacsyDataLimitError
 
 
 class TestMacsydata(MacsyTest):
@@ -449,7 +449,6 @@ To cite MacSyFinder:
   MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. 
   Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjournal.250.
   https://peercommunityjournal.org/articles/10.24072/pcjournal.250/"""
-
         self.assertEqual(expected_citation, citation)
 
 
@@ -934,6 +933,9 @@ The models {pack_name} ({pack_vers}) have been installed successfully."""
 
 
     def test_install_installed_package_corrupted(self):
+        # there is no metadata file
+        # the package is not installable
+
         pack_name = 'fake_pack'
         pack_vers = '0.0b2'
         macsydata_cache = os.path.join(self.tmpdir, 'cache')
@@ -960,20 +962,14 @@ The models {pack_name} ({pack_vers}) have been installed successfully."""
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
-            with self.catch_log(log_name='macsydata'):
-                macsydata.do_install(self.args)
-            with self.catch_log(log_name='macsypy'):
-                # macsypy.registry throw a warning if metadata is not found
-                # silenced it
-                with self.catch_log(log_name='macsydata') as log:
-                    with self.assertRaises(RuntimeError):
-                        # try to install again
-                        # but find a corrupted package at the destination
-                        macsydata.do_install(self.args)
-                    msg_log = log.get_value().strip()
-                expected_log = f"""{pack_name} locally installed is corrupted.
-You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
-                self.assertEqual(msg_log, expected_log)
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(MacsydataError):
+                    macsydata.do_install(self.args)
+                msg_log = log.get_value().strip()
+                expected_log = (f"Extracting {pack_name} ({pack_vers})."
+                                f"\nFailed to install '{pack_name}-{pack_vers}' : The package has no 'metadata.yml' file."
+                                f"\nPlease contact the package maintainer. (local)")
+                self.assertEqual(expected_log, msg_log)
         finally:
             del macsydata.Config.models_dir
 
@@ -1563,9 +1559,6 @@ Maybe you can use --user option to install in your HOME.""")
 
             files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
             for f_name in files:
-                # ElementTree ensure order of attribute only from python3.9
-                if sys.version_info.minor < 9 and f_name.endswith('.xml'):
-                    continue
                 with self.subTest(file_name=f_name):
                     expected_file = self.find_data(self.args.pack_name, f_name)
                     got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
@@ -1597,9 +1590,6 @@ Maybe you can use --user option to install in your HOME.""")
 
             files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
             for f_name in files:
-                # ElementTree ensure order of attribute only from python3.9
-                if sys.version_info.minor < 9 and f_name.endswith('.xml'):
-                    continue
                 with self.subTest(file_name=f_name):
                     expected_file = self.find_data(self.args.pack_name, f_name)
                     got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
