@@ -369,7 +369,6 @@ Please wait before to try again.""")
                 _ = remote.download("bad_pack", "0.2")
             self.assertEqual(str(ctx.exception),
                              "package 'bad_pack-0.2' does not exists on repos 'package_download'")
-
         finally:
             package.RemoteModelIndex.remote_exists = rem_exists
 
@@ -461,7 +460,8 @@ ligne 3 et bbbbb
 
 
     def create_fake_package(self, model, definitions=True, bad_definitions=False, profiles=True, skip_hmm=None,
-                            metadata='good_metadata.yml', readme=True, license=True, conf=True, bad_conf=False):
+                            metadata='good_metadata.yml', readme=True, license=True, conf=True, vers=True,
+                            bad_conf=False):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
         if definitions:
@@ -492,9 +492,14 @@ ligne 3 et bbbbb
                     continue
                 open(os.path.join(profile_dir, f"{name}.hmm"), 'w').close()
         if metadata:
-            meta_file = self.find_data('pack_metadata', metadata)
+            meta_path = self.find_data('pack_metadata', metadata)
             meta_dest = os.path.join(pack_path, package.Metadata.name)
-            shutil.copyfile(meta_file, meta_dest)
+            with open(meta_path) as meta_file:
+                meta = yaml.safe_load(meta_file)
+            if not vers:
+                meta['vers'] = None
+            with open(meta_dest, 'w') as meta_file:
+                yaml.dump(meta, meta_file,allow_unicode=True, indent=2)
         if readme:
             with open(os.path.join(pack_path, "README"), 'w') as f:
                 f.write("# This a README\n")
@@ -712,7 +717,7 @@ ligne 3 et bbbbb
 
 
     def test_check_no_readme_n_no_license(self):
-        fake_pack_path = self.create_fake_package('fake_model', readme=False, license=False)
+        fake_pack_path = self.create_fake_package('fake_model', readme=False, license=False, vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
@@ -722,14 +727,14 @@ ligne 3 et bbbbb
                                     "The package 'fake_model' have not any README file."])
 
     def test_check_metadata(self):
-        fake_pack_path = self.create_fake_package('fake_model')
+        fake_pack_path = self.create_fake_package('fake_model', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
 
     def test_check_metadata_no_maintainer(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_maintainer.yml')
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_maintainer.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
@@ -737,7 +742,7 @@ ligne 3 et bbbbb
         self.assertListEqual(warnings, [])
 
     def test_check_metadata_no_name(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_name.yml')
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_name.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' "
@@ -745,7 +750,7 @@ ligne 3 et bbbbb
         self.assertListEqual(warnings, [])
 
     def test_check_metadata_no_email(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_email.yml')
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_email.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' "
@@ -753,7 +758,7 @@ ligne 3 et bbbbb
         self.assertListEqual(warnings, [])
 
     def test_check_metadata_no_desc(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_desc.yml')
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_desc.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
@@ -768,31 +773,39 @@ ligne 3 et bbbbb
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
 
+    def test_check_metadata_with_vers(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
+        self.assertEqual(errors, [])
+        self.assertEqual(warnings, ["The field 'vers' is not required anymore."
+                                    "\n  It will be ignored and set by macsydata during installation phase according"
+                                    " to the git tag."])
 
     def test_check_metadata_no_cite(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_cite.yml')
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_cite.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [f"It's better if the field 'cite' is setup in '{fake_pack_path}/metadata.yml' file."])
 
 
-    def test_checke_metadata_no_doc(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_doc.yml')
+    def test_check_metadata_no_doc(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_doc.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [f"It's better if the field 'doc' is setup in '{fake_pack_path}/metadata.yml' file."])
 
     def test_check_metadata_no_license(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_license.yml')
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_license.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [f"It's better if the field 'license' is setup in '{fake_pack_path}/metadata.yml' file."])
 
     def test_check_metadata_no_copyright(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_copyright.yml')
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_copyright.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
@@ -800,7 +813,7 @@ ligne 3 et bbbbb
 
 
     def test_check(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata='good_metadata.yml')
+        fake_pack_path = self.create_fake_package('fake_model', metadata='good_metadata.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack.check()
         self.assertListEqual(warnings, [])

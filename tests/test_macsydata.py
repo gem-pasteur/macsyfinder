@@ -33,8 +33,11 @@ import io
 import shlex
 from collections import namedtuple
 
+import yaml
+
 import macsypy.registries
 from macsypy.registries import scan_models_dir, ModelRegistry
+from macsypy import package
 
 from tests import MacsyTest
 from macsypy.scripts import macsydata
@@ -84,6 +87,7 @@ class TestMacsydata(MacsyTest):
                             definitions=True,
                             profiles=True,
                             metadata=True,
+                            vers=True,
                             readme=True,
                             license=True,
                             dest=''):
@@ -107,9 +111,14 @@ class TestMacsydata(MacsyTest):
             for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC', 'abc'):
                 open(os.path.join(profile_dir, f"{name}.hmm"), 'w').close()
         if metadata:
-            meta_file = self.find_data('pack_metadata', 'good_metadata.yml')
-            meta_dest = os.path.join(pack_path, 'metadata.yml')
-            shutil.copyfile(meta_file, meta_dest)
+            meta_path = self.find_data('pack_metadata', 'good_metadata.yml')
+            meta_dest = os.path.join(pack_path, package.Metadata.name)
+            with open(meta_path) as meta_file:
+                meta = yaml.safe_load(meta_file)
+            if not vers:
+                meta['vers'] = None
+            with open(meta_dest, 'w') as meta_file:
+                yaml.dump(meta, meta_file, allow_unicode=True, indent=2)
         if readme:
             with open(os.path.join(pack_path, "README"), 'w') as f:
                 f.write("# This a README\n")
@@ -606,7 +615,7 @@ To cite MacSyFinder:
 
     def test_check(self):
         pack_name = 'fake_1'
-        path = self.create_fake_package(pack_name)
+        path = self.create_fake_package(pack_name, vers=False)
         self.args.path = path
         with self.catch_log(log_name='macsydata') as log:
             macsydata.do_check(self.args)
@@ -621,8 +630,8 @@ Transform the models into a git repository
 add a remote repository to host the models
 for instance if you want to add the models to 'macsy-models'
 \tgit remote add origin https://github.com/macsy-models/
-\tgit tag 0.0b2
-\tgit push origin 0.0b2"""
+\tgit tag <tag vers>  # check https://macsyfinder.readthedocs.io/en/latest/modeler_guide/publish_package.html#sharing-your-models
+\tgit push origin <tag vers>"""
         self.assertEqual(expected_msg, log_msg)
 
 
@@ -635,6 +644,8 @@ for instance if you want to add the models to 'macsy-models'
             log_msg = log.get_value().strip()
         expected_msg = """The package 'fake_1' have not any LICENSE file. May be you have not right to use it.
 The package 'fake_1' have not any README file.
+The field 'vers' is not required anymore.
+  It will be ignored and set by macsydata during installation phase according to the git tag.
 
 macsydata says: You're only giving me a partial QA payment?
 I'll take it this time, but I'm not happy.
