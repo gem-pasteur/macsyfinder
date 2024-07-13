@@ -956,7 +956,7 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
     ######################
     # Initialize Package #
     ######################
-    c_date = time.localtime().tm_year
+    c_date = str(time.localtime().tm_year)
     repo = create_repo(args.pack_name, models_dir=args.models_dir)
     pack_dir = repo.working_dir
     def_dir = os.path.join(pack_dir, 'definitions')
