@@ -37,15 +37,18 @@ import pathlib
 import logging
 import xml.etree.ElementTree as ET
 import typing
+from importlib import resources as impresources
 
 import colorlog
+import git
 from packaging import requirements, specifiers, version
 
 import macsypy
 from macsypy.error import MacsydataError, MacsyDataLimitError
 from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry, ModelLocation, scan_models_dir
-from macsypy.package import RemoteModelIndex, LocalModelIndex, Package, parse_arch_path, Metadata
+from macsypy.package import RemoteModelIndex, LocalModelIndex, Package, parse_arch_path
+from macsypy.metadata import Metadata, Maintainer
 from macsypy import licenses
 
 # _log is set in main func
@@ -256,7 +259,7 @@ def do_install(args: argparse.Namespace) -> None:
             return
         try:
             shutil.rmtree(model_index.cache)
-        except Exception:
+        except Exception as err:
             _log.warning(f"Cannot clean cache '{model_index.cache}': {err}")
 
     def create_dir(path):
@@ -364,7 +367,7 @@ def do_install(args: argparse.Namespace) -> None:
     # we do not rely on vers in metadat any longer
     # but we inject the version from the version specify in package name
     # the package name is set by github according to the tag
-    _log.debug(f"injecting version in metadata")
+    _log.debug("injecting version in metadata")
     metadata_path = os.path.join(cached_pack, Metadata.name)
     if not os.path.exists(metadata_path):
         maintainer_loc = f" ({model_index.repos_url})"
@@ -616,8 +619,8 @@ I'll be really happy, if you fix warnings above, before to publish these models.
             _log.info("for instance if you want to add the models to 'macsy-models'")
             _log.log(25, "\tgit remote add origin https://github.com/macsy-models/")
 
-        _log.log(25, f"\tgit tag <tag vers>  # check https://macsyfinder.readthedocs.io/en/latest/modeler_guide/publish_package.html#sharing-your-models")
-        _log.log(25, f"\tgit push origin <tag vers>")
+        _log.log(25, "\tgit tag -a <tag vers>  # check https://macsyfinder.readthedocs.io/en/latest/modeler_guide/publish_package.html#sharing-your-models")
+        _log.log(25, "\tgit push origin <tag vers>")
 
 
 def do_show_definition(args: argparse.Namespace) -> None:
@@ -704,7 +707,7 @@ def do_init_package(args: argparse.Namespace) -> None:
         if not os.path.exists(pack_path):
             os.makedirs(pack_path)
         else:
-            raise ValueError(f"{pack_path} already exist.")
+            _log.warning(f"The '{pack_path}' already exists.")
         return pack_path
 
 
@@ -721,13 +724,16 @@ def do_init_package(args: argparse.Namespace) -> None:
         :param c_date: the date of the copyright
         :param c_holders: the holders of the copyright
         """
-        desc = desc if desc else "description in one line of this package"
-        metadata = Metadata(maintainer, email, desc)
-        metadata.cite = ['Place here how to cite this package, it can hold several citation',
-                         'citation 2 (optional)']
-        metadata.doc = 'where to find documentation about this package'
-        metadata.vers= '0.1b1'
-
+        meta_path = os.path.join(pack_dir, Metadata.name)
+        if os.path.exists(meta_path):
+            metadata = Metadata.load(meta_path)
+            metadata.vers = None
+        else:
+            desc = desc if desc else "description in one line of this package"
+            metadata = Metadata(Maintainer(maintainer, email), desc)
+            metadata.cite = ['Place here how to cite this package, it can hold several citation',
+                             'citation 2 (optional)']
+            metadata.doc = 'where to find documentation about this package'
         if c_date:
             metadata.copyright_date = c_date
         else:
@@ -739,7 +745,7 @@ def do_init_package(args: argparse.Namespace) -> None:
         if license:
             metadata.license = licenses.name_2_url(license)
 
-        metadata.save(os.path.join(pack_dir, Metadata.name))
+        metadata.save(meta_path)
 
 
     def add_def_skeleton(license: str | None = None) -> None:
@@ -757,9 +763,10 @@ def do_init_package(args: argparse.Namespace) -> None:
         )
         comment = ET.Comment('GENE_1 is a mandatory gene. GENE_1.hmm must exist in profiles directory')
         model.append(comment)
-        mandatory = ET.SubElement(model, 'gene',
-                                  attrib={'name': 'GENE_1',
-                                          'presence': 'mandatory'})
+        # add mandatory gene
+        ET.SubElement(model, 'gene',
+                      attrib={'name': 'GENE_1',
+                              'presence': 'mandatory'})
         comment = ET.Comment("GENE_2 is accessory and can be exchanged with GENE_3 which play a similar role in model.\n"
                              "Both GENE_2.hmm and GENE_3.hmm must exist in profiles_directory")
         model.append(comment)
@@ -768,28 +775,28 @@ def do_init_package(args: argparse.Namespace) -> None:
                                           'presence': 'accessory',
                                           })
         exchangeables = ET.SubElement(accessory, 'exchangeables')
-        ex_gene = ET.SubElement(exchangeables, 'gene',
-                                attrib={'name': 'GENE_3'})
+        ET.SubElement(exchangeables, 'gene',
+                      attrib={'name': 'GENE_3'})
         comment = ET.Comment("GENE_4 can be anywhere in the genome and not clusterized with some other model genes")
         model.append(comment)
-        loner = ET.SubElement(model, 'gene',
-                              attrib={'name': 'GENE_4',
-                                      'presence': 'accessory',
-                                      'loner': 'true'}
+        ET.SubElement(model, 'gene',
+                      attrib={'name': 'GENE_4',
+                              'presence': 'accessory',
+                              'loner': 'true'}
                               )
         comment = ET.Comment("GENE_5 can be shared by several systems instance from different models.")
         model.append(comment)
-        multi_model = ET.SubElement(model, 'gene',
-                                    attrib={'name': 'GENE_5',
-                                            'presence': 'accessory',
-                                            'multi_model': 'true'}
-                              )
+        ET.SubElement(model, 'gene',
+                      attrib={'name': 'GENE_5',
+                      'presence': 'accessory',
+                      'multi_model': 'true'}
+                      )
         comment = ET.Comment("GENE_6 have specific clusterisation rule")
         model.append(comment)
-        inter = ET.SubElement(model, 'gene',
-                              attrib={'name': 'GENE_6',
-                                      'presence': 'accessory',
-                                      'inter_gene_max_space': '10'}
+        ET.SubElement(model, 'gene',
+                      attrib={'name': 'GENE_6',
+                              'presence': 'accessory',
+                              'inter_gene_max_space': '10'}
                               )
         comment = ET.Comment("\nFor exhaustive documentation about grammar visit \n"
                              "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html\n")
@@ -915,43 +922,94 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
             with open(conf_path, 'w') as conf_file:
                 conf_file.writelines(conf)
 
+    def create_repo(package_name: str, models_dir: str | None = None) -> str:
+        pack_path = package_name if not models_dir else os.path.join(models_dir, package_name)
+        if os.path.exists(pack_path):
+            if os.path.isdir(pack_path):
+                content = os.listdir(pack_path)
+                if content:
+                    # The directory is not empty
+                    lacks =[]
+                    for item in 'definitions', 'profiles':
+                        if item not in content:
+                            lacks.append(item)
+                    if lacks:
+                        _log.error(f"{pack_path} already exits and not look a model package:"
+                                   f" There is no {', '.join(lacks)}.")
+                        sys.tracebacklimit = 0
+                        raise ValueError()
+                    repo = git.Repo(pack_path)
+            else:
+                _log.critical(f"{pack_path} already exists and is not a directory")
+                sys.tracebacklimit = 0
+                raise ValueError()
+        else:
+            os.makedirs(pack_path)
+            repo = git.Repo.init(pack_path)
+        return repo
 
     ######################
     # Initialize Package #
     ######################
     c_date = time.localtime().tm_year
-    pack_dir = create_package_dir(args.pack_name, models_dir=args.models_dir)
+    repo = create_repo(args.pack_name, models_dir=args.models_dir)
+    pack_dir = repo.working_dir
     def_dir = os.path.join(pack_dir, 'definitions')
     profiles_dir = os.path.join(pack_dir, 'profiles')
-    license_text = None
-    os.mkdir(def_dir)
-    os.mkdir(profiles_dir)
+    if os.path.exists(profiles_dir):
+        _log.warning("The 'profiles' directory already exists.")
+    else:
+        os.mkdir(profiles_dir)
 
     if args.holders:
         add_copyright(pack_dir, args.pack_name, c_date, args.holders, args.desc)
     else:
-        _log.warning(f"Consider to add copyright to protect your rights.")
+        if os.path.exists(os.path.join(pack_dir, 'COPYRIGHT')):
+            _log.warning("Consider to add copyright to protect your rights.")
 
     if args.license:
         try:
             license_text = licenses.licence(args.license, args.pack_name, args.authors, c_date, args.holders, args.desc)
+            add_license(pack_dir, license_text)
         except KeyError:
             _log.error(f"The license {args.license} is not managed by init (see macsydata init help). "
                        f"You will have to put the license by hand in package.")
             license_text=None
-        add_license(pack_dir, license_text)
     else:
-        _log.warning(f"Consider licensing {args.pack_name} to give the end-user the right to use your package,"
-                     f"and protect your rights. https://data.europa.eu/elearning/en/module4/#/id/co-01")
+        licence_path = os.path.exists(os.path.join(pack_dir, 'LICENSE'))
+        if not licence_path:
+            _log.warning(f"Consider licensing {args.pack_name} to give the end-user the right to use your package,"
+                         f"and protect your rights. https://data.europa.eu/elearning/en/module4/#/id/co-01")
+            license_text = None
+        else:
+            license_text = ''.join(open(licence_path).readlines())
 
-    add_def_skeleton(license=license_text)
-
-    create_model_conf(pack_dir, license=license_text)
-
-    add_readme(pack_dir, args.pack_name, args.desc)
+    if os.path.exists(def_dir):
+        _log.warning("The 'defintions' directory already exists.")
+        if os.listdir(def_dir):
+            # def_dir is not empty
+            _log.warning("Do not forget to add license in each xml definition file \n"
+                         "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html")
+        else:
+            add_def_skeleton(license=license_text)
+    else:
+        os.mkdir(def_dir)
+        add_def_skeleton(license=license_text)
+    if not os.path.exists(os.path.join(pack_dir, 'model_conf.xml')):
+        create_model_conf(pack_dir, license=license_text)
+    if not (os.path.exists(os.path.join(pack_dir, 'README')) or os.path.exists(os.path.join(pack_dir, 'README.md'))):
+        add_readme(pack_dir, args.pack_name, args.desc)
 
     add_metadata(pack_dir, args.maintainer, args.email, desc=args.desc, license=args.license,
                  c_date=c_date, c_holders=args.holders)
+
+    pre_push_path = impresources.files('macsypy') / 'data' / 'pre-push'
+    dest = os.path.join(repo.git_dir, 'hooks', 'pre-push')
+    if os.path.exists(dest):
+        _log.warning(f"A git hook '{pre_push_path}' already exists cannot install macsydata prepush hook.")
+        _log.warning("Do it manually, check documentation: ")
+    else:
+        shutil.copy(pre_push_path, dest)
 
     _log.info(f"""The skeleton of {args.pack_name} is ready.
 The package is located at {pack_dir}
@@ -966,7 +1024,9 @@ The package is located at {pack_dir}
 Before to publish your package you can use `macsydata check` to verify it's integrity.
 """
               )
-    _log.warning("Read macsyfinder modeler guide for further details: "
+    _log.warning("To share your models with the MacSyFinder community.")
+    _log.info("Consider to ask for a repository to macsy-models organization (https://github.com/macsy-models)")
+    _log.warning("\nRead macsyfinder modeler guide for further details: "
                  "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/index.html")
 
 ##################################
