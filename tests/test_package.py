@@ -37,6 +37,7 @@ from unittest.mock import patch
 
 import macsypy
 from macsypy import package
+from macsypy.metadata import Maintainer
 from macsypy import model_conf_parser
 from macsypy.error import MacsydataError, MacsyDataLimitError
 
@@ -432,8 +433,8 @@ class TestPackage(MacsyTest):
         package._log = logger
         logger = colorlog.getLogger('macsypy.model_conf_parser')
         model_conf_parser._log = logger
-        self.metadata = package.Metadata("auth_name",
-                                         "auth_name@mondomain.fr",
+        maintainer = Maintainer("auth_name", "auth_name@mondomain.fr")
+        self.metadata = package.Metadata(maintainer,
                                          "this is a short description of the repos")
         self.metadata.vers = "0.0b2"
         self.metadata.cite = ["bla bla",
