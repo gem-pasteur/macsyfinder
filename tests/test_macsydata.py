@@ -630,7 +630,7 @@ Transform the models into a git repository
 add a remote repository to host the models
 for instance if you want to add the models to 'macsy-models'
 \tgit remote add origin https://github.com/macsy-models/
-\tgit tag <tag vers>  # check https://macsyfinder.readthedocs.io/en/latest/modeler_guide/publish_package.html#sharing-your-models
+\tgit tag -a <tag vers>  # check https://macsyfinder.readthedocs.io/en/latest/modeler_guide/publish_package.html#sharing-your-models
 \tgit push origin <tag vers>"""
         self.assertEqual(expected_msg, log_msg)
 
