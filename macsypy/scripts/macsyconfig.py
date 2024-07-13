@@ -67,7 +67,7 @@ class ConfigParserWithComments(ConfigParser):
         :param add_space_before:
         :param add_space_after:
         """
-        comment = ''.join([f"# {l}\n" for l in comment.split('\n')])
+        comment = ''.join([f"# {line}\n" for line in comment.split('\n')])
         if add_space_before:
             comment = '\n' + comment
         if add_space_after:

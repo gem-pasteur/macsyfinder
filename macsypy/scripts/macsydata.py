@@ -1026,6 +1026,7 @@ Before to publish your package you can use `macsydata check` to verify it's inte
               )
     _log.warning("To share your models with the MacSyFinder community.")
     _log.info("Consider to ask for a repository to macsy-models organization (https://github.com/macsy-models)")
+    _log.info("then add this new repo to your local package. git remote add <remote name> <remote url>")
     _log.warning("\nRead macsyfinder modeler guide for further details: "
                  "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/index.html")
 

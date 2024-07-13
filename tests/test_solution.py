@@ -26,7 +26,7 @@ import os
 import argparse
 import random
 
-from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, LonerMultiSystem,  HitWeight
+from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory

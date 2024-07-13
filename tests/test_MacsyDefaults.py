@@ -27,7 +27,6 @@ import logging
 import shutil
 import tempfile
 
-from time import strftime
 
 from macsypy.config import MacsyDefaults
 

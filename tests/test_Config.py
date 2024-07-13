@@ -53,7 +53,7 @@ class TestConfig(MacsyTest):
         try:
             shutil.rmtree(self.tmp_dir)
             #pass
-        except Exception as err:
+        except Exception:
             pass
 
     def test_str_2_tuple(self):

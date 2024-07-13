@@ -410,7 +410,7 @@ Please wait before to try again.""")
                                  sorted([os.path.join(unpacked_path, f"file_{i}") for i in range(3)])
                                  )
             # test package is remove before to unarchive a new one
-            open(os.path.join(unpacked_path, f"file_must_be_removed"), 'w').close()
+            open(os.path.join(unpacked_path, "file_must_be_removed"), 'w').close()
             model_path = remote.unarchive_package(arch)
             self.assertListEqual(sorted(glob.glob(f"{unpacked_path}/*")),
                                  sorted([os.path.join(unpacked_path, f"file_{i}") for i in range(3)])
@@ -746,16 +746,16 @@ ligne 3 et bbbbb
         fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_name.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
-        self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' "
-                                      f"is not valid: the element 'email' must have fields 'name' and 'email'."])
+        self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
+                                                "the element 'maintainer' must have fields 'name' and 'email'."])
         self.assertListEqual(warnings, [])
 
     def test_check_metadata_no_email(self):
         fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_email.yml', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
-        self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' "
-                                      f"is not valid: the element 'email' must have fields 'name' and 'email'."])
+        self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
+                                                "the element 'maintainer' must have fields 'name' and 'email'."])
         self.assertListEqual(warnings, [])
 
     def test_check_metadata_no_desc(self):

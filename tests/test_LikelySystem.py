@@ -27,11 +27,11 @@ import argparse
 
 from macsypy.hit import CoreHit, ModelHit
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
+from macsypy.gene import CoreGene, ModelGene, GeneStatus
 from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
-from macsypy.system import LikelySystem, UnlikelySystem, HitSystemTracker
+from macsypy.system import LikelySystem, UnlikelySystem
 
 from tests import MacsyTest
 

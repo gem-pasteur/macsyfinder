@@ -274,8 +274,8 @@ class TestModelParser(MacsyTest):
             with self.catch_log():
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
-                         f"model 'only_one_accessory' is not consistent: there is only one gene in your model. " \
-                         f"So its status should be 'mandatory'.")
+                         "model 'only_one_accessory' is not consistent: there is only one gene in your model. " \
+                         "So its status should be 'mandatory'.")
 
 
     def test_bad_max_nb_genes(self):

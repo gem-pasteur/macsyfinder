@@ -101,7 +101,7 @@ def index_seq(genome_path: str) -> dict[str: tuple[int, int]]:
     index = OrderedDict()
     with open(genome_path, 'r') as fh:
         start = None
-        end = None
+        _id = None
         line = fh.readline()
         while line:
             if line.startswith('>') and start is not None:

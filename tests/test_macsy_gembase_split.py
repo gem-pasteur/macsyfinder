@@ -69,7 +69,7 @@ class TestSplit(MacsyTest):
             seq_files = sys.stdout.getvalue().strip().split()
 
         expected_dir = self.find_data('gembase_split')
-        expected_out_files = glob.glob(os.path.join(expected_dir, f'*.fasta'))
+        expected_out_files = glob.glob(os.path.join(expected_dir, '*.fasta'))
 
         self.assertSetEqual(set([os.path.basename(f) for f in expected_out_files]),
                             set([os.path.basename(f) for f in seq_files])

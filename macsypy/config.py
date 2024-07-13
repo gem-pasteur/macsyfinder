@@ -22,9 +22,7 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-"""
-Module to manage both default values and configuration needed by macsyfinder
-"""
+
 import argparse
 import os
 import shutil
@@ -33,9 +31,14 @@ import logging
 from configparser import ConfigParser, ParsingError
 
 from  macsypy.model_conf_parser import ModelConfParser
-_log = logging.getLogger(__name__)
 
 from typing import Any, TextIO, Literal, TypeAlias, Iterable
+
+"""
+Module to manage both default values and configuration needed by macsyfinder
+"""
+
+_log = logging.getLogger(__name__)
 
 DBType: TypeAlias = Literal['gembase', 'ordered_replicon', 'unordered']
 Topology: TypeAlias = Literal['linear', 'ciircular']

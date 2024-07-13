@@ -23,14 +23,14 @@
 #########################################################################
 from __future__ import annotations  # to allow to use a Type in type hint before it's definition
 
-"""
-Manage the Models locations: Profiles and definitions
-"""
-
 import os
 import colorlog
 
 from .metadata import Metadata
+
+"""
+Manage the Models locations: Profiles and definitions
+"""
 
 _log = colorlog.getLogger(__name__)
 

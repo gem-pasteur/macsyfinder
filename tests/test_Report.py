@@ -35,7 +35,7 @@ from macsypy.hit import CoreHit
 from macsypy.gene import CoreGene
 from macsypy.profile import ProfileFactory
 from macsypy.config import Config, MacsyDefaults
-from macsypy.database import Indexes, RepliconDB
+from macsypy.database import Indexes
 from macsypy.registries import ModelLocation
 from macsypy.error import MacsypyError
 from tests import MacsyTest

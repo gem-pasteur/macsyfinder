@@ -26,12 +26,10 @@
 import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.database import RepliconDB, Indexes, RepliconInfo
-from macsypy.error import MacsypyError
 
 from tests import MacsyTest
 

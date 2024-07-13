@@ -238,7 +238,7 @@ def merge_results(results_dirs: list[str], out_dir: str = '.') -> None:
     all_best_solutions_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
     header = "Systems"
     merge_and_reindex(all_best_solutions_files, out_file, header,
-                      skip_until=lambda l: l.startswith('sol_id'),
+                      skip_until=lambda line: line.startswith('sol_id'),
                       comment='#')
 
     for filename_to_merge, ext, header, first_col in [('best_solution', 'tsv', 'Systems', 'replicon'),
@@ -251,7 +251,7 @@ def merge_results(results_dirs: list[str], out_dir: str = '.') -> None:
         _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
         best_solution_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
         merge_files(best_solution_files, out_file, header,
-                    skip_until=lambda l: l.startswith(first_col),
+                    skip_until=lambda line: line.startswith(first_col),
                     keep_first=first_col)
 
     filename_to_merge = 'all_systems'
@@ -260,7 +260,7 @@ def merge_results(results_dirs: list[str], out_dir: str = '.') -> None:
     _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
     filename_to_merge = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
     merge_files(filename_to_merge, out_file, 'Systems',
-                skip_until=lambda l: l.startswith('system id'),
+                skip_until=lambda line: line.startswith('system id'),
                 keep_first='system id')
 
     filename_to_merge = 'rejected_candidates'
@@ -269,7 +269,7 @@ def merge_results(results_dirs: list[str], out_dir: str = '.') -> None:
     _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
     filename_to_merge = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
     merge_files(filename_to_merge, out_file, 'Rejected candidates',
-                skip_until=lambda l: l.startswith('Cluster:'),
+                skip_until=lambda line: line.startswith('Cluster:'),
                 keep_first='Cluster:')
 
     filename_to_merge, ext = 'best_solution_summary', 'tsv'

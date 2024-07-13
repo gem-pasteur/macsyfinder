@@ -23,26 +23,25 @@
 #########################################################################
 from __future__ import annotations
 
-"""
-Module to build and manage Clusters of Hit
-A cluster is a set of hits each of which hits less than inter_gene_max_space from its neighbor
-"""
 
 import itertools
 import logging
-from typing import Any
 
 import macsypy.gene
-
 from .error import MacsypyError
 from .gene import GeneStatus
 from .hit import Loner, LonerMultiSystem, get_best_hit_4_func, ModelHit, CoreHit, HitWeight
-
 from .database import RepliconInfo
 from .model import Model
 from .gene import ModelGene
 
 _log = logging.getLogger(__name__)
+
+
+"""
+Module to build and manage Clusters of Hit
+A cluster is a set of hits each of which hits less than inter_gene_max_space from its neighbor
+"""
 
 
 def _colocates(h1: ModelHit, h2: ModelHit, rep_info: RepliconInfo) -> bool:

@@ -1206,7 +1206,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
 
 
     def test_cfg_n_previous_run(self):
-        args = f"--cfg-file foo --previous-run bar " \
+        args = "--cfg-file foo --previous-run bar " \
                "-o {out_dir}"
 
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_cfg_n_previous_run')

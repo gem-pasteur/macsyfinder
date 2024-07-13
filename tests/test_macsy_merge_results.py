@@ -30,7 +30,6 @@ import sys
 import colorlog
 import unittest
 import platform
-import re
 
 from tests import MacsyTest
 from macsypy.scripts import macsy_merge_results
