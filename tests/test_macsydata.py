@@ -1579,7 +1579,7 @@ Maybe you can use --user option to install in your HOME.""")
 
 
     def test_init_package_complete(self):
-        self.args.pack_name = 'complete_pack'
+        self.args.pack_name = 'init_pack'
         self.args.maintainer = 'John Doe'
         self.args.email = 'john.doe@domain.org'
         self.args.authors = 'Jim Doe, John Doe'

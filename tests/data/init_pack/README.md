@@ -1,7 +1,7 @@
 
-# complete_pack: description in one line of this package
+# init_pack: description in one line of this package
 
-Place here information about complete_pack
+Place here information about init_pack
 
 - how to use it
 - how to cite it
