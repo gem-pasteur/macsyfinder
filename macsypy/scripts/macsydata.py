@@ -1008,6 +1008,17 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
     add_metadata(pack_dir, args.maintainer, args.email, desc=args.desc, license=args.license,
                  c_date=c_date, c_holders=args.holders)
 
+    # add files to repository
+    untracked_files = repo.untracked_files
+    for file in untracked_files:
+        repo.index.add(file)
+    untracked_str = '- ' + '\n- '.join(untracked_files)
+    repo.index.commit(f"""initial commit
+
+add files:
+{untracked_str}    
+""")
+
     pre_push_path = impresources.files('macsypy') / 'data' / 'pre-push'
     dest = os.path.join(repo.git_dir, 'hooks', 'pre-push')
     if os.path.exists(dest):
