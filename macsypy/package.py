@@ -23,10 +23,6 @@
 #########################################################################
 from __future__ import annotations
 
-"""
-This module allow to manage Packages of MacSyFinder models
-"""
-
 import os
 import abc
 import ssl
@@ -50,6 +46,10 @@ from .gene import GeneBank
 from .model_conf_parser import ModelConfParser
 from .metadata import Metadata
 from .error import MacsydataError, MacsyDataLimitError, MacsypyError
+
+"""
+This module allow to manage Packages of MacSyFinder models
+"""
 
 
 _log = colorlog.getLogger(__name__)
@@ -75,7 +75,7 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
     @property
     @abc.abstractmethod
     def repos_url(self) -> str:
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
     def unarchive_package(self, path: str) -> str:
@@ -501,9 +501,9 @@ class Package:
                 warnings.append(f"It's better if the field '{item}' is setup in '{self.metadata_path}' file.")
 
         if data.vers:
-            warnings.append(f"The field 'vers' is not required anymore.\n"
-                            f"  It will be ignored and set by macsydata during installation phase according "
-                            f"to the git tag.")
+            warnings.append("The field 'vers' is not required anymore.\n"
+                            "  It will be ignored and set by macsydata during installation phase according "
+                            "to the git tag.")
         return errors, warnings
 
 
@@ -537,7 +537,7 @@ class Package:
         info = f"""
 {pack_name} ({metadata.vers})
 
-maintainer: {metadata.maintainer['name']} <{metadata.maintainer['email']}>
+maintainer: {metadata.maintainer.name} <{metadata.maintainer.email}>
 
 {metadata.short_desc}
 
