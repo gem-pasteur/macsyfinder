@@ -21,7 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
+import logging
 import tempfile
 import shutil
 import os
@@ -34,6 +34,7 @@ import shlex
 from collections import namedtuple
 
 import yaml
+import git
 
 import macsypy.registries
 from macsypy.registries import scan_models_dir, ModelRegistry
@@ -81,6 +82,14 @@ class TestMacsydata(MacsyTest):
         # some function in macsydata script suppress the traceback
         # but without traceback it's hard to debug test :-(
         sys.tracebacklimit = 1000  # the default value
+
+        # at each call of macsydata.main
+        # init_logger is called and new handler is add
+        # remove them
+        logger = macsydata._log
+        if logger:
+            for handler in logger.handlers[:]:
+                logger.removeHandler(handler)
 
 
     def create_fake_package(self, model,
@@ -1607,6 +1616,172 @@ Maybe you can use --user option to install in your HOME.""")
                     self.assertFileEqual(expected_file, got_file)
         finally:
             macsydata.time.localtime = local_time_ori
+
+    def test_init_empty_dir_exists(self):
+        self.args.pack_name = 'init_pack'
+        self.args.maintainer = 'John Doe'
+        self.args.email = 'john.doe@domain.org'
+        self.args.authors = 'Jim Doe, John Doe'
+        self.args.license = 'cc-by-nc-sa'
+        self.args.holders = 'Pasteur'
+        self.args.desc = 'description in one line of this package'
+        self.args.models_dir = self.models_dir[0]
+        self.args.no_clean = False
+        # see above (test_init_package_complete)
+        # why a do a mock for localtime
+        fake_time = namedtuple('FakeTime', ['tm_year'])
+        local_time_ori = macsydata.time.localtime
+        macsydata.time.localtime = lambda: fake_time(2022)
+        os.makedirs(os.path.join(self.models_dir[0], self.args.pack_name))
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_init_package(self.args)
+
+            files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
+            for f_name in files:
+                with self.subTest(file_name=f_name):
+                    expected_file = self.find_data(self.args.pack_name, f_name)
+                    got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
+                    self.assertFileEqual(expected_file, got_file)
+        finally:
+            macsydata.time.localtime = local_time_ori
+
+
+    def test_init_dir_exists_not_pack(self):
+        self.args.pack_name = 'init_pack'
+        self.args.maintainer = 'John Doe'
+        self.args.email = 'john.doe@domain.org'
+        self.args.authors = 'Jim Doe, John Doe'
+        self.args.license = 'cc-by-nc-sa'
+        self.args.holders = 'Pasteur'
+        self.args.desc = 'description in one line of this package'
+        self.args.models_dir = self.models_dir[0]
+        self.args.no_clean = False
+        # see above (test_init_package_complete)
+        # why a do a mock for localtime
+        fake_time = namedtuple('FakeTime', ['tm_year'])
+        local_time_ori = macsydata.time.localtime
+        macsydata.time.localtime = lambda: fake_time(2022)
+        pack_path = os.path.join(self.models_dir[0], self.args.pack_name)
+        os.makedirs(pack_path)
+        os.mkdir(os.path.join(pack_path, 'nimportnaoik'))
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError):
+                    macsydata.do_init_package(self.args)
+                log_msg = log.get_value().strip()
+            self.assertEqual(log_msg,
+                             f"{pack_path} already exits and not look a model package:"
+                             f" There is no definitions, profiles.")
+
+        finally:
+            macsydata.time.localtime = local_time_ori
+
+    def test_init_dir_exists_look_pack(self):
+        self.args.pack_name = 'init_pack'
+        self.args.maintainer = 'John Doe'
+        self.args.email = 'john.doe@domain.org'
+        self.args.authors = 'Jim Doe, John Doe'
+        self.args.license = 'cc-by-nc-sa'
+        self.args.holders = 'Pasteur'
+        self.args.desc = 'description in one line of this package'
+        self.args.models_dir = self.models_dir[0]
+        self.args.no_clean = False
+        # see above (test_init_package_complete)
+        # why a do a mock for localtime
+        fake_time = namedtuple('FakeTime', ['tm_year'])
+        local_time_ori = macsydata.time.localtime
+        macsydata.time.localtime = lambda: fake_time(2022)
+        pack_path = os.path.join(self.models_dir[0], self.args.pack_name)
+        os.makedirs(pack_path)
+        os.mkdir(os.path.join(pack_path, 'definitions'))
+        os.mkdir(os.path.join(pack_path, 'profiles'))
+        repo = git.Repo.init(pack_path)
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_init_package(self.args)
+            files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
+            for f_name in files:
+                with self.subTest(file_name=f_name):
+                    expected_file = self.find_data(self.args.pack_name, f_name)
+                    got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
+                    self.assertFileEqual(expected_file, got_file)
+            repo = git.Repo(pack_path)
+            tree = repo.head.commit.tree
+            files_and_dirs = {entry.name for entry in tree}
+            # profiles is empty so not in git
+            # we list only first level so 'definitions/model_example.xml' does not appear
+            self.assertEqual({'COPYRIGHT', 'LICENSE', 'README.md', 'definitions', 'metadata.yml', 'model_conf.xml'},
+                             files_and_dirs)
+        finally:
+            macsydata.time.localtime = local_time_ori
+
+
+    def test_init_existing_pack(self):
+        self.args.pack_name = 'init_pack'
+        self.args.maintainer = 'John Doe'
+        self.args.email = 'john.doe@domain.org'
+        self.args.authors = 'Jim Doe, John Doe'
+        self.args.license = 'cc-by-nc-sa'
+        self.args.holders = 'Pasteur'
+        self.args.desc = 'description in one line of this package'
+        self.args.models_dir = self.models_dir[0]
+        self.args.no_clean = False
+        # see above (test_init_package_complete)
+        # why a do a mock for localtime
+        fake_time = namedtuple('FakeTime', ['tm_year'])
+        local_time_ori = macsydata.time.localtime
+        macsydata.time.localtime = lambda: fake_time(2022)
+        pack_path = os.path.join(self.models_dir[0], self.args.pack_name)
+        with self.catch_log(log_name='macsydata'):
+            macsydata.do_init_package(self.args)
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_init_package(self.args)
+            files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
+            for f_name in files:
+                with self.subTest(file_name=f_name):
+                    expected_file = self.find_data(self.args.pack_name, f_name)
+                    got_file = os.path.join(self.args.models_dir, self.args.pack_name, f_name)
+                    self.assertFileEqual(expected_file, got_file)
+            repo = git.Repo(pack_path)
+            tree = repo.head.commit.tree
+            files_and_dirs = {entry.name for entry in tree}
+            # profiles is empty so not in git
+            # we list only first level so 'definitions/model_example.xml' does not appear
+            self.assertEqual({'COPYRIGHT', 'LICENSE', 'README.md', 'definitions', 'metadata.yml', 'model_conf.xml'},
+                             files_and_dirs)
+        finally:
+            macsydata.time.localtime = local_time_ori
+
+
+    def test_init_existing_file(self):
+        self.args.pack_name = 'init_pack'
+        self.args.maintainer = 'John Doe'
+        self.args.email = 'john.doe@domain.org'
+        self.args.authors = 'Jim Doe, John Doe'
+        self.args.license = 'cc-by-nc-sa'
+        self.args.holders = 'Pasteur'
+        self.args.desc = 'description in one line of this package'
+        self.args.models_dir = self.models_dir[0]
+        self.args.no_clean = False
+        # see above (test_init_package_complete)
+        # why a do a mock for localtime
+        fake_time = namedtuple('FakeTime', ['tm_year'])
+        local_time_ori = macsydata.time.localtime
+        macsydata.time.localtime = lambda: fake_time(2022)
+        pack_path = os.path.join(self.models_dir[0], self.args.pack_name)
+        open(pack_path, 'w').close()
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError) as ctx:
+                    macsydata.do_init_package(self.args)
+                log_msg = log.get_value().strip()
+                self.assertEqual(log_msg,
+                                 f"{pack_path} already exists and is not a directory.")
+        finally:
+            macsydata.time.localtime = local_time_ori
+
 
     def test_build_argparser(self):
         parser = macsydata.build_arg_parser()
