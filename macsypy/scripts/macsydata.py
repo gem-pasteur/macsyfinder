@@ -969,7 +969,7 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
     if args.holders:
         add_copyright(pack_dir, args.pack_name, c_date, args.holders, args.desc)
     else:
-        if os.path.exists(os.path.join(pack_dir, 'COPYRIGHT')):
+        if not os.path.exists(os.path.join(pack_dir, 'COPYRIGHT')):
             _log.warning("Consider to add copyright to protect your rights.")
 
     if args.license:
