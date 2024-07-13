@@ -929,7 +929,7 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
                 content = os.listdir(pack_path)
                 if content:
                     # The directory is not empty
-                    lacks =[]
+                    lacks = []
                     for item in 'definitions', 'profiles':
                         if item not in content:
                             lacks.append(item)
@@ -938,9 +938,14 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
                                    f" There is no {', '.join(lacks)}.")
                         sys.tracebacklimit = 0
                         raise ValueError()
-                    repo = git.Repo(pack_path)
+                    _log.info(f"{pack_path} already exits and look a model package:"
+                              " Transform it in git repository.")
+                    repo = git.Repo.init(pack_path)
+                else:
+                    # the dir pack_name is empty
+                    repo = git.Repo.init(pack_path)
             else:
-                _log.critical(f"{pack_path} already exists and is not a directory")
+                _log.critical(f"{pack_path} already exists and is not a directory.")
                 sys.tracebacklimit = 0
                 raise ValueError()
         else:
