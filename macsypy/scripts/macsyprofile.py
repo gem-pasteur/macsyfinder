@@ -38,7 +38,7 @@ from macsypy.database import Indexes
 from macsypy.hit import get_best_hits, CoreHit
 from macsypy.registries import split_def_name
 from macsypy.utils import get_replicon_names
-
+from macsypy.metadata import Metadata
 
 # _log is set in main func
 _log = None
@@ -288,13 +288,16 @@ class HmmProfile:
                         raise ValueError(msg) from err
 
 
-def header(cmd: list[str]) -> str:
+def header(cmd: list[str], model: str, model_vers: str) -> str:
     """
 
     :param cmd: the command use dto launch this analyse
+    :model: The name of model family
+    :model_vers: The version of the model
     :return: The header of the result file
     """
     header = f"""# macsyprofile {macsypy.__version__}
+# models: {model}-{model_vers}
 # macsyprofile {' '.join(cmd)}
 hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tscore\tprofile_coverage\tsequence_coverage\tbegin\tend"""
     return header
@@ -494,17 +497,20 @@ def main(args: list[str] | None = None, log_level: str | int | None = None) -> N
         model_familly_name = split_def_name(cfg.models()[0])[0]
         model_dir = [p for p in [os.path.join(p, model_familly_name) for p in cfg.models_dir()] if os.path.exists(p)][-1]
 
+        metadata_path = os.path.join(model_dir, Metadata.name)
+        metadata = Metadata.load(metadata_path)
+        model_vers = metadata.vers
         profiles_dir = os.path.join(model_dir, 'profiles')
     except IndexError:
         _log.critical(f"Cannot find models in conf file {msf_run_path}. "
                       f"May be these results have been generated with an old version of macsyfinder.")
-        sys.tracebacklimit = 0
+        sys.tracebacklimit = 10
         raise ValueError() from None
 
     _log.debug(f"hmmer_files: {hmmer_files}")
     all_hits = []
     with open(profile_report_path, 'w') as prof_out:
-        print(header(args), file=prof_out)
+        print(header(args, model_familly_name, model_vers), file=prof_out)
         for hmmer_out_path in hmmer_files:
             _log.info(f"parsing {hmmer_out_path}")
             gene_name = get_gene_name(hmmer_out_path, hmm_suffix)
