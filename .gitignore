@@ -93,3 +93,8 @@ macsyfinder.egg-info/
 .nextflow/
 .nextflow.log*
 work/
+
+########
+# ruff #
+########
+.ruff_cache/
