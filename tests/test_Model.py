@@ -64,7 +64,7 @@ class TestModel(MacsyTest):
     def clean_working_dir(self):
         try:
             shutil.rmtree(self.cfg.working_dir())
-        except:
+        except Exception:
             pass
 
     def test_fqn(self):

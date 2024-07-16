@@ -49,7 +49,7 @@ class TestSplit(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
         # some function in macsydata script suppress the traceback
         # but without traceback it's hard to debug test :-(

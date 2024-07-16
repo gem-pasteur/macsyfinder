@@ -324,7 +324,7 @@ class TestMacsyconfig(MacsyTest):
                    }
         defaults = MacsyDefaults()
 
-        with self.catch_io(out=True) as out:
+        with self.catch_io(out=True):
             msf_cfg.set_section(sec_name, options, cp, defaults, use_defaults=False)
             stdout = sys.stdout.getvalue().strip()
         self.assertTrue(cp.has_section(sec_name))

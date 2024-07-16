@@ -40,7 +40,6 @@ import typing
 from importlib import resources as impresources
 
 import colorlog
-import git
 from packaging import requirements, specifiers, version
 
 import macsypy
@@ -50,6 +49,15 @@ from macsypy.registries import ModelRegistry, ModelLocation, scan_models_dir
 from macsypy.package import RemoteModelIndex, LocalModelIndex, Package, parse_arch_path
 from macsypy.metadata import Metadata, Maintainer
 from macsypy import licenses
+try:
+    import git
+except ModuleNotFoundError:
+    import warnings
+    warnings.warn("GitPython is not installed, `macsydata init` is disabled ()\n"
+                  "To turn this feature ON:\n"
+                  "  - install git\n"
+                  "  - then run `python -m pip install macsyfinder[model]` in your activated environment.")
+    git = None
 
 # _log is set in main func
 _log = None
@@ -1291,33 +1299,35 @@ def build_arg_parser() -> argparse.ArgumentParser:
     ########
     # init #
     ########
-    init_subparser = subparsers.add_parser('init',
-                                           help='Create a template for a new data package')
-    init_subparser.set_defaults(func=do_init_package)
-    init_subparser.add_argument('--pack-name',
-                                required=True,
-                                help='The name of the data package.')
-    init_subparser.add_argument('--maintainer',
-                                required=True,
-                                help='The name of the package maintainer.')
-    init_subparser.add_argument('--email',
-                                required=True,
-                                help='The email of the package maintainer.')
-    init_subparser.add_argument('--authors',
-                                required=True,
-                                help="The authors of the package. Could be different that the maintainer."
-                                     "Could be several persons. Surround the names by quotes 'John Doe, Richard Miles'")
-    init_subparser.add_argument('--license',
-                                choices=['cc-by', 'cc-by-sa', 'cc-by-nc', 'cc-by-nc-sa', 'cc-by-nc-nd'],
-                                help="""The license under this work will be released.
-if the license you choice is not in the list, you can do it manually
-by adding the license file in package and add suitable headers in model definitions.""")
-    init_subparser.add_argument('--holders',
-                                help="The holders of the copyright")
-    init_subparser.add_argument('--desc',
-                                help="A short description (one line) of the package")
-    init_subparser.add_argument('--models-dir',
-                                help='The path of an alternative models directory by default the package will be created here.' )
+    if git is not None:
+        init_subparser = subparsers.add_parser('init',
+                                               help='Create a template for a new data package')
+        init_subparser.set_defaults(func=do_init_package)
+        init_subparser.add_argument('--pack-name',
+                                    required=True,
+                                    help='The name of the data package.')
+        init_subparser.add_argument('--maintainer',
+                                    required=True,
+                                    help='The name of the package maintainer.')
+        init_subparser.add_argument('--email',
+                                    required=True,
+                                    help='The email of the package maintainer.')
+        init_subparser.add_argument('--authors',
+                                    required=True,
+                                    help="The authors of the package. Could be different that the maintainer."
+                                         "Could be several persons. Surround the names by quotes 'John Doe, Richard Miles'")
+        init_subparser.add_argument('--license',
+                                    choices=['cc-by', 'cc-by-sa', 'cc-by-nc', 'cc-by-nc-sa', 'cc-by-nc-nd'],
+                                    help="""The license under this work will be released.
+    if the license you choice is not in the list, you can do it manually
+    by adding the license file in package and add suitable headers in model definitions.""")
+        init_subparser.add_argument('--holders',
+                                    help="The holders of the copyright")
+        init_subparser.add_argument('--desc',
+                                    help="A short description (one line) of the package")
+        init_subparser.add_argument('--models-dir',
+                                    help='The path of an alternative models directory by default the package will be created here.' )
+
     return parser
 
 

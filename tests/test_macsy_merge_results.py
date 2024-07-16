@@ -47,7 +47,7 @@ class TestMerge(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
         # some function in macsydata script suppress the traceback
         # but without traceback it's hard to debug test :-(
@@ -180,10 +180,8 @@ class TestMerge(MacsyTest):
 
     def test_functional_merge_out_error(self):
         res_1 = 'results_1'
-        src_res_1 = self.find_data('data_set', res_1)
         dest_res_1 = os.path.join(self.test_dir, res_1)
         res_2 = 'results_no_hits'
-        src_res_2 = self.find_data('data_set', res_2)
         dest_res_2 = os.path.join(self.test_dir, res_2)
         merge_dir = os.path.join(self.test_dir, 'merged_results')
 
@@ -210,10 +208,8 @@ class TestMerge(MacsyTest):
     @unittest.skipIf(platform.system() == 'Windows' or os.getuid() == 0, 'Skip test on Windows or if run as root')
     def test_functional_merge_out_not_writable(self):
         res_1 = 'results_1'
-        src_res_1 = self.find_data('data_set', res_1)
         dest_res_1 = os.path.join(self.test_dir, res_1)
         res_2 = 'results_no_hits'
-        src_res_2 = self.find_data('data_set', res_2)
         dest_res_2 = os.path.join(self.test_dir, res_2)
         merge_dir = os.path.join(self.test_dir, 'merged_results')
         ######################################
@@ -250,7 +246,7 @@ class TestMerge(MacsyTest):
 
         with self.assertRaises(ValueError) as ctx:
             macsy_merge_results.merge_and_reindex([res1, res2], merge_dir, "Systems",
-                                                  skip_until=lambda l: l.startswith('sol_id'),
+                                                  skip_until=lambda line: line.startswith('sol_id'),
                                                   comment='#')
         self.assertEqual(str(ctx.exception),
                          "Cannot reindex int(GCF_000006845) + 1:"

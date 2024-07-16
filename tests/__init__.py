@@ -26,7 +26,6 @@ import os
 import sys
 import shutil
 import unittest
-import platform
 from io import StringIO
 from contextlib import contextmanager
 import hashlib
@@ -175,7 +174,6 @@ class MacsyTest(unittest.TestCase):
 
                 # the system_id may change from one run to another
                 # So I have to remove them before to compare each row
-                filename = os.path.basename(fh1.name)
                 if header is None:
                     header = fields_1[:]
 
@@ -266,7 +264,7 @@ class MacsyTest(unittest.TestCase):
         """
         try:
             shutil.rmtree(path)
-        except:
+        except Exception:
             pass
 
     @staticmethod

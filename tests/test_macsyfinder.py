@@ -63,8 +63,9 @@ class TestMacsyfinder(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.tmp_dir)
-        except:
+        except Exception:
             pass
+
 
     def _fill_model_registry(self, config):
         model_registry = ModelRegistry()
@@ -298,7 +299,6 @@ neutral genes:
         mhit_gspd1 = ModelHit(chit_gspd1, mg_gspd, GeneStatus.MANDATORY)
         mhit_gspd2 = ModelHit(chit_gspd2, mg_gspd, GeneStatus.MANDATORY)
         l_gspd1 = Loner(mhit_gspd1, counterpart=[mhit_gspd2])
-        l_gspd2 = Loner(mhit_gspd2, counterpart=[mhit_gspd1])
         system_1 = System(model,
                           [Cluster([mhit_abc, mhit_sctj], model, HitWeight(**cfg.hit_weights())),
                            Cluster([l_gspd1], model, HitWeight(**cfg.hit_weights()))],
@@ -378,7 +378,6 @@ neutral genes:
         mhit_gspd1 = ModelHit(chit_gspd1, mg_gspd, GeneStatus.MANDATORY)
         mhit_gspd2 = ModelHit(chit_gspd2, mg_gspd, GeneStatus.MANDATORY)
         l_gspd1 = MultiSystem(mhit_gspd1, counterpart=[mhit_gspd2])
-        l_gspd2 = MultiSystem(mhit_gspd2, counterpart=[mhit_gspd1])
         system_1 = System(model,
                           [Cluster([mhit_abc, mhit_sctj], model, HitWeight(**cfg.hit_weights())),
                            Cluster([l_gspd1], model, HitWeight(**cfg.hit_weights()))],

@@ -80,7 +80,7 @@ class Test(MacsyTest):
             pass
             # self.out_dir is set in self._macsyfinder_run
             shutil.rmtree(self.out_dir)
-        except:
+        except Exception:
             pass
         # remove handlers
         # otherwise at each test init_logger is called
@@ -1051,9 +1051,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
-        sequences_dir = self.find_data('base')
         self._macsyfinder_run(args)
-
         self.assertTrue(os.path.exists(os.path.join(self._index_dir, "test_3.fasta.idx")))
 
 
@@ -1121,7 +1119,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
         open(os.path.join(self.out_dir, 'FOO'), 'w').close()
 
         # msf should complain about out dir
-        with self.assertRaises(ValueError) as ctx:
+        with self.assertRaises(ValueError):
             macsyfinder.main(args=args.split(), loglevel='ERROR')
 
         args += " --force"

@@ -77,7 +77,7 @@ class TestSearchGenes(MacsyTest):
         try:
             shutil.rmtree(self.tmp_dir)
             #pass
-        except:
+        except Exception:
             pass
 
 

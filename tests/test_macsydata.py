@@ -21,7 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-import logging
+
 import tempfile
 import shutil
 import os
@@ -34,8 +34,6 @@ import shlex
 from collections import namedtuple
 
 import yaml
-import git
-
 import macsypy.registries
 from macsypy.registries import scan_models_dir, ModelRegistry
 from macsypy import package
@@ -43,6 +41,12 @@ from macsypy import package
 from tests import MacsyTest
 from macsypy.scripts import macsydata
 from macsypy.error import MacsydataError, MacsyDataLimitError
+import warnings
+warnings.simplefilter('ignore', UserWarning,)
+try:
+    import git
+except ModuleNotFoundError:
+    git = None
 
 
 class TestMacsydata(MacsyTest):
@@ -77,7 +81,7 @@ class TestMacsydata(MacsyTest):
         try:
             shutil.rmtree(self.tmpdir)
             pass
-        except:
+        except Exception:
             pass
         # some function in macsydata script suppress the traceback
         # but without traceback it's hard to debug test :-(
@@ -245,7 +249,6 @@ copyright: 2019, Institut Pasteur, CNRS"""
         fake_packs = ('fake_1', 'fake_2')
         for name in fake_packs:
             self.create_fake_package(name, dest=self.models_dir[0])
-        model_dir = self.tmpdir
         registry = ModelRegistry()
         for model_loc in scan_models_dir(self.models_dir[0]):
             registry.add(model_loc)
@@ -597,7 +600,7 @@ To cite MacSyFinder:
             # macsypy.registry throw a warning if metadata is not found
             # silenced it
             with self.catch_log(log_name='macsydata') as log:
-                with self.assertRaises(ValueError) as ctx:
+                with self.assertRaises(ValueError):
                     macsydata.do_show_definition(self.args)
                 log_msg = log.get_value().strip()
 
@@ -612,7 +615,7 @@ To cite MacSyFinder:
         macsydata._find_installed_package = lambda x, models_dir: macsypy.registries.ModelLocation(path=fake_pack_path)
         try:
             with self.catch_log(log_name='macsydata') as log:
-                with self.assertRaises(ValueError) as ctx:
+                with self.assertRaises(ValueError):
                     macsydata.do_show_definition(self.args)
                 log_msg = log.get_value().strip()
         finally:
@@ -1558,6 +1561,7 @@ Maybe you can use --user option to install in your HOME.""")
             macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
 
 
+    @unittest.skipIf(git is None, "GitPython is not installed")
     def test_init_package_minimal(self):
         self.args.pack_name = 'minimal_pack'
         self.args.maintainer = 'John Doe'
@@ -1574,7 +1578,7 @@ Maybe you can use --user option to install in your HOME.""")
         local_time_ori = macsydata.time.localtime
         macsydata.time.localtime = lambda: fake_time(2022)
         try:
-            with self.catch_log(log_name='macsydata') as log:
+            with self.catch_log(log_name='macsydata'):
                 macsydata.do_init_package(self.args)
 
             files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
@@ -1587,6 +1591,7 @@ Maybe you can use --user option to install in your HOME.""")
             macsydata.time.localtime = local_time_ori
 
 
+    @unittest.skipIf(git is None, "GitPython is not installed")
     def test_init_package_complete(self):
         self.args.pack_name = 'init_pack'
         self.args.maintainer = 'John Doe'
@@ -1605,7 +1610,7 @@ Maybe you can use --user option to install in your HOME.""")
         local_time_ori = macsydata.time.localtime
         macsydata.time.localtime = lambda: fake_time(2022)
         try:
-            with self.catch_log(log_name='macsydata') as log:
+            with self.catch_log(log_name='macsydata'):
                 macsydata.do_init_package(self.args)
 
             files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
@@ -1617,6 +1622,8 @@ Maybe you can use --user option to install in your HOME.""")
         finally:
             macsydata.time.localtime = local_time_ori
 
+
+    @unittest.skipIf(git is None, "GitPython is not installed")
     def test_init_empty_dir_exists(self):
         self.args.pack_name = 'init_pack'
         self.args.maintainer = 'John Doe'
@@ -1634,7 +1641,7 @@ Maybe you can use --user option to install in your HOME.""")
         macsydata.time.localtime = lambda: fake_time(2022)
         os.makedirs(os.path.join(self.models_dir[0], self.args.pack_name))
         try:
-            with self.catch_log(log_name='macsydata') as log:
+            with self.catch_log(log_name='macsydata'):
                 macsydata.do_init_package(self.args)
 
             files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
@@ -1647,6 +1654,7 @@ Maybe you can use --user option to install in your HOME.""")
             macsydata.time.localtime = local_time_ori
 
 
+    @unittest.skipIf(git is None, "GitPython is not installed")
     def test_init_dir_exists_not_pack(self):
         self.args.pack_name = 'init_pack'
         self.args.maintainer = 'John Doe'
@@ -1677,6 +1685,7 @@ Maybe you can use --user option to install in your HOME.""")
         finally:
             macsydata.time.localtime = local_time_ori
 
+    @unittest.skipIf(git is None, "GitPython is not installed")
     def test_init_dir_exists_look_pack(self):
         self.args.pack_name = 'init_pack'
         self.args.maintainer = 'John Doe'
@@ -1696,9 +1705,9 @@ Maybe you can use --user option to install in your HOME.""")
         os.makedirs(pack_path)
         os.mkdir(os.path.join(pack_path, 'definitions'))
         os.mkdir(os.path.join(pack_path, 'profiles'))
-        repo = git.Repo.init(pack_path)
+        git.Repo.init(pack_path)
         try:
-            with self.catch_log(log_name='macsydata') as log:
+            with self.catch_log(log_name='macsydata'):
                 macsydata.do_init_package(self.args)
             files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
             for f_name in files:
@@ -1717,6 +1726,7 @@ Maybe you can use --user option to install in your HOME.""")
             macsydata.time.localtime = local_time_ori
 
 
+    @unittest.skipIf(git is None, "GitPython is not installed")
     def test_init_existing_pack(self):
         self.args.pack_name = 'init_pack'
         self.args.maintainer = 'John Doe'
@@ -1736,7 +1746,7 @@ Maybe you can use --user option to install in your HOME.""")
         with self.catch_log(log_name='macsydata'):
             macsydata.do_init_package(self.args)
         try:
-            with self.catch_log(log_name='macsydata') as log:
+            with self.catch_log(log_name='macsydata'):
                 macsydata.do_init_package(self.args)
             files = ('README.md', 'metadata.yml', 'model_conf.xml', os.path.join('definitions', 'model_example.xml'))
             for f_name in files:
@@ -1774,7 +1784,7 @@ Maybe you can use --user option to install in your HOME.""")
         open(pack_path, 'w').close()
         try:
             with self.catch_log(log_name='macsydata') as log:
-                with self.assertRaises(ValueError) as ctx:
+                with self.assertRaises(ValueError):
                     macsydata.do_init_package(self.args)
                 log_msg = log.get_value().strip()
                 self.assertEqual(log_msg,
@@ -1835,14 +1845,15 @@ Maybe you can use --user option to install in your HOME.""")
         args = parser.parse_args(cmd.split()[1:])
         self.assertEqual(args.func.__name__, 'do_available')
 
-        cmd = "macsydata init --pack-name foo --authors 'john Doe' --maintainer 'Jim Doe' " \
-              "--email 'jim.doe@my_domain.com'"
-        args = parser.parse_args(shlex.split(cmd)[1:])
-        self.assertEqual(args.func.__name__, 'do_init_package')
-        self.assertEqual(args.pack_name, 'foo')
-        self.assertEqual(args.authors, 'john Doe')
-        self.assertEqual(args.maintainer, 'Jim Doe')
-        self.assertEqual(args.email, 'jim.doe@my_domain.com')
+        if git is not None:
+            cmd = "macsydata init --pack-name foo --authors 'john Doe' --maintainer 'Jim Doe' " \
+                  "--email 'jim.doe@my_domain.com'"
+            args = parser.parse_args(shlex.split(cmd)[1:])
+            self.assertEqual(args.func.__name__, 'do_init_package')
+            self.assertEqual(args.pack_name, 'foo')
+            self.assertEqual(args.authors, 'john Doe')
+            self.assertEqual(args.maintainer, 'Jim Doe')
+            self.assertEqual(args.email, 'jim.doe@my_domain.com')
 
     def test_cmd_name(self):
         parser = macsydata.build_arg_parser()

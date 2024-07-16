@@ -995,8 +995,6 @@ class TestCluster(MacsyTest):
 
         h_sctj = CoreHit(c_gene_sctj, "h_sctj", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         mh_sctj = ModelHit(h_sctj, gene_sctj, GeneStatus.ACCESSORY)
-        h_sctj_an = CoreHit(c_gene_sctJ_FLG, "h_sctj_an", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        mh_sctj_an = ModelHit(h_sctj_an, analog_sctJ_FLG, GeneStatus.ACCESSORY)
 
         h_sctn = CoreHit(c_gene_sctn, "sctn", 40, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         mh_sctn = ModelHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)

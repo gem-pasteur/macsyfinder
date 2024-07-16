@@ -509,11 +509,11 @@ class ModelRegistryTest(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir)
-        except:
+        except Exception:
             pass
         try:
             shutil.rmtree(self.tmp_dir)
-        except:
+        except Exception:
             pass
 
     def test_scan_models_dir(self):

@@ -43,7 +43,7 @@ class TestUtils(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.tmp_dir)
-        except:
+        except Exception:
             pass
 
 

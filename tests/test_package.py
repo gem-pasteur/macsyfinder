@@ -67,7 +67,7 @@ class TestPackageFunc(MacsyTest):
 class TestModelIndex(MacsyTest):
 
     def test_init(self):
-        with self.assertRaises(TypeError) as ctx:
+        with self.assertRaises(TypeError):
             package.AbstractModelIndex()
 
 
@@ -95,7 +95,7 @@ class TestRemoteModelIndex(MacsyTest):
     def tearDown(self) -> None:
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
 
     def mocked_requests_get(url: str, context:None=None):
@@ -452,7 +452,7 @@ ligne 3 et bbbbb
     def tearDown(self) -> None:
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
         logger = colorlog.getLogger('macsypy.package')
         del logger.manager.loggerDict['macsypy.package']

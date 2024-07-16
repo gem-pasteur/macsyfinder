@@ -64,7 +64,7 @@ class TestProfile(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir())
-        except:
+        except Exception:
             pass
 
 
@@ -211,15 +211,15 @@ class TestProfile(MacsyTest):
                 first_l = hmmer_raw_out_file.readline()
                 # a hmmsearch output file has been produced
                 self.assertTrue(first_l.startswith("# hmmsearch :: search profile(s) against a sequence database"))
-                for i in range(5):
+                for _ in range(5):
                     # skip 4 lines
-                    l = hmmer_raw_out_file.readline()
+                    line = hmmer_raw_out_file.readline()
                 # a hmmsearch used the abc profile line should become with: "# query HMM file: {the path tp hmm profile used}"
-                self.assertTrue(l.find(profile_path) != -1)
-                for i in range(3):
+                self.assertTrue(line.find(profile_path) != -1)
+                for _ in range(3):
                     # skip 2 lines
-                    l = hmmer_raw_out_file.readline()
-                self.assertEqual("# model-specific thresholding:     GA cutoffs", l.strip())
+                    line = hmmer_raw_out_file.readline()
+                self.assertEqual("# model-specific thresholding:     GA cutoffs", line.strip())
             # test if profile is executed only once per run
             report_bis = profile.execute()
             self.assertIs(report, report_bis)
@@ -243,21 +243,21 @@ class TestProfile(MacsyTest):
         # case GA threshold in profile
         profile_path = self.model_location.get_profile("T5aSS_PF03797")
         profile = Profile(gene, self.cfg, profile_path)
-        report = profile.execute()
+        profile.execute()
         hmmer_raw_out = profile.hmm_raw_output
         with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
             first_l = hmmer_raw_out_file.readline()
             # a hmmsearch output file has been produced
             self.assertTrue(first_l.startswith("# hmmsearch :: search profile(s) against a sequence database"))
-            for i in range(5):
+            for _ in range(5):
                 # skip 4 lines
-                l = hmmer_raw_out_file.readline()
+                line = hmmer_raw_out_file.readline()
             # a hmmsearch used the abc profile line should become with: "# query HMM file: {the path tp hmm profile used}"
-            self.assertTrue(l.find(profile_path) != -1)
-            for i in range(3):
+            self.assertTrue(line.find(profile_path) != -1)
+            for _ in range(3):
                 # skip 2 lines
-                l = hmmer_raw_out_file.readline()
-            self.assertEqual("# model-specific thresholding:     GA cutoffs", l.strip())
+                line = hmmer_raw_out_file.readline()
+            self.assertEqual("# model-specific thresholding:     GA cutoffs", line.strip())
 
 
     @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
@@ -279,12 +279,12 @@ class TestProfile(MacsyTest):
             gene = ModelGene(c_gene, model)
             profile_path = self.model_location.get_profile("T5aSS_PF03797")
             profile = Profile(gene, cfg, profile_path)
-            report = profile.execute()
+            profile.execute()
             hmmer_raw_out = profile.hmm_raw_output
             with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
                 for i in range(9):
-                    l = hmmer_raw_out_file.readline()
-                self.assertEqual("# sequence reporting threshold:    E-value <= 0.5", l.strip())
+                    line = hmmer_raw_out_file.readline()
+                self.assertEqual("# sequence reporting threshold:    E-value <= 0.5", line.strip())
 
 
     @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
@@ -299,23 +299,23 @@ class TestProfile(MacsyTest):
             profile_path = self.model_location.get_profile("abc")
             profile = Profile(gene, self.cfg, profile_path)
 
-            with self.catch_log() as log:
-                report = profile.execute()
+            with self.catch_log():
+                profile.execute()
 
             hmmer_raw_out = profile.hmm_raw_output
             with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
                 first_l = hmmer_raw_out_file.readline()
                 # a hmmsearch output file has been produced
                 self.assertTrue(first_l.startswith("# hmmsearch :: search profile(s) against a sequence database"))
-                for i in range(5):
+                for _ in range(5):
                     # skip 4 lines
-                    l = hmmer_raw_out_file.readline()
+                    line = hmmer_raw_out_file.readline()
                 # a hmmsearch used the abc profile line should become with: "# query HMM file: {the path tp hmm profile used}"
-                self.assertTrue(l.find(profile_path) != -1)
-                for i in range(3):
+                self.assertTrue(line.find(profile_path) != -1)
+                for _ in range(3):
                     # skip 2 lines
-                    l = hmmer_raw_out_file.readline()
-                self.assertEqual('# sequence reporting threshold:    E-value <= 0.1', l.strip())
+                    line = hmmer_raw_out_file.readline()
+                self.assertEqual('# sequence reporting threshold:    E-value <= 0.1', line.strip())
 
 
     def test_execute_unknown_binary(self):
@@ -354,7 +354,7 @@ sys.exit(127)
             with self.catch_log():
                 with self.assertRaisesRegex(RuntimeError,
                                             "an error occurred during Hmmer "
-                                            "execution: command = .* : return code = 127 .*") as ctx:
+                                            "execution: command = .* : return code = 127 .*"):
                     profile.execute()
 
         finally:

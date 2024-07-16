@@ -218,7 +218,7 @@ class TestConfig(MacsyTest):
                     self.assertEqual(getattr(cfg, opt)(), self.defaults['system_models_dir'])
                 else:
                     self.assertEqual(getattr(cfg, opt)(), val)
-        except:
+        except Exception:
             os.chdir(self._current_dir)
 
 

@@ -63,7 +63,7 @@ class TestModelParser(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir())
-        except:
+        except Exception:
             pass
 
 
@@ -436,7 +436,6 @@ class TestModelParser(MacsyTest):
         def_2_parse = set()
         model_fqn = 'foo/model_5'
         def_2_parse.add(model_fqn)
-        parsed = set()
 
         min_genes_required = [[model_fqn, '4']]
         self.args.min_genes_required = min_genes_required
@@ -544,7 +543,7 @@ class TestModelParser(MacsyTest):
         model_fqn = 'foo/model_old_1'
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.catch_log(log_name='macsypy') as log:
-            with self.assertRaises(MacsypyError) as ctx:
+            with self.assertRaises(MacsypyError):
                 self.parser.parse(models_2_detect)
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
@@ -555,7 +554,7 @@ class TestModelParser(MacsyTest):
         model_fqn = 'foo/model_old_2'
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.catch_log(log_name='macsypy') as log:
-            with self.assertRaises(MacsypyError) as ctx:
+            with self.assertRaises(MacsypyError):
                 self.parser.parse(models_2_detect)
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
@@ -566,7 +565,7 @@ class TestModelParser(MacsyTest):
         model_fqn = 'foo/model_old_3'
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.catch_log(log_name='macsypy') as log:
-            with self.assertRaises(MacsypyError) as ctx:
+            with self.assertRaises(MacsypyError):
                 self.parser.parse(models_2_detect)
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
@@ -577,7 +576,7 @@ class TestModelParser(MacsyTest):
         model_fqn = 'foo/model_old_4'
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.catch_log(log_name='macsypy') as log:
-            with self.assertRaises(MacsypyError) as ctx:
+            with self.assertRaises(MacsypyError):
                 self.parser.parse(models_2_detect)
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
@@ -588,7 +587,7 @@ class TestModelParser(MacsyTest):
         model_fqn = 'foo/model_old_5'
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.catch_log(log_name='macsypy') as log:
-            with self.assertRaises(MacsypyError) as ctx:
+            with self.assertRaises(MacsypyError):
                 self.parser.parse(models_2_detect)
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,

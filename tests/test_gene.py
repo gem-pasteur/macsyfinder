@@ -54,7 +54,7 @@ class TestCoreGene(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir())
-        except:
+        except Exception:
             pass
 
     def test_core_gene(self):
@@ -91,7 +91,7 @@ class TestModelGene(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir())
-        except:
+        except Exception:
             pass
 
     def test_init(self):

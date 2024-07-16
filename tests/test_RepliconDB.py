@@ -106,7 +106,7 @@ class Test(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir())
-        except:
+        except Exception:
             pass
         RepliconDB.__init__ = self.real_init
 

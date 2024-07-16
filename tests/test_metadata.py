@@ -44,7 +44,7 @@ class TestMetadata(MacsyTest):
     def tearDown(self) -> None:
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
 
 
