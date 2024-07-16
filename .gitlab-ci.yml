@@ -1,4 +1,5 @@
 stages:
+  - linting
   - test
   - coverage
   - pages
@@ -6,12 +7,18 @@ stages:
 variables:
   MACSY_VERSION: ${CI_COMMIT_REF_NAME}
 
+ruff:
+  stage: linting
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
+  script:
+    - python3 -m pip install .[dev]
+    - ruff check --output-format=gitlab macsypy/ tests/
+
 testing:
   stage: test
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
-
   script:
-    - python3 -m pip install .
+    - python3 -m pip install .[model]
     - python3 tests/run_tests.py -vvv
   except:
     - /^feat.*$/
