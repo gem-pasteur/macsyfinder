@@ -2,8 +2,8 @@
 # models : set_1-0.0b2
 # macsyprofile -o tests/data/results_macsyprofile.tsv tests/data/functional_test_degenerated_systems/
 hit_id	replicon_name	position_hit	hit_sequence_length	gene_name	i_eval	score	profile_coverage	sequence_coverage	begin	end
-VICH001.B.00001.C001_01398	UserReplicon	7	467	T1SS_mfp	2.100e-72	235.600	1.000	0.797	85	456
-VICH001.B.00001.C001_01549	UserReplicon	27	324	T1SS_mfp	3.000e-01	1.400	0.124	0.145	204	250
-VICH001.B.00001.C001_01549	UserReplicon	27	324	T1SS_mfp	1.100e-04	12.800	0.365	0.448	43	187
-VICH001.B.00001.C001_01400	UserReplicon	15	559	T2SS_gspD	1.000e-02	5.700	0.117	0.118	76	141
-VICH001.B.00001.C001_01400	UserReplicon	15	559	T2SS_gspD	1.900e-47	153.400	0.559	0.658	168	535
+VICH001.B.00001.C001_01398	test_4	7	467	T1SS_mfp	2.100e-72	235.600	1.000	0.797	85	456
+VICH001.B.00001.C001_01549	test_4	27	324	T1SS_mfp	3.000e-01	1.400	0.124	0.145	204	250
+VICH001.B.00001.C001_01549	test_4	27	324	T1SS_mfp	1.100e-04	12.800	0.365	0.448	43	187
+VICH001.B.00001.C001_01400	test_4	15	559	T2SS_gspD	1.000e-02	5.700	0.117	0.118	76	141
+VICH001.B.00001.C001_01400	test_4	15	559	T2SS_gspD	1.900e-47	153.400	0.559	0.658	168	535
