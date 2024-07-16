@@ -26,7 +26,13 @@ exclude = [
 line-length = 120
 indent-width = 4
 
+src = ['macsypy', 'tetsts']
 [tool.ruff.format]
 indent-style = "space"
 
+
+[tool.ruff.lint.per-file-ignores]
+
+#F841 Local variable `xxx` is assigned to but never used
+"tests/test_System.py" = ["F841"]
 
