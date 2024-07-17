@@ -47,6 +47,6 @@ if [ $returncode -ne 0 ]; then
     echo "${Green}  4. commit your fix:${clear} git add / git commit "
     echo "${Green}  5. tag again:${Clear} git tag -a ${tagref}"
     echo "${Green}  6. and push:${Clear} git push ${remote} ${tagref}"
-    returncode=1
 fi
+
 exit $returncode

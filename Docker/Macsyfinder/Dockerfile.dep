@@ -22,7 +22,7 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-FROM ubuntu:22.10
+FROM python:3.12.4-slim-bookworm
 
 LABEL org.opencontainers.image.authors="Bertrand Neron <bneron@pasteur.fr>"
 LABEL org.label-schema.vendor='Institut Pasteur'
@@ -38,16 +38,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV PYTHONNOUSERSITE=1
 
 RUN apt-get update -y &&\
-    apt-get install -y --no-install-recommends hmmer python3.11 python3-pip git
+    apt-get install -y --no-install-recommends hmmer git
 RUN apt-get clean -y
-
-RUN cd /tmp &&\
-    git clone https://github.com/gem-pasteur/macsyfinder.git &&\
-    cd macsyfinder &&\
-    python3 -m pip install . &&\
-    install -m 755 Docker/Macsyfinder/macsyfinder-entrypoint.sh /usr/local/bin &&\
-    cd /tmp &&\
-    rm -Rf macsyfinder
 
 ENV DEBIAN_FRONTEND teletype
 ENV PYTHONIOENCODING UTF-8
@@ -55,6 +47,6 @@ ENV PYTHONIOENCODING UTF-8
 RUN useradd -m msf
 USER msf
 WORKDIR /home/msf
+ENV PATH="$PATH:/home/msf/.local/bin"
 
-CMD macsyfinder --help
-ENTRYPOINT ["/usr/local/bin/macsyfinder-entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/bash"]
