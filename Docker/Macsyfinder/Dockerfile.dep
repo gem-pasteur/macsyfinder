@@ -48,5 +48,6 @@ RUN useradd -m msf
 USER msf
 WORKDIR /home/msf
 ENV PATH="$PATH:/home/msf/.local/bin"
+ENV PYTHONPATH=/home/msf/.local/lib/python3.12/site-packages/:$PYTHONPATH
 
 ENTRYPOINT ["/usr/bin/bash"]
