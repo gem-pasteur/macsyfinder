@@ -49,7 +49,8 @@ These dependencies will be automatically retrieved and installed when using `pip
 
 .. note::
     If you want to contribute to the *MacSyFinder* code, check the guide lines (`CONTRIBUTING <https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTING.md>`_)
-   and specific procedure for :ref:`developer installation <dev_installation>`.
+    and specific procedure for :ref:`developer installation <dev_installation>`.
+
 
 ==================================
 MacSyFinder Installation procedure
