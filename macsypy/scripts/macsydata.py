@@ -405,9 +405,9 @@ def do_install(args: argparse.Namespace) -> None:
         if not models_dirs:
             clean_cache(model_index)
             msg = """There is no canonical directories to store models:
-You can create one in your HOME to enable the models for the user 
+You can create one in your HOME to enable the models for the user
        macsydata install --user <PACK_NAME>
-or for a project 
+or for a project
        macsydata install --models <PACK_NAME>
 In this latter case you have to specify --models-dir <path_to_models_dir> on the macsyfinder command line
 for the system wide models installation please refer to the documentation.
@@ -417,7 +417,7 @@ for the system wide models installation please refer to the documentation.
             raise ValueError() from None
         else:
             dest = config.models_dir()[0]
-    
+
     if inst_pack_loc:
         old_pack_path = f"{inst_pack_loc.path}.old"
         shutil.move(inst_pack_loc.path, old_pack_path)
@@ -850,8 +850,8 @@ def do_init_package(args: argparse.Namespace) -> None:
         desc = desc if desc is not None else ''
         head = textwrap.fill(f"{pack_name} - {desc}")
         text = f"""{head}
-        
-Copyright (c) {date} {holders}        
+
+Copyright (c) {date} {holders}
 """
         with open(os.path.join(pack_dir, 'COPYRIGHT'), 'w') as copyright_file:
             copyright_file.write(text)
@@ -1024,7 +1024,7 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
     repo.index.commit(f"""initial commit
 
 add files:
-{untracked_str}    
+{untracked_str}
 """)
 
     pre_push_path = impresources.files('macsypy') / 'data' / 'pre-push'
@@ -1034,17 +1034,17 @@ add files:
         _log.warning("Do it manually, check documentation: ")
     else:
         shutil.copy(pre_push_path, dest)
-
+        os.chmod(dest, 0o755)
     _log.info(f"""The skeleton of {args.pack_name} is ready.
 The package is located at {pack_dir}
 
 - Edit metadata.yml and fill how to cite your package and where to find documentation about it.
 - Add hmm profiles in {pack_dir}/profiles directory
-- A skeleton of model definitions has been added in {pack_dir}/definitions. 
+- A skeleton of model definitions has been added in {pack_dir}/definitions.
   For complete documentation about model grammar read https://macsyfinder.readthedocs.io/en/latest/modeler_guide/modeling.html
-- A configuration file has been added (model_conf.xml) with default value tweak this file if needed. 
+- A configuration file has been added (model_conf.xml) with default value tweak this file if needed.
   (https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html#model-configuration)
-  
+
 Before to publish your package you can use `macsydata check` to verify it's integrity.
 """
               )
@@ -1070,8 +1070,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=textwrap.dedent(r'''
 
-         *            *               *                   * *       * 
-    *           *               *   *   *  *    **                *  
+         *            *               *                   * *       *
+    *           *               *   *   *  *    **                *
       **     *    *   *  *     *                    *               *
         __  __  *         ____ *      ____    ** _  *
        |  \/  | __ _  ___/ ___| _   _|  _ | __ _| |_  __ _     *
