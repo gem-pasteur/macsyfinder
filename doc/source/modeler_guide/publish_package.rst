@@ -1,11 +1,11 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _publish_package:
 
 *************************
@@ -32,7 +32,7 @@ types of files to be complete:
 You can create a template for your package by using `macsydata init`.
 It will create for you:
 
-* the data package directory with the right structure.
+* the git repository with the data package with the right structure.
 * a template of `metadata.yaml` .
 * a template of `README.md` file.
 * a generic `model_conf.xml` file.
@@ -45,17 +45,17 @@ It will create for you:
 Sharing your models
 ===================
 
-If you want to share your models you can create a :ref:`macsy-model package <model_package>` in your github repository. 
+If you want to share your models you can create a :ref:`macsy-model package <model_package>` in your github repository.
 Several steps are needed to publish your model:
 
 1. Check the **validity** of your package with the ``macsydata check`` command.
-   You have to run it from within the folder containing your package files. 
+   You have to run it from within the folder containing your package files.
    It will report:
 
-   * everything is clear: `macsydata` displays the next step totake to publish the package
+   * everything is clear: `macsydata` displays the next step to take to publish the package
 
    * warning: it means that the package could be improved.
-   
+
    It is better to fix it if you can, but you can also proceed to *Step 2*
 
    * error: the package is not ready to be published as is. You have to fix the errors before you go to *Step 2*.
@@ -63,7 +63,6 @@ Several steps are needed to publish your model:
 2. Create a **tag**, and submit a **pull request** to the https://github.com/macsy-models organization.
    This step is **very important**: without a tag, there is no package.
    `macsydata check` only tagged packages.
-   It is also the duty of the model provider to setup a tag with the same name as the version in the `metadata.yml` file.
    It is **Mandatory** to follow a versioning scheme described here:
 
         * https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
@@ -76,11 +75,12 @@ Several steps are needed to publish your model:
 
    .. warning::
 
-        Check that the tag match with the version defined in `metadata.yml`.
-        To avoid inadvertent mistake place the script below in `.git/hooks/` directory.
+        To avoid making an inconsistent model visible by macsydata install/search (by pushing a tag),
+        a pre-push hook has been setup in the git repository by `macsydata init` command.
+        If you do not used `macsydata init` to create the model, It is a good idea to set up the hook by yourself.
+
         Check that the hook is well named pre-push and it is executable (`chmod 755 .git/hooks/pre-push`)
-        This script check if you push a tag and if the tag match the version in metadata.yml
-        If it does not match it prevent the push.
+        This script run `macsydata check` if you push a tag and it prevent the push if some error are found.
 
         .. literalinclude:: ../_static/code/pre-push
            :language: shell
@@ -93,7 +93,7 @@ Several steps are needed to publish your model:
 If you don't want to submit a PR you can provide the tag release tarball (tar.gz) as is to your collaborators.
 This archive will also be usable with the `macsydata` tool.
 
-.. note:: 
+.. note::
 
     ``macsydata check``
     checks the syntax of the package, but it does not publish anything.
@@ -130,7 +130,7 @@ Your package is syntactically correct:
             git push --tags
 
 
-You received some warnings: 
+You received some warnings:
 
 .. code-block:: text
 

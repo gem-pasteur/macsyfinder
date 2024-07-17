@@ -22,12 +22,13 @@ Modelling Systems with MacSyFinder
 .. toctree::
    :maxdepth: 2
 
+   installation
    package
    modeling
    helper_tools
    publish_package
    gallery
-   
+
 
 Carrying models from v1 to v2
 =============================
@@ -40,5 +41,5 @@ Frequently Asked Questions
 ==========================
 .. toctree::
    :maxdepth: 2
-   
+
    FAQ_modeler
