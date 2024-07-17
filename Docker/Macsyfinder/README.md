@@ -20,7 +20,7 @@ to build the macsyfinder:latest in dockerhub
 to build a container to test the local repo
 
     docker build -f Dockerfile.dep -t msf_test .
-    docker run -v ${PWD}:/home/msf  -u $(id -u ${USER}):$(id -g ${USER}) -it msf_test
-
-    python tests/run_tests.py -vv
+    docker run -v ${PWD}:/home/msf/MacSyFinder  -u $(id -u ${USER}):$(id -g ${USER}) -it msf_test
+    cd MacSyFinder
+    python3 tests/run_tests.py -vv
     ...
