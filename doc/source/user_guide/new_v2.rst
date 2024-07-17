@@ -179,7 +179,7 @@ Dependencies
 
 MacSyFinder v2 no longer requires the *formatdb* or *makeblastdb* tools from NCBI.
 However, new dependencies are used, but as they are Python libraries, it should be transparent for the user,
-and not require manual installations. See :ref:`here for details<dependencies>`.
+and not require manual installations. See :ref:`here for details<user_dependencies>`.
 
 
 Models are more formalized
