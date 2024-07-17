@@ -15,8 +15,18 @@ What's new in MacSyFinder v2?
 V 2.1.4
 =======
 
-Features
---------
+For users
+---------
+
+Minor bugs
+""""""""""
+
+* when profile name ends with `hmm`, then the profile was not retrieved by msf (https://github.com/gem-pasteur/macsyfinder/issues/69).
+* fix omitted parameter `timeout` in `macsyfinder` step in parallel_macsyfinder
+
+
+For modelers
+-------------
 
 * The *vers* is now deprecated in model/metadata file.
   *macsydata* rely only on the tag version to get the version of the model.
@@ -25,17 +35,11 @@ Features
   a buggy nodel.
 
 
-Minor bugs
-----------
+For developers
+--------------
 
-* when profile name ends with `hmm`, then the profile was not retrieved by msf (https://github.com/gem-pasteur/macsyfinder/issues/69).
-* fix omitted parameter `timeout` in `macsyfinder` step in parallel_macsyfinder
-
-code
-----
-
-* all the msf code (macsypy and tests) pass the ruff linter
-* all the code use type hints (required python >3.10)
+* all the *msf* code (macsypy and tests) pass the `ruff<https://docs.astral.sh/ruff/>`_ linter
+* all the code use type hints (required python >3.10) see (https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTING.md)
 
 
 V 2.1.3
