@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.
     Authors: Sophie Abby, Bertrand Néron
-    Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2024 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
     See the COPYING file for details.
@@ -15,12 +15,27 @@ What's new in MacSyFinder v2?
 V 2.1.4
 =======
 
+Features
+--------
+
+* The *vers* is now deprecated in model/metadata file.
+  *macsydata* rely only on the tag version to get the version of the model.
+* *macsydata* now create a *git* repository for you and add files to it.
+* a pre-push git hook is installed by `macsydata init` to prevent to push a tag (publish)
+  a buggy nodel.
+
 
 Minor bugs
 ----------
 
-- when profile name ends with `hmm`, then the profile was not retrieved by msf (https://github.com/gem-pasteur/macsyfinder/issues/69).
-- fix omitted parameter `timeout` in `macsyfinder` step in parallel_macsyfinder
+* when profile name ends with `hmm`, then the profile was not retrieved by msf (https://github.com/gem-pasteur/macsyfinder/issues/69).
+* fix omitted parameter `timeout` in `macsyfinder` step in parallel_macsyfinder
+
+code
+----
+
+* all the msf code (macsypy and tests) pass the ruff linter
+* all the code use type hints (required python >3.10)
 
 
 V 2.1.3
@@ -198,4 +213,3 @@ results of a previous MacSyFinder run, to provide information on all hits even i
 
 * **macsydata init** to init a new model package.
 * **macsydata check** to check the integrity of a model package, before to use/publish it.
-
