@@ -22,7 +22,7 @@ We also provide container so you can use macsyfinder directly.
 ========================
 MacSyFinder dependencies
 ========================
-**Python version >=3.10** is required to run MacSyFinder: https://docs.python.org/3.7/index.html
+**Python version >=3.10** is required to run MacSyFinder: https://docs.python.org/3.10/index.html
 
 MacSyFinder has one program dependency:
 
@@ -48,7 +48,8 @@ These dependencies will be automatically retrieved and installed when using `pip
     If you intend to build and distribute new models you will need some other dependencies see modeler guide for installation.
 
 .. note::
-    If you want to contribute to the *MacSyFinder* code, check the guide lines () and for installation for developper.
+    If you want to contribute to the *MacSyFinder* code, check the guide lines (`CONTRIBUTING <https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTING.md>`_)
+   and specific procedure for :ref:`developer installation <dev_installation>`.
 
 ==================================
 MacSyFinder Installation procedure

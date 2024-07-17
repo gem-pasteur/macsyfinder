@@ -22,7 +22,7 @@ We also provide container so you can use macsyfinder directly.
 ========================
 MacSyFinder dependencies
 ========================
-**Python version >=3.10** is required to run MacSyFinder: https://docs.python.org/3.7/index.html
+**Python version >=3.10** is required to run MacSyFinder: https://docs.python.org/3.10/index.html
 
 MacSyFinder has one program dependency:
 
