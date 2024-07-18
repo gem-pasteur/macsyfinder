@@ -1,5 +1,5 @@
 
-# minimal_pack: 
+# minimal_pack:
 
 Place here information about minimal_pack
 

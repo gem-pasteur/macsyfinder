@@ -862,9 +862,9 @@ Copyright (c) {date} {holders}
         :param pack_name: The name of the package
         :param desc: One line description of the package
         """
-        desc = desc if desc is not None else ''
+        desc = ' ' + desc if desc is not None else ''
         text = f"""
-# {pack_name}: {desc}
+# {pack_name}:{desc}
 
 Place here information about {pack_name}
 
