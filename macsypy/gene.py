@@ -142,7 +142,7 @@ class CoreGene:
 
 class ModelGene:
     """
-    Handle Gene describe in a Model
+    Handle Gene described in a Model
     """
 
     def __init__(self,

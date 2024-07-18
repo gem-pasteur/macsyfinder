@@ -94,6 +94,7 @@ def _clusterize(hits: list[ModelHit], model: Model, hit_weights: HitWeight, rep_
     :return: the clusters
     :rtype: list of :class:`macsypy.cluster.Cluster` objects.
     """
+
     def do_clst(clusters: list[Cluster], cluster_scaffold: list[ModelHit], model: Model, hit_weights: HitWeight) -> None:
         """
         transform a list of ModelHit in a cluster if the hit colocalize and they are not all neutral
@@ -123,7 +124,6 @@ def _clusterize(hits: list[ModelHit], model: Model, hit_weights: HitWeight, rep_
             else:
                 _log.debug(f"({', '.join([h.id for h in cluster_scaffold])}) "
                            f"is composed of only type of gene {cluster_scaffold[0].gene_ref.name}. It's not a cluster.")
-
 
     clusters = []
     cluster_scaffold = []
@@ -201,7 +201,12 @@ def _get_true_loners(clusters: list[Cluster]) -> tuple[dict[str: Loner | LonerMu
              * dict containing true clusters  {str func_name : :class:`macsypy.hit.Loner | :class:`macsypy.hit.LonerMultiSystem` object}
              * list of :class:`macsypy.cluster.Cluster` objects
     """
-    def add_true_loner(clstr):
+    def add_true_loner(clstr: Cluster) -> None:
+        """
+        Add the hit of the Cluster clstr to the true_loners
+        The clstr must contain only one hit or a stretch of same gene.
+        :param clstr:
+        """
         hits = clstr.hits
         clstr_len = len(hits)
         if clstr_len > 1:
@@ -238,7 +243,7 @@ def _get_true_loners(clusters: list[Cluster]) -> tuple[dict[str: Loner | LonerMu
             true_loners[func_name] = []
             for i, _ in enumerate(loners):
                 if loners[i].multi_system:
-                    # the counterpart have been already computed during the MS hit instanciation
+                    # the counterpart have been already computed during the MS hit instantiation
                     # instead of the Loner not multisystem it include the hits which clusterize
                     true_loners[func_name].append(LonerMultiSystem(loners[i]))
                 else:
@@ -336,6 +341,7 @@ class Cluster:
         """
         :return: True if this cluster is made of only some hits representing the same gene and this gene is tag as loner
                  False otherwise:
+
                  - contains several hits coding for different genes
                  - contains one hit but gene is not tag as loner (max_gene_required = 1)
         """
@@ -371,7 +377,6 @@ class Cluster:
 
     def __contains__(self, m_hit: ModelHit) -> bool:
         """
-
         :param m_hit: The hit to test
         :return: True if the hit is in the cluster hits, False otherwise
         """

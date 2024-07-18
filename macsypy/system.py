@@ -666,8 +666,8 @@ class UnlikelySystem(AbstractUnordered):
 
 class MatchMaker(metaclass=abc.ABCMeta):
     """
-    Is an abstract class for (Odered/Unordered)MatchMaker
-    the `match` class method must be implemented in concrete classes
+    Is an abstract class for (Ordered|Unordered)MatchMaker
+    the `match` class method must be implemented in concrete classes.
     """
 
     def __init__(self, model: Model) -> None:
