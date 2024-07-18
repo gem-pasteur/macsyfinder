@@ -25,4 +25,3 @@ fixing or enhancing.
 - [ ] I have tested this PR locally with a `python tests/run_tests.py`
 - [ ] I have added myself as a contributor to the [contributors's file](https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTORS.md)
 - [ ] This PR is ready for review and/or merge
-

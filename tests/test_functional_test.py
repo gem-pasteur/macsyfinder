@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -34,7 +34,7 @@ import itertools
 import colorlog
 import pandas as pd
 
-from tests import MacsyTest, which
+from tests import MacsyTest
 from macsypy.scripts import macsyfinder
 from macsypy.error import OptionError
 from macsypy.system import System, AbstractUnordered, RejectedCandidate
@@ -80,7 +80,7 @@ class Test(MacsyTest):
             pass
             # self.out_dir is set in self._macsyfinder_run
             shutil.rmtree(self.out_dir)
-        except:
+        except Exception:
             pass
         # remove handlers
         # otherwise at each test init_logger is called
@@ -89,7 +89,7 @@ class Test(MacsyTest):
         for h in logger.handlers[:]:
             logger.removeHandler(h)
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_gembase(self):
         """
 
@@ -128,7 +128,7 @@ class Test(MacsyTest):
         get_results = os.path.join(self.out_dir, self.rejected_candidates_txt)
         self.assertFileEqual(expected_result, get_results, comment="#")
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_timeout(self):
         """
 
@@ -1051,9 +1051,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
-        sequences_dir = self.find_data('base')
         self._macsyfinder_run(args)
-
         self.assertTrue(os.path.exists(os.path.join(self._index_dir, "test_3.fasta.idx")))
 
 
@@ -1121,7 +1119,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
         open(os.path.join(self.out_dir, 'FOO'), 'w').close()
 
         # msf should complain about out dir
-        with self.assertRaises(ValueError) as ctx:
+        with self.assertRaises(ValueError):
             macsyfinder.main(args=args.split(), loglevel='ERROR')
 
         args += " --force"
@@ -1206,7 +1204,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
 
 
     def test_cfg_n_previous_run(self):
-        args = f"--cfg-file foo --previous-run bar " \
+        args = "--cfg-file foo --previous-run bar " \
                "-o {out_dir}"
 
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_cfg_n_previous_run')

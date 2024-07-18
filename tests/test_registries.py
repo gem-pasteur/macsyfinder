@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -27,13 +27,13 @@ import os
 import shutil
 import tempfile
 import argparse
-import yaml
 import colorlog
 
 import macsypy
 from macsypy.config import Config, MacsyDefaults
 from macsypy import registries
 from macsypy.registries import ModelLocation, DefinitionLocation, ModelRegistry, scan_models_dir
+from macsypy.metadata import Metadata, Maintainer
 from tests import MacsyTest
 
 
@@ -72,32 +72,14 @@ def _create_fake_models_tree(root_models_dir, sys_def, metadata=True):
     create_tree(sys_def['not_definitions'], def_dir)
 
     if metadata:
-        with open(os.path.join(models_dir, "metadata.yml"), 'w') as file:
-            metadata = {'vers': '1.0'}
-            yaml.dump(metadata, file)
+        meta = Metadata(Maintainer('maintainer_name','maintainer@email.org'),
+                        'fake package')
+        meta.vers = '1.0'
+        meta_path = os.path.join(models_dir, "metadata.yml")
+        meta.save(meta_path)
 
     return models_dir
 
-
-# class RegitriesUtilsTest(MacsyTest):
-#
-#     def test_split_def_name(self):
-#         items = ['CRISPR-Cas', 'typing', 'cas']
-#         def_name = registries._SEPARATOR.join(items)
-#         split = registries.split_def_name(def_name)
-#         self.assertListEqual(split, items)
-#         def_name = registries._SEPARATOR.join(items) + registries._SEPARATOR
-#         split = registries.split_def_name(def_name)
-#         self.assertListEqual(split, items)
-#         def_name = registries._SEPARATOR + registries._SEPARATOR.join(items)
-#         split = registries.split_def_name(def_name)
-#         self.assertListEqual(split, items)
-#
-#
-#     def test_join_def_path(self):
-#         items = ['CRISPR-Cas', 'typing', 'cas']
-#         self.assertEqual('/'.join(items), registries.join_def_path(*items))
-#
 
 class ModelLocationTest(MacsyTest):
 
@@ -148,7 +130,7 @@ class ModelLocationTest(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.tmp_dir)
-        except Exception as err:
+        except Exception:
             pass
         logger = colorlog.getLogger('macsypy.registries')
         del logger.manager.loggerDict['macsypy.registries']
@@ -345,7 +327,7 @@ class ModelLocationTest(MacsyTest):
 
         model_loc._definitions = None
         defs = model_loc.get_definitions()
-        self.assertEqual({}, defs)
+        self.assertEqual([], defs)
 
         model_loc._definitions = {'foo': 'bar'}
         defs = model_loc.get_definitions()
@@ -527,11 +509,11 @@ class ModelRegistryTest(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir)
-        except:
+        except Exception:
             pass
         try:
             shutil.rmtree(self.tmp_dir)
-        except:
+        except Exception:
             pass
 
     def test_scan_models_dir(self):

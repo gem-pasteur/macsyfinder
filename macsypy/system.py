@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -21,284 +21,23 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+from __future__ import annotations
 
 import abc
 import itertools
 import statistics
 from itertools import chain
 from operator import attrgetter
+from typing import Callable, Iterable
 import logging
-_log = logging.getLogger(__name__)
 
-from.gene import GeneStatus
+from .model import Model
+from .hit import ModelHit, Loner, MultiSystem, LonerMultiSystem
+from .gene import GeneStatus, ModelGene
 from .cluster import Cluster
 from .error import MacsypyError
 
-
-class MatchMaker(metaclass=abc.ABCMeta):
-    """
-    Is an abstract class for (Odered/Unordered)MatchMaker
-    the `match` class method must be implemented in concrete classes
-    """
-
-    def __init__(self, model):
-        self._model = model
-        # init my structures to count gene occurrences
-        self.mandatory_counter = {g.name: 0 for g in model.mandatory_genes}
-        self.exchangeable_mandatory = self._create_exchangeable_map(model.mandatory_genes)
-
-        self.accessory_counter = {g.name: 0 for g in model.accessory_genes}
-        self.exchangeable_accessory = self._create_exchangeable_map(model.accessory_genes)
-
-        self.forbidden_counter = {g.name: 0 for g in model.forbidden_genes}
-        self.exchangeable_forbidden = self._create_exchangeable_map(model.forbidden_genes)
-
-        self.neutral_counter = {g.name: 0 for g in model.neutral_genes}
-        self.exchangeable_neutral = self._create_exchangeable_map(model.neutral_genes)
-
-
-    def _create_exchangeable_map(self, genes):
-        """
-        create a map between an exchangeable (formly homolog or analog) gene name and it's gene reference
-
-        :param genes: The genes to get the exchangeable genes
-        :type genes: list of :class:`macsypy.gene.ModelGene` objects
-        :rtype: a dict with keys are the exchangeable gene_name and the value the reference gene
-        """
-        map = {}
-        for gene in genes:
-            for ex_gene in gene.exchangeables:
-                map[ex_gene.name] = gene
-        return map
-
-
-    def sort_hits_by_status(self, hits):
-        """
-        sort :class:`macsypy.hit.ModelHit` according the
-        the status of the gene the hit code for.
-
-        :param hits: list of :class:`macsypy.hit.ModelHit` object
-        :return: the valid hits according their status
-        :rtype: a tuple of 4 lists
-
-              * :class:`macsypy.hit.ModelHit` for MANDATORY genes
-              * :class:`macsypy.hit.ModelHit` for ACCESSORY genes
-              * :class:`macsypy.hit.ModelHit` for NEUTRAL genes
-              * :class:`macsypy.hit.ModelHit` for FORBIDDEN genes
-
-        """
-        mandatory_hits = []
-        accessory_hits = []
-        neutral_hits = []
-        forbidden_hits = []
-        for hit in hits:
-            gene_name = hit.gene.name
-            # the ModelHit need to be linked to the
-            # gene of the model
-            if gene_name in self.mandatory_counter:
-                self.mandatory_counter[hit.gene.name] += 1
-                mandatory_hits.append(hit)
-            elif gene_name in self.exchangeable_mandatory:
-                gene_ref = self.exchangeable_mandatory[gene_name]
-                self.mandatory_counter[gene_ref.name] += 1
-                mandatory_hits.append(hit)
-
-            elif gene_name in self.accessory_counter:
-                self.accessory_counter[gene_name] += 1
-                accessory_hits.append(hit)
-            elif gene_name in self.exchangeable_accessory:
-                gene_ref = self.exchangeable_accessory[gene_name]
-                self.accessory_counter[gene_ref.name] += 1
-                accessory_hits.append(hit)
-
-            elif gene_name in self.neutral_counter:
-                self.neutral_counter[gene_name] += 1
-                neutral_hits.append(hit)
-            elif gene_name in self.exchangeable_neutral:
-                gene_ref = self.exchangeable_neutral[gene_name]
-                self.neutral_counter[gene_ref.name] += 1
-                neutral_hits.append(hit)
-
-            elif gene_name in self.forbidden_counter:
-                self.forbidden_counter[gene_name] += 1
-                forbidden_hits.append(hit)
-            elif gene_name in self.exchangeable_forbidden:
-                gene_ref = self.exchangeable_forbidden[gene_name]
-                self.forbidden_counter[gene_ref.name] += 1
-                forbidden_hits.append(hit)
-            else:
-                model = hit.gene_ref.model
-                msg = f"Gene '{gene_name}' not found in model '{model.fqn}'"
-                _log.critical(msg)
-                raise MacsypyError(msg)
-
-        return mandatory_hits, accessory_hits, neutral_hits, forbidden_hits
-
-
-    def present_genes(self):
-        """
-        :return: the lists of genes name in model which are present in the replicon (included exchangeable)
-        :rtype: tuple of 4 lists for mandatory, accessory, neutral and forbidden
-                ([str gene_name, ...], [str gene_name], [str gene_name], [str gene_name])
-        """
-        mandatory_genes = [g_name for g_name, occ in self.mandatory_counter.items() if occ > 0]
-        accessory_genes = [g_name for g_name, occ in self.accessory_counter.items() if occ > 0]
-        neutral_genes = [g_name for g_name, occ in self.neutral_counter.items() if occ > 0]
-        forbidden_genes = [g_name for g_name, occ in self.forbidden_counter.items() if occ > 0]
-        return mandatory_genes, accessory_genes, neutral_genes, forbidden_genes
-
-
-    @abc.abstractmethod
-    def match(self, clusters):
-        pass
-
-
-class OrderedMatchMaker(MatchMaker):
-    """
-    check if a set of hits match the quorum for ordered replicons (ordered_replicon or gembase)
-    """
-
-    def __init__(self, model, redundancy_penalty):
-        self._redundancy_penalty = redundancy_penalty
-        super().__init__(model)
-
-
-    def match(self, clusters):
-        """
-        Check a set of clusters fill model constraints.
-        If yes create a :class:`macsypy.system.System` otherwise create
-        a :class:`macsypy.cluster.RejectedCandidate`.
-
-        :param clusters: The list of cluster to check if fit the model
-        :type clusters: list of :class:`macsypy.cluster.Cluster` objects
-        :return: either a System or a RejectedCandidates
-        :rtype: :class:`macsypy.system.System` or :class:`macsypy.system.RejectedCandidate` object
-        """
-        # count the hits
-        # and track for each hit for which gene it counts for
-        valid_clusters = []
-        forbidden_hits = []
-        for cluster in clusters:
-            # sort model hits between forbidden and the other
-            *one_clst_allowed_hits, one_clst_forbidden_hits = self.sort_hits_by_status(cluster.hits)
-            if one_clst_forbidden_hits:
-                forbidden_hits.extend(one_clst_forbidden_hits)
-            # merge MANDATORY, ACCESSORY, NEUTRAL ModelHit
-            one_clst_allowed_hits = [mh for hits in one_clst_allowed_hits for mh in hits]
-            one_clst_allowed_hits.sort(key=attrgetter('position'))
-            valid_clusters.append(Cluster(one_clst_allowed_hits + one_clst_forbidden_hits,
-                                          self._model, cluster._hit_weights))
-
-        mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.present_genes()
-        # the count is finished
-        # check if the quorum is reached
-        # count how many different genes are represented in the clusters
-        # the neutral genes belong to the cluster
-        # but they do not count for the quorum
-
-        _log.debug("#" * 50)
-        _log.debug(f"mandatory_genes: {mandatory_genes}")
-        _log.debug(f"accessory_genes: {accessory_genes}")
-        _log.debug(f"neutral_genes: {neutral_genes}")
-        _log.debug(f"forbidden_genes: {forbidden_genes}")
-
-        reasons = []
-        is_a_system = True
-        if forbidden_genes:
-            is_a_system = False
-            msg = f"There is {len(forbidden_hits)} forbidden genes occurrence(s):" \
-                  f" {', '.join(h.gene.name for h in forbidden_hits)}"
-            reasons.append(msg)
-            _log.debug(msg)
-        if len(mandatory_genes) < self._model.min_mandatory_genes_required:
-            is_a_system = False
-            msg = f'The quorum of mandatory genes required ({self._model.min_mandatory_genes_required}) ' \
-                  f'is not reached: {len(mandatory_genes)}'
-            reasons.append(msg)
-            _log.debug(msg)
-        if len(accessory_genes) + len(mandatory_genes) < self._model.min_genes_required:
-            is_a_system = False
-            msg = f'The quorum of genes required ({self._model.min_genes_required}) is not reached:' \
-                  f' {len(accessory_genes) + len(mandatory_genes)}'
-            reasons.append(msg)
-            _log.debug(msg)
-
-        if is_a_system:
-            res = System(self._model, valid_clusters, self._redundancy_penalty)
-            _log.debug("is a system")
-        else:
-            res = RejectedCandidate(self._model, valid_clusters, reasons)
-        _log.debug("#" * 50)
-        return res
-
-
-class UnorderedMatchMaker(MatchMaker):
-
-    def match(self, hits):
-        """
-        :param hits:
-        :return:
-        """
-        # count the hits
-        # and track for each hit for which gene it counts for
-        mandatory_hits, accessory_hits, neutral_hits, forbidden_hits = self.sort_hits_by_status(hits)
-        # the count is finished
-        # check if the quorum is reached
-        # count how many different genes are represented in the clusters
-        # the neutral genes belong to the cluster
-        # but they do not count for the quorum
-        mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.present_genes()
-
-        _log.debug("#" * 50)
-        _log.debug(f"mandatory_genes: {mandatory_genes}")
-        _log.debug(f"accessory_genes: {accessory_genes}")
-        _log.debug(f"neutral_genes: {neutral_genes}")
-        _log.debug(f"forbidden_genes: {forbidden_genes}")
-
-        is_a_potential_system = True
-        reasons = []
-        if forbidden_genes:
-            msg = f"There is {len(forbidden_hits)} forbidden genes occurrence(s):" \
-                  f" {', '.join(h.gene.name for h in forbidden_hits)}"
-            _log.debug(msg)
-        if len(mandatory_genes) < self._model.min_mandatory_genes_required:
-            is_a_potential_system = False
-            msg = f'The quorum of mandatory genes required ({self._model.min_mandatory_genes_required}) is not reached: ' \
-                  f'{len(mandatory_genes)}'
-            reasons.append(msg)
-            _log.debug(msg)
-        if len(accessory_genes) + len(mandatory_genes) < self._model.min_genes_required:
-            is_a_potential_system = False
-            msg = f'The quorum of genes required ({self._model.min_genes_required}) is not reached:' \
-                  f' {len(accessory_genes) + len(mandatory_genes)}'
-            reasons.append(msg)
-            _log.debug(msg)
-
-        if is_a_potential_system:
-            res = LikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits)
-            _log.debug("There is a genetic potential for a system")
-        elif any((mandatory_hits, accessory_hits, neutral_hits)):
-            res = UnlikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits, reasons)
-        else:
-            res = None
-        _log.debug("#" * 50)
-        return res
-
-
-class HitSystemTracker(dict):
-    """
-    track in which system is implied each hit
-    """
-
-    def __init__(self, systems):
-        super(HitSystemTracker, self).__init__()
-        for system in systems:
-            m_hits = system.hits
-            for m_hit in m_hits:
-                c_hit = m_hit.hit
-                if c_hit not in self:
-                    self[c_hit] = set()
-                self[c_hit].add(system)
+_log = logging.getLogger(__name__)
 
 
 class MetaSetOfHits(abc.ABCMeta):
@@ -327,11 +66,11 @@ class MetaSetOfHits(abc.ABCMeta):
     which is defined in AbstractSetOfHits
     """
 
-    def getter_maker(status):
+    def getter_maker(status: str) -> Callable:
         """
         Create a property which allow to access to the gene corresponding of the cat of the model
 
-        :param str cat: the type of gene category to which we create the getter
+        :param status: the type of gene category to which we create the getter
         :return: unbound method
         """
         def getter(self):
@@ -360,21 +99,20 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
     Is the mother class of  System, RejectedCandidates, LikelySystems UnlikelySystem, ...
     """
 
-    def __init__(self, model):
+    def __init__(self, model: Model) -> None:
         self.model = model
 
-    def _sort_hits(self, hits):
-        hits = sorted(hits, key=attrgetter('position'))
-        return hits
+    def _sort_hits(self, hits: list[ModelHit]) -> list[ModelHit]:
+        return sorted(hits, key=attrgetter('position'))
 
     @property
     @abc.abstractmethod
-    def hits(self):
+    def hits(self) -> list[ModelHit]:
         pass
 
 
     @property
-    def replicon_name(self):
+    def replicon_name(self) -> str:
         """
         :return: The name of the replicon
         :rtype: str
@@ -383,12 +121,11 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
 
 
     @property
-    def position(self):
+    def position(self) -> tuple[int, int]:
         """
-        :return: The position of the first and last hit,
+        :return: The position of the first and last hit (start: int, end:int),
                  excluded the hit coding for loners.
                  If the system is composed only by loners, used loners to compute position
-        :rtype: tuple (start: int, end:int)
         """
         # hits are sorted by their positions
         hits = [h.position for h in self.hits if not h.gene_ref.loner]
@@ -402,7 +139,7 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
         return pos
 
 
-    def count(self):
+    def count(self) -> None:
         """
         fill structures one for supported status mandatory, accessory, ...
         each structure count how many hit for each gene of the model
@@ -427,14 +164,13 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
 
 
     @property
-    def wholeness(self):
+    def wholeness(self) -> float:
         """
 
         :return: a score indicating the genes ratio of the model which have at least one hit
                  by default full system is mandatory + accessory ('neutral' genes do not count)
-                 but for special corner case it can be sepcified in model definition (xml)
+                 but for special corner case it can be specified in model definition (xml)
                  or on the command line
-        :rtype: float
         """
         # model completude
         # the neutral hit do not participate to the model completude
@@ -445,10 +181,12 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
 
 class AbstractClusterizedHits(AbstractSetOfHits):
     """
+    Modelize SetOfHits that colocalize.
 
+    should be inherited
     """
 
-    def __init__(self, model, clusters):
+    def __init__(self, model: Model, clusters: Cluster | list[Cluster]):
         if isinstance(clusters, Cluster):
             self.clusters = [clusters]
         else:
@@ -457,10 +195,10 @@ class AbstractClusterizedHits(AbstractSetOfHits):
         super().__init__(model)
 
 
-    def fulfilled_function(self, *genes):
+    def fulfilled_function(self, *genes: ModelGene | str) -> set[str]:
         """
 
-        :param gene: The genes which must be tested.
+        :param genes: The genes which must be tested.
         :type genes: :class:`macsypy.gene.ModelGene` object or string representing the gene name
         :return: the common functions between genes and this system.
         :rtype: set of string
@@ -474,7 +212,7 @@ class AbstractClusterizedHits(AbstractSetOfHits):
 
 class System(AbstractClusterizedHits):
     """
-    Modelize as system. a system is an occurrence of a given model on a replicon.
+    Modeling as system. a system is an occurrence of a given model on a replicon.
     """
 
     _supported_status = (GeneStatus.MANDATORY,
@@ -483,13 +221,13 @@ class System(AbstractClusterizedHits):
 
     _id = itertools.count(1)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.id[14:]
 
-    def __init__(self, model, clusters, redundancy_penalty=1.5):
+    def __init__(self, model: Model, clusters: list[Cluster], redundancy_penalty: float = 1.5) -> None:
         """
 
-        :param model:  The model which has ben used to build this system
+        :param model:  The model which has been used to build this system
         :type model: :class:`macsypy.model.Model` object
         :param clusters: The list of cluster that form this system
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
@@ -501,7 +239,7 @@ class System(AbstractClusterizedHits):
 
 
     @property
-    def score(self):
+    def score(self) -> float:
         """
         :return: a score take in account
             * if a hit match for the gene or it is an exchangeable gene
@@ -514,7 +252,7 @@ class System(AbstractClusterizedHits):
             # So to avoid computation we cached it
             return self._score
 
-        def clst_func(clsts):
+        def clst_func(clsts: list[Cluster]) -> dict[str: list[Cluster]]:
             """
 
             :param clsts: list of clusters
@@ -571,7 +309,7 @@ class System(AbstractClusterizedHits):
         for clst in loner_multi_syst_clsts:
             loner_or_ms = clst.hits[0]  # len(clst) == 1
             funct = loner_or_ms.gene_ref.alternate_of().name
-            if not funct in regular_functions:
+            if funct not in regular_functions:
                 _log.debug(f"{funct} is not already in regular clusters {regular_functions}")
                 # call the cluster score
                 # because it's in this method that the out of cluster penalty is applied
@@ -589,7 +327,7 @@ class System(AbstractClusterizedHits):
         return score
 
 
-    def occurrence(self):
+    def occurrence(self) -> int:
         """
         sometimes several systems collocates so they form only one cluster
         so macsyfinder build only one system
@@ -610,21 +348,19 @@ class System(AbstractClusterizedHits):
 
 
     @property
-    def hits(self):
+    def hits(self) -> list[ModelHit]:
         """
         :return: The list of all hits that compose this system
-        :rtype: [:class:`macsypy.hit.ValidHits` , ... ]
         """
         hits = self._sort_hits([h for cluster in self.clusters for h in cluster.hits])
         return hits
 
     @property
-    def loci_num(self):
+    def loci_num(self) -> list[int]:
         """
         :return: the number of the corresponding locus for each cluster
                  the cluster made of only one Loner are not considered as a loci
                  so these clusters have a negative locus_num
-        :rtype: list of int
         """
         loci = []
         loci_num = 0
@@ -641,7 +377,7 @@ class System(AbstractClusterizedHits):
 
 
     @property
-    def loci_nb(self):
+    def loci_nb(self) -> int:
         """
         :return: The number of loci of this system (loners are not considered)
         :rtype: int >= 0
@@ -651,18 +387,16 @@ class System(AbstractClusterizedHits):
 
 
     @property
-    def multi_loci(self):
+    def multi_loci(self) -> bool:
         """
         :return: True if the systems is encoded in multiple loci. False otherwise
-        :rtype: bool
         """
         return self.loci_nb > 1
 
 
-    def is_compatible(self, other):
+    def is_compatible(self, other: System) -> bool:
         """
         :param other: the other systems to test compatibility
-        :type other: :class:`macsypy.system.System` object
         :return: True if other system is compatible with this one. False otherwise.
                  Two systems are compatible if they do not share :class:`macsypy.hit.CoreHit`
                  except hit corresponding to a multi_system gene in the model.
@@ -695,36 +429,30 @@ class System(AbstractClusterizedHits):
             for ch in common_hits:
                 other_hit = other_hits[ch]
                 my_hit = my_hits[ch]
-                if not(other_hit.multi_model and my_hit.multi_model):
+                if not (other_hit.multi_model and my_hit.multi_model):
                     return False
             return True
 
 
-
-
-
-    def get_loners(self):
+    def get_loners(self) -> set[Loner | LonerMultiSystem]:
         """
-        :return: The True Loners (Loner which not colocalize with an other hit) belonging to the systems
-        :rtype: set of :class:`macsypy.hit.Loner` object
+        :return: The True Loners (Loner which not colocalize with another hit) belonging to the systems
         """
         # a model hit is a loner only if it's a true loner
         return {mh for mh in self.hits if mh.loner}
 
 
-    def get_hits_encoding_multisystem(self):
+    def get_hits_encoding_multisystem(self) -> set[MultiSystem]:
         """
 
         :return: The hits codding for a gene taged as multi system
-        :rtype: set of :class:`macsypy.hit.ModelHit` object
         """
         return {mh for mh in self.hits if mh.gene_ref.multi_system}
 
 
-    def get_multisystems(self):
+    def get_multisystems(self) -> set[MultiSystem | LonerMultiSystem]:
         """
         :return: The MultiSystem hit (comming from out system (other cluster or loner) and tag as multisystem)
-        :rtype: set of :class:`macsypy.hit.MultiSystem` | :class:`macsypy.hit.LonerMultiSystem` object
         """
         return {mh for mh in self.hits if mh.multi_system}
 
@@ -741,22 +469,19 @@ class RejectedCandidate(AbstractClusterizedHits):
 
     _id = itertools.count(1)
 
-    def __init__(self, model, clusters, reasons):
+    def __init__(self, model: Model, clusters: list[Cluster], reasons: list[str]) -> None:
         """
         :param model:
-        :type model: :class:`macsypy.model.Model` object
         :param clusters: list of clusters. These Clusters should be created with
                          :class:`macsypy.cluster.Cluster` of :class:`macsypy.hit.ModelHit` objects
-        :type clusters: list of :class:`macsypy.cluster.Cluster` objects
         :param reasons: the reason why these clusters have been rejected
-        :type reasons: list of string
         """
         super().__init__(model, clusters)
         self.id = f"{self.replicon_name}_{model.name}_{next(self._id)}"  # for testing purpose only
         self._reasons = reasons if isinstance(reasons, list) else [reasons]
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
 
         :return: a string representation of this RejectedCandidates
@@ -772,18 +497,19 @@ class RejectedCandidate(AbstractClusterizedHits):
 
 
     @property
-    def hits(self):
+    def hits(self) -> list[ModelHit]:
         """
 
         :return: The list of all hits that compose this system
-        :rtype: [:class:`macsypy.hit.ModelHit` , ... ]
         """
-        hits = self._sort_hits([h for cluster in self.clusters for h in cluster.hits])
-        return hits
+        return self._sort_hits([h for cluster in self.clusters for h in cluster.hits])
 
 
     @property
-    def reasons(self):
+    def reasons(self) -> list[str]:
+        """
+        :return: The reason why it has been rejected
+        """
         return self._reasons
 
 
@@ -795,7 +521,18 @@ class AbstractUnordered(AbstractSetOfHits):
 
     _id = itertools.count(1)
 
-    def __init__(self, model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits):
+    def __init__(self, model: Model,
+                 mandatory_hits: list[ModelHit],
+                 accessory_hits: list[ModelHit],
+                 neutral_hits: list[ModelHit],
+                 forbidden_hits: list[ModelHit]) -> None:
+        """
+        :param model:  The model which has been used to build this system
+        :param mandatory_hits: The list of mandatory hits (encode for a gene tagged as mandatory)
+        :param accessory_hits: The list of accessory hits (encode for a gene tagged as accessory)
+        :param neutral_hits: The list of neutral hits (encode for a gene tagged as neutral)
+        :param forbidden_hits: The list of hits that are forbidden
+        """
         self._mandatory_hits = mandatory_hits
         self._accessory_hits = accessory_hits
         self._neutral_hits = neutral_hits
@@ -804,51 +541,48 @@ class AbstractUnordered(AbstractSetOfHits):
         self.id = f"{self.replicon_name}_{model.name}_{next(self._id)}"
         super().__init__(model)
 
+
     @property
-    def hits(self):
+    def hits(self) -> list[ModelHit]:
         """
         :return: The list of all hits sorted by their position
-        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._sort_hits(self._mandatory_hits + self._accessory_hits + self._neutral_hits + self.forbidden_hits)
 
+
     @property
-    def mandatory_hits(self):
+    def mandatory_hits(self) -> list[ModelHit]:
         """
         :return: The list of mandatory hits
-        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._mandatory_hits[:]
 
+
     @property
-    def accessory_hits(self):
+    def accessory_hits(self) -> list[ModelHit]:
         """
         :return: The list of accesory hits
-        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._accessory_hits[:]
 
     @property
-    def neutral_hits(self):
+    def neutral_hits(self) -> list[ModelHit]:
         """
         :return: The list of neutral hits
-        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._neutral_hits[:]
 
     @property
-    def forbidden_hits(self):
+    def forbidden_hits(self) -> list[ModelHit]:
         """
         :return: The list of forbidden hits
-        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._forbidden_hits[:]
 
     @property
-    def allowed_hits(self):
+    def allowed_hits(self) -> list[ModelHit]:
         """
         :return: The list of allowed (mandatory, accessory, neutral) hits
-        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
 
         return self._mandatory_hits + self._accessory_hits + self._neutral_hits
@@ -863,7 +597,7 @@ class LikelySystem(AbstractUnordered):
     .. note:
         do not forget that this class inherits from MetaSetOfHits
         so the getter to mandatory, accessory, neutral, forbidden is dynamically injected
-        by the meta class base on  _supported_status
+        by the metaclass base on  _supported_status
     """
 
     _supported_status = (GeneStatus.MANDATORY,
@@ -872,7 +606,7 @@ class LikelySystem(AbstractUnordered):
                          GeneStatus.FORBIDDEN)
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
 
         :return: a string representation of this LikelySystem
@@ -891,27 +625,26 @@ class UnlikelySystem(AbstractUnordered):
                          GeneStatus.FORBIDDEN)
 
 
-    def __init__(self, model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits, reasons):
+    def __init__(self, model: Model,
+                 mandatory_hits: list[ModelHit],
+                 accessory_hits: list[ModelHit],
+                 neutral_hits: list[ModelHit],
+                 forbidden_hits: list[ModelHit],
+                 reasons: list[str]) -> None:
         """
 
-        :param model:  The model which has ben used to build this system
-        :type model: :class:`macsypy.model.Model` object
+        :param model:  The model which has been used to build this system
         :param mandatory_hits: The list of mandatory hits (encode for a gene tagged as mandatory)
-        :type mandatory_hits: list of :class:`macsypy.hit.ModelHit` objects
         :param accessory_hits: The list of accessory hits (encode for a gene tagged as accessory)
-        :type accessory_hits: list of :class:`macsypy.hit.ModelHit` objects
         :param neutral_hits: The list of neutral hits (encode for a gene tagged as neutral)
-        :type neutral_hits: list of :class:`macsypy.hit.ModelHit` objects
         :param forbidden_hits: The list of hits that are forbidden
-        :type forbidden_hits: list of :class:`macsypy.hit.ModelHit` objects
         :param reasons: the reasons why this set of hits has been rejected
-        :type reasons: List of str
         """
         super().__init__(model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits)
         self._reasons = reasons if isinstance(reasons, list) else [reasons]
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
 
         :return: a string representation of this UnlikelySystem
@@ -923,9 +656,268 @@ class UnlikelySystem(AbstractUnordered):
 
 
     @property
-    def reasons(self):
+    def reasons(self) -> list[str]:
         """
         :return: The reasons why it probably not a system
         :rtype: list of string
         """
         return self._reasons
+
+
+class MatchMaker(metaclass=abc.ABCMeta):
+    """
+    Is an abstract class for (Odered/Unordered)MatchMaker
+    the `match` class method must be implemented in concrete classes
+    """
+
+    def __init__(self, model: Model) -> None:
+        self._model = model
+        # init my structures to count gene occurrences
+        self.mandatory_counter = {g.name: 0 for g in model.mandatory_genes}
+        self.exchangeable_mandatory = self._create_exchangeable_map(model.mandatory_genes)
+
+        self.accessory_counter = {g.name: 0 for g in model.accessory_genes}
+        self.exchangeable_accessory = self._create_exchangeable_map(model.accessory_genes)
+
+        self.forbidden_counter = {g.name: 0 for g in model.forbidden_genes}
+        self.exchangeable_forbidden = self._create_exchangeable_map(model.forbidden_genes)
+
+        self.neutral_counter = {g.name: 0 for g in model.neutral_genes}
+        self.exchangeable_neutral = self._create_exchangeable_map(model.neutral_genes)
+
+
+    def _create_exchangeable_map(self, genes: list[ModelGene]) -> dict[str: ModelGene]:
+        """
+        create a map between an exchangeable (formly homolog or analog) gene name and it's gene reference
+
+        :param genes: The genes to get the exchangeable genes
+        :return: a dict with keys are the exchangeable gene_name and the value the reference gene
+        """
+        map = {}
+        for gene in genes:
+            for ex_gene in gene.exchangeables:
+                map[ex_gene.name] = gene
+        return map
+
+
+    def sort_hits_by_status(self, hits: Iterable[ModelHit]) \
+            -> tuple[list[ModelHit], list[ModelHit], list[ModelHit], list[ModelHit]]:
+        """
+        sort :class:`macsypy.hit.ModelHit` according the status of the gene the hit code for.
+
+        :param hits: list of :class:`macsypy.hit.ModelHit` object
+        :return: the valid hits according their status ([mandatory, ], [accessory, ], [neutral, ], [forbidden ])
+        :raise MacsypyError: when a gene is not found in the model
+        """
+        mandatory_hits = []
+        accessory_hits = []
+        neutral_hits = []
+        forbidden_hits = []
+        for hit in hits:
+            gene_name = hit.gene.name
+            # the ModelHit need to be linked to the
+            # gene of the model
+            if gene_name in self.mandatory_counter:
+                self.mandatory_counter[hit.gene.name] += 1
+                mandatory_hits.append(hit)
+            elif gene_name in self.exchangeable_mandatory:
+                gene_ref = self.exchangeable_mandatory[gene_name]
+                self.mandatory_counter[gene_ref.name] += 1
+                mandatory_hits.append(hit)
+
+            elif gene_name in self.accessory_counter:
+                self.accessory_counter[gene_name] += 1
+                accessory_hits.append(hit)
+            elif gene_name in self.exchangeable_accessory:
+                gene_ref = self.exchangeable_accessory[gene_name]
+                self.accessory_counter[gene_ref.name] += 1
+                accessory_hits.append(hit)
+
+            elif gene_name in self.neutral_counter:
+                self.neutral_counter[gene_name] += 1
+                neutral_hits.append(hit)
+            elif gene_name in self.exchangeable_neutral:
+                gene_ref = self.exchangeable_neutral[gene_name]
+                self.neutral_counter[gene_ref.name] += 1
+                neutral_hits.append(hit)
+
+            elif gene_name in self.forbidden_counter:
+                self.forbidden_counter[gene_name] += 1
+                forbidden_hits.append(hit)
+            elif gene_name in self.exchangeable_forbidden:
+                gene_ref = self.exchangeable_forbidden[gene_name]
+                self.forbidden_counter[gene_ref.name] += 1
+                forbidden_hits.append(hit)
+            else:
+                model = hit.gene_ref.model
+                msg = f"Gene '{gene_name}' not found in model '{model.fqn}'"
+                _log.critical(msg)
+                raise MacsypyError(msg)
+
+        return mandatory_hits, accessory_hits, neutral_hits, forbidden_hits
+
+
+    def present_genes(self) -> tuple[list[str], list[str], list[str], list[str]]:
+        """
+        :return: the lists of genes name in model which are present in the replicon (included exchangeable)
+
+                 tuple of 4 lists for mandatory, accessory, neutral and forbidden
+                ([str gene_name, ...], [str gene_name], [str gene_name], [str gene_name])
+        """
+        mandatory_genes = [g_name for g_name, occ in self.mandatory_counter.items() if occ > 0]
+        accessory_genes = [g_name for g_name, occ in self.accessory_counter.items() if occ > 0]
+        neutral_genes = [g_name for g_name, occ in self.neutral_counter.items() if occ > 0]
+        forbidden_genes = [g_name for g_name, occ in self.forbidden_counter.items() if occ > 0]
+        return mandatory_genes, accessory_genes, neutral_genes, forbidden_genes
+
+
+    @abc.abstractmethod
+    def match(self, clusters: list[Cluster]) -> AbstractClusterizedHits | AbstractUnordered:
+        pass
+
+
+class OrderedMatchMaker(MatchMaker):
+    """
+    check if a set of hits match the quorum for ordered replicons (ordered_replicon or gembase)
+    """
+
+    def __init__(self, model, redundancy_penalty):
+        self._redundancy_penalty = redundancy_penalty
+        super().__init__(model)
+
+
+    def match(self, clusters: Iterable[Cluster]) -> System | RejectedCandidate:
+        """
+        Check a set of clusters fill model constraints.
+        If yes create a :class:`macsypy.system.System` otherwise create
+        a :class:`macsypy.cluster.RejectedCandidate`.
+
+        :param clusters: The list of cluster to check if fit the model
+        :type clusters: list of :class:`macsypy.cluster.Cluster` objects
+        :return: either a System or a RejectedCandidates
+        :rtype: :class:`macsypy.system.System` or :class:`macsypy.system.RejectedCandidate` object
+        """
+        # count the hits
+        # and track for each hit for which gene it counts for
+        valid_clusters = []
+        forbidden_hits = []
+        for cluster in clusters:
+            # sort model hits between forbidden and the other
+            *one_clst_allowed_hits, one_clst_forbidden_hits = self.sort_hits_by_status(cluster.hits)
+            if one_clst_forbidden_hits:
+                forbidden_hits.extend(one_clst_forbidden_hits)
+            # merge MANDATORY, ACCESSORY, NEUTRAL ModelHit
+            one_clst_allowed_hits = [mh for hits in one_clst_allowed_hits for mh in hits]
+            one_clst_allowed_hits.sort(key=attrgetter('position'))
+            valid_clusters.append(Cluster(one_clst_allowed_hits + one_clst_forbidden_hits,
+                                          self._model, cluster.hit_weights))
+
+        mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.present_genes()
+        # the count is finished
+        # check if the quorum is reached
+        # count how many different genes are represented in the clusters
+        # the neutral genes belong to the cluster
+        # but they do not count for the quorum
+
+        _log.debug("#" * 50)
+        _log.debug(f"mandatory_genes: {mandatory_genes}")
+        _log.debug(f"accessory_genes: {accessory_genes}")
+        _log.debug(f"neutral_genes: {neutral_genes}")
+        _log.debug(f"forbidden_genes: {forbidden_genes}")
+
+        reasons = []
+        is_a_system = True
+        if forbidden_genes:
+            is_a_system = False
+            msg = f"There is {len(forbidden_hits)} forbidden genes occurrence(s):" \
+                  f" {', '.join(h.gene.name for h in forbidden_hits)}"
+            reasons.append(msg)
+            _log.debug(msg)
+        if len(mandatory_genes) < self._model.min_mandatory_genes_required:
+            is_a_system = False
+            msg = f'The quorum of mandatory genes required ({self._model.min_mandatory_genes_required}) ' \
+                  f'is not reached: {len(mandatory_genes)}'
+            reasons.append(msg)
+            _log.debug(msg)
+        if len(accessory_genes) + len(mandatory_genes) < self._model.min_genes_required:
+            is_a_system = False
+            msg = f'The quorum of genes required ({self._model.min_genes_required}) is not reached:' \
+                  f' {len(accessory_genes) + len(mandatory_genes)}'
+            reasons.append(msg)
+            _log.debug(msg)
+
+        if is_a_system:
+            res = System(self._model, valid_clusters, self._redundancy_penalty)
+            _log.debug("is a system")
+        else:
+            res = RejectedCandidate(self._model, valid_clusters, reasons)
+        _log.debug("#" * 50)
+        return res
+
+
+class UnorderedMatchMaker(MatchMaker):
+
+    def match(self, hits: Iterable[ModelHit]) -> LikelySystem | UnlikelySystem:
+        """
+        :param hits: the hits to check
+        """
+        # count the hits
+        # and track for each hit for which gene it counts for
+        mandatory_hits, accessory_hits, neutral_hits, forbidden_hits = self.sort_hits_by_status(hits)
+        # the count is finished
+        # check if the quorum is reached
+        # count how many different genes are represented in the clusters
+        # the neutral genes belong to the cluster
+        # but they do not count for the quorum
+        mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.present_genes()
+
+        _log.debug("#" * 50)
+        _log.debug(f"mandatory_genes: {mandatory_genes}")
+        _log.debug(f"accessory_genes: {accessory_genes}")
+        _log.debug(f"neutral_genes: {neutral_genes}")
+        _log.debug(f"forbidden_genes: {forbidden_genes}")
+
+        is_a_potential_system = True
+        reasons = []
+        if forbidden_genes:
+            msg = f"There is {len(forbidden_hits)} forbidden genes occurrence(s):" \
+                  f" {', '.join(h.gene.name for h in forbidden_hits)}"
+            _log.debug(msg)
+        if len(mandatory_genes) < self._model.min_mandatory_genes_required:
+            is_a_potential_system = False
+            msg = (f'The quorum of mandatory genes required ({self._model.min_mandatory_genes_required}) '
+                   f'is not reached: {len(mandatory_genes)}')
+            reasons.append(msg)
+            _log.debug(msg)
+        if len(accessory_genes) + len(mandatory_genes) < self._model.min_genes_required:
+            is_a_potential_system = False
+            msg = f'The quorum of genes required ({self._model.min_genes_required}) is not reached:' \
+                  f' {len(accessory_genes) + len(mandatory_genes)}'
+            reasons.append(msg)
+            _log.debug(msg)
+
+        if is_a_potential_system:
+            res = LikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits)
+            _log.debug("There is a genetic potential for a system")
+        elif any((mandatory_hits, accessory_hits, neutral_hits)):
+            res = UnlikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits, reasons)
+        else:
+            res = None
+        _log.debug("#" * 50)
+        return res
+
+
+class HitSystemTracker(dict):
+    """
+    track in which system is implied each hit
+    """
+
+    def __init__(self, systems: list[System]) -> None:
+        super(HitSystemTracker, self).__init__()
+        for system in systems:
+            m_hits = system.hits
+            for m_hit in m_hits:
+                c_hit = m_hit.hit
+                if c_hit not in self:
+                    self[c_hit] = set()
+                self[c_hit].add(system)

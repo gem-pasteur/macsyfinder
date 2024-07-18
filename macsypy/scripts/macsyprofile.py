@@ -1,6 +1,6 @@
 #########################################################################
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -24,19 +24,21 @@ import sys
 import os
 import glob
 import argparse
-from typing import List, Dict
 from itertools import groupby
 from dataclasses import dataclass
 from textwrap import dedent
 import logging
+import typing
 
 import colorlog
 
 import macsypy
 from macsypy.config import MacsyDefaults, Config
 from macsypy.database import Indexes
-from macsypy.hit import get_best_hits
+from macsypy.hit import get_best_hits, CoreHit
 from macsypy.registries import split_def_name
+from macsypy.utils import get_replicon_names
+from macsypy.metadata import Metadata
 
 # _log is set in main func
 _log = None
@@ -45,10 +47,10 @@ _log = None
 def get_version_message() -> str:
     """
     :return: the long description of the macsyfinder version
-    :rtype: str
     """
     version = macsypy.__version__
-    vers_msg = f"""macsyprofile {version}
+    commit = macsypy.__commit__
+    vers_msg = f"""macsyprofile {version} {commit}
 Python {sys.version}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
@@ -66,9 +68,8 @@ def get_profile_len(path: str) -> int:
     """
     Parse the HMM profile to extract the length and the presence of GA bit threshold
 
-    :param str path: The path to the hmm profile used to produced the hmm search output to analyse
+    :param path: The path to the hmm profile used to produce the hmm search output to analyse
     :return: the length, presence of ga bit threshold
-    :rtype: tuple(int length, bool ga_threshold)
     """
     with open(path) as file:
         for line in file:
@@ -81,10 +82,9 @@ def get_profile_len(path: str) -> int:
 def get_gene_name(path: str, suffix: str) -> str:
     """
 
-    :param str path: The path to the hmm output to analyse
-    :param str suffix: the suffix of the hmm output file
+    :param path: The path to the hmm output to analyse
+    :param suffix: the suffix of the hmm output file
     :return: the name of the analysed gene
-    :rtype: str
     """
     file_name = os.path.basename(path)
     gene_name = file_name.replace(suffix, '')
@@ -121,14 +121,11 @@ class HmmProfile:
     Handle the HMM output files
     """
 
-    def __init__(self, gene_name, gene_profile_lg, hmmer_output, cfg):
+    def __init__(self, gene_name: str, gene_profile_lg: int, hmmer_output: str, cfg: Config):
         """
-        :param gene: the gene corresponding to the profile search reported here
-        :type gene: :class:`macsypy.gene.CoreGene` object
+        :param gene_name: the name of the gene corresponding to the profile search reported here
         :param hmmer_output: The path to the raw Hmmer output file
-        :type hmmer_output: string
         :param cfg: the configuration object
-        :type cfg: :class:`macsypy.config.Config` object
         """
         self.gene_name = gene_name
         self._hmmer_raw_out = hmmer_output
@@ -136,17 +133,15 @@ class HmmProfile:
         self.cfg = cfg
 
 
-    def parse(self) -> List[LightHit]:
+    def parse(self) -> list[LightHit]:
         """
         parse a hmm output file and extract all hits and do some basic computation (coverage profile)
 
         :return: The list of extracted hits
         """
         all_hits = []
-        idx = Indexes(self.cfg)
-        macsyfinder_idx = idx.build()
         my_db = self._build_my_db(self._hmmer_raw_out)
-        self._fill_my_db(macsyfinder_idx, my_db)
+        self._fill_my_db(my_db)
 
         with open(self._hmmer_raw_out, 'r') as hmm_out:
             i_evalue_sel = self.cfg.i_evalue_sel()
@@ -159,23 +154,21 @@ class HmmProfile:
                 seq_lg, position_hit = my_db[hit_id]
 
                 replicon_name = self._get_replicon_name(hit_id)
-
                 body = next(hmm_hits)
-                l_hit = self._parse_hmm_body(hit_id, self.gene_profile_lg, seq_lg, coverage_threshold,
-                                         replicon_name, position_hit, i_evalue_sel, body)
+                l_hit = self._parse_hmm_body(hit_id, self.gene_profile_lg, seq_lg,
+                                             coverage_threshold, replicon_name,
+                                             position_hit, i_evalue_sel, body)
                 all_hits += l_hit
             hits = sorted(all_hits, key=lambda h: - h.score)
         return hits
 
 
-    def _build_my_db(self, hmm_output: str) -> Dict:
+    def _build_my_db(self, hmm_output: str) -> dict[str: None]:
         """
         Build the keys of a dictionary object to store sequence identifiers of hits.
 
         :param hmm_output: the path to the hmmsearch output to parse.
-        :type hmm_output: string
         :return: a dictionary containing a key for each sequence id of the hits
-        :rtype: dict
         """
         db = {}
         with open(hmm_output) as hmm_file:
@@ -185,14 +178,11 @@ class HmmProfile:
         return db
 
 
-    def _fill_my_db(self, macsyfinder_idx: str, db: Dict) -> None:
+    def _fill_my_db(self, db: dict[str: tuple[int, int]]) -> None:
         """
         Fill the dictionary with information on the matched sequences
 
-        :param macsyfinder_idx: the path the macsyfinder index corresponding to the dataset
-        :type  macsyfinder_idx: string
         :param db: the database containing all sequence id of the hits.
-        :type db: dict
         """
         idx = Indexes(self.cfg)
         idx.build()
@@ -202,55 +192,51 @@ class HmmProfile:
 
 
     def _get_replicon_name(self, hit_id: str) -> str:
-
-        replicon_name = {'unordered': 'unordered',
-                         'ordered_replicon': 'UserReplicon',
-                         'gembase': "_".join(hit_id.split('_')[:-1])}
-        return replicon_name[self.cfg.db_type()]
+        db_type = self.cfg.db_type()
+        if db_type == 'gembase':
+            *replicon_name, seq_name = hit_id.split('_')
+            replicon_name = "_".join(replicon_name)
+        else:
+            replicon_name = get_replicon_names(self.cfg.sequence_db(), db_type)[0]
+        return replicon_name
 
 
     def _hit_start(self, line: str) -> bool:
         """
         :param line: the line to parse
-        :type line: string
         :return: True if it's the beginning of a new hit in Hmmer raw output files.
          False otherwise
-        :rtype: boolean.
         """
         return line.startswith(">>")
 
 
-    def _parse_hmm_header(self, h_grp) -> str:
+    def _parse_hmm_header(self, h_grp: str) -> str:
         """
         :param h_grp: the sequence of string return by groupby function representing the header of a hit
-        :type h_grp: sequence of string (<itertools._grouper object at 0x7ff9912e3b50>)
         :returns: the sequence identifier from a set of lines that corresponds to a single hit
-        :rtype: string
         """
         for line in h_grp:
             hit_id = line.split()[1]
         return hit_id
 
 
-    def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_threshold, replicon_name,
-                        position_hit, i_evalue_sel, b_grp):
+    def _parse_hmm_body(self, hit_id: str, gene_profile_lg: int, seq_lg: int,
+                        coverage_threshold:float, replicon_name: str,
+                        position_hit: int, i_evalue_sel: float, b_grp: list[list[str]]) -> list[CoreHit]:
         """
         Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected
         ("coverage_profile" and "i_evalue_select" command-line parameters)
 
-        :param str hit_id: the sequence identifier
-        :param int gene_profile_lg: the length of the profile matched
-        :paramint  seq_lg: the length of the sequence
-        :param float coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment
+        :param hit_id: the sequence identifier
+        :param gene_profile_lg: the length of the profile matched
+        :param seq_lg: the length of the sequence
+        :param coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment
                                         for hit selection.
-        :param str replicon_name: the identifier of the replicon
-        :param int position_hit: the rank of the sequence matched in the input dataset file
-        :param float i_evalue_sel: the maximal i-evalue (independent evalue) for hit selection
+        :param replicon_name: the identifier of the replicon
+        :param position_hit: the rank of the sequence matched in the input dataset file
+        :param i_evalue_sel: the maximal i-evalue (independent evalue) for hit selection
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
-        :type b_grp: list of list of strings
         :returns: a sequence of hits
-        :rtype: list of :class:`macsypy.report.CoreHit` objects
-
         """
         first_line = next(b_grp)
         if not first_line.startswith('   #    score'):
@@ -302,26 +288,29 @@ class HmmProfile:
                         raise ValueError(msg) from err
 
 
-def header(cmd: List[str]) -> str:
+def header(cmd: list[str], model: str, model_vers: str) -> str:
     """
 
     :param cmd: the command use dto launch this analyse
+    :model: The name of model family
+    :model_vers: The version of the model
     :return: The header of the result file
     """
     header = f"""# macsyprofile {macsypy.__version__}
+# models: {model}-{model_vers}
 # macsyprofile {' '.join(cmd)}
 hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tscore\tprofile_coverage\tsequence_coverage\tbegin\tend"""
     return header
 
 
-def init_logger(level='INFO', out=True):
+def init_logger(level: typing.Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int ='INFO',
+                out: bool = True):
     """
 
     :param level: The logger threshold could be a positive int or string
                   among: 'CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'
     :param out: if the log message must be displayed
     :return: logger
-    :rtype: :class:`logging.Logger` instance
     """
     logger = colorlog.getLogger('macsyprofile')
     if isinstance(level, str):
@@ -357,20 +346,18 @@ def init_logger(level='INFO', out=True):
 def verbosity_to_log_level(verbosity: int) -> int:
     """
     transform the number of -v option in loglevel
-    :param int verbosity: number of -v option on the command line
+    :param verbosity: number of -v option on the command line
     :return: an int corresponding to a logging level
     """
     level = max((logging.INFO - (10 * verbosity), 1))
     return level
 
 
-def parse_args(args:  List[str]) -> argparse.Namespace:
+def parse_args(args: list[str]) -> argparse.Namespace:
     """
 
     :param args: The arguments provided on the command line
-    :type args: List of strings [without the program name]
     :return: The arguments parsed
-    :rtype: :class:`aprgparse.Namespace` object.
     """
     msf_def = MacsyDefaults()
     parser = argparse.ArgumentParser(
@@ -378,12 +365,12 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=dedent(r'''
 
-         *            *               *                   * *       * 
-    *           *               *   *   *  *    **                *  
+         *            *               *                   * *       *
+    *           *               *   *   *  *    **                *
       **     *    *   *  *     *                    *               *
-         __  __    *       ____ *      ____        **   __ _ _  *    
-        |  \/  | __ _  ___/ ___| _   _|  _ \ _ __ ___  / _(_) | ___ 
-        | |\/| |/ _` |/ __\___ \| | | | |_) | '__/ _ \| |_| | |/ _ \ 
+         __  __    *       ____ *      ____        **   __ _ _  *
+        |  \/  | __ _  ___/ ___| _   _|  _ \ _ __ ___  / _(_) | ___
+        | |\/| |/ _` |/ __\___ \| | | | |_) | '__/ _ \| |_| | |/ _ \
         | |  | | (_| | (__ ___) | |_| |  __/| | | (_) |  _| | |  __/
         |_|  |_|\__,_|\___|____/ \__, |_|   |_|  \___/|_| |_|_|\___|
                 *                |___/    *                   *
@@ -430,7 +417,8 @@ the hit selection for systems detection. (default no threshold)"""
     parser.add_argument('--index-dir',
                         action='store',
                         default=None,
-                        help="Specifies the path to a directory to store/read the sequence index when the sequence-db dir is not writable.")
+                        help="Specifies the path to a directory to store/read the sequence index when "
+                             "the sequence-db dir is not writable.")
 
     parser.add_argument('-f', '--force',
                         action='store_true',
@@ -456,14 +444,12 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
     return parsed_args
 
 
-def main(args=None, log_level=None) -> None:
+def main(args: list[str] | None = None, log_level: str | int | None = None) -> None:
     """
     main entry point to macsyprofile
 
     :param args: the arguments passed on the command line without the program name
-    :type args: List of string
     :param log_level: the output verbosity
-    :type log_level: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """
     global _log
     args = sys.argv[1:] if args is None else args
@@ -511,17 +497,20 @@ def main(args=None, log_level=None) -> None:
         model_familly_name = split_def_name(cfg.models()[0])[0]
         model_dir = [p for p in [os.path.join(p, model_familly_name) for p in cfg.models_dir()] if os.path.exists(p)][-1]
 
+        metadata_path = os.path.join(model_dir, Metadata.name)
+        metadata = Metadata.load(metadata_path)
+        model_vers = metadata.vers
         profiles_dir = os.path.join(model_dir, 'profiles')
     except IndexError:
         _log.critical(f"Cannot find models in conf file {msf_run_path}. "
                       f"May be these results have been generated with an old version of macsyfinder.")
-        sys.tracebacklimit = 0
+        sys.tracebacklimit = 10
         raise ValueError() from None
 
     _log.debug(f"hmmer_files: {hmmer_files}")
     all_hits = []
     with open(profile_report_path, 'w') as prof_out:
-        print(header(args), file=prof_out)
+        print(header(args, model_familly_name, model_vers), file=prof_out)
         for hmmer_out_path in hmmer_files:
             _log.info(f"parsing {hmmer_out_path}")
             gene_name = get_gene_name(hmmer_out_path, hmm_suffix)

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -33,17 +33,22 @@ import logging
 from .error import MacsypyError, EmptyFileError
 from .utils import open_compressed
 
+
+from typing import TextIO, Iterator, Literal, TypeAlias, Any
+from .config import Config
+
 _log = logging.getLogger(__name__)
 
 
-def fasta_iter(fasta_file):
+Topology: TypeAlias = Literal['linear', 'ciircular']
+
+
+def fasta_iter(fasta_file: TextIO) -> Iterator[tuple[str, str, int]]:
     """
     :param fasta_file: the file containing all input sequences in fasta format.
-    :type fasta_file: file object
     :author: http://biostar.stackexchange.com/users/36/brentp
     :return: for a given fasta file, it returns an iterator which yields tuples
              (string id, string comment, int sequence length)
-    :rtype: iterator
     """
     # ditch the boolean (x[0]) and just keep the header or sequence since
     # we know they alternate.
@@ -75,7 +80,7 @@ class Indexes:
 
     _field_separator = "^^"
 
-    def __init__(self, cfg):
+    def __init__(self, cfg: Config) -> None:
         """
         The constructor retrieves the file of indexes in the case they are not present
         or the user asked for build indexes (--idx)
@@ -89,15 +94,13 @@ class Indexes:
         self.name = os.path.basename(self._fasta_path)
 
 
-    def build(self, force=False):
+    def build(self, force: bool = False) -> str:
         """
         Build the indexes from the sequence data set in fasta format,
 
         :param force: If True, force the index building even
                       if the index files are present in the sequence data set folder
-        :type force: boolean
         :return: the path to the index
-        :rtype: str
         """
         my_indexes = self.find_my_indexes()  # check read
 
@@ -144,7 +147,7 @@ class Indexes:
         return my_indexes
 
 
-    def find_my_indexes(self):
+    def find_my_indexes(self) -> str | None:
         """
         :return: the file of macsyfinder indexes if it exists in the dataset folder, None otherwise.
         :rtype: string
@@ -155,14 +158,13 @@ class Indexes:
             return path
 
 
-    def _index_dir(self, build=False):
+    def _index_dir(self, build: bool = False) -> str:
         """
         search where to store(build=True) read indexes
 
-        :param bool build: if check the index-dir permissions to write
+        :param build: if check the index-dir permissions to write
         :return: The directory where read or write the indexes
-        :rtype: str
-        :raise ValueError: if the directory specify by --index-dir option does not exists
+        :raise ValueError: if the directory specify by --index-dir option does not exist
                            or if build = True index-dir is not writable
         """
         index_dir = self.cfg.index_dir()
@@ -185,7 +187,7 @@ class Indexes:
                 return index_dir
 
 
-    def _build_my_indexes(self, index_dir):
+    def _build_my_indexes(self, index_dir: str) -> str:
         """
         Build macsyfinder indexes. These indexes are stored in a file.
 
@@ -221,12 +223,12 @@ class Indexes:
         return index_file
 
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[tuple[str, str, int]]:
         """
         :raise MacsypyError: if the indexes are not buid
         :return: an iterator on the indexes
 
-        To use it the index must be build.
+        To use it the index must be built.
         """
         path = self.find_my_indexes()
         if path is None:
@@ -281,13 +283,13 @@ class RepliconDB:
     """
 
 
-    def __init__(self, cfg):
+    def __init__(self, cfg: Config) -> None:
         """
         :param cfg: The configuration object
         :type cfg: :class:`macsypy.config.Config` object
 
         .. note ::
-            This class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon'
+            This class can be instanced only if the db_type is 'gembase' or 'ordered_replicon'
         """
         self.cfg = cfg
         assert self.cfg.db_type() in ('gembase', 'ordered_replicon')
@@ -305,10 +307,10 @@ class RepliconDB:
             self._fill_ordered_min_max(self.cfg.replicon_topology())
 
     @property
-    def ordered_replicon_name(self):
+    def ordered_replicon_name(self) -> str:
         return self._ordered_replicon_name
 
-    def guess_if_really_gembase(self):
+    def guess_if_really_gembase(self) -> bool:
         """
         Count the number of replicon with only on sequence
         if this number is above a threshold may be it's not gembase. for instance the folowing sequence
@@ -325,8 +327,7 @@ class RepliconDB:
         | >07700ES100A0cP01_ C ATG TGA 91521 94826 Valid icmF1 3306 _PA0077_NP_248767.1_ PA0077 1 91521 94826
         | MQSLAEVSAPDAASVAT
 
-        :return: False if most of replicon contains only one seaquence, True otherwise
-        :rtype: bool
+        :return: False if most replicon contains only one sequence, True otherwise
         """
         all_len = [rep.max - rep.min for rep in self._DB.values()]
         replicon_with_one_seq = all_len.count(0)
@@ -335,7 +336,7 @@ class RepliconDB:
         else:
             return True
 
-    def _fill_topology(self):
+    def _fill_topology(self) -> dict[str: str]:
         """
         Fill the internal dictionary with min and max positions for each replicon_name of the sequence_db
         """
@@ -351,7 +352,7 @@ class RepliconDB:
         return topo_dict
 
 
-    def _fill_ordered_min_max(self, default_topology=None):
+    def _fill_ordered_min_max(self, default_topology: Topology | None = None) -> None:
         """
         For the replicon_name of the ordered_replicon sequence base, fill the internal dict with RepliconInfo
 
@@ -367,17 +368,15 @@ class RepliconDB:
         self._DB[self.ordered_replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
 
 
-    def _fill_gembase_min_max(self, topology, default_topology):
+    def _fill_gembase_min_max(self, topology: dict[str: Topology], default_topology: Topology) -> None:
         """
         For each replicon_name of a gembase dataset, it fills the internal dictionary with a namedtuple RepliconInfo
 
         :param topology: the topologies for each replicon
                          (parsed from the file specified with the option --topology-file)
-        :type topology: dict
         :param default_topology: the topology provided by the config.replicon_topology
-        :type default_topology: string
         """
-        def grp_replicon(entry):
+        def grp_replicon(entry: str) -> str:
             """
             in gembase the identifier of fasta sequence follows the following schema:
             <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
@@ -390,7 +389,7 @@ class RepliconDB:
 
         def parse_seq_id(seq_id):
             """
-            parse a gemabse sequence id (.idx)
+            parse a gembase sequence id (.idx)
             seq_id has the following format <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
             but not in the <seq-name>.
             """
@@ -402,7 +401,7 @@ class RepliconDB:
         for replicon in replicons:
             genes = []
             seq_id, seq_length, _min = next(replicon)
-            
+
             replicon_name, seq_name = parse_seq_id(seq_id)
             genes.append((seq_name, seq_length))
             for seq_id, seq_length, rank in replicon:
@@ -422,62 +421,55 @@ class RepliconDB:
                 self._DB[replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
 
 
-    def __contains__(self, replicon_name):
+    def __contains__(self, replicon_name: str) -> bool:
         """
         :param replicon_name: the name of the replicon
-        :type replicon_name: string
         :returns: True if replicon_name is in the repliconDB, false otherwise.
-        :rtype: boolean
         """
         return replicon_name in self._DB
 
 
-    def __getitem__(self, replicon_name):
+    def __getitem__(self, replicon_name: str) -> RepliconInfo:
         """
         :param replicon_name: the name of the replicon to get information on
-        :type replicon_name: string
         :returns: the RepliconInfo for the provided replicon_name
-        :rtype: :class:`RepliconInfo` object
         :raise: KeyError if replicon_name is not in repliconDB
         """
         return self._DB[replicon_name]
 
 
-    def get(self, replicon_name, default=None):
+    def get(self, replicon_name: str, default: Any = None) -> RepliconInfo:
         """
-        :param replicon_name: the name of the replicon to get informations
-        :type replicon_name: string
+        :param replicon_name: the name of the replicon to get information
         :param default: the value to return if the replicon_name is not in the RepliconDB
-        :type default: any
         :returns: the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else default.
                   If default is not given, it is set to None, so that this method never raises a KeyError.
-        :rtype: :class:`RepliconInfo` object
         """
         return self._DB.get(replicon_name, default)
 
 
-    def items(self):
+    def items(self) -> list[tuple[str, RepliconInfo]]:
         """
         :return: a copy of the RepliconDB as a list of (replicon_name, RepliconInfo) pairs
         """
         return list(self._DB.items())
 
 
-    def iteritems(self):
+    def iteritems(self) -> Iterator[tuple[str, RepliconInfo]]:
         """
         :return: an iterator over the RepliconDB as a list (replicon_name, RepliconInfo) pairs
         """
         return iter(self._DB.items())
 
 
-    def replicon_names(self):
+    def replicon_names(self) -> list[str]:
         """
         :return: a copy of the RepliconDB as a list of replicon_names
         """
         return list(self._DB.keys())
 
 
-    def replicon_infos(self):
+    def replicon_infos(self) -> list[RepliconInfo]:
         """
         :return: a copy of the RepliconDB as list of replicons info
         :rtype: RepliconInfo instance

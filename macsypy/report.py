@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -28,15 +28,19 @@ Extract informations from the results of hmmsearch
 
 import os
 import logging
-_log = logging.getLogger(__name__)
-
 import abc
 from threading import Lock
 from itertools import groupby
+from typing import Iterator
 
-from .database import Indexes, RepliconDB
+from .database import Indexes
 from .hit import CoreHit
 from .error import MacsypyError
+
+from .gene import CoreGene
+from .config import Config
+
+_log = logging.getLogger(__name__)
 
 
 class HMMReport(metaclass=abc.ABCMeta):
@@ -48,14 +52,11 @@ class HMMReport(metaclass=abc.ABCMeta):
     or not ("unordered" db_type).
     """
 
-    def __init__(self, gene, hmmer_output, cfg):
+    def __init__(self, gene: CoreGene, hmmer_output: str, cfg: Config) -> None:
         """
         :param gene: the gene corresponding to the profile search reported here
-        :type gene: :class:`macsypy.gene.CoreGene` object
         :param hmmer_output: The path to the raw Hmmer output file
-        :type hmmer_output: string
         :param cfg: the configuration object
-        :type cfg: :class:`macsypy.config.Config` object
         """
         self.gene = gene
         self._hmmer_raw_out = hmmer_output
@@ -65,7 +66,7 @@ class HMMReport(metaclass=abc.ABCMeta):
         self._lock = Lock()
 
     @abc.abstractmethod
-    def _get_replicon_name(self, hit_id):
+    def _get_replicon_name(self, hit_id: str) -> str:
         """
         This method is used by extract method and must be implemented by concrete class
 
@@ -76,7 +77,7 @@ class HMMReport(metaclass=abc.ABCMeta):
         return rep_name
 
 
-    def extract(self):
+    def extract(self) -> None | list[CoreHit]:
         """
         Parse the output file of hmmer compute from an unordered genes base
         and produced a new synthetic report file.
@@ -115,14 +116,13 @@ class HMMReport(metaclass=abc.ABCMeta):
                     c_hit = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
                                                  replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += c_hit
-                self.hits.sort()
-                return self.hits
+            self.hits.sort()
+            return self.hits
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         :return: string representation of this report
-        :rtype: str
         """
         rep = f"""# gene: {self.gene.name} extract from {self._hmmer_raw_out} hmm output
 # profile length= {len(self.gene.profile):d}
@@ -136,7 +136,7 @@ class HMMReport(metaclass=abc.ABCMeta):
         return rep
 
 
-    def save_extract(self):
+    def save_extract(self) -> None:
         """
         Write the string representation of the extract report in a file.
         The name of this file is the concatenation of the gene name and of the "res_extract_suffix"
@@ -149,7 +149,7 @@ class HMMReport(metaclass=abc.ABCMeta):
                 _file.write(str(self))
 
 
-    def best_hit(self):
+    def best_hit(self) -> CoreHit | None:
         """
         Return the best hit among multiple hits
         """
@@ -159,7 +159,7 @@ class HMMReport(metaclass=abc.ABCMeta):
             return None
 
 
-    def _hit_start(self, line):
+    def _hit_start(self, line: str) -> bool:
         """
         :param line: the line to parse
         :type line: string
@@ -170,14 +170,13 @@ class HMMReport(metaclass=abc.ABCMeta):
         return line.startswith(">>")
 
 
-    def _build_my_db(self, hmm_output):
+    def _build_my_db(self, hmm_output: str) -> dict[str: None]:
         """
         Build the keys of a dictionary object to store sequence identifiers of hits.
 
         :param hmm_output: the path to the hmmsearch output to parse.
         :type hmm_output: string
         :return: a dictionary containing a key for each sequence id of the hits
-        :rtype: dict
         """
         db = {}
         with open(hmm_output) as hmm_file:
@@ -187,7 +186,7 @@ class HMMReport(metaclass=abc.ABCMeta):
         return db
 
 
-    def _fill_my_db(self, db):
+    def _fill_my_db(self, db: dict[str: tuple[int, int]]) -> None:
         """
         Fill the dictionary with information on the matched sequences
 
@@ -202,7 +201,7 @@ class HMMReport(metaclass=abc.ABCMeta):
                 db[seqid] = (int(length), int(rank))
 
 
-    def _parse_hmm_header(self, h_grp):
+    def _parse_hmm_header(self, h_grp: Iterator) -> str:
         """
         :param h_grp: the sequence of string return by groupby function representing the header of a hit
         :type h_grp: sequence of string (<itertools._grouper object at 0x7ff9912e3b50>)
@@ -214,20 +213,20 @@ class HMMReport(metaclass=abc.ABCMeta):
         return hit_id
 
 
-    def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_threshold, replicon_name,
-                        position_hit, i_evalue_sel, b_grp):
+    def _parse_hmm_body(self, hit_id: str, gene_profile_lg: int, seq_lg: int, coverage_threshold: float,
+                        replicon_name: str, position_hit: int, i_evalue_sel: float, b_grp: Iterator) -> list[CoreHit]:
         """
         Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected
         ("coverage_profile" and "i_evalue_select" command-line parameters)
 
-        :param str hit_id: the sequence identifier
-        :param int gene_profile_lg: the length of the profile matched
-        :paramint  seq_lg: the length of the sequence
-        :param float coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment
+        :param hit_id: the sequence identifier
+        :param gene_profile_lg: the length of the profile matched
+        :param seq_lg: the length of the sequence
+        :param coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment
                                         for hit selection.
-        :param str replicon_name: the identifier of the replicon
-        :param int position_hit: the rank of the sequence matched in the input dataset file
-        :param float i_evalue_sel: the maximal i-evalue (independent evalue) for hit selection
+        :param replicon_name: the identifier of the replicon
+        :param position_hit: the rank of the sequence matched in the input dataset file
+        :param i_evalue_sel: the maximal i-evalue (independent evalue) for hit selection
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
         :type b_grp: list of list of strings
         :returns: a sequence of hits
@@ -283,9 +282,8 @@ class GeneralHMMReport(HMMReport):
     Handle HMM report. Extract a synthetic report from the raw hmmer output.
     Dedicated to any type of 'unordered' datasets.
     """
-    def _get_replicon_name(self, hit_id):
+    def _get_replicon_name(self, hit_id: str) -> str:
         return super()._get_replicon_name(hit_id)
-
 
 
 class OrderedHMMReport(HMMReport):
@@ -293,8 +291,9 @@ class OrderedHMMReport(HMMReport):
     Handle HMM report. Extract a synthetic report from the raw hmmer output.
     Dedicated to 'ordered_replicon' datasets.
     """
-    def _get_replicon_name(self, hit_id):
+    def _get_replicon_name(self, hit_id: str) -> str:
         return super()._get_replicon_name(hit_id)
+
 
 class GembaseHMMReport(HMMReport):
     """
@@ -302,6 +301,6 @@ class GembaseHMMReport(HMMReport):
     Dedicated to 'gembase' format datasets.
     """
 
-    def _get_replicon_name(self, hit_id):
+    def _get_replicon_name(self, hit_id: str) -> str:
         replicon_name = "_".join(hit_id.split('_')[:-1])
         return replicon_name

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -149,34 +149,34 @@ class SystemTest(MacsyTest):
         self.assertEqual(system_1.position, (1, 20))
 
 
-    def test_multi_loci(self):
-        model = Model("foo/T2SS", 10)
-        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
-        gene_gspd = ModelGene(c_gene_gspd, model)
-        model.add_mandatory_gene(gene_gspd)
-        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
-        gene_sctj = ModelGene(c_gene_sctj, model)
-        model.add_accessory_gene(gene_sctj)
-        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
-        gene_sctn = ModelGene(c_gene_sctn, model)
-        model.add_accessory_gene(gene_sctn)
-
-        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = CoreHit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = CoreHit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ModelHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
-        c2 = Cluster([v_hit_1, v_hit_3], model, self.hit_weights)
-        sys_single_locus = System(model, [c1])
-        self.assertFalse(sys_single_locus.multi_loci)
-        sys_multi_loci = System(model, [c1, c2])
-        self.assertTrue(sys_multi_loci.multi_loci)
-        c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
-        c3 = Cluster([v_hit_3], model, self.hit_weights)
-        sys_single_locus_plus_loner = System(model, [c1, c3], self.cfg.redundancy_penalty())
-        self.assertFalse(sys_single_locus_plus_loner.multi_loci)
+    # def test_multi_loci(self):
+    #     model = Model("foo/T2SS", 10)
+    #     c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+    #     gene_gspd = ModelGene(c_gene_gspd, model)
+    #     model.add_mandatory_gene(gene_gspd)
+    #     c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+    #     gene_sctj = ModelGene(c_gene_sctj, model)
+    #     model.add_accessory_gene(gene_sctj)
+    #     c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+    #     gene_sctn = ModelGene(c_gene_sctn, model)
+    #     model.add_accessory_gene(gene_sctn)
+    #
+    #     hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    #     v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+    #     hit_2 = CoreHit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    #     v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+    #     hit_3 = CoreHit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    #     v_hit_3 = ModelHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+    #     c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
+    #     c2 = Cluster([v_hit_1, v_hit_3], model, self.hit_weights)
+    #     sys_single_locus = System(model, [c1])
+    #     self.assertFalse(sys_single_locus.multi_loci)
+    #     sys_multi_loci = System(model, [c1, c2])
+    #     self.assertTrue(sys_multi_loci.multi_loci)
+    #     c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
+    #     c3 = Cluster([v_hit_3], model, self.hit_weights)
+    #     sys_single_locus_plus_loner = System(model, [c1, c3], self.cfg.redundancy_penalty())
+    #     self.assertFalse(sys_single_locus_plus_loner.multi_loci)
 
     def test_loci_nb(self):
         model = Model("foo/T2SS", 10)

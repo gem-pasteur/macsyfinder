@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -149,7 +149,7 @@ class TestModelConfParser(MacsyTest):
 
         # test bad value for cut_ga
         cut_ga_node.text = 'FOO'
-        with self.catch_log(log_name='macsypy') as log:
+        with self.catch_log(log_name='macsypy'):
             with self.assertRaises(MacsypyError) as ctx:
                 mcp.parse_filtering(filtering_node)
 
@@ -197,7 +197,7 @@ class TestModelConfParser(MacsyTest):
         coverage_node = filter_node.find('coverage_profile')
         coverage_node.text = "FOO"
 
-        with self.catch_log(log_name='macsypy') as log:
+        with self.catch_log(log_name='macsypy'):
             with self.assertRaises(MacsypyError) as ctx:
                 mcp.parse_filtering(model_node.find("./filtering"))
         self.assertEqual(str(ctx.exception),

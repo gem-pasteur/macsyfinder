@@ -1,11 +1,11 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _functioning:
 
 
@@ -25,7 +25,7 @@ Functioning overview
 
 
 MacSyFinder is run from the command-line using a variety of input files and options.
-See :ref:`input-dataset-label` for more details. Below follows a description of its overall functioning. 
+See :ref:`input-dataset-label` for more details. Below follows a description of its overall functioning.
 
 
 ************************************
@@ -75,7 +75,7 @@ These clusters are then screened to check for the model specifications such as t
 
 When the **gene order is unknown** (`unordered` search mode) the power of the analysis is more **limited**.
 In this case, the presence of systems can only be suggested on the basis of
-the **quorum** of components - and not based on genomic context information. 
+the **quorum** of components - and not based on genomic context information.
 
 .. _note:
     The `neutral` components are used to build clusters of co-localized genes.
@@ -85,15 +85,15 @@ the **quorum** of components - and not based on genomic context information.
 For *ordered* datasets: building clusters of components
 -------------------------------------------------------
 
-The following two steps are reiterated for each model being searched. 
+The following two steps are reiterated for each model being searched.
 
 1. The search starts with the filtering of hits to only keep the **hits that are listed in the model** (mandatory, accessory, neutral,
    forbidden, exchangeable).
 
-2.  MacSyFinder searches for sets of contiguous hits to build **clusters**, following the 
+2.  MacSyFinder searches for sets of contiguous hits to build **clusters**, following the
     **(co-localization criterion)** for each replicon, as defined in the MacSyFinder's model.
     Two hits are deemed contiguous if their genomic location is separated by less than *d* protein-encoding genes, *d*
-    being the maximum of the two `inter_gene_max_space` parameters 
+    being the maximum of the two `inter_gene_max_space` parameters
     from the two genes with hits (system-wise, or gene-specific parameter).
     The `loner` components may form a cluster on their own.
 
@@ -102,7 +102,7 @@ The following two steps are reiterated for each model being searched.
        :height: 500px
        :align: left
 
-   
+
 Once performed for each model searched, the :ref:`next step <combinatorial-exploration>` is performed.
 
 .. note::
@@ -115,7 +115,7 @@ Once performed for each model searched, the :ref:`next step <combinatorial-explo
      If a group of gene which co-locate is composed solely of Neutral genes, It has not considered by MSf as a cluster.
 
 
-For *unordered* datasets: 
+For *unordered* datasets:
 -------------------------
 
 For each model being searched:
@@ -129,7 +129,7 @@ For each model being searched:
     The "unordered" mode of detection is less powerful, as a single occurrence of a given model is filled for
     an entire dataset with hits that origin is unknown. Please consider the assessment of systems with caution in this mode.
 
-For unordered datasets, the **search so ends**, and MacSyFinder generates the final :ref:`output files <unordered_outputs>`. 
+For unordered datasets, the **search so ends**, and MacSyFinder generates the final :ref:`output files <unordered_outputs>`.
 
 
 .. _combinatorial-exploration:
@@ -150,7 +150,7 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 * For a given model, clusters are used to "fill up" Systems' occurrence(s) according to the **quorum criteria**
   defined in the System's model (see function :func:`macsypy.system.match`):
 
-   The `min_genes_required` and `min_mandatory_genes_required` thresholds must be reached.  
+   The `min_genes_required` and `min_mandatory_genes_required` thresholds must be reached.
 
       * In the case of the `single-locus system` search mode (default), each cluster in addition to potential loners
         are evaluated for System's assessment separately.
@@ -162,7 +162,7 @@ this calls for a **combinatorial screening** of the different clusters to assemb
    and they obtain a **System's score** (see below).
 
    The clusters that do not allow to form a candidate System are reported in the `rejected_candidates.txt` and  `rejected_candidates.tsv` output files.
-   
+
 
 *  We introduce a **scoring scheme for candidate Systems**, to easily separate combinations of clusters that are readily
    more similar to a system's model than others.
@@ -180,11 +180,11 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 
     * When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems
       ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score.
-	
+
     * In addition, we want to **favor concise sets of clusters** to fulfill a `System`'s model.
       We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring
       any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
-	
+
         - -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
         - -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
         - for the components that are `loner` and `multi system`, the score of the loner component is added only if the function is not fulfilled in the other clusters.
@@ -228,9 +228,9 @@ which are themselves made of a subset of Hits (remember, Hits are at 1st filtere
 Candidate `Systems` may thus overlap by being partly made of the same components, or even partly being made of the same Clusters.
 
 We define a `Solution` as being **a set of compatible Systems**, i.e. that do not have any overlaps between their components.
-All possible `Solutions` are combinatorially explored and consist in all possible sets of compatible `Systems`. 
+All possible `Solutions` are combinatorially explored and consist in all possible sets of compatible `Systems`.
 
-A scoring scheme enables to separate between sets of `Solutions`. A **Solution's score** is basically the **sum of its Systems' scores**.  
+A scoring scheme enables to separate between sets of `Solutions`. A **Solution's score** is basically the **sum of its Systems' scores**.
 The overall procedure of exploring the space of all possible `Solutions` while finding the optimal one,
 i.e. that with the maximal score, is performed at once using a graph solution to this problem, implemented in the ``networkx package``.
 
@@ -244,4 +244,3 @@ that have the **best score possible** among all combinations of compatible `Syst
 .. image:: ../_static/msf_functionning_step5.*
  :height: 500px
  :align: left
-

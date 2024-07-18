@@ -4,8 +4,8 @@
     Copyright © 2014-2023  Institut Pasteur (Paris), and CNRS.
     See the COPYRIGHT file for details
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
-    See the COPYING file for details.  
-    
+    See the COPYING file for details.
+
 .. _database:
 
 ********
@@ -27,9 +27,9 @@ and the topology from the parsing of the topology file (--topology-file, see :re
 Thus it also builds an index (with .idx suffix) that is stored in the same directory as the sequence dataset.
 If this file is found in the same folder than the input dataset, MacSyFinder will use it. Otherwise, it will build it.
 
-The user can force MacSyFinder to rebuild these indexes with the "--idx" option on the command-line. 
+The user can force MacSyFinder to rebuild these indexes with the "--idx" option on the command-line.
 
-  
+
 .. _database_api:
 
 database API reference
@@ -60,4 +60,3 @@ RepliconDB
 fasta_iter
 ==========
 .. autofunction:: macsypy.database.fasta_iter
-

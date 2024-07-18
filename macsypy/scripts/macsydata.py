@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -33,33 +33,44 @@ import argparse
 import shutil
 import textwrap
 import time
-from typing import List, Tuple, Dict, Optional
 import pathlib
 import logging
 import xml.etree.ElementTree as ET
+import typing
+from importlib import resources as impresources
 
 import colorlog
-import yaml
 from packaging import requirements, specifiers, version
 
 import macsypy
-from macsypy.error import MacsyDataLimitError
+from macsypy.error import MacsydataError, MacsyDataLimitError
 from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry, ModelLocation, scan_models_dir
 from macsypy.package import RemoteModelIndex, LocalModelIndex, Package, parse_arch_path
+from macsypy.metadata import Metadata, Maintainer
 from macsypy import licenses
+try:
+    import git
+except ModuleNotFoundError:
+    import warnings
+    warnings.warn("GitPython is not installed, `macsydata init` is disabled ()\n"
+                  "To turn this feature ON:\n"
+                  "  - install git\n"
+                  "  - then run `python -m pip install macsyfinder[model]` in your activated environment.")
+    git = None
 
 # _log is set in main func
 _log = None
 
 
-def get_version_message():
+def get_version_message() -> str:
     """
     :return: the long description of the macsyfinder version
     :rtype: str
     """
     msf_ver = macsypy.__version__
-    vers_msg = f"""Macsydata {msf_ver}
+    commit = macsypy.__commit__
+    vers_msg = f"""Macsydata {msf_ver} {commit}
 Python {sys.version}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
@@ -101,12 +112,10 @@ def do_search(args: argparse.Namespace) -> None:
     Search macsy-models for Model in a remote index.
     by default search in package name,
     if option -S is set search also in description
-    by default the search is case insensitive except if
+    by default the search is case-insensitive except if
     option --match-case is set.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     """
     try:
         remote = RemoteModelIndex(org=args.org)
@@ -122,14 +131,16 @@ def do_search(args: argparse.Namespace) -> None:
         _log.critical(str(err))
 
 
-def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: List[str],
-                         match_case: bool = False) -> List[Tuple[str, str, Dict]]:
+def _search_in_pack_name(pattern: str,
+                         remote: RemoteModelIndex,
+                         packages: list[str],
+                         match_case: bool = False) -> list[tuple[str, str, dict]]:
     """
 
     :param pattern: the substring to search packages names
     :param remote: the uri of the macsy-models index
     :param packages: list of packages to search in
-    :param match_case: True if the search is case sensitive, False otherwise
+    :param match_case: True if the search is case-sensitive, False otherwise
     :return:
     """
     results = []
@@ -149,13 +160,16 @@ def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: List[
     return results
 
 
-def _search_in_desc(pattern: str, remote: RemoteModelIndex, packages: List[str], match_case: bool = False):
+def _search_in_desc(pattern: str,
+                    remote: RemoteModelIndex,
+                    packages: list[str],
+                    match_case: bool = False) -> tuple[str, str, str]:
     """
 
     :param pattern: the substring to search packages descriptions
     :param remote: the uri of the macsy-models index
     :param packages: list of packages to search in
-    :param match_case: True if the search is case sensitive, False otherwise
+    :param match_case: True if the search is case-sensitive, False otherwise
     :return:
     """
     results = []
@@ -179,11 +193,10 @@ def _search_in_desc(pattern: str, remote: RemoteModelIndex, packages: List[str],
 
 def do_download(args: argparse.Namespace) -> str:
     """
-    Download tarball from remote models repository.
+    Download tarball from remote models' repository.
 
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
-    :rtype: None
     """
     try:
         remote = RemoteModelIndex(org=args.org)
@@ -206,7 +219,7 @@ def do_download(args: argparse.Namespace) -> str:
         _log.critical(str(err))
 
 
-def _find_all_installed_packages(models_dir=None) -> ModelRegistry:
+def _find_all_installed_packages(models_dir: list[str] | None = None) -> ModelRegistry:
     """
     :return: all models installed
     """
@@ -226,13 +239,12 @@ def _find_all_installed_packages(models_dir=None) -> ModelRegistry:
     return registry
 
 
-def _find_installed_package(pack_name, models_dir=None) -> Optional[ModelLocation]:
+def _find_installed_package(pack_name: str, models_dir: list[str] | None = None) -> ModelLocation | None:
     """
     search if a package names *pack_name* is already installed
 
     :param pack_name: the name of the family model to search
     :return: The model location corresponding to the `pack_name`
-    :rtype: :class:`macsypy.registries.ModelLocation` object
     """
     registry = _find_all_installed_packages(models_dir)
     try:
@@ -246,8 +258,8 @@ def do_install(args: argparse.Namespace) -> None:
     Install new models in macsyfinder local models repository.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
+    :raise RuntimeError: if there is problem is installed package
+    :raise ValueError: if the package and/or version is not found
     """
     def clean_cache(model_index):
         if args.no_clean:
@@ -255,8 +267,9 @@ def do_install(args: argparse.Namespace) -> None:
             return
         try:
             shutil.rmtree(model_index.cache)
-        except Exception:
+        except Exception as err:
             _log.warning(f"Cannot clean cache '{model_index.cache}': {err}")
+
     def create_dir(path):
         if os.path.exists(path) and not os.path.isdir(path):
             clean_cache(model_index)
@@ -285,7 +298,7 @@ def do_install(args: argparse.Namespace) -> None:
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         try:
-            local_vers = version.Version(pack.metadata['vers'])
+            local_vers = version.Version(pack.metadata.vers)
         except FileNotFoundError:
             _log.error(f"{pack_name} locally installed is corrupted.")
             _log.warning(f"You can fix it by removing '{inst_pack_loc.path}'.")
@@ -357,7 +370,25 @@ def do_install(args: argparse.Namespace) -> None:
 
     _log.info(f"Extracting {pack_name} ({target_vers}).")
     cached_pack = model_index.unarchive_package(arch_path)
+
     _log.debug(f"package is chached at {cached_pack}")
+    # we do not rely on vers in metadat any longer
+    # but we inject the version from the version specify in package name
+    # the package name is set by github according to the tag
+    _log.debug("injecting version in metadata")
+    metadata_path = os.path.join(cached_pack, Metadata.name)
+    if not os.path.exists(metadata_path):
+        maintainer_loc = f" ({model_index.repos_url})"
+        clean_cache(model_index)
+
+        _log.error(f"Failed to install '{pack_name}-{target_vers}' : The package has no 'metadata.yml' file.")
+        _log.warning(f"Please contact the package maintainer.{maintainer_loc}")
+        sys.tracebacklimit = 0
+        raise MacsydataError() from None
+
+    metadata = Metadata.load(metadata_path)
+    metadata.vers = target_vers
+    metadata.save(metadata_path)
 
     if args.user:
         dest = os.path.realpath(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
@@ -374,9 +405,9 @@ def do_install(args: argparse.Namespace) -> None:
         if not models_dirs:
             clean_cache(model_index)
             msg = """There is no canonical directories to store models:
-You can create one in your HOME to enable the models for the user 
+You can create one in your HOME to enable the models for the user
        macsydata install --user <PACK_NAME>
-or for a project 
+or for a project
        macsydata install --models <PACK_NAME>
 In this latter case you have to specify --models-dir <path_to_models_dir> on the macsyfinder command line
 for the system wide models installation please refer to the documentation.
@@ -386,7 +417,7 @@ for the system wide models installation please refer to the documentation.
             raise ValueError() from None
         else:
             dest = config.models_dir()[0]
-    
+
     if inst_pack_loc:
         old_pack_path = f"{inst_pack_loc.path}.old"
         shutil.move(inst_pack_loc.path, old_pack_path)
@@ -410,7 +441,13 @@ for the system wide models installation please refer to the documentation.
     clean_cache(model_index)
 
 
-def _get_remote_available_versions(pack_name, org):
+def _get_remote_available_versions(pack_name: str, org: str) -> list[str]:
+    """
+    Ask the organization org the available version for the package pack_name
+    :param pack_name: the name of the package
+    :param org: The remote organization to query
+    :return: list of available version for the package
+    """
     remote = RemoteModelIndex(org=org)
     all_versions = remote.list_package_vers(pack_name)
     return all_versions
@@ -425,8 +462,7 @@ def do_uninstall(args: argparse.Namespace) -> None:
     Remove models from macsyfinder local models repository.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
+    :raise ValueError: if the package is not found locally
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
@@ -445,8 +481,7 @@ def do_info(args: argparse.Namespace) -> None:
     Show information about installed model.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
+    :raise ValueError: if the package is not found locally
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
@@ -465,14 +500,12 @@ def do_list(args: argparse.Namespace) -> None:
     List installed models.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     """
     registry = _find_all_installed_packages(models_dir=args.models_dir)
     for model_loc in registry.models():
         try:
             pack = Package(model_loc.path)
-            pack_vers = pack.metadata['vers']
+            pack_vers = pack.metadata.vers
             model_path = f"   ({model_loc.path})" if args.long else ""
             if args.outdated or args.uptodate:
                 remote = RemoteModelIndex(org=args.org)
@@ -492,13 +525,15 @@ def do_list(args: argparse.Namespace) -> None:
 
 def do_freeze(args: argparse.Namespace) -> None:
     """
-    display all models installed with there respective version, in requirement format.
+    display all models installed with their respective version, in requirement format.
+
+    :param args: the arguments passed on the command line
     """
     registry = _find_all_installed_packages()
     for model_loc in sorted(registry.models(), key=lambda ml: ml.name.lower()):
         try:
             pack = Package(model_loc.path)
-            pack_vers = pack.metadata['vers']
+            pack_vers = pack.metadata.vers
             print(f"{model_loc.name}=={pack_vers}")
         except Exception:
             pass
@@ -509,14 +544,12 @@ def do_cite(args: argparse.Namespace) -> None:
     How to cite an installed model.
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
-        pack_citations = pack.metadata['cite']
+        pack_citations = pack.metadata.cite
         pack_citations = [cite.replace('\n', '\n  ') for cite in pack_citations]
         pack_citations = '\n- '.join(pack_citations)
         pack_citations = '_ ' + pack_citations.rstrip()
@@ -540,10 +573,9 @@ To cite MacSyFinder:
 def do_help(args: argparse.Namespace) -> None:
     """
     Display on stdout the content of readme file
-    if the readme file does nopt exists display a message to the user see :meth:`macsypy.package.help`
+    if the readme file does not exist display a message to the user see :meth:`macsypy.package.help`
 
     :param args: the arguments passed on the command line (the package name)
-    :type args: :class:`argparse.Namespace` object
     :return: None
     :raise ValueError: if the package name is not known.
     """
@@ -562,7 +594,6 @@ def do_check(args: argparse.Namespace) -> None:
     """
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
     pack = Package(args.path)
@@ -596,8 +627,8 @@ I'll be really happy, if you fix warnings above, before to publish these models.
             _log.info("for instance if you want to add the models to 'macsy-models'")
             _log.log(25, "\tgit remote add origin https://github.com/macsy-models/")
 
-        _log.log(25, f"\tgit tag {pack.metadata['vers']}")
-        _log.log(25, f"\tgit push origin {pack.metadata['vers']}")
+        _log.log(25, "\tgit tag -a <tag vers>  # check https://macsyfinder.readthedocs.io/en/latest/modeler_guide/publish_package.html#sharing-your-models")
+        _log.log(25, "\tgit push origin <tag vers>")
 
 
 def do_show_definition(args: argparse.Namespace) -> None:
@@ -616,8 +647,6 @@ def do_show_definition(args: argparse.Namespace) -> None:
     display all models contains in *TXSS+/bacterial subpackage*
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
     """
     def display_definition(path):
         return open(path, 'r').read()
@@ -675,62 +704,63 @@ def do_init_package(args: argparse.Namespace) -> None:
     :return: None
     """
 
-    def create_package_dir(package_name: str, models_dir: str = None) -> str:
+    def create_package_dir(package_name: str, models_dir: str | None = None) -> str:
         """
 
         :param str package_name:
         :param models_dir: the path where to create the new package
         :return: the path of the package directory
-        :rtype: str
         """
         pack_path = package_name if not models_dir else os.path.join(models_dir, package_name)
         if not os.path.exists(pack_path):
             os.makedirs(pack_path)
         else:
-            raise ValueError(f"{pack_path} already exist.")
+            _log.warning(f"The '{pack_path}' already exists.")
         return pack_path
 
+
     def add_metadata(pack_dir: str, maintainer: str, email: str,
-                     desc: str = None, license: str = None,
-                     c_date: str = None, c_holders: str = None) -> None:
+                     desc: str | None = None, license: str | None = None,
+                     c_date: str | None = None, c_holders: str | None = None) -> None:
         """
 
         :param pack_dir: the package directory path
         :param maintainer: the maintainer name
         :param email: the maintainer email
         :param desc: a One line description of the package
-        :param license: the license choosed
+        :param license: the license chosen
         :param c_date: the date of the copyright
         :param c_holders: the holders of the copyright
-        :return: None
         """
-        metadata = {
-            'maintainer': {
-                'name': maintainer,
-                'email': email
-            },
-            'short_desc': desc,
-            'cite': 'Place here how to cite this package, it can hold several citation',
-            'doc': 'where to find documentation about this package',
-            'vers': '0.1b1',
-        }
-
-        if copyright:
-            metadata['copyright'] = f"Copyright (c) {c_date} {c_holders}"
-
+        meta_path = os.path.join(pack_dir, Metadata.name)
+        if os.path.exists(meta_path):
+            metadata = Metadata.load(meta_path)
+            metadata.vers = None
+        else:
+            desc = desc if desc else "description in one line of this package"
+            metadata = Metadata(Maintainer(maintainer, email), desc)
+            metadata.cite = ['Place here how to cite this package, it can hold several citation',
+                             'citation 2 (optional)']
+            metadata.doc = 'where to find documentation about this package'
+        if c_date:
+            metadata.copyright_date = c_date
+        else:
+            metadata.copyright_date = str(time.localtime().tm_year)
+        if c_holders:
+            metadata.copyright_holder = c_holders
+        else:
+            metadata.copyright_holder = "copyright holders <My institution>"
         if license:
-            metadata['license'] = licenses.name_2_url(license)
+            metadata.license = licenses.name_2_url(license)
 
-        with open(os.path.join(pack_dir, 'metadata.yml'), 'w') as metafile:
-            yaml.dump(metadata, metafile)
+        metadata.save(meta_path)
 
 
-    def add_def_skeleton(license: str =None) -> None:
+    def add_def_skeleton(license: str | None = None) -> None:
         """
-        Create a example of model definition
+        Create an example of model definition
 
         :param license: the text of the license
-        :return: None
         """
         model = ET.Element('model',
                            attrib={'inter_gene_max_space': "5",
@@ -741,9 +771,10 @@ def do_init_package(args: argparse.Namespace) -> None:
         )
         comment = ET.Comment('GENE_1 is a mandatory gene. GENE_1.hmm must exist in profiles directory')
         model.append(comment)
-        mandatory = ET.SubElement(model, 'gene',
-                                  attrib={'name': 'GENE_1',
-                                          'presence': 'mandatory'})
+        # add mandatory gene
+        ET.SubElement(model, 'gene',
+                      attrib={'name': 'GENE_1',
+                              'presence': 'mandatory'})
         comment = ET.Comment("GENE_2 is accessory and can be exchanged with GENE_3 which play a similar role in model.\n"
                              "Both GENE_2.hmm and GENE_3.hmm must exist in profiles_directory")
         model.append(comment)
@@ -752,41 +783,34 @@ def do_init_package(args: argparse.Namespace) -> None:
                                           'presence': 'accessory',
                                           })
         exchangeables = ET.SubElement(accessory, 'exchangeables')
-        ex_gene = ET.SubElement(exchangeables, 'gene',
-                                attrib={'name': 'GENE_3'})
+        ET.SubElement(exchangeables, 'gene',
+                      attrib={'name': 'GENE_3'})
         comment = ET.Comment("GENE_4 can be anywhere in the genome and not clusterized with some other model genes")
         model.append(comment)
-        loner = ET.SubElement(model, 'gene',
-                              attrib={'name': 'GENE_4',
-                                      'presence': 'accessory',
-                                      'loner': 'true'}
+        ET.SubElement(model, 'gene',
+                      attrib={'name': 'GENE_4',
+                              'presence': 'accessory',
+                              'loner': 'true'}
                               )
         comment = ET.Comment("GENE_5 can be shared by several systems instance from different models.")
         model.append(comment)
-        multi_model = ET.SubElement(model, 'gene',
-                                    attrib={'name': 'GENE_5',
-                                            'presence': 'accessory',
-                                            'multi_model': 'true'}
-                              )
+        ET.SubElement(model, 'gene',
+                      attrib={'name': 'GENE_5',
+                      'presence': 'accessory',
+                      'multi_model': 'true'}
+                      )
         comment = ET.Comment("GENE_6 have specific clusterisation rule")
         model.append(comment)
-        inter = ET.SubElement(model, 'gene',
-                              attrib={'name': 'GENE_6',
-                                      'presence': 'accessory',
-                                      'inter_gene_max_space': '10'}
+        ET.SubElement(model, 'gene',
+                      attrib={'name': 'GENE_6',
+                              'presence': 'accessory',
+                              'inter_gene_max_space': '10'}
                               )
         comment = ET.Comment("\nFor exhaustive documentation about grammar visit \n"
                              "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html\n")
         model.append(comment)
         tree = ET.ElementTree(model)
-        try:
-            ET.indent(model)
-        except AttributeError:
-            # workaround as ET.indent appear in python3.9
-            from macsypy.utils import indent_wrapper
-            ET.indent = indent_wrapper(type(tree))
-            ET.indent(model)
-
+        ET.indent(model)
         def_path = os.path.join(pack_dir, 'definitions', 'model_example.xml')
         tree.write(def_path,
                    encoding='UTF-8',
@@ -805,50 +829,42 @@ def do_init_package(args: argparse.Namespace) -> None:
             with open(def_path, 'w') as def_path:
                 def_path.writelines(definition)
 
-
     def add_license(pack_dir: str, license_text: str):
         """
         Create a license file
 
         :param pack_dir: the package directory path
         :param license_text: the text of the license
-        :return: None
         """
         with open(os.path.join(pack_dir, 'LICENSE'), 'w') as license_file:
             license_file.write(license_text)
 
-
     def add_copyright(pack_dir: str, pack_name: str, date: str, holders: str, desc: str):
         """
-
-        :param str pack_dir: The path of package directory
-        :param str pack_name: The name of the package
-        :param str date: The date (year) of package creation
-        :param str holders: The copyright holders
-        :param str desc: One line description of the package
-        :return: None
+        :param pack_dir: The path of package directory
+        :param pack_name: The name of the package
+        :param date: The date (year) of package creation
+        :param holders: The copyright holders
+        :param desc: One line description of the package
         """
         desc = desc if desc is not None else ''
         head = textwrap.fill(f"{pack_name} - {desc}")
         text = f"""{head}
-        
-Copyright (c) {date} {holders}        
+
+Copyright (c) {date} {holders}
 """
         with open(os.path.join(pack_dir, 'COPYRIGHT'), 'w') as copyright_file:
             copyright_file.write(text)
 
-
     def add_readme(pack_dir: str, pack_name: str, desc: str):
         """
-
-        :param str pack_dir: The path of package directory
-        :param str pack_name: The name of the package
-        :param str desc: One line description of the package
-        :return: None
+        :param pack_dir: The path of package directory
+        :param pack_name: The name of the package
+        :param desc: One line description of the package
         """
-        desc = desc if desc is not None else ''
+        desc = ' ' + desc if desc is not None else ''
         text = f"""
-# {pack_name}: {desc}
+# {pack_name}:{desc}
 
 Place here information about {pack_name}
 
@@ -862,13 +878,11 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
         with open(os.path.join(pack_dir, 'README.md'), 'w') as readme_file:
             readme_file.write(text)
 
-
-    def create_model_conf(pack_dir: str, license: str = None):
+    def create_model_conf(pack_dir: str, license: str = None) -> None:
         """
 
         :param pack_dir: The path of the package directory
         :param license: The text of the chosen license
-        :return: None
         """
         msf_defaults = MacsyDefaults()
         model_conf = ET.Element('model_config')
@@ -898,14 +912,7 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
         tree = ET.ElementTree(model_conf)
         conf_path = os.path.join(pack_dir, 'model_conf.xml')
 
-        try:
-            ET.indent(model_conf)
-        except AttributeError:
-            # workaround as ET.indent appear in python3.9
-            from macsypy.utils import indent_wrapper
-            ET.indent = indent_wrapper(type(tree))
-            ET.indent(model_conf)
-
+        ET.indent(model_conf)
         tree.write(conf_path,
                    encoding='UTF-8',
                    xml_declaration=True)
@@ -923,58 +930,128 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
             with open(conf_path, 'w') as conf_file:
                 conf_file.writelines(conf)
 
+    def create_repo(package_name: str, models_dir: str | None = None) -> str:
+        pack_path = package_name if not models_dir else os.path.join(models_dir, package_name)
+        if os.path.exists(pack_path):
+            if os.path.isdir(pack_path):
+                content = os.listdir(pack_path)
+                if content:
+                    # The directory is not empty
+                    lacks = []
+                    for item in 'definitions', 'profiles':
+                        if item not in content:
+                            lacks.append(item)
+                    if lacks:
+                        _log.error(f"{pack_path} already exits and not look a model package:"
+                                   f" There is no {', '.join(lacks)}.")
+                        sys.tracebacklimit = 0
+                        raise ValueError()
+                    _log.info(f"{pack_path} already exits and look a model package:"
+                              " Transform it in git repository.")
+                    repo = git.Repo.init(pack_path)
+                else:
+                    # the dir pack_name is empty
+                    repo = git.Repo.init(pack_path)
+            else:
+                _log.critical(f"{pack_path} already exists and is not a directory.")
+                sys.tracebacklimit = 0
+                raise ValueError()
+        else:
+            os.makedirs(pack_path)
+            repo = git.Repo.init(pack_path)
+        return repo
 
     ######################
     # Initialize Package #
     ######################
-    c_date = time.localtime().tm_year
-    pack_dir = create_package_dir(args.pack_name, models_dir=args.models_dir)
+    c_date = str(time.localtime().tm_year)
+    repo = create_repo(args.pack_name, models_dir=args.models_dir)
+    pack_dir = repo.working_dir
     def_dir = os.path.join(pack_dir, 'definitions')
     profiles_dir = os.path.join(pack_dir, 'profiles')
-    license_text = None
-    os.mkdir(def_dir)
-    os.mkdir(profiles_dir)
+    if os.path.exists(profiles_dir):
+        _log.warning("The 'profiles' directory already exists.")
+    else:
+        os.mkdir(profiles_dir)
 
     if args.holders:
         add_copyright(pack_dir, args.pack_name, c_date, args.holders, args.desc)
     else:
-        _log.warning(f"Consider to add copyright to protect your rights.")
+        if not os.path.exists(os.path.join(pack_dir, 'COPYRIGHT')):
+            _log.warning("Consider to add copyright to protect your rights.")
 
     if args.license:
         try:
             license_text = licenses.licence(args.license, args.pack_name, args.authors, c_date, args.holders, args.desc)
+            add_license(pack_dir, license_text)
         except KeyError:
             _log.error(f"The license {args.license} is not managed by init (see macsydata init help). "
                        f"You will have to put the license by hand in package.")
             license_text=None
-        add_license(pack_dir, license_text)
     else:
-        _log.warning(f"Consider licensing {args.pack_name} to give the end-user the right to use your package,"
-                     f"and protect your rights. https://data.europa.eu/elearning/en/module4/#/id/co-01")
+        licence_path = os.path.exists(os.path.join(pack_dir, 'LICENSE'))
+        if not licence_path:
+            _log.warning(f"Consider licensing {args.pack_name} to give the end-user the right to use your package,"
+                         f"and protect your rights. https://data.europa.eu/elearning/en/module4/#/id/co-01")
+            license_text = None
+        else:
+            license_text = ''.join(open(licence_path).readlines())
 
-    add_def_skeleton(license=license_text)
-
-    create_model_conf(pack_dir, license=license_text)
-
-    add_readme(pack_dir, args.pack_name, args.desc)
+    if os.path.exists(def_dir):
+        _log.warning("The 'defintions' directory already exists.")
+        if os.listdir(def_dir):
+            # def_dir is not empty
+            _log.warning("Do not forget to add license in each xml definition file \n"
+                         "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html")
+        else:
+            add_def_skeleton(license=license_text)
+    else:
+        os.mkdir(def_dir)
+        add_def_skeleton(license=license_text)
+    if not os.path.exists(os.path.join(pack_dir, 'model_conf.xml')):
+        create_model_conf(pack_dir, license=license_text)
+    if not (os.path.exists(os.path.join(pack_dir, 'README')) or os.path.exists(os.path.join(pack_dir, 'README.md'))):
+        add_readme(pack_dir, args.pack_name, args.desc)
 
     add_metadata(pack_dir, args.maintainer, args.email, desc=args.desc, license=args.license,
                  c_date=c_date, c_holders=args.holders)
 
+    # add files to repository
+    untracked_files = repo.untracked_files
+    for file in untracked_files:
+        repo.index.add(file)
+    untracked_str = '- ' + '\n- '.join(untracked_files)
+    repo.index.commit(f"""initial commit
+
+add files:
+{untracked_str}
+""")
+
+    pre_push_path = impresources.files('macsypy') / 'data' / 'pre-push'
+    dest = os.path.join(repo.git_dir, 'hooks', 'pre-push')
+    if os.path.exists(dest):
+        _log.warning(f"A git hook '{pre_push_path}' already exists cannot install macsydata prepush hook.")
+        _log.warning("Do it manually, check documentation: ")
+    else:
+        shutil.copy(pre_push_path, dest)
+        os.chmod(dest, 0o755)
     _log.info(f"""The skeleton of {args.pack_name} is ready.
 The package is located at {pack_dir}
 
 - Edit metadata.yml and fill how to cite your package and where to find documentation about it.
 - Add hmm profiles in {pack_dir}/profiles directory
-- A skeleton of model definitions has been added in {pack_dir}/definitions. 
+- A skeleton of model definitions has been added in {pack_dir}/definitions.
   For complete documentation about model grammar read https://macsyfinder.readthedocs.io/en/latest/modeler_guide/modeling.html
-- A configuration file has been added (model_conf.xml) with default value tweak this file if needed. 
+- A configuration file has been added (model_conf.xml) with default value tweak this file if needed.
   (https://macsyfinder.readthedocs.io/en/latest/modeler_guide/package.html#model-configuration)
-  
+
 Before to publish your package you can use `macsydata check` to verify it's integrity.
 """
               )
-    _log.warning("Read macsyfinder modeler guide for further details: "
+    _log.warning("To share your models with the MacSyFinder community.")
+    _log.info("Consider to ask for a repository to macsy-models organization (https://github.com/macsy-models)")
+    _log.info("then add this new repo to your local package. git remote add <remote name> <remote url>")
+    _log.warning("\nRead macsyfinder modeler guide for further details: "
                  "https://macsyfinder.readthedocs.io/en/latest/modeler_guide/index.html")
 
 ##################################
@@ -986,7 +1063,6 @@ def build_arg_parser() -> argparse.ArgumentParser:
     """
     Build argument parser.
 
-    :rtype: :class:`argparse.ArgumentParser` object
     """
 
     parser = argparse.ArgumentParser(
@@ -994,8 +1070,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=textwrap.dedent(r'''
 
-         *            *               *                   * *       * 
-    *           *               *   *   *  *    **                *  
+         *            *               *                   * *       *
+    *           *               *   *   *  *    **                *
       **     *    *   *  *     *                    *               *
         __  __  *         ____ *      ____    ** _  *
        |  \/  | __ _  ___/ ___| _   _|  _ | __ _| |_  __ _     *
@@ -1223,33 +1299,35 @@ def build_arg_parser() -> argparse.ArgumentParser:
     ########
     # init #
     ########
-    init_subparser = subparsers.add_parser('init',
-                                           help='Create a template for a new data package')
-    init_subparser.set_defaults(func=do_init_package)
-    init_subparser.add_argument('--pack-name',
-                                required=True,
-                                help='The name of the data package.')
-    init_subparser.add_argument('--maintainer',
-                                required=True,
-                                help='The name of the package maintainer.')
-    init_subparser.add_argument('--email',
-                                required=True,
-                                help='The email of the package maintainer.')
-    init_subparser.add_argument('--authors',
-                                required=True,
-                                help="The authors of the package. Could be different that the maintainer."
-                                     "Could be several persons. Surround the names by quotes 'John Doe, Richard Miles'")
-    init_subparser.add_argument('--license',
-                                choices=['cc-by', 'cc-by-sa', 'cc-by-nc', 'cc-by-nc-sa', 'cc-by-nc-nd'],
-                                help="""The license under this work will be released.
-if the license you choice is not in the list, you can do it manually
-by adding the license file in package and add suitable headers in model definitions.""")
-    init_subparser.add_argument('--holders',
-                                help="The holders of the copyright")
-    init_subparser.add_argument('--desc',
-                                help="A short description (one line) of the package")
-    init_subparser.add_argument('--models-dir',
-                                help='The path of an alternative models directory by default the package will be created here.' )
+    if git is not None:
+        init_subparser = subparsers.add_parser('init',
+                                               help='Create a template for a new data package')
+        init_subparser.set_defaults(func=do_init_package)
+        init_subparser.add_argument('--pack-name',
+                                    required=True,
+                                    help='The name of the data package.')
+        init_subparser.add_argument('--maintainer',
+                                    required=True,
+                                    help='The name of the package maintainer.')
+        init_subparser.add_argument('--email',
+                                    required=True,
+                                    help='The email of the package maintainer.')
+        init_subparser.add_argument('--authors',
+                                    required=True,
+                                    help="The authors of the package. Could be different that the maintainer."
+                                         "Could be several persons. Surround the names by quotes 'John Doe, Richard Miles'")
+        init_subparser.add_argument('--license',
+                                    choices=['cc-by', 'cc-by-sa', 'cc-by-nc', 'cc-by-nc-sa', 'cc-by-nc-nd'],
+                                    help="""The license under this work will be released.
+    if the license you choice is not in the list, you can do it manually
+    by adding the license file in package and add suitable headers in model definitions.""")
+        init_subparser.add_argument('--holders',
+                                    help="The holders of the copyright")
+        init_subparser.add_argument('--desc',
+                                    help="A short description (one line) of the package")
+        init_subparser.add_argument('--models-dir',
+                                    help='The path of an alternative models directory by default the package will be created here.' )
+
     return parser
 
 
@@ -1262,22 +1340,20 @@ def cmd_name(args: argparse.Namespace) -> str:
         macsydata uninstall
 
     :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: str
     """
     assert 'func' in args
     func_name = args.func.__name__.replace('do_', '')
     return f"macsydata {func_name}"
 
 
-def init_logger(level='INFO', out=True):
+def init_logger(level: typing.Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int = 'INFO',
+                out: bool = True) -> logging.Logger:
     """
 
     :param level: The logger threshold could be a positive int or string
                   among: 'CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'
     :param out: if the log message must be displayed
     :return: logger
-    :rtype: :class:`logging.Logger` instance
     """
 
     logger = colorlog.getLogger('macsydata')
@@ -1317,20 +1393,18 @@ def init_logger(level='INFO', out=True):
 def verbosity_to_log_level(verbosity: int) -> int:
     """
     transform the number of -v option in loglevel
-    :param int verbosity: number of -v option on the command line
+    :param verbosity: number of -v option on the command line
     :return: an int corresponding to a logging level
     """
     level = max((logging.INFO - (10 * verbosity), 1))
     return level
 
 
-def main(args=None) -> None:
+def main(args: list[str] = None) -> None:
     """
     Main entry point.
 
     :param args: the arguments passed on the command line (before parsing)
-    :type args: list
-    :rtype: int
     """
     global _log
     args = sys.argv[1:] if args is None else args

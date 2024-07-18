@@ -1,11 +1,11 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2023  Institut Pasteur (Paris),and CNRS.
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
+    Copyright © 2014-2024  Institut Pasteur (Paris),and CNRS.
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _overview:
 
 MacSyFinder implementation overview
@@ -186,7 +186,7 @@ The :ref:`Model object <model>` represents a macromolecular model to detect.
 It is defined *via* a definition file in XML stored in a dedicated location that can be specified *via*
 the configuration file, or the command-line (`-d` parameter).
 See :ref:`model-definition-grammar-label` for more details on the XML grammar.
- 
+
 An object :ref:`ModelDefinitionParser <definition_parser>` is used to build a model object from its XML definition file.
 
 A model is named after the file tree name of its XML definition.
@@ -199,8 +199,8 @@ and four kind of components are listed in function of their presence in the syst
   (``min-genes-required`` and ``min-mandatory-genes-required``) are described as "neutral".
 * The genes that must not be present in the system ("forbidden").
 
-.. note:: 
-    
+.. note::
+
     A complete description of macromolecular models modelling is available in the section :ref:`model_definition`
 
 
@@ -233,7 +233,7 @@ See the :ref:`Exchangeable API <exchangeable_api>` for more details.
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several Models,
     each CoreGene must be instantiated only once, and stored in a *"gene_bank"*.
-    gene_bank is a :class:`macsypy.gene.GeneBank` object. 
+    gene_bank is a :class:`macsypy.gene.GeneBank` object.
     The gene_bank and model_bank are filled by the system_parser (:class:`macsypy.definition_parser.ModelDefinitionParser`)
 
 
@@ -257,7 +257,7 @@ Reporting Hmmer search results
 
 A *"HMMReport"* (:class:`macsypy.report.HMMReport`) object represents the results of a Hmmer program search on
 the input dataset with a hidden Markov model protein profile.
-This object has methods to extract and build *"Hits"* that are then analyzed for systems assessment. 
+This object has methods to extract and build *"Hits"* that are then analyzed for systems assessment.
 
 It analyses Hmmer raw outputs, and applies filters on the matches (according to :ref:`Hmmer options<hmmer-options>`).
 See :ref:`hmmer-outputs-label` for details on the resulting output files.

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -26,7 +26,7 @@ import os
 import argparse
 import random
 
-from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, LonerMultiSystem,  HitWeight
+from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -37,9 +37,9 @@ from macsypy.system import System, RejectedCandidate
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems, Solution
 from tests import MacsyTest
 
-    
+
 def _build_clusters(cfg, profile_factory):
-    
+
     model_name = 'foo'
     model_location = ModelLocation(path=os.path.join(cfg.models_dir()[0], model_name))
 

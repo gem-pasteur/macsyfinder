@@ -1,7 +1,7 @@
 #  MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #                using systems modelling and similarity search.          #
 #  Authors: Sophie Abby, Bertrand Neron                                  #
-#  Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
+#  Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 #  See the COPYRIGHT file for details                                    #
 #                                                                        #
 #  This file is part of MacSyFinder package.                             #
@@ -29,7 +29,7 @@ def _preambule(PN: str, authors: str, cr_date: str, cr_holders: str, short_desc:
     :param cr_date: the date of the copyright (year)
     :param cr_holders: the holders of the copyright
     :param short_desc: One line description of the package
-    :return: The preambule of the licence declaration
+    :return: The preamble of the licence declaration
     """
     short_desc = f"\n{PN} {short_desc}" if short_desc else ''
 
@@ -65,7 +65,7 @@ def licence(licence_name: str, PN: str, authors: str, cr_date: str, cr_holders: 
 
     licence = {
         'cc-by': f"""{preambule}
-    
+
 This work is licensed under the Creative Commons Attribution 4.0 International License.
 To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/
 or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
@@ -109,4 +109,3 @@ def name_2_url(licence_name: str):
     """
     acronym = licence_name.strip('cc-')
     return f"http://creativecommons.org/licenses/{acronym}/4.0/"
-

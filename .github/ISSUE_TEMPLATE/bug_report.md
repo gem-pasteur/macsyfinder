@@ -21,12 +21,12 @@ A clear and concise description of what you expected to happen.
 
 **Screenshots**
 
-If applicable, add **screenshots**, **outputs** or **error traceback** 
+If applicable, add **screenshots**, **outputs** or **error traceback**
 to help explain your problem.
 
 **Please complete the following information):**
 
-***OS:*** 
+***OS:***
 
  - [ ] Linux
  - [ ] Windows

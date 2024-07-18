@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -25,26 +25,47 @@
 MacSypy package contains mainly variable used in library as __version_
 and functions to intialize the logger uses by entrypoints
 """
-
+import logging
 from time import strftime, localtime
 import sys
+import os
+import subprocess
+
+from typing import Literal
+
 
 __version__ = f'{strftime("%Y%m%d", localtime())}.dev'
 
 
-__citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S. 
-MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. 
+__citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
+MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes.
 Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjournal.250.
 https://peercommunityjournal.org/articles/10.24072/pcjournal.250/"""
 
 
-def init_logger(log_file=None, out=True):
+def get_git_revision_short_hash() -> str:
+    """
+    :return: the git commit number (short version) or empty string if this not a git repository
+    :rtype: str
+    """
+    try:
+        short_hash = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],
+                                             cwd=os.path.dirname(os.path.abspath(__file__)))
+        short_hash = str(short_hash, "utf-8").strip()
+    except Exception:
+        short_hash = ''
+    return short_hash
+
+
+__commit__ = f'{get_git_revision_short_hash()}'
+
+
+def init_logger(log_file: str = None, out: bool = True) -> list[logging.Handler]:
     """
 
-    :param str log_file: The path toward a file log
-    :param out:
+    :param log_file: The path toward a file log
+    :param out: True if the log are display on the screen, False otherwise.
     :return: the logger handlers
-    :rtype: list of :class:`logging.Handler` object
     """
     import logging
     import colorlog
@@ -82,9 +103,10 @@ def init_logger(log_file=None, out=True):
     return handlers
 
 
-def logger_set_level(level='INFO'):
+def logger_set_level(level: Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int = 'INFO'):
     """
     Set the level and the formatter to the logger 'macsypy'
+
     :param level:
     :type level: str among (NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL) or a positive integer
     """

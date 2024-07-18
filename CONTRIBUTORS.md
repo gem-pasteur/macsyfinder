@@ -17,7 +17,7 @@ This is a list of people who have made contributions to Macsyfinder.
 
 * Sophie Abby <sophie.abby@univ-grenoble-alpes.fr> <https://www-timc.imag.fr/en/sophie-abby> :bulb: :computer: :pencil2: :file_folder: :umbrella: :bug:
 * Eduardo Rocha <https://research.pasteur.fr/en/member/eduardo-rocha/> :bulb: :umbrella:
-* Bertrand Néron <https://github.com/bneron/> :computer: :bulb: :pencil2: :white_check_mark: 
+* Bertrand Néron <https://github.com/bneron/> :computer: :bulb: :pencil2: :white_check_mark:
 * freeh4cker <https://github.com/freeh4cker> :computer:
 * Hervé Ménager <https://github.com/hmenager> :computer:
 * Francisco J. Ossandon <https://github.com/fjossandon> :computer:
@@ -25,3 +25,12 @@ This is a list of people who have made contributions to Macsyfinder.
 * Marie Touchon <https://research.pasteur.fr/en/member/marie-touchon/> :bulb: :umbrella:
 * Amandine Perrin <https://github.com/orgs/gem-pasteur/people/asetGem> :computer:
 * Yoann Dufresne <https://research.pasteur.fr/en/member/yoann-dufresne/> :bulb:
+
+
+
+* Ezra Herman <https://github.com/ezherman> :bug:
+* Nelle Varoquaux <https://github.com/NelleV> :bug:
+* Nicolas CELLIER <https://github.com/celliern> :bug:
+* Nilesh Patra <https://github.com/nileshpatra> :bug: :computer:
+* Antônio Camargo <https://github.com/apcamargo> :bug:
+* TrellixVulnTeam <https://github.com/TrellixVulnTeam> :computer:

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -22,10 +22,8 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-"""
-Module to manage both default values and configuration needed by macsyfinder
-"""
 
+import argparse
 import os
 import shutil
 from time import strftime
@@ -33,7 +31,17 @@ import logging
 from configparser import ConfigParser, ParsingError
 
 from  macsypy.model_conf_parser import ModelConfParser
+
+from typing import Any, TextIO, Literal, TypeAlias, Iterable
+
+"""
+Module to manage both default values and configuration needed by macsyfinder
+"""
+
 _log = logging.getLogger(__name__)
+
+DBType: TypeAlias = Literal['gembase', 'ordered_replicon', 'unordered']
+Topology: TypeAlias = Literal['linear', 'ciircular']
 
 
 class MacsyDefaults(dict):
@@ -43,7 +51,7 @@ class MacsyDefaults(dict):
     the argument parser or config must use a MacsyDefaults object
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """
         :param kwargs: allow to overwrite a default value.
                        It mainly used in unit tests
@@ -145,15 +153,15 @@ class Config:
                  'profile_suffix', 'res_search_dir', 'res_search_suffix', 'res_extract_suffix', 'index_dir')
 
 
-    def __init__(self, defaults, parsed_args):
+    def __init__(self, defaults: MacsyDefaults, parsed_args: argparse.Namespace) -> None:
         """
         Store macsyfinder configuration options and propose an interface to access to them.
 
         The config object is populated in several steps, the rules of precedence are
 
-        system wide conf < user home conf < model conf < (project conf | previous run) < command line
+        system-wide conf < user home conf < model conf < (project conf | previous run) < command line
 
-        system wide conf = etc/macsyfinder/macsyfinder.conf
+        system-wide conf = etc/macsyfinder/macsyfinder.conf
         user home conf = ~/.macsyfinder/macsyfinder.conf
         model conf = model_conf.xml at the root of the model package
         project conf = macsyfinder.conf  where the analysis is run
@@ -161,9 +169,7 @@ class Config:
         command line = the options set on the command line
 
         :param defaults:
-        :type defaults: a :class:`MacsyDefaults` object
         :param parsed_args: the command line arguments parsed
-        :type parsed_args: a :class:`argspace.Namescape` object
         """
         self._defaults = defaults
         self.cfg_name = "macsyfinder.conf"
@@ -244,7 +250,7 @@ class Config:
             raise ValueError(msg)
 
 
-    def _set_options(self, options):
+    def _set_options(self, options: dict[str: Any]) -> None:
         """
         set key, value in the general config
 
@@ -263,7 +269,7 @@ class Config:
                     self._options[opt] = val
 
 
-    def _set_default_config(self):
+    def _set_default_config(self) -> None:
         """
         set the value comming from MacsyDefaults
         """
@@ -274,11 +280,11 @@ class Config:
         self._options['log_level'] = self._convert_log_level(self._defaults.log_level)
 
 
-    def _set_system_wide_config(self, config_path):
+    def _set_system_wide_config(self, config_path: str) -> None:
         """
-        set the options from the system wide configuration file
+        set the options from the system-wide configuration file
 
-        :param str config_path:
+        :param config_path:
         """
         system_wide_config = self._config_file_2_dict(config_path)
         if 'models_dir' in system_wide_config:
@@ -288,21 +294,21 @@ class Config:
         self._set_options(system_wide_config)
 
 
-    def _set_user_wide_config(self, config_path):
+    def _set_user_wide_config(self, config_path: str) -> None:
         """
         Set the options from the ~/.macsyfinder/macsyfinder.conf file
 
-        :param str config_path: The path to the ~/.macsyfinder/macsyfinder.conf
+        :param config_path: The path to the ~/.macsyfinder/macsyfinder.conf
         """
         user_wide_config = self._config_file_2_dict(config_path)
         self._set_options(user_wide_config)
 
 
-    def _set_model_config(self, model_conf_path):
+    def _set_model_config(self, model_conf_path: str) -> None:
         """
         Set the options from the model package model_conf.xml file
 
-        :param str model_conf_path: The path to the model_conf.xml file
+        :param model_conf_path: The path to the model_conf.xml file
         """
         mcp = ModelConfParser(model_conf_path)
         model_conf = mcp.parse()
@@ -310,11 +316,11 @@ class Config:
         self._set_options(model_conf)
 
 
-    def _set_project_config_file(self, config_path):
+    def _set_project_config_file(self, config_path: str) -> None:
         """
         Set the options from the macsyfinder.conf present in the current directory
 
-        :param str config_path: the path to the configuration file
+        :param config_path: the path to the configuration file
         """
         project_config = self._config_file_2_dict(config_path)
         for opt in self.model_opts:
@@ -324,11 +330,11 @@ class Config:
         self._set_options(project_config)
 
 
-    def _set_user_config_file(self, config_path):
+    def _set_user_config_file(self, config_path: str) -> None:
         """
         Set the options specified by the user on the command line via the --cfg-file option
 
-        :param str config_path: The path to the configuration path
+        :param config_path: The path to the configuration path
         """
         user_config = self._config_file_2_dict(config_path)
         for opt in self.model_opts:
@@ -338,7 +344,7 @@ class Config:
         self._set_options(user_config)
 
 
-    def _set_previous_run_config(self, prev_config_path):
+    def _set_previous_run_config(self, prev_config_path: str) -> None:
         """
         Set the options specified by the user on the command line via --previous-run
 
@@ -355,11 +361,9 @@ class Config:
         self._set_options(previous_conf)
 
 
-    def _set_command_line_config(self, parsed_args):
+    def _set_command_line_config(self, parsed_args: argparse.Namespace) -> None:
         """
-
         :param parsed_args: the argument set on the command line
-        :type parsed_args: :class:`argparse.Namespace` object.
         """
         # do not iter on args special attribute
         # do not set option if the value is None (not specified on command line)
@@ -371,13 +375,12 @@ class Config:
         self._set_options(args_dict)
 
 
-    def _config_file_2_dict(self, file):
+    def _config_file_2_dict(self, file: str) -> dict[str: Any]:
         """
         Parse a configuration file in ini format in dictionnary
 
-        :param str file: path to the configuration file
+        :param file: path to the configuration file
         :return: the parsed options
-        :rtype: dict
         """
         parser = ConfigParser()
         parse_meth = {int: parser.getint,
@@ -407,7 +410,7 @@ class Config:
         return opts
 
 
-    def __getattr__(self, option_name):
+    def __getattr__(self, option_name: str) -> Any:
         # some getter return just a value they can be transformed in property
         # but some other need extra argument so they cannot be a property, they must be methods
         # to have something generic and with the same behavior
@@ -420,13 +423,12 @@ class Config:
             raise AttributeError(f"config object has no attribute '{option_name}'")
 
 
-    def _str_2_tuple(self, value):
+    def _str_2_tuple(self, value: str) -> list[tuple[str, str]]:
         """
         transform a string with syntax {model_fqn int} in list of tuple
 
         :param str value: the string to parse
-        :return:
-        :rtype: [(model_fqn, int), ...]
+        :return: [(model_fqn, value as str), ...]
         """
         try:
             it = iter(value.split())
@@ -436,7 +438,7 @@ class Config:
             raise ValueError(f"You must provide a list of model name and value separated by spaces: {value}")
 
 
-    def save(self, path_or_buf=None):
+    def save(self, path_or_buf: str | TextIO | None = None) -> None:
         """
         save itself in a file in ini format.
 
@@ -480,11 +482,11 @@ class Config:
             print(serialize(), file=path_or_buf)
 
 
-    def _set_db_type(self, value):
+    def _set_db_type(self, value: DBType) -> None:
         """
         set value for 'db_type' option
 
-        :param str value: the value for db_type, allowed values are :
+        :param value: the value for db_type, allowed values are :
                           'ordered_replicon', 'gembase', 'unordered'
         :raise ValueError: if value is not allowed
         """
@@ -495,14 +497,14 @@ class Config:
             raise ValueError(f"db_type as unauthorized value : '{value}'.")
 
 
-    def _set_inter_gene_max_space(self, value):
+    def _set_inter_gene_max_space(self, value: str) -> None:
         """
         set value for 'inter_gene_max_space' option
 
-        :param str value: the string parse representing the model fully qualified name
-                          and it's associated value and so on
-                          the model_fqn is a string, the associated value must be cast in int
-        :raise ValueError: if value is not well formed
+        :param value: the string parse representing the model fully qualified name
+                      and it's associated value and so on
+                      the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well-formed
         """
         opt = {}
         if isinstance(value, str):
@@ -519,11 +521,10 @@ class Config:
         self._options['inter_gene_max_space'] = opt
 
 
-    def inter_gene_max_space(self, model_fqn):
+    def inter_gene_max_space(self, model_fqn: str) -> int | None:
         """
-        :param str model_fqn: the model fully qualifed name
+        :param model_fqn: the model fully qualifed name
         :return: the gene_max_space for the model_fqn or None if it's does not specify
-        :rtype: int or None
         """
         if self._options['inter_gene_max_space']:
             return self._options['inter_gene_max_space'].get(model_fqn, None)
@@ -531,14 +532,14 @@ class Config:
             return None
 
 
-    def _set_max_nb_genes(self, value):
+    def _set_max_nb_genes(self, value: str | Iterable[tuple[str, int]]) -> None:
         """
         set value for 'max_nb_genes' option
 
         :param str value: the string parse representing the model fully qualified name
                           and it's associated value and so on
                           the model_fqn is a string, the associated value must be cast in int
-        :raise ValueError: if value is not well formed
+        :raise ValueError: if value is not well-formed
         """
         opt = {}
         if isinstance(value, str):
@@ -555,11 +556,10 @@ class Config:
         self._options['max_nb_genes'] = opt
 
 
-    def max_nb_genes(self, model_fqn):
+    def max_nb_genes(self, model_fqn: str) -> int | None:
         """
-        :param str model_fqn: the model fully qualifed name
+        :param model_fqn: the model fully qualifed name
         :return: the max_nb_genes for the model_fqn or None if it's does not specify
-        :rtype: int or None
         """
         if self._options['max_nb_genes']:
             return self._options['max_nb_genes'].get(model_fqn, None)
@@ -567,14 +567,14 @@ class Config:
             return None
 
 
-    def _set_min_genes_required(self, value):
+    def _set_min_genes_required(self, value: str) -> None:
         """
         set value for 'min_genes_required' option
 
-        :param str value: the string parse representing the model fully qualified name
-                          and it's associated value and so on
-                          the model_fqn is a string, the associated value must be cast in int
-        :raise ValueError: if value is not well formed
+        :param value: the string parse representing the model fully qualified name
+                      and it's associated value and so on
+                      the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well-formed
         """
         opt = {}
         if isinstance(value, str):
@@ -591,25 +591,24 @@ class Config:
         self._options['min_genes_required'] = opt
 
 
-    def min_genes_required(self, model_fqn):
+    def min_genes_required(self, model_fqn: str) -> int | None:
         """
-        :param str model_fqn: the model fully qualifed name
+        :param model_fqn: the model fully qualifed name
         :return: the min_genes_required for the model_fqn or None if it's does not specify
-        :rtype: int or None
         """
         if self._options['min_genes_required']:
             return self._options['min_genes_required'].get(model_fqn, None)
         else:
             return None
 
-    def _set_min_mandatory_genes_required(self, value):
+    def _set_min_mandatory_genes_required(self, value: str | Iterable[tuple[str, int]]) -> None:
         """
         set value for 'min_mandatory_genes_required' option
 
-        :param str value: the string parse representing the model fully qualified name
-                          and it's associated value and so on
-                          the model_fqn is a string, the associated value must be cast in int
-        :raise ValueError: if value is not well formed
+        :param value: the string parse representing the model fully qualified name
+                      and it's associated value and so on
+                      the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well-formed
         """
         opt = {}
         if isinstance(value, str):
@@ -626,18 +625,17 @@ class Config:
         self._options['min_mandatory_genes_required'] = opt
 
 
-    def min_mandatory_genes_required(self, model_fqn):
+    def min_mandatory_genes_required(self, model_fqn: str) -> int | None:
         """
-        :param str model_fqn: the model fully qualifed name
+        :param model_fqn: the model fully qualifed name
         :return: the min_mandatory_genes_required for the model_fqn or None if it's does not specify
-        :rtype: int or None
         """
         if self._options['min_mandatory_genes_required']:
             return self._options['min_mandatory_genes_required'].get(model_fqn, None)
         else:
             return None
 
-    def _set_models(self, value):
+    def _set_models(self, value: str | list[str, list[str]]) -> None:
         """
         :param value: The models to search as return by the command line parsing or
                       the configuration files
@@ -653,7 +651,7 @@ class Config:
             # value = model_family_name model1 model2
             model_family_name, *models_name = value.split()
         else:
-            # it come from the command line
+            # it comes from the command line
             # value = ['model_family_name', 'model1', 'model2']
             model_family_name = value[0]
             models_name = value[1:]
@@ -664,7 +662,7 @@ class Config:
         self._options['models'] = (model_family_name, models_name)
 
 
-    def out_dir(self):
+    def out_dir(self) -> str:
         """
         :return: the path to the directory where the results are stored
         """
@@ -678,18 +676,18 @@ class Config:
             return out_dir
 
 
-    def working_dir(self):
+    def working_dir(self) -> str:
         """
         alias to :py:meth:`config.Config.out_dir`
         """
         return self.out_dir()
 
 
-    def _set_replicon_topology(self, value):
+    def _set_replicon_topology(self, value: Topology) -> None:
         """
         set the default replicon topology
 
-        :param str value: 'circular' or 'linear'
+        :param value: 'circular' or 'linear'
         """
         auth_values = ('linear', 'circular')
         value_low = value.lower()
@@ -704,9 +702,9 @@ class Config:
             raise ValueError(f"replicon_topology as unauthorized value : '{value}'.")
 
 
-    def _set_sequence_db(self, path):
+    def _set_sequence_db(self, path: str) -> None:
         """
-        :param str path: set the path to the sequence file (in fasta format) to analysed
+        :param path: set the path to the sequence file (in fasta format) to analysed
         """
         if os.path.exists(path) and os.path.isfile(path):
             self._options['sequence_db'] = path
@@ -714,11 +712,11 @@ class Config:
             raise ValueError(f"sequence_db '{path}' does not exists or is not a file.")
 
 
-    def _set_topology_file(self, path):
+    def _set_topology_file(self, path: str) -> None:
         """
         test if the path exists and set it in config
 
-        :param str path: the path to the topology file
+        :param path: the path to the topology file
         """
         if os.path.exists(path) and os.path.isfile(path):
             self._options['topology_file'] = path
@@ -739,7 +737,7 @@ class Config:
             value = value.split(', ')
         self._options['system_models_dir'] = value
 
-    def _set_models_dir(self, path):
+    def _set_models_dir(self, path: str) -> None:
         """
         :param str path: the path to the models (definitions + profiles) are stored.
         """
@@ -753,7 +751,7 @@ class Config:
             raise ValueError(f"models_dir '{path}' does not exists or is not a directory.")
 
 
-    def _set_multi_loci(self, value):
+    def _set_multi_loci(self, value: str) -> None:
         """
         :param str value: the models fqn list separated by comma of multi loc models
         """
@@ -761,7 +759,7 @@ class Config:
         self._options['multi_loci'] = set(models_fqn)
 
 
-    def _convert_log_level(self, value):
+    def _convert_log_level(self, value: str) -> int:
         try:
             log_level = int(value)
         except ValueError:
@@ -773,17 +771,14 @@ class Config:
         return log_level
 
 
-    def _set_log_level(self, value):
+    def _set_log_level(self, value: str) -> None:
         """
-
         :param value:
-        :return:
         """
-
         self._options['log_level'] = self._convert_log_level(value)
 
 
-    def _set_no_cut_ga(self, value):
+    def _set_no_cut_ga(self, value) -> None:
         """
 
         :param value:
@@ -794,7 +789,7 @@ class Config:
         self._options['cut_ga'] = not value
 
 
-    def models_dir(self):
+    def models_dir(self) -> str | None:
         """
 
         :return: list of models dir path
@@ -808,7 +803,7 @@ class Config:
             return self._options['system_models_dir']
 
 
-    def multi_loci(self, model_fqn):
+    def multi_loci(self, model_fqn: str) -> bool:
         """
         :param str model_fqn: the model fully qualified name
         :return: True if the model is multi loci, False otherwise
@@ -817,7 +812,7 @@ class Config:
         return model_fqn in self._options['multi_loci']
 
 
-    def hmmer_dir(self):
+    def hmmer_dir(self) -> str:
         """
 
         :return: The name of the directory containing the hmmsearch results (output, error, parsing)
@@ -825,7 +820,7 @@ class Config:
         return 'hmmer_results'
 
 
-    def hit_weights(self):
+    def hit_weights(self) -> dict[str: float]:
         """
 
         :return: the options used in scoring systems (mandatory_weight, accessory_weight, itself_weight,
@@ -841,7 +836,7 @@ class Config:
                 }
 
 
-    def log_level(self):
+    def log_level(self) -> int:
         """
         :return: the verbosity output level
         :rtype: int
@@ -853,13 +848,13 @@ class Config:
 
 class NoneConfig:
     """
-    Minimalist Config object just use in some special case wher config is require by api
+    Minimalist Config object just use in some special case where config is required by api
     but not used for instance in :class:`macsypy.package.Package`
     """
 
     def __getattr__(self, prop):
         if prop in ('multi_loci', 'min_mandatory_genes_required', 'max_nb_genes',
-                        'inter_gene_max_space', 'min_genes_required'):
+                    'inter_gene_max_space', 'min_genes_required'):
             return lambda x: None
         else:
             return lambda: None

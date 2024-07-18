@@ -4,9 +4,9 @@ Authors: Jim Doe, John Doe
 Copyright: 2022 Pasteur
 See COPYRIGHT file for details.
 
-complete_pack is a package of models for macsyfinder
+init_pack is a package of models for macsyfinder
 (https://github.com/gem-pasteur/macsyfinder)
-complete_pack description in one line of this package
+init_pack description in one line of this package
 
 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
 To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/

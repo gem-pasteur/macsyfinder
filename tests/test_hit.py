@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -290,7 +290,7 @@ class LonerTest(MacsyTest):
         self.assertEqual(l3.gene_ref, self.mg_gspd)
         self.assertEqual(l3.status, GeneStatus.MANDATORY)
 
-        with self.catch_log(log_name='macsypy') as log:
+        with self.catch_log(log_name='macsypy'):
             with self.assertRaises(MacsypyError) as ctx:
                 Loner(self.chit_2, gene_ref=self.mg_sctj, gene_status=GeneStatus.ACCESSORY)
         self.assertEqual(str(ctx.exception),
@@ -549,7 +549,7 @@ class LonerMultiSystemTest(MacsyTest):
                             {self.mhit_3, self.mhit_4})
 
         with self.assertRaises(MacsypyError) as ctx:
-            with self.catch_log() as log:
+            with self.catch_log():
                 mh1.counterpart = [self.mhit_3, self.mhit_2]
         self.assertEqual(str(ctx.exception),
                          "Try to set counterpart for hit 'gspD' with non compatible hits: ['gspD', 'sctJ']")
@@ -571,7 +571,7 @@ class GetBestHitTest(MacsyTest):
         # because it's a like a singleton
         # so other tests are influenced by ProfileFactory and it's configuration
         # for instance search_genes get profile without hmmer_exe
-        profile_factory = ProfileFactory(cfg)
+        ProfileFactory(cfg)
 
         model = Model(model_name, 10)
         self.profile_factory = ProfileFactory(cfg)
@@ -680,8 +680,8 @@ class GetBestHitTest(MacsyTest):
         m1 = ModelHit(h1, gene_gspd, GeneStatus.ACCESSORY)
         l0 = Loner(h0, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m1])
         l1 = Loner(h1, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m0])
-        l = get_best_hit_4_func(gene_name, [l0, l1])
-        self.assertEqual(l, l1)
+        loners = get_best_hit_4_func(gene_name, [l0, l1])
+        self.assertEqual(loners, l1)
 
         #######################
         # based on the i_eval #
@@ -695,8 +695,8 @@ class GetBestHitTest(MacsyTest):
         l0 = Loner(h0, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m1])
         l1 = Loner(h1, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m0])
 
-        l = get_best_hit_4_func(gene_name, [l0, l1], key='i_eval')
-        self.assertEqual(l, l0)
+        loners = get_best_hit_4_func(gene_name, [l0, l1], key='i_eval')
+        self.assertEqual(loners, l0)
 
         #################################
         # based on the profile_coverage #
@@ -710,8 +710,8 @@ class GetBestHitTest(MacsyTest):
         l0 = Loner(h0, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m1])
         l1 = Loner(h1, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m0])
 
-        l = get_best_hit_4_func(gene_name, [l0, l1], key='profile_coverage')
-        self.assertEqual(l, l1)
+        loners = get_best_hit_4_func(gene_name, [l0, l1], key='profile_coverage')
+        self.assertEqual(loners, l1)
 
         # bad criterion
         with self.assertRaises(MacsypyError) as ctx:

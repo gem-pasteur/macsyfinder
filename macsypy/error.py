@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -26,10 +26,12 @@
 Manage MacSyFinder specific errors
 """
 
+
 class MacsypyError(Exception):
     """
     The base class for MacSyFinder specific exceptions.
     """
+
 
 class MacsydataError(MacsypyError):
     """
@@ -39,7 +41,7 @@ class MacsydataError(MacsypyError):
 
 class MacsyDataLimitError(MacsydataError):
     """
-    Raised when the maximum number of github api call is reached
+    Raised when the maximum number of GitHub api call is reached
     """
 
 
@@ -60,10 +62,12 @@ class SystemDetectionError(MacsypyError):
     Raised when the detection of systems from Hits encountered a problem.
     """
 
+
 class Timeout(MacsypyError):
     """
     Raised when best solution reach the timeout
     """
+
 
 class EmptyFileError(MacsypyError):
     """

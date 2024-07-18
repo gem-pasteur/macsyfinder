@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -26,12 +26,10 @@
 import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.database import RepliconDB, Indexes, RepliconInfo
-from macsypy.error import MacsypyError
 
 from tests import MacsyTest
 
@@ -108,7 +106,7 @@ class Test(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir())
-        except:
+        except Exception:
             pass
         RepliconDB.__init__ = self.real_init
 

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -32,19 +32,18 @@ import gzip
 import contextlib
 from itertools import groupby
 
-from .registries import DefinitionLocation
+from .registries import DefinitionLocation, ModelRegistry
 from .error import MacsypyError
 
 
-def get_def_to_detect(models, model_registry):
+def get_def_to_detect(models: list[tuple[str, tuple[str]]],
+                      model_registry: ModelRegistry) -> tuple[list[DefinitionLocation], str, str]:
     """
     :param models: the list of models to detect as returned by config.models.
     :type models: list of tuple with the following structure:
                   [('model_fqn', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
     :param model_registry: the models registry for this run.
-    :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
     :return: the definitions to parse
-    :rtype: list of :class:`macsypy.registries.DefinitionLocation` objects
     :raise ValueError: if a model name provided in models is not in model_registry.
     """
     root, def_names = models
@@ -61,24 +60,23 @@ def get_def_to_detect(models, model_registry):
     return def_to_detect, model_family, model_vers
 
 
-def get_replicon_names(genomee_path, db_type):
+def get_replicon_names(genome_path, db_type) -> list[str]:
     if db_type == 'gembase':
-        return _get_gembase_replicon_names(genomee_path)
+        return _get_gembase_replicon_names(genome_path)
     elif db_type in ('ordered_replicon', 'unordered'):
-        return [os.path.splitext(os.path.basename(genomee_path))[0]]
+        return [os.path.splitext(os.path.basename(genome_path))[0]]
     else:
         raise MacsypyError(f"Invalid genome type: {db_type}")
 
 
-def _get_gembase_replicon_names(genome_path):
+def _get_gembase_replicon_names(genome_path: str) -> list[str]:
     """
     parse gembase file and get the list of replicon identifiers
 
-    :param str genome_path: The path to a file containing sequence in **gembase** format
+    :param genome_path: The path to a file containing sequence in **gembase** format
     :return: the list of replicon identifiers
-    :rtype: list of str
     """
-    def grp_replicon(ids):
+    def grp_replicon(ids: str) -> str:
         """
         in gembase the identifier of fasta sequence follows the following schema:
         <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
@@ -96,13 +94,12 @@ def _get_gembase_replicon_names(genome_path):
     return replicons
 
 
-def threads_available():
+def threads_available() -> int:
     """
 
     :return: The maximal number of threads available.
              It's nice with cluster scheduler or linux.
-             On Mac it use the number of physical cores
-    :rtype: int
+             On Mac it uses the number of physical cores
     """
     if hasattr(os, "sched_getaffinity"):
         threads_nb = len(os.sched_getaffinity(0))
@@ -111,86 +108,21 @@ def threads_available():
     return threads_nb
 
 
-def indent_wrapper(ElementTree):
+def parse_time(user_time: int | str) -> int:
     """
-    xml.etree.ElementTree implement ident only from python 3.9
-    below the code from python 3.9 to inject it in ET at runtime
-
-    :param ElementTree: ElementTree class
-    :type ElementTree: class
-    :return: function indent
-    :rtype: function
-    """
-
-    def indent(tree, space="  ", level=0):
-        """Indent an XML document by inserting newlines and indentation space
-        after elements.
-
-        *tree* is the ElementTree or Element to modify.  The (root) element
-        itself will not be changed, but the tail text of all elements in its
-        subtree will be adapted.
-
-        *space* is the whitespace to insert for each indentation level, two
-        space characters by default.
-
-        *level* is the initial indentation level. Setting this to a higher
-        value than 0 can be used for indenting subtrees that are more deeply
-        nested inside of a document.
-        """
-        if isinstance(tree, ElementTree):
-            tree = tree.getroot()
-        if level < 0:
-            raise ValueError(f"Initial indentation level must be >= 0, got {level}")
-        if not len(tree):
-            return
-
-        # Reduce the memory consumption by reusing indentation strings.
-        indentations = ["\n" + level * space]
-
-        def _indent_children(elem, level):
-            # Start a new indentation level for the first child.
-            child_level = level + 1
-            try:
-                child_indentation = indentations[child_level]
-            except IndexError:
-                child_indentation = indentations[level] + space
-                indentations.append(child_indentation)
-
-            if not elem.text or not elem.text.strip():
-                elem.text = child_indentation
-
-            for child in elem:
-                if len(child):
-                    _indent_children(child, child_level)
-                if not child.tail or not child.tail.strip():
-                    child.tail = child_indentation
-
-            # Dedent after the last child by overwriting the previous indentation.
-            if not child.tail.strip():
-                child.tail = indentations[level]
-
-        _indent_children(tree, 0)
-
-    return indent
-
-
-def parse_time(user_time):
-    """
-    parse user friendly time and return it in seconds
+    parse user-friendly time and return it in seconds
     user time supports units as s h m d for sec min hour day
     or a combination of them
     1h10m50s means 1 hour 10 minutes 50 seconds
     all terms will be converted in seconds and added
 
     :param user_time:
-    :type user_time: int or str
     :return: seconds
-    :rtype: int
     :raise: ValueError if user_time is not parseable
     """
     try:
         user_time = int(user_time)
-        return user_time # user time has no units , it's seconds
+        return user_time  # user time has no units , it's seconds
     except ValueError:
         pass
     import re
@@ -198,7 +130,7 @@ def parse_time(user_time):
                        'm': lambda x: x * 60,
                        'h': lambda x: x * 3600,
                        'd': lambda x: x * 86400
-    }
+                       }
     time_parts = re.findall(r'(\d+)(\D+)', user_time)
     time = 0
     for value, unit in time_parts:

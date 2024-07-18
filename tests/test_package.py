@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -37,6 +37,7 @@ from unittest.mock import patch
 
 import macsypy
 from macsypy import package
+from macsypy.metadata import Maintainer
 from macsypy import model_conf_parser
 from macsypy.error import MacsydataError, MacsyDataLimitError
 
@@ -66,7 +67,7 @@ class TestPackageFunc(MacsyTest):
 class TestModelIndex(MacsyTest):
 
     def test_init(self):
-        with self.assertRaises(TypeError) as ctx:
+        with self.assertRaises(TypeError):
             package.AbstractModelIndex()
 
 
@@ -77,6 +78,10 @@ class TestLocalModelIndex(MacsyTest):
         self.assertEqual(lmi.org_name, 'local')
         expected_cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
         self.assertEqual(lmi.cache, expected_cache)
+
+    def test_repos_url(self):
+        lmi = package.LocalModelIndex()
+        self.assertEqual(lmi.repos_url, 'local')
 
 
 class TestRemoteModelIndex(MacsyTest):
@@ -90,10 +95,12 @@ class TestRemoteModelIndex(MacsyTest):
     def tearDown(self) -> None:
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
 
-    def mocked_requests_get(url, context=None):
+    def mocked_requests_get(url: str, context:None=None):
+        # cannot type the return value the class is defined inside de method
+
         class MockResponse:
             def __init__(self, data, status_code):
                 self.data = io.BytesIO(bytes(data.encode("utf-8")))
@@ -171,6 +178,16 @@ class TestRemoteModelIndex(MacsyTest):
             package.RemoteModelIndex.remote_exists = rem_exists
         self.assertEqual(str(ctx.exception), "the 'foo' organization does not exist.")
 
+
+    def test_repos_url(self):
+        rem_exists = package.RemoteModelIndex.remote_exists
+        package.RemoteModelIndex.remote_exists = lambda x: True
+        try:
+            org = "package_repos_url"
+            remote = package.RemoteModelIndex(org=org)
+            self.assertEqual(remote.repos_url, f"https://github.com/{org}")
+        finally:
+            rem_exists
 
     @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
     def test_url_json(self, mock_urlopen):
@@ -353,7 +370,6 @@ Please wait before to try again.""")
                 _ = remote.download("bad_pack", "0.2")
             self.assertEqual(str(ctx.exception),
                              "package 'bad_pack-0.2' does not exists on repos 'package_download'")
-
         finally:
             package.RemoteModelIndex.remote_exists = rem_exists
 
@@ -394,7 +410,7 @@ Please wait before to try again.""")
                                  sorted([os.path.join(unpacked_path, f"file_{i}") for i in range(3)])
                                  )
             # test package is remove before to unarchive a new one
-            open(os.path.join(unpacked_path, f"file_must_be_removed"), 'w').close()
+            open(os.path.join(unpacked_path, "file_must_be_removed"), 'w').close()
             model_path = remote.unarchive_package(arch)
             self.assertListEqual(sorted(glob.glob(f"{unpacked_path}/*")),
                                  sorted([os.path.join(unpacked_path, f"file_{i}") for i in range(3)])
@@ -417,26 +433,26 @@ class TestPackage(MacsyTest):
         package._log = logger
         logger = colorlog.getLogger('macsypy.model_conf_parser')
         model_conf_parser._log = logger
-        self.metadata = {"maintainer": {"name": "auth_name",
-                                    "email": "auth_name@mondomain.fr"},
-                         "short_desc": "this is a short description of the repos",
-                         "vers": "0.0b2",
-                         "cite": ["bla bla",
+        maintainer = Maintainer("auth_name", "auth_name@mondomain.fr")
+        self.metadata = package.Metadata(maintainer,
+                                         "this is a short description of the repos")
+        self.metadata.vers = "0.0b2"
+        self.metadata.cite = ["bla bla",
                                   "link to publication",
                                   """ligne 1
 ligne 2
 ligne 3 et bbbbb
-"""],
-                         "doc": "http://link/to/the/documentation",
-                         "license": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
-                         "copyright": "2019, Institut Pasteur, CNRS"
-                          }
+"""]
+        self.metadata.doc = "http://link/to/the/documentation"
+        self.metadata.license = "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)"
+        self.metadata.copyright_date = "2019"
+        self.metadata.copyright_holder = "Institut Pasteur, CNRS"
 
 
     def tearDown(self) -> None:
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
         logger = colorlog.getLogger('macsypy.package')
         del logger.manager.loggerDict['macsypy.package']
@@ -445,7 +461,8 @@ ligne 3 et bbbbb
 
 
     def create_fake_package(self, model, definitions=True, bad_definitions=False, profiles=True, skip_hmm=None,
-                            metadata=True, readme=True, license=True, conf=True, bad_conf=False):
+                            metadata='good_metadata.yml', readme=True, license=True, conf=True, vers=True,
+                            bad_conf=False):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
         if definitions:
@@ -476,9 +493,14 @@ ligne 3 et bbbbb
                     continue
                 open(os.path.join(profile_dir, f"{name}.hmm"), 'w').close()
         if metadata:
-            meta_file = self.find_data('pack_metadata', 'good_metadata.yml')
-            meta_dest = os.path.join(pack_path, 'metadata.yml')
-            shutil.copyfile(meta_file, meta_dest)
+            meta_path = self.find_data('pack_metadata', metadata)
+            meta_dest = os.path.join(pack_path, package.Metadata.name)
+            with open(meta_path) as meta_file:
+                meta = yaml.safe_load(meta_file)
+            if not vers:
+                meta['vers'] = None
+            with open(meta_dest, 'w') as meta_file:
+                yaml.dump(meta, meta_file,allow_unicode=True, indent=2)
         if readme:
             with open(os.path.join(pack_path, "README"), 'w') as f:
                 f.write("# This a README\n")
@@ -531,8 +553,12 @@ ligne 3 et bbbbb
     def test_metadata(self):
         fake_pack_path = self.create_fake_package('fake_model')
         pack = package.Package(fake_pack_path)
-        self.assertDictEqual(pack.metadata, self.metadata)
-        self.assertDictEqual(pack.metadata, self.metadata)
+        self.assertEqual(pack.metadata.maintainer, self.metadata.maintainer)
+        self.assertEqual(pack.metadata.short_desc, self.metadata.short_desc)
+        self.assertEqual(pack.metadata.license, self.metadata.license)
+        self.assertEqual(pack.metadata.copyright, self.metadata.copyright)
+        self.assertEqual(pack.metadata.doc, self.metadata.doc)
+        self.assertEqual(pack.metadata.cite, self.metadata.cite)
 
     def test_find_readme(self):
         fake_pack_path = self.create_fake_package('fake_model')
@@ -620,7 +646,7 @@ ligne 3 et bbbbb
 
 
     def test_check_structure_no_metadata(self):
-        fake_pack_path = self.create_fake_package('fake_model', metadata=False)
+        fake_pack_path = self.create_fake_package('fake_model', metadata='')
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
@@ -692,7 +718,7 @@ ligne 3 et bbbbb
 
 
     def test_check_no_readme_n_no_license(self):
-        fake_pack_path = self.create_fake_package('fake_model', readme=False, license=False)
+        fake_pack_path = self.create_fake_package('fake_model', readme=False, license=False, vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
@@ -702,151 +728,119 @@ ligne 3 et bbbbb
                                     "The package 'fake_model' have not any README file."])
 
     def test_check_metadata(self):
-        fake_pack_path = self.create_fake_package('fake_model')
+        fake_pack_path = self.create_fake_package('fake_model', vers=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
 
-        load_metadata_meth = package.Package._load_metadata
-
-        #################
-        # No maintainer #
-        #################
-        no_auth_meta_data = self.metadata.copy()
-        del no_auth_meta_data['maintainer']
-        try:
-            package.Package._load_metadata = lambda x: no_auth_meta_data
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_metadata()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
-        self.assertListEqual(errors, [f"field 'maintainer' is mandatory in {fake_pack_path}/metadata.yml."])
+    def test_check_metadata_no_maintainer(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_maintainer.yml', vers=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
+        self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
+                                      f"the element 'maintainer' is required."])
         self.assertListEqual(warnings, [])
 
-        #################
-        # No short desc #
-        #################
-        no_short_desc_metadata = self.metadata.copy()
-        del no_short_desc_metadata['short_desc']
-        try:
-            package.Package._load_metadata = lambda x: no_short_desc_metadata
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_metadata()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, [f"field 'short_desc' is mandatory in {fake_pack_path}/metadata.yml."])
+    def test_check_metadata_no_name(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_name.yml', vers=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
+        self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
+                                                "the element 'maintainer' must have fields 'name' and 'email'."])
+        self.assertListEqual(warnings, [])
+
+    def test_check_metadata_no_email(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_email.yml', vers=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
+        self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
+                                                "the element 'maintainer' must have fields 'name' and 'email'."])
+        self.assertListEqual(warnings, [])
+
+    def test_check_metadata_no_desc(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_desc.yml', vers=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
+        self.assertEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
+                                  f"the element 'short_desc' is required."])
         self.assertEqual(warnings, [])
 
-        ###########
-        # No vers #
-        ###########
-        no_vers_metadata = self.metadata.copy()
-        del no_vers_metadata['vers']
-        try:
-            package.Package._load_metadata = lambda x: no_vers_metadata
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_metadata()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, [f"field 'vers' is mandatory in {fake_pack_path}/metadata.yml."])
+
+    def test_check_metadata_no_vers(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_vers.yml')
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
+        self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
 
-        ###########
-        # No cite #
-        ###########
-        no_cite_metadata = self.metadata.copy()
-        del no_cite_metadata['cite']
-        try:
-            package.Package._load_metadata = lambda x: no_cite_metadata
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_metadata()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
+    def test_check_metadata_with_vers(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, [f"It's better if the field 'cite' is setup in {fake_pack_path}/metadata.yml file"])
+        self.assertEqual(warnings, ["The field 'vers' is not required anymore."
+                                    "\n  It will be ignored and set by macsydata during installation phase according"
+                                    " to the git tag."])
 
-        ##########
-        # No doc #
-        ##########
-        no_doc_metadata = self.metadata.copy()
-        del no_doc_metadata['doc']
-        try:
-            package.Package._load_metadata = lambda x: no_doc_metadata
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_metadata()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
+    def test_check_metadata_no_cite(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_cite.yml', vers=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, [f"It's better if the field 'doc' is setup in {fake_pack_path}/metadata.yml file"])
+        self.assertEqual(warnings, [f"It's better if the field 'cite' is setup in '{fake_pack_path}/metadata.yml' file."])
 
-        ##############
-        # No license #
-        ##############
-        no_license_metadata = self.metadata.copy()
-        del no_license_metadata['license']
-        try:
-            package.Package._load_metadata = lambda x: no_license_metadata
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_metadata()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
+
+    def test_check_metadata_no_doc(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_doc.yml', vers=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, [f"It's better if the field 'license' is setup in {fake_pack_path}/metadata.yml file"])
+        self.assertEqual(warnings, [f"It's better if the field 'doc' is setup in '{fake_pack_path}/metadata.yml' file."])
 
-        ################
-        # No copyright #
-        ################
-        no_copyright_metadata = self.metadata.copy()
-        del no_copyright_metadata['copyright']
-        try:
-            package.Package._load_metadata = lambda x: no_copyright_metadata
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_metadata()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
+    def test_check_metadata_no_license(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_license.yml', vers=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, [f"It's better if the field 'copyright' is setup in {fake_pack_path}/metadata.yml file"])
+        self.assertEqual(warnings, [f"It's better if the field 'license' is setup in '{fake_pack_path}/metadata.yml' file."])
 
-        ##################
-        # No maintainer name #
-        ##################
-        # this test must the last of the set
-        # because we remove a key in maintainer value
-        # the copy is a shallow copy
-        # so maintainer value is a reference to the good_metadata[maintainer]
-        # side effect
-        no_auth_name_meta_data = self.metadata.copy()
-        del no_auth_name_meta_data['maintainer']['name']
-        try:
-            package.Package._load_metadata = lambda x: no_auth_name_meta_data
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_metadata()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, [f"field 'maintainer.name' is mandatory in {fake_pack_path}/metadata.yml."])
-        self.assertEqual(warnings, [])
+    def test_check_metadata_no_copyright(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_copyright.yml', vers=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_metadata()
+        self.assertEqual(errors, [])
+        self.assertEqual(warnings, [f"It's better if the field 'copyright' is setup in '{fake_pack_path}/metadata.yml' file."])
 
 
     def test_check(self):
-        fake_pack_path = self.create_fake_package('fake_model')
-        load_metadata_meth = package.Package._load_metadata
-        bad_meta_data = {"short_desc": "this is a short description of the repos",
-                         "doc": "http://link/to/the/documentation",
-                         "copyright": "2019, Institut Pasteur, CNRS"
-                         }
-        try:
-            package.Package._load_metadata = lambda x: bad_meta_data
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack.check()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
-        self.assertListEqual(errors,
-                             [f"field 'maintainer' is mandatory in {fake_pack_path}/metadata.yml.",
-                              f"field 'vers' is mandatory in {fake_pack_path}/metadata.yml."])
+        fake_pack_path = self.create_fake_package('fake_model', metadata='good_metadata.yml', vers=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack.check()
+        self.assertListEqual(warnings, [])
+        self.assertListEqual(errors, [])
+
+    def test_check_bad_metadata(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='bad_metadata.yml')
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack.check()
+
+        self.assertListEqual(warnings, [])
+        self.assertListEqual(errors, [f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
+                                      f"the element 'short_desc' is required.",
+                                      f"- The metadata file '{fake_pack_path}/metadata.yml' is not valid: "
+                                      f"the element 'maintainer' is required."])
+
+    def test_check_poor_quality_metadata(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_poor_quality.yml')
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack.check()
+        self.assertListEqual(errors, [])
         self.assertListEqual(warnings,
-                             [f"It's better if the field 'cite' is setup in {fake_pack_path}/metadata.yml file",
-                              f"It's better if the field 'license' is setup in {fake_pack_path}/metadata.yml file"])
+                             [f"It's better if the field 'cite' is setup in '{fake_pack_path}/metadata.yml' file.",
+                              f"It's better if the field 'doc' is setup in '{fake_pack_path}/metadata.yml' file.",
+                              f"It's better if the field 'license' is setup in '{fake_pack_path}/metadata.yml' file.",
+                              f"It's better if the field 'copyright' is setup in '{fake_pack_path}/metadata.yml' file."])
 
     def test_help(self):
         fake_pack_path = self.create_fake_package('fake_model', license=False)
@@ -866,6 +860,7 @@ ligne 3 et bbbbb
         pack = package.Package(fake_pack_path)
 
         info = pack.info()
+
         expected_info = """
 fake_model (0.0b2)
 
@@ -888,18 +883,12 @@ copyright: 2019, Institut Pasteur, CNRS
 """
         self.assertEqual(info, expected_info)
 
-        load_metadata_meth = package.Package._load_metadata
-        ###########
-        # No cite #
-        ###########
-        no_cite_metadata = self.metadata.copy()
-        del no_cite_metadata['cite']
-        try:
-            package.Package._load_metadata = lambda x: no_cite_metadata
-            pack = package.Package(fake_pack_path)
-            info = pack.info()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
+    def test_info_no_citation(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_cite.yml', license=False)
+        pack = package.Package(fake_pack_path)
+
+        info = pack.info()
+
         expected_info = """
 fake_model (0.0b2)
 
@@ -918,17 +907,11 @@ copyright: 2019, Institut Pasteur, CNRS
 """
         self.assertEqual(info, expected_info)
 
-        ##########
-        # No doc #
-        ##########
-        no_doc_metadata = self.metadata.copy()
-        del no_doc_metadata['doc']
-        try:
-            package.Package._load_metadata = lambda x: no_doc_metadata
-            pack = package.Package(fake_pack_path)
-            info = pack.info()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
+    def test_info_no_doc(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_doc.yml', license=False)
+        pack = package.Package(fake_pack_path)
+
+        info = pack.info()
         expected_info = """
 fake_model (0.0b2)
 
@@ -951,17 +934,12 @@ copyright: 2019, Institut Pasteur, CNRS
 """
         self.assertEqual(info, expected_info)
 
-        ##############
-        # No license #
-        ##############
-        no_license_metadata = self.metadata.copy()
-        del no_license_metadata['license']
-        try:
-            package.Package._load_metadata = lambda x: no_license_metadata
-            pack = package.Package(fake_pack_path)
-            info = pack.info()
-        finally:
-            package.Package._load_metadata = load_metadata_meth
+
+    def test_info_no_license(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata='metadata_no_license.yml', license=False)
+        pack = package.Package(fake_pack_path)
+
+        info = pack.info()
         expected_info = """
 fake_model (0.0b2)
 

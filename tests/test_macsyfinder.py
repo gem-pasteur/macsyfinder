@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -49,7 +49,7 @@ from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
-from tests import MacsyTest, which
+from tests import MacsyTest
 
 
 class TestMacsyfinder(MacsyTest):
@@ -63,8 +63,9 @@ class TestMacsyfinder(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.tmp_dir)
-        except:
+        except Exception:
             pass
+
 
     def _fill_model_registry(self, config):
         model_registry = ModelRegistry()
@@ -110,7 +111,7 @@ set_2
     def test_systems_to_txt(self):
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Systems found
@@ -154,7 +155,7 @@ set_2
                           [Cluster([v_hit_1, v_hit_2], model, HitWeight(**cfg.hit_weights()))],
                           cfg.redundancy_penalty())
 
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
@@ -220,7 +221,7 @@ neutral genes:
                               cfg.redundancy_penalty())
             model_fam_name = 'foo'
             model_vers = '0.0b2'
-            system_tsv = f"""# macsyfinder {macsypy.__version__}
+            system_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
@@ -245,7 +246,7 @@ neutral genes:
             self.assertMultiLineEqual(system_tsv, f_out.getvalue())
 
             # test No system found
-            system_str = f"""# macsyfinder {macsypy.__version__}
+            system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Systems found
@@ -298,14 +299,13 @@ neutral genes:
         mhit_gspd1 = ModelHit(chit_gspd1, mg_gspd, GeneStatus.MANDATORY)
         mhit_gspd2 = ModelHit(chit_gspd2, mg_gspd, GeneStatus.MANDATORY)
         l_gspd1 = Loner(mhit_gspd1, counterpart=[mhit_gspd2])
-        l_gspd2 = Loner(mhit_gspd2, counterpart=[mhit_gspd1])
         system_1 = System(model,
                           [Cluster([mhit_abc, mhit_sctj], model, HitWeight(**cfg.hit_weights())),
                            Cluster([l_gspd1], model, HitWeight(**cfg.hit_weights()))],
                           cfg.redundancy_penalty())
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        loner_tsv = f"""# macsyfinder {macsypy.__version__}
+        loner_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Loners found:
@@ -326,7 +326,7 @@ neutral genes:
         self.assertMultiLineEqual(loner_tsv, f_out.getvalue())
 
         # test No system found
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Loners found
@@ -378,14 +378,13 @@ neutral genes:
         mhit_gspd1 = ModelHit(chit_gspd1, mg_gspd, GeneStatus.MANDATORY)
         mhit_gspd2 = ModelHit(chit_gspd2, mg_gspd, GeneStatus.MANDATORY)
         l_gspd1 = MultiSystem(mhit_gspd1, counterpart=[mhit_gspd2])
-        l_gspd2 = MultiSystem(mhit_gspd2, counterpart=[mhit_gspd1])
         system_1 = System(model,
                           [Cluster([mhit_abc, mhit_sctj], model, HitWeight(**cfg.hit_weights())),
                            Cluster([l_gspd1], model, HitWeight(**cfg.hit_weights()))],
                           cfg.redundancy_penalty())
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        multisystem_tsv = f"""# macsyfinder {macsypy.__version__}
+        multisystem_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Multisystems found:
@@ -407,7 +406,7 @@ neutral genes:
                                   f_out.getvalue())
 
         # test No system found
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Multisystems found
@@ -606,7 +605,7 @@ neutral genes:
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        sol_tsv = f"""# macsyfinder {macsypy.__version__}
+        sol_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
@@ -737,7 +736,7 @@ neutral genes:
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Rejected candidates:
@@ -760,7 +759,7 @@ This candidate has been rejected because:
         self.maxDiff = None
         self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
-        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Rejected candidates
@@ -810,7 +809,7 @@ This candidate has been rejected because:
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Rejected candidates found:
@@ -832,7 +831,7 @@ This candidate has been rejected because:
         self.maxDiff = None
         self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
-        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Rejected candidates
@@ -890,7 +889,7 @@ This candidate has been rejected because:
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        system_str = f"""# macsyfinder {macsypy.__version__}
+        system_str = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
@@ -927,7 +926,7 @@ Use ordered replicon to have better prediction.
 
         f_out = StringIO()
         likely_systems_to_txt(model_fam_name, model_vers, [], track_multi_systems_hit, f_out)
-        expected_out = f"""# macsyfinder {macsypy.__version__}
+        expected_out = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Likely Systems found
@@ -983,7 +982,7 @@ Use ordered replicon to have better prediction.
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        sol_tsv = f"""# macsyfinder {macsypy.__version__}
+        sol_tsv = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Likely Systems found:"""
@@ -1013,7 +1012,7 @@ Use ordered replicon to have better prediction.
 
         f_out = StringIO()
         likely_systems_to_tsv(model_fam_name, model_vers, [], track_multi_systems_hit, f_out)
-        expected_out = f"""# macsyfinder {macsypy.__version__}
+        expected_out = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Likely Systems found
@@ -1070,7 +1069,7 @@ Use ordered replicon to have better prediction.
         model_fam_name = 'foo'
         model_vers = '0.0b2'
 
-        exp_txt = f"""# macsyfinder {macsypy.__version__}
+        exp_txt = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Unlikely Systems found:
@@ -1107,7 +1106,7 @@ Use ordered replicon to have better prediction.
 
         f_out = StringIO()
         unlikely_systems_to_txt(model_fam_name, model_vers, [], f_out)
-        expected_out = f"""# macsyfinder {macsypy.__version__}
+        expected_out = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Unlikely Systems found
@@ -1168,7 +1167,7 @@ Use ordered replicon to have better prediction.
         self.assertListEqual(args.min_genes_required, [['TXSScan/T2SS', '15'], ['TXSScan/Flagellum', '10']])
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search_systems(self):
         logger = logging.getLogger('macsypy.macsyfinder')
         macsypy.logger_set_level(level='ERROR')
@@ -1264,7 +1263,7 @@ Use ordered replicon to have better prediction.
         self.assertEqual([r.id for r in rejected_clst],
                          ['VICH001.B.00001.C001_T12SS-multisystem_1'])
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_db_type_set_to_gembase(self):
         logger = logging.getLogger('macsypy.macsyfinder')
         macsypy.logger_set_level(level='WARNING')
@@ -1292,7 +1291,7 @@ Use ordered replicon to have better prediction.
                          f"Most of replicons contains only ONE sequence are you sure that '{seq_db}' is a 'gembase'.")
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search_systems_unordered(self):
         logger = logging.getLogger('macsypy.macsyfinder')
         macsypy.logger_set_level(level='ERROR')

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -24,9 +24,11 @@
 
 import xml.etree.ElementTree as Et
 import logging
-_log = logging.getLogger(__name__)
+from typing import Any, Callable
 
 from macsypy.error import MacsypyError
+
+_log = logging.getLogger(__name__)
 
 
 class ModelConfParser:
@@ -34,7 +36,7 @@ class ModelConfParser:
     Handle model_conf.xml configuration file.
     """
 
-    def __init__(self, path):
+    def __init__(self, path: str) -> None:
         """
 
         :param str path: The path to the configuration file
@@ -42,7 +44,7 @@ class ModelConfParser:
         self._path = path
 
 
-    def parse(self):
+    def parse(self) -> dict[str: Any]:
         """
         Parse the xml 'model_conf' file set at the root of a data package
 
@@ -65,7 +67,7 @@ class ModelConfParser:
         return model_conf
 
 
-    def _get_model_conf_node(self):
+    def _get_model_conf_node(self) -> Et.ElementTree:
         """
         Find the root of the document
 
@@ -81,14 +83,12 @@ class ModelConfParser:
         return model_node
 
 
-    def parse_weights(self, weights_node):
+    def parse_weights(self, weights_node: Et.ElementTree) -> dict[str: float]:
         """
-        Parse the node 'weights' contening the scoring weight configuration
+        Parse the node 'weights' containing the scoring weight configuration
 
         :param weights_node: the node 'weights'
-        :type weights_node: :class"`Et.ElementTree` object
         :return: the configuration option/value about the scores
-        :rtype: dict
         """
         elements = {'itself': float,
                     'exchangeable': float,
@@ -103,14 +103,12 @@ class ModelConfParser:
         return weights_conf
 
 
-    def parse_filtering(self, filtering_node):
+    def parse_filtering(self, filtering_node: Et.ElementTree) -> dict[str: Any]:
         """
         Parse the node 'filtering' containing the filtering options configuration
 
         :param filtering_node: the node 'filtering'
-        :type filtering_node: :class"`Et.ElementTree` object
         :return: the configuration option/value about the filtering
-        :rtype: dict
         """
         def parse_cut_ga(value):
             if value.lower() in ('true', 1):
@@ -131,7 +129,7 @@ class ModelConfParser:
         return fiter_conf
 
 
-    def _parse_section(self, section_node, allowed_elements):
+    def _parse_section(self, section_node: Et.ElementTree, allowed_elements: dict[str: Callable]) -> dict[str: Any]:
         """
         Parse a node containing configurations options and value
 

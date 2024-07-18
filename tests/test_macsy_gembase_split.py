@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -49,7 +49,7 @@ class TestSplit(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
         # some function in macsydata script suppress the traceback
         # but without traceback it's hard to debug test :-(
@@ -69,7 +69,7 @@ class TestSplit(MacsyTest):
             seq_files = sys.stdout.getvalue().strip().split()
 
         expected_dir = self.find_data('gembase_split')
-        expected_out_files = glob.glob(os.path.join(expected_dir, f'*.fasta'))
+        expected_out_files = glob.glob(os.path.join(expected_dir, '*.fasta'))
 
         self.assertSetEqual(set([os.path.basename(f) for f in expected_out_files]),
                             set([os.path.basename(f) for f in seq_files])

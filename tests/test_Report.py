@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -35,7 +35,7 @@ from macsypy.hit import CoreHit
 from macsypy.gene import CoreGene
 from macsypy.profile import ProfileFactory
 from macsypy.config import Config, MacsyDefaults
-from macsypy.database import Indexes, RepliconDB
+from macsypy.database import Indexes
 from macsypy.registries import ModelLocation
 from macsypy.error import MacsypyError
 from tests import MacsyTest
@@ -224,7 +224,7 @@ class TestHMMReport(TestReport):
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         report_path = os.path.join(self.cfg.working_dir(), gene_name + self.cfg.res_search_suffix())
         report = GembaseHMMReport(c_gene, report_path, self.cfg)
-        idx = Indexes(self.cfg)
+        Indexes(self.cfg)
         gspD_hmmer_path = self.find_data(os.path.join('hmm', 'gspD.search_hmm.out'))
         db = report._build_my_db(gspD_hmmer_path)
         report._fill_my_db(db)
@@ -253,8 +253,8 @@ class TestHMMReport(TestReport):
     def test_parse_hmm_body(self):
         def make_hmm_group(hmm_string):
             hmm_file = StringIO(hmm_string)
-            hmm_hits = (x[1] for x in groupby(hmm_file, lambda l: l.startswith('>>')))
-            header = next(hmm_hits)
+            hmm_hits = (x[1] for x in groupby(hmm_file, lambda line: line.startswith('>>')))
+            next(hmm_hits)  # garbage header
             body = next(hmm_hits)
             return body
 
@@ -434,7 +434,7 @@ class TestOrderedHMMReport(TestReport):
             idx_file.writelines(idx)
         report = OrderedHMMReport(c_gene, report_path, self.cfg)
         with self.assertRaises(MacsypyError) as ctx:
-            with self.catch_log() as log:
+            with self.catch_log():
                 report.extract()
             self.assertEqual(str(ctx.exception),
                              "hit id 'NC_xxxxx_xx_056141' was not indexed, rebuild sequence 'test_base.fa' index")

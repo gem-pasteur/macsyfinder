@@ -1,11 +1,11 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _gembase_convention:
 
 **************
@@ -19,11 +19,11 @@ we propose to adopt the following convention to fulfill the requirements for the
 It consists in providing for each protein, both the replicon name and a protein identifier separated by
 a "_" in the first field of fasta headers. "_" are accepted in the replicon name, but not in the protein identifier.
 Hence, the last "_" is the separator between the replicon name and the protein identifier.
-As such, MacSyFinder will be able to treat each replicon separately to assess macromolecular systems' presence. 
+As such, MacSyFinder will be able to treat each replicon separately to assess macromolecular systems' presence.
 
 For instance::
 
-  >PlasmidA_0001 YP_003225072.1 | putative stcE protein 
+  >PlasmidA_0001 YP_003225072.1 | putative stcE protein
   MKLKYLSCMILASLAMGAFAATAADNNSAIYFNTTQPVNDLQGGLAAEVK
   FAQSQILSAHPKEGESQQHLTSLRKSLLLVRLVKADDKTPVQVEARDAND
   KILGTLTLSPPSSLPDTVYHLDGVPADGIDFTPQNGTKKIINTVAEVNKL
@@ -62,7 +62,7 @@ For instance::
 
 This input file contains 3 replicons: PlasmidA (which 2 first protein identifiers are 0001 and 0002),
 ChromosomeA (which 2 first protein identifiers are 0001 and 0020) and NC_001548 (which first protein identifier is 0015).
-MacSyFinder search results will thus be reported for each of these three replicons. 
+MacSyFinder search results will thus be reported for each of these three replicons.
 
 .. warning::
 
@@ -87,7 +87,6 @@ For example::
   PlasmidA : circular
   ChromosomeA : linear
   ChromosomeB : circular
-  
+
 .. note::
     A topology file can be specified on the command-line with the ``--topology-file`` parameter.
-    

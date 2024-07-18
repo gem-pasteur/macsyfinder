@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -53,7 +53,7 @@ class TestFastaIter(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
 
     def test_fasta_iter(self):
@@ -112,7 +112,7 @@ class TestIndex(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir())
-        except:
+        except Exception:
             pass
 
 
@@ -190,9 +190,7 @@ class TestIndex(MacsyTest):
 
     def test_build_idx_point_wrong_fasta(self):
         # test if idx.build
-        # if index is present and newer than fasta the index are not rebuild
-        # if index is present but older than fasta the index is rebuild
-        fasta_path = self.cfg.sequence_db()
+        # if index is present but point a file which does not exists
         idx = Indexes(self.cfg)
         idx_path = idx.build()
         first_build_stamp = os.path.getmtime(idx_path)
@@ -221,7 +219,7 @@ class TestIndex(MacsyTest):
         with open(os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"), 'w') as idx_file:
             idx_content_new = f"{self.cfg.sequence_db()}\nVICH001.B.00001.C001_01359{idx._field_separator}200{idx._field_separator}1\n"
             idx_file.write(idx_content_new)
-        my_idx = idx.build()
+        idx.build()
         self.assertEqual(os.path.getsize(idx_file.name), len(idx_content_new))
 
         # case old style no path as first line
@@ -480,4 +478,3 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
                                  f"The sequence-db file '{args.sequence_db}' does not contains sequences.")
 
                 self.assertFalse(os.path.exists(f"{args.sequence_db}.idx"))
-

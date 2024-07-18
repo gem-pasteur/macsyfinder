@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -27,11 +27,11 @@ import argparse
 
 from macsypy.hit import CoreHit, ModelHit
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
+from macsypy.gene import CoreGene, ModelGene, GeneStatus
 from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
-from macsypy.system import LikelySystem, UnlikelySystem, HitSystemTracker
+from macsypy.system import LikelySystem, UnlikelySystem
 
 from tests import MacsyTest
 
@@ -256,4 +256,3 @@ class UnlikelySystemTest(MacsyTest):
         expected_str = """(hit_1, gspD, 1), (hit_2, sctJ, 2), (hit_3, sctN, 3): These hits does not probably constitute a system because:
 reason"""
         self.assertEqual(str(uls_1), expected_str)
-

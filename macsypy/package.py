@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -21,10 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
-"""
-This module allow to manage Packages of MacSyFinder models
-"""
+from __future__ import annotations
 
 import os
 import abc
@@ -35,13 +32,10 @@ import urllib.parse
 import json
 import shutil
 import tarfile
-import copy
-from typing import List, Dict, Tuple, Optional
 
 import certifi
 import yaml
 import colorlog
-_log = colorlog.getLogger(__name__)
 
 from .config import NoneConfig
 from .registries import ModelLocation, ModelRegistry
@@ -50,7 +44,15 @@ from .definition_parser import DefinitionParser
 from .model import ModelBank
 from .gene import GeneBank
 from .model_conf_parser import ModelConfParser
+from .metadata import Metadata
 from .error import MacsydataError, MacsyDataLimitError, MacsypyError
+
+"""
+This module allow to manage Packages of MacSyFinder models
+"""
+
+
+_log = colorlog.getLogger(__name__)
 
 
 class AbstractModelIndex(metaclass=abc.ABCMeta):
@@ -59,21 +61,21 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
     This class cannot be implemented, it must be subclassed
     """
 
-    def __new__(cls, *args, **kwargs):
-        if cls.__bases__ == (object,):
-            raise TypeError(f'{cls.__name__} is abstract cannot be instantiated.')
-        return super(AbstractModelIndex, cls).__new__(cls)
-
-
-    def __init__(self, cache: str = ''):
+    def __init__(self, cache: str | None = None) -> None:
         """
 
         """
-        self.org_name: str = None
+        self.org_name: str | None = None
         if cache:
             self.cache: str = cache
         else:
             self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
+
+
+    @property
+    @abc.abstractmethod
+    def repos_url(self) -> str:
+        raise NotImplementedError()
 
 
     def unarchive_package(self, path: str) -> str:
@@ -93,25 +95,20 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
 
         with tarfile.open(path, 'r:gz') as tar:
             tar_dir_name = tar.next().name
-            def is_within_directory(directory, target):
-                
+
+            def is_within_directory(directory: str, target: str) -> bool:
                 abs_directory = os.path.abspath(directory)
                 abs_target = os.path.abspath(target)
-            
                 prefix = os.path.commonprefix([abs_directory, abs_target])
-                
                 return prefix == abs_directory
-            
-            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
-            
+
+            def safe_extract(tar: tarfile.TarFile, path: str = ".", members=None, *, numeric_owner=False):
                 for member in tar.getmembers():
                     member_path = os.path.join(path, member.name)
                     if not is_within_directory(path, member_path):
                         raise Exception("Attempted Path Traversal in Tar File")
-            
-                tar.extractall(path, members, numeric_owner=numeric_owner) 
-                
-            
+                tar.extractall(path, members, numeric_owner=numeric_owner)
+
             safe_extract(tar, path=dest_dir)
 
         # github prefix the archive root directory with the organization name
@@ -129,12 +126,16 @@ class LocalModelIndex(AbstractModelIndex):
     It allow to manage installation from a local package (tarball)
     """
 
-    def __init__(self, cache=None) -> None:
+    def __init__(self, cache: str | None = None) -> None:
         """
 
         """
         super().__init__(cache=cache)
         self.org_name: str = 'local'
+
+    @property
+    def repos_url(self) -> str:
+        return "local"
 
 
 class RemoteModelIndex(AbstractModelIndex):
@@ -142,7 +143,7 @@ class RemoteModelIndex(AbstractModelIndex):
     This class allow to interact with ModelIndex on github
     """
 
-    def __init__(self, org: str = "macsy-models", cache=None) -> None:
+    def __init__(self, org: str = "macsy-models", cache: str | None = None) -> None:
         """
 
         :param org: The name of the organization on github where are stored the models
@@ -155,7 +156,7 @@ class RemoteModelIndex(AbstractModelIndex):
             raise ValueError(f"the '{self.org_name}' organization does not exist.")
 
 
-    def _url_json(self, url: str) -> Dict:
+    def _url_json(self, url: str) -> dict:
         """
         Get the url, deserialize the data as json
 
@@ -173,12 +174,16 @@ class RemoteModelIndex(AbstractModelIndex):
         data = json.loads(req.decode('utf-8'))
         return data
 
+    @property
+    def repos_url(self) -> str:
+        return f"{self.base_url.replace('api.', '', 1)}/{self.org_name}"
+
 
     def remote_exists(self) -> bool:
         """
         check if the remote exists and is an organization
 
-        :return: True if the Remote url point to a github Organization, False otherwise
+        :return: True if the Remote url point to a GitHub Organization, False otherwise
         """
         try:
             url = f"{self.base_url}/orgs/{self.org_name}"
@@ -194,7 +199,7 @@ class RemoteModelIndex(AbstractModelIndex):
                 raise err from None
 
 
-    def get_metadata(self, pack_name: str, vers: str = 'latest') -> Dict:
+    def get_metadata(self, pack_name: str, vers: str = 'latest') -> dict:
         """
         Fetch the metadata_path from a remote package
 
@@ -228,7 +233,7 @@ class RemoteModelIndex(AbstractModelIndex):
         return metadata
 
 
-    def list_packages(self) -> List[str]:
+    def list_packages(self) -> list[str]:
         """
         list all model packages available on a model repos
 
@@ -240,9 +245,9 @@ class RemoteModelIndex(AbstractModelIndex):
         return [p['name'] for p in packages if p['name'] != '.github']
 
 
-    def list_package_vers(self, pack_name: str) -> List[str]:
+    def list_package_vers(self, pack_name: str) -> list[str]:
         """
-        List all available versions from github model repos for a given package
+        List all available versions from GitHub model repos for a given package
 
         :param str pack_name: the name of the package
         :return: the list of the versions
@@ -260,15 +265,15 @@ class RemoteModelIndex(AbstractModelIndex):
         return [v['name'] for v in tags]
 
 
-    def download(self, pack_name: str, vers: str, dest: str = None) -> str:
+    def download(self, pack_name: str, vers: str, dest: str | None = None) -> str:
         """
-        Download a package from a github repos and save it as
+        Download a package from a GitHub repos and save it as
         <remote cache>/<organization name>/<package name>/<vers>.tar.gz
 
         :param str pack_name: the name of the package to download
         :param str vers: the version of the package to download
         :param str dest: The path to the directory where save the package
-                         This directory must exists
+                         This directory must exist
                          If dest is None, the macsyfinder cache will be used
         :return: The package archive path.
         """
@@ -286,7 +291,8 @@ class RemoteModelIndex(AbstractModelIndex):
         else:
             tmp_archive_path = os.path.join(dest, f"{pack_name}-{vers}.tar.gz")
         try:
-            with urllib.request.urlopen(url, context=self._context) as response, open(tmp_archive_path, 'wb') as out_file:
+            with (urllib.request.urlopen(url, context=self._context) as response,
+                  open(tmp_archive_path, 'wb') as out_file):
                 shutil.copyfileobj(response, out_file)
         except urllib.error.HTTPError as err:
             if 400 <= err.code < 500:
@@ -301,13 +307,13 @@ class Package:
     """
     This class Modelize a package of Models
     a package is a directory with the name of the models family
-    it must contains at least
+    it must contain at least
     - a subdirectory definitions
     - a subdirectory profiles
     - a file metadata.yml
-    it is also recomanded to add a file
+    it is also recommended to add a file
     for licensing and copyright and a README.
-    for further explanation see TODO
+    for further explanation see documentation: modeler guide > package
 
     """
 
@@ -317,13 +323,13 @@ class Package:
         :param str path: The of the package root directory
         """
         self.path: str = os.path.realpath(path)
-        self.metadata_path: str = os.path.join(self.path, 'metadata.yml')
-        self._metadata: Dict = None
+        self.metadata_path: str = os.path.join(self.path, Metadata.name)
+        self._metadata: Metadata | None = None
         self.name: str = os.path.basename(self.path)
         self.readme: str = self._find_readme()
 
 
-    def _find_readme(self) -> Optional[str]:
+    def _find_readme(self) -> str | None:
         """
         find the README file
 
@@ -336,28 +342,26 @@ class Package:
         return None
 
     @property
-    def metadata(self) -> Dict:
+    def metadata(self) -> dict[str: str]:
         """
 
         :return: The parsed metadata as a dict
         """
         if not self._metadata:
             self._metadata = self._load_metadata()
-        # to avoid side effect
-        return copy.deepcopy(self._metadata)
+        return self._metadata
 
 
-    def _load_metadata(self) -> Dict:
+    def _load_metadata(self) -> dict[str: str]:
         """
         Open the metadata_path file and de-serialize it's content
         :return:
         """
-        with open(self.metadata_path) as raw_metadata:
-            metadata = yaml.safe_load(raw_metadata)
+        metadata = Metadata.load(self.metadata_path)
         return metadata
 
 
-    def check(self) -> Tuple[List[str], List[str]]:
+    def check(self) -> tuple[list[str], list[str]]:
         """
         Check the QA of this package
         """
@@ -372,7 +376,7 @@ class Package:
         return all_errors, all_warnings
 
 
-    def _check_structure(self) -> Tuple[List[str], List[str]]:
+    def _check_structure(self) -> tuple[list[str], list[str]]:
         """
         Check the QA structure of the package
 
@@ -409,9 +413,9 @@ class Package:
         return errors, warnings
 
 
-    def _check_model_consistency(self) -> Tuple[List, List]:
+    def _check_model_consistency(self) -> tuple[list, list]:
         """
-        check if each xml seems well write, each genes have an associated profile, etc
+        check if each xml seems well write, each genes have an associated profile, etc.
 
         :return:
         """
@@ -453,7 +457,7 @@ class Package:
         return errors, warnings
 
 
-    def _check_model_conf(self) -> Tuple[List[str], List[str]]:
+    def _check_model_conf(self) -> tuple[list[str], list[str]]:
         """
         check if a model configuration file is present in the package (model_conf.xml)
         if the syntax of this file is good.
@@ -475,7 +479,7 @@ class Package:
         return errors, warnings
 
 
-    def _check_metadata(self) -> Tuple[List[str], List[str]]:
+    def _check_metadata(self) -> tuple[list[str], list[str]]:
         """
         Check the QA of package metadata_path
 
@@ -485,19 +489,21 @@ class Package:
         _log.info(f"Checking '{self.name}' {self.metadata_path}")
         errors = []
         warnings = []
-        data = self._load_metadata()
-        must_have = ("maintainer", "short_desc", "vers")
+        try:
+            data = self._load_metadata()
+        except ValueError as err:
+            errors.extend([msg for msg in err.args[0].split('\n') if msg])
+            return errors, warnings
+
         nice_to_have = ("cite", "doc", "license", "copyright")
-        for item in must_have:
-            if item not in data:
-                errors.append(f"field '{item}' is mandatory in {self.metadata_path}.")
         for item in nice_to_have:
-            if item not in data:
-                warnings.append(f"It's better if the field '{item}' is setup in {self.metadata_path} file")
-        if "maintainer" in data:
-            for item in ("name", "email"):
-                if item not in data["maintainer"]:
-                    errors.append(f"field 'maintainer.{item}' is mandatory in {self.metadata_path}.")
+            if not getattr(data, item):
+                warnings.append(f"It's better if the field '{item}' is setup in '{self.metadata_path}' file.")
+
+        if data.vers:
+            warnings.append("The field 'vers' is not required anymore.\n"
+                            "  It will be ignored and set by macsydata during installation phase according "
+                            "to the git tag.")
         return errors, warnings
 
 
@@ -518,35 +524,36 @@ class Package:
         :return: some information about the package
         """
         metadata = self._load_metadata()
-        if 'cite' not in metadata:
-            metadata['cite'] = ["No citation available\n"]
-        if 'doc' not in metadata:
-            metadata['doc'] = "No documentation available"
-        if 'license' not in metadata:
-            metadata['license'] = "No license available"
-        copyrights = f"copyright: {metadata['copyright']}" if 'copyright' in metadata else ''
+        if metadata.cite:
+            cite = '\n'.join([f"\t- {c}".replace('\n', '\n\t  ') for c in metadata.cite]).rstrip()
+        else:
+            cite = "\t- No citation available"
+        doc = metadata.doc if metadata.doc else "No documentation available"
+        license = metadata.license if metadata.license else "No license available"
+        copyrights = f"copyright: {metadata.copyright_date}, {metadata.copyright_holder}" \
+            if metadata.copyright else ''
         pack_name = self.name
-        cite = '\n'.join([f"\t- {c}".replace('\n', '\n\t  ') for c in metadata['cite']]).rstrip()
+
         info = f"""
-{pack_name} ({metadata['vers']})
+{pack_name} ({metadata.vers})
 
-maintainer: {metadata['maintainer']['name']} <{metadata['maintainer']['email']}>
+maintainer: {metadata.maintainer.name} <{metadata.maintainer.email}>
 
-{metadata['short_desc']}
+{metadata.short_desc}
 
 how to cite:
 {cite}
 
 documentation
-\t{metadata['doc']}
+\t{doc}
 
-This data are released under {metadata['license']}
+This data are released under {license}
 {copyrights}
 """
         return info
 
 
-def parse_arch_path(path: str) -> Tuple[str, str]:
+def parse_arch_path(path: str) -> tuple[str, str]:
     """
 
     :param str path: the path to the archive

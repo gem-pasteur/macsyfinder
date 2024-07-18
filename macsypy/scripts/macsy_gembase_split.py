@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -25,6 +25,7 @@
 import sys
 import os.path
 import argparse
+import typing
 from itertools import groupby
 
 import colorlog
@@ -35,14 +36,14 @@ import macsypy
 from macsypy.config import MacsyDefaults
 
 
-def copy_chunk(fh_in, out, start, stop):
+def copy_chunk(fh_in: typing.IO, out: str, start: int, stop: int) -> None:
     """
     Copy file from fh_in to out from position start to stop
 
     :param fh_in: the source file
     :type fh_in: file like object
-    :param str out: the destination file name
-    :param int start: the position to start the copy
+    :param out: the destination file name
+    :param start: the position to start the copy
     :param stop: the position to end the copy
     """
     chunk_size = 1024
@@ -54,7 +55,7 @@ def copy_chunk(fh_in, out, start, stop):
             f_out.write(content)
 
 
-def split(seq_index, genome_path, outdir='.'):
+def split(seq_index: dict[str: tuple[int, int]], genome_path: str, outdir: str = '.') -> list[str]:
     """
     split a file with different replicons in gembase format
     in several files with one replicon per file
@@ -66,7 +67,7 @@ def split(seq_index, genome_path, outdir='.'):
     :return: the list of created replicons files
     :rtype: list of string
     """
-    def grp_replicon(line):
+    def grp_replicon(line: str) -> str:
         """
         in gembase the identifier of fasta sequence follows the following schema:
         <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
@@ -89,7 +90,7 @@ def split(seq_index, genome_path, outdir='.'):
     return all_seq_files
 
 
-def index_seq(genome_path):
+def index_seq(genome_path: str) -> dict[str: tuple[int, int]]:
     """
     Index the sequence in the file represented by genome_path
 
@@ -100,7 +101,7 @@ def index_seq(genome_path):
     index = OrderedDict()
     with open(genome_path, 'r') as fh:
         start = None
-        end = None
+        _id = None
         line = fh.readline()
         while line:
             if line.startswith('>') and start is not None:
@@ -121,7 +122,7 @@ def index_seq(genome_path):
     return index
 
 
-def parse_args(args):
+def parse_args(args: list[str]) -> argparse.Namespace:
     """
     :param args: The arguments passed on the command line (without the name of the program)
                  Typically sys.argv[1:]
@@ -130,7 +131,7 @@ def parse_args(args):
     :rtype: a :class:`argparse.Namespace` object.
     """
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
-                                     description="Split a gembase protein file in several files, one per replicon." )
+                                     description="Split a gembase protein file in several files, one per replicon.")
     parser.add_argument('genome_path',
                         help='Path to the genomes file (in gembase format), eg : path/to/file.fst or file.fst')
 
@@ -157,13 +158,13 @@ def parse_args(args):
     return parsed_args
 
 
-def main(args=None, log_level=None):
+def main(args: list[str] | None = None, log_level: int | str | None = None):
     """
     main entry point to macsy_gembase_split
 
         1. index the gembase file to identify start/end of each replicon
         2. use this information to split gembase in several files one per replicon
-     
+
     :param args: the arguments passed on the command line
     :type args: list of str
     :param log_level: the output verbosity

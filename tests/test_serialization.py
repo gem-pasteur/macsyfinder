@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -259,8 +259,6 @@ neutral genes:
         model_A.add_accessory_gene(gene_gspd)
         model_A.add_accessory_gene(gene_abc)
 
-
-
         #       CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
         #                                                           pos      score
@@ -278,7 +276,7 @@ neutral genes:
         h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 40, 1.0, 1.0, 1.0, 1.0, 10, 20)
         mh_sctj_flg = ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY)
         mh_flgB = ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)
-        mh_abc = ModelHit(h_abc, gene_abc, GeneStatus.ACCESSORY)
+        # mh_abc = ModelHit(h_abc, gene_abc, GeneStatus.ACCESSORY)
         mh_abc2 = ModelHit(h_abc2, gene_abc, GeneStatus.ACCESSORY)
         mh_tadZ = ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)
 
@@ -491,12 +489,12 @@ Use ordered replicon to have better prediction.
         model.add_accessory_gene(mg_sctj)
         model.add_accessory_gene(mg_abc)
 
-        chit_abc = CoreHit(cg_abc, "hit_abc", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        chit_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        # chit_abc = CoreHit(cg_abc, "hit_abc", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        # chit_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
         chit_gspd1 = CoreHit(cg_gspd, "hit_gspd1", 803, "replicon_id", 20, 1.0, 2.0, 1.0, 1.0, 10, 20)
         chit_gspd2 = CoreHit(cg_gspd, "hit_gspd2", 803, "replicon_id", 30, 1.0, 3.0, 1.0, 1.0, 10, 20)
-        mhit_abc = ModelHit(chit_abc, mg_abc, GeneStatus.ACCESSORY)
-        mhit_sctj = ModelHit(chit_sctj, mg_sctj, GeneStatus.ACCESSORY)
+        # mhit_abc = ModelHit(chit_abc, mg_abc, GeneStatus.ACCESSORY)
+        # mhit_sctj = ModelHit(chit_sctj, mg_sctj, GeneStatus.ACCESSORY)
         mhit_gspd1 = ModelHit(chit_gspd1, mg_gspd, GeneStatus.MANDATORY)
         mhit_gspd2 = ModelHit(chit_gspd2, mg_gspd, GeneStatus.MANDATORY)
         l_gspd1 = Loner(mhit_gspd1, counterpart=[mhit_gspd2])
@@ -573,9 +571,6 @@ Use ordered replicon to have better prediction.
         r_c1 = RejectedCandidate(model, [c1, c2], ["The reasons to reject this candidate"])
 
         r_c2 = RejectedCandidate(model, [c2, c3], ["reason One", "reason Two"])
-
-        model_fam_name = 'foo'
-        model_vers = '0.0b2'
 
         ser = TsvRejectedCandidatesSerializer()
         tsv = ser.serialize([r_c1, r_c2])

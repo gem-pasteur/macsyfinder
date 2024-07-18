@@ -21,8 +21,8 @@ MacSyFinder - Detection of macromolecular systems in protein datasets using syst
 ## Citations
 
 MacSyFinder v2:
-Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S. 
-MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. 
+Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
+MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes.
 Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjournal.250.
 https://peercommunityjournal.org/articles/10.24072/pcjournal.250/
 
@@ -38,7 +38,7 @@ https://macsyfinder.readthedocs.io/en/latest/user_guide/new_v2.html
 
 ## Installation
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > MacSYFinder requires hmmer >= 3.1 (http://hmmer.org/).
 > You need to install hmmer by yourself (except if you install macsyfinder via *conda/mamba*).
 > The other dependencies are managed by the python package manager *pip*.
@@ -77,12 +77,13 @@ where `x.x` is the version number
     cd macsyfinder
     python3 -m pip install .
 
+#### for modelers
+
+    https://macsyfinder.readthedocs.io/en/latest/modeler_guide/installation.html
 
 #### for developers
 
-    git clone https://github.com/gem-pasteur/macsyfinder.git
-    cd macsyfinder
-    python3 -m pip install .[dev]
+    https://macsyfinder.readthedocs.io/en/latest/developer_guide/installation.html
 
 ## Unit tests
 

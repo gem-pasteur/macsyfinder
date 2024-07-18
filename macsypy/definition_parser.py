@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -29,13 +29,18 @@ Module use to parse XML model defintion and create a python Model and Genes, ...
 import os.path
 import xml.etree.ElementTree as Et
 import logging
-_log = logging.getLogger(__name__)
 
-from .model import Model
-from .gene import ModelGene
+from .model import Model, ModelBank
+from .gene import ModelGene, GeneBank
 from .gene import Exchangeable
-from .registries import split_def_name
 from .error import MacsypyError, ModelInconsistencyError
+
+from typing import Any
+from .config import Config, NoneConfig
+from .registries import ModelRegistry, DefinitionLocation, ModelLocation
+from .profile import ProfileFactory
+
+_log = logging.getLogger(__name__)
 
 
 class DefinitionParser:
@@ -43,18 +48,18 @@ class DefinitionParser:
     Build a Model instance from the corresponding model definition described in the XML file.
     """
 
-    def __init__(self, cfg, model_bank, gene_bank, model_registry, profile_factory):
+    def __init__(self,
+                 cfg: Config | NoneConfig,
+                 model_bank: ModelBank,
+                 gene_bank: GeneBank,
+                 model_registry: ModelRegistry,
+                 profile_factory: ProfileFactory) -> None:
         """
         :param cfg: the configuration object of this run
-        :type cfg: :class:`macsypy.config.Config` object
         :param model_bank: the model factory
-        :type model_bank: :class:`macsypy.model.ModelBank` object
         :param gene_bank: the gene factory
-        :type gene_bank: :class:`macsypy.gene.GeneBank` object
         :param model_registry: The registry with all model location
-        :type model_registry: :class:`macsypy.registry.ModelRegistry` object
         :param profile_factory: The profile factory
-        :type profile_factory: :class:`macsypy.profil.ProfilFactory` object
         """
         self.cfg = cfg
         self.model_bank = model_bank
@@ -63,14 +68,13 @@ class DefinitionParser:
         self.profile_factory = profile_factory
 
 
-    def parse(self, models_2_detect):
+    def parse(self, models_2_detect: list[DefinitionLocation]) -> None:
         """
         Parse models definition in XML format to build the corresponding Model objects,
         and add them to the model factory after checking its consistency.
         To get the model ask it to model_bank
 
         :param models_2_detect: a list of model definition to parse.
-        :type models_2_detect: list of :class:`macsypy.registry.DefinitionLocation`
         """
         models_2_check = []
         _log.info("Models Parsing")
@@ -89,7 +93,7 @@ class DefinitionParser:
         self.check_consistency(models_2_check)
 
 
-    def _get_model_node(self, def_loc):
+    def _get_model_node(self, def_loc: DefinitionLocation) -> Et.ElementTree:
         """
         :param def_loc: a definition location to parse.
         :type def_loc: return the node corresponding to the 'model' tag
@@ -107,15 +111,13 @@ class DefinitionParser:
         return model_node
 
 
-    def _check_syntax(self, model_node, path):
+    def _check_syntax(self, model_node: Et.ElementTree, path: str) -> None:
         """
-        Check if the definition does not contains logical error which is allowed by syntax
+        Check if the definition does not contain logical error which is allowed by syntax
         and absence of explicit grammar.
 
         :param model_node: the node corresponding to the model
-        :type model_node:  :class:`Et.Element` object
-        :param str path: the path of the definition.
-        :return: None
+        :param path: the path of the definition.
         :raises ModelInconsistencyError: if an error is encountered in the document.
         """
 
@@ -171,15 +173,11 @@ class DefinitionParser:
             raise ModelInconsistencyError(msg)
 
 
-    def _create_model(self, def_loc, model_node):
+    def _create_model(self, def_loc: DefinitionLocation, model_node: Et.ElementTree) -> Model:
         """
         :param def_loc: the definition location to parse.
-        :type def_loc: :class:`macsypy.registries.DefinitionLocation` object
         :param model_node: the node corresponding to the model.
-        :type model_node: :class:`Et.ElementTree` object.
-
         :return: the model corresponding to the definition location.
-        :rtype: :class:`macsypy.model.Model` object.
         """
 
         inter_gene_max_space = model_node.get('inter_gene_max_space')
@@ -263,17 +261,16 @@ class DefinitionParser:
         return model
 
 
-    def _fill_gene_bank(self, model_node, model_location, def_loc):
+    def _fill_gene_bank(self,
+                        model_node: Et.ElementTree,
+                        model_location: ModelLocation,
+                        def_loc: DefinitionLocation) -> None:
         """
         find all gene node and add them to the gene_bank
 
-        :param model_node: :param model_node: the node corresponding to the model.
-        :type model_node: :class:`Et.ElementTree` object.
+        :param model_node: the node corresponding to the model.
         :param model_location:
-        :type model_location: class:`macsypy.registries.ModelLocation` object.
-        :param def_loc: a definition location to parse.
-        :type def_loc: the node corresponding to the 'model' tag
-        :return: None
+        :param def_loc: a definition location corresponding to the 'model' to parse.
         """
         gene_nodes = model_node.findall(".//gene")
         for gene_node in gene_nodes:
@@ -287,7 +284,7 @@ class DefinitionParser:
             self.gene_bank.add_new_gene(model_location, gene_name, self.profile_factory)
 
 
-    def _parse_gene_attrs(self, gene_node):
+    def _parse_gene_attrs(self, gene_node: Et.ElementTree) -> dict[str: Any]:
         attrs = {}
         for attr in ('loner', 'multi_system', 'multi_model'):
             val = gene_node.get(attr)
@@ -310,15 +307,13 @@ class DefinitionParser:
         return attrs
 
 
-    def _parse_genes(self, model, model_node):
+    def _parse_genes(self, model: Model, model_node: Et.ElementTree) -> None:
         """
         Create genes belonging to the models.
-        Each gene is directly added to the model in it's right category ('mandatory, accessory, ...)
+        Each gene is directly added to the model in its right category ('mandatory, accessory, ...)
 
         :param model: the Model currently parsing
-        :type model: :class:`macsypy.model.Model` object
         :param model_node: the element 'model'
-        :type model_node: :class:`Et.ElementTree` object
         """
 
         gene_nodes = model_node.findall("./gene")
@@ -350,18 +345,14 @@ class DefinitionParser:
                 raise SyntaxError(msg)
 
 
-    def _parse_exchangeable(self, gene_node, gene_ref, curr_model):
+    def _parse_exchangeable(self, gene_node: Et.ElementTree, gene_ref: ModelGene, curr_model: Model) -> Exchangeable:
         """
         Parse a xml element gene child of exchangeable and build the corresponding object
 
         :param gene_node: a "node" corresponding to the gene element in the XML hierarchy
-        :type gene_node: :class:`xml.etree.ElementTree.Element` object.
         :param gene_ref: the gene which this gene is homolog to
-        :type gene_ref: class:`macsypy.gene.ModelGene` object
         :param curr_model: the model being parsed .
-        :type curr_model: :class:`macsypy.model.Model` object
         :return: the gene object corresponding to the node
-        :rtype: :class:`macsypy.gene.Exchangeable` object
         """
         name = gene_node.get("name")
         family_name = curr_model.family_name
@@ -380,13 +371,12 @@ class DefinitionParser:
         return ex
 
 
-    def check_consistency(self, models):
+    def check_consistency(self, models: list[Model]) -> None:
         """
         Check the consistency of the co-localization features between the different values given as an input:
         between XML definitions, configuration file, and command-line options.
 
         :param models: the list of models to check
-        :type models: list of `class:macsypy.model.Model` object
         :raise: :class:`macsypy.error.ModelInconsistencyError` if one test fails
 
         (see `feature <https://projets.pasteur.fr/issues/1850>`_)

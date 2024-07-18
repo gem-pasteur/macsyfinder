@@ -4,8 +4,8 @@
     Copyright © 2014-2023  Institut Pasteur (Paris), and CNRS.
     See the COPYRIGHT file for details
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
-    See the COPYING file for details.  
-    
+    See the COPYING file for details.
+
 .. _search_genes:
 
 
@@ -25,7 +25,6 @@ search_genes API reference
 search_genes
 ============
 .. automodule:: macsypy.search_genes
-   :members: 
+   :members:
    :private-members:
    :special-members:
-  

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -49,7 +49,7 @@ class TestMacsyprofile(MacsyTest):
     def tearDown(self):
         try:
             shutil.rmtree(self.tmpdir)
-        except:
+        except Exception:
             pass
         # some function in macsyprofile script suppress the traceback
         # but without traceback it's hard to debug test :-(
@@ -119,10 +119,13 @@ class TestMacsyprofile(MacsyTest):
         coverage_profile = 0.1
         version = macsypy.__version__
         cmd = f"macsyprofile --coverage-profile {coverage_profile} --out {out} --index-dir {self.tmpdir} {self.previous_run}"
+        model_name = 'TFF-SF'
+        model_vers = '0.0b2'
         expected_header = f"""# macsyprofile {version}
+# models: {model_name}-{model_vers}
 # macsyprofile {' '.join(cmd.split()[1:])}
 hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tscore\tprofile_coverage\tsequence_coverage\tbegin\tend"""
-        got_header = macsyprofile.header(cmd.split()[1:])
+        got_header = macsyprofile.header(cmd.split()[1:], 'TFF-SF', '0.0b2')
         self.assertEqual(expected_header, got_header)
 
 
@@ -201,12 +204,11 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         cfg = Config(MacsyDefaults(), args)
         gspD_hmmer_path = self.find_data('hmm', 'gspD.search_hmm.out')
 
-        idx = Indexes(cfg)
-        macsyfinder_idx = idx.build()
+        Indexes(cfg)
         hmm_prof = macsyprofile.HmmProfile(gene_name, 596, gspD_hmmer_path, cfg)
 
         db = hmm_prof._build_my_db(gspD_hmmer_path)
-        hmm_prof._fill_my_db(macsyfinder_idx, db)
+        hmm_prof._fill_my_db(db)
         self.assertDictEqual(db, {'PSAE001c01_031420': (658, 73),
                                   'PSAE001c01_051090': (714, 75),
                                   'PSAE001c01_018920': (776, 71),
@@ -253,8 +255,8 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
     def test_parse_hmm_body(self):
         def make_hmm_group(hmm_string):
             hmm_file = StringIO(hmm_string)
-            hmm_hits = (x[1] for x in groupby(hmm_file, lambda l: l.startswith('>>')))
-            header = next(hmm_hits)
+            hmm_hits = (x[1] for x in groupby(hmm_file, lambda line: line.startswith('>>')))
+            next(hmm_hits)  # throw out header
             body = next(hmm_hits)
             return body
 
@@ -353,6 +355,7 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         hits = hmm_prof.parse()
         self.assertListEqual(expected_hits, hits)
 
+
     def test_functional(self):
         out = os.path.join(self.tmpdir, 'test_macsyprofile')
         previous_run = self.find_data('functional_test_degenerated_systems')
@@ -360,6 +363,7 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         cmd = f"macsyprofile -o {out} --index-dir {self.tmpdir} {previous_run} "
         macsyprofile.main(cmd.split()[1:], log_level='WARNING')
         self.assertFileEqual(expected_result, out, comment='#')
+
 
     def test_functional_pattern(self):
         out = os.path.join(self.tmpdir, 'test_macsyprofile')
@@ -371,6 +375,7 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         macsyprofile.main(cmd.split()[1:], log_level='WARNING')
         self.assertFileEqual(expected_result, out, comment='#')
 
+
     def test_functional_coverage(self):
         out = os.path.join(self.tmpdir, 'test_macsyprofile')
         previous_run = self.find_data('functional_test_degenerated_systems')
@@ -378,6 +383,7 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         cmd = f"macsyprofile -o {out} --index-dir {self.tmpdir} --coverage-profile 0.5 {previous_run} "
         macsyprofile.main(cmd.split()[1:], log_level='WARNING')
         self.assertFileEqual(expected_result, out, comment='#')
+
 
     def test_functional_evalue(self):
         out = os.path.join(self.tmpdir, 'test_macsyprofile')
@@ -387,6 +393,7 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         macsyprofile.main(cmd.split()[1:], log_level='WARNING')
         self.assertFileEqual(expected_result, out, comment='#')
 
+
     def test_functional_best_score(self):
         out = os.path.join(self.tmpdir, 'test_macsyprofile')
         previous_run = self.find_data('functional_test_degenerated_systems')
@@ -394,6 +401,7 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         cmd = f"macsyprofile -o {out} --index-dir {self.tmpdir} --best-hits score {previous_run} "
         macsyprofile.main(cmd.split()[1:], log_level='WARNING')
         self.assertFileEqual(expected_result, out, comment='#')
+
 
     def test_functional_no_hits(self):
         out = os.path.join(self.tmpdir, 'test_macsyprofile')
@@ -412,10 +420,15 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
 
         # we cannot test the log message here
         # because the logger are init when main is called
-        # after that the context is establish
-        # so when the wrapper is called the handler cannot be substitute by the fake
-        with self.assertRaises(ValueError):
-            macsyprofile.main(cmd.split()[1:])
+        # after that the context is established
+        # so when the wrapper is called the handler cannot be substituted by the fake
+        with self.catch_log('macsyprofile') as log:
+            with self.assertRaises(ValueError):
+                macsyprofile.main(cmd.split()[1:])
+            log_msg = log.get_value().strip()
+        self.assertEqual(log_msg,
+                         f"The file {self.tmpdir} already exists."
+                         " Remove it or specify a new output name --out or use --force option")
 
 
     def test_functional_no_previous_run(self):
@@ -423,8 +436,8 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
 
         # we cannot test the log message here
         # because the logger are init when main is called
-        # after that the context is establish
-        # so when the wrapper is called the handler cannot be substitute by the fake
+        # after that the context is established
+        # so when the wrapper is called the handler cannot be substituted by the fake
         with self.assertRaises(FileNotFoundError):
             macsyprofile.main(cmd.split()[1:])
 
@@ -432,14 +445,27 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         open(bad_previous_run, 'w').close()
         cmd = f"macsyprofile  {bad_previous_run} "
 
-        with self.assertRaises(ValueError):
-            macsyprofile.main(cmd.split()[1:], log_level=logging.CRITICAL + 1)
+        with self.catch_log('macsyprofile') as log:
+            with self.assertRaises(ValueError):
+                macsyprofile.main(cmd.split()[1:], log_level=logging.CRITICAL + 1)
+            log_msg = log.get_value().strip()
+        self.assertEqual(log_msg,
+                         "")
 
-    def test_functional(self):
+
+    def test_functional_old_conf(self):
+        # old fashioned macsyfinder.conf
+        # models are not specified in the conf
         old = self.find_data('conf_files', 'macsyfinder-old.conf')
         shutil.copyfile(old, os.path.join(self.tmpdir, 'macsyfinder.conf'))
 
         previous_run = self.tmpdir
         cmd = f"macsyprofile --index-dir {self.tmpdir} {previous_run}"
-        with self.assertRaises(ValueError):
-            macsyprofile.main(cmd.split()[1:], log_level=logging.CRITICAL + 1)
+        with self.catch_io(err=True):
+            with self.catch_log('macsyprofile') as log:
+                with self.assertRaises(ValueError):
+                    macsyprofile.main(cmd.split()[1:], log_level=logging.CRITICAL)
+                log_msg = log.get_value().strip()
+            self.assertEqual(log_msg,
+                             f"Cannot find models in conf file {self.tmpdir}."
+                             f" May be these results have been generated with an old version of macsyfinder.")

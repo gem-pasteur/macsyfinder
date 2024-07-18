@@ -5,7 +5,7 @@
    See the COPYRIGHT file for details
    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
    See the COPYING file for details.
-    
+
 .. _solution:
 
 ********
@@ -40,5 +40,3 @@ combine_multisystems
 find_best_solutions
 ===================
 .. autofunction:: macsypy.solution.find_best_solutions
-
-

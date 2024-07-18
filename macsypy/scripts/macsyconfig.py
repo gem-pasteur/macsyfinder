@@ -2,7 +2,7 @@
 #  MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #                using systems modelling and similarity search.          #
 #  Authors: Sophie Abby, Bertrand Neron                                  #
-#  Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
+#  Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 #  See the COPYRIGHT file for details                                    #
 #                                                                        #
 #  This file is part of MacSyFinder package.                             #
@@ -21,6 +21,7 @@
 #  along with MacSyFinder (COPYING).                                     #
 #  If not, see <https://www.gnu.org/licenses/>.                          #
 ##########################################################################
+
 """
 Entrypoint for macsyconfig command
 which generate a MacSyFinder config file
@@ -32,12 +33,14 @@ import sys
 import os.path
 import argparse
 import shutil
+import typing
 from dataclasses import dataclass
 from configparser import ConfigParser
 
 from colorama import Fore, Style
 from colorama import init as col_init
 
+import macsypy.config
 from macsypy import __version__ as msf_vers
 from macsypy.config import MacsyDefaults
 from macsypy.error import MacsypyError
@@ -48,28 +51,30 @@ class ConfigParserWithComments(ConfigParser):
     Extend ConfigParser to allow comment in serialization
     """
 
-    def add_comment(self, section, option, comment,
-                    comment_nb=itertools.count(1),
-                    add_space_before=False,
-                    add_space_after=True):
+    def add_comment(self, section: str,
+                    option: str,
+                    comment: str,
+                    comment_nb: int = itertools.count(1),
+                    add_space_before: bool = False,
+                    add_space_after: bool = True) -> None:
         """
         Write a comment in .ini-format (start line with #)
 
-        :param section: the name of the sction
-        :param str option: the name of the option
-        :param str comment: the comment linked to this option
-        :param int comment_nb: the identifier of the comment by default an integer
-        :param bool add_space_before:
-        :param bool add_space_after:
+        :param section: the name of the section
+        :param option: the name of the option
+        :param comment: the comment linked to this option
+        :param comment_nb: the identifier of the comment by default an integer
+        :param add_space_before:
+        :param add_space_after:
         """
-        comment = ''.join([f"# {l}\n" for l in comment.split('\n')])
+        comment = ''.join([f"# {line}\n" for line in comment.split('\n')])
         if add_space_before:
             comment = '\n' + comment
         if add_space_after:
             comment = comment + '\n'
         self.set(section, f"{option}_{next(comment_nb)}_comment", comment)
 
-    def write(self, file):
+    def write(self, file: typing.IO) -> None:
         """
         Write an .ini-format representation of the configuration state.
 
@@ -82,7 +87,7 @@ class ConfigParserWithComments(ConfigParser):
         file.write("\n")
 
 
-    def _write_item(self, file, key, value):
+    def _write_item(self, file: typing.IO, key: str, value: str):
         if key.endswith('_comment'):
             file.write(f"{value}")
         else:
@@ -91,7 +96,7 @@ class ConfigParserWithComments(ConfigParser):
 
 @dataclass(frozen=True)
 class Theme:
-    """Handle color combination to hylight interactive question"""
+    """Handle color combination to highlight interactive question"""
 
     ERROR: str = Style.BRIGHT + Fore.RED
     WARN: str = Fore.YELLOW
@@ -103,11 +108,24 @@ class Theme:
     EXPLANATION: str = Style.RESET_ALL
     DEFAULT: str = Style.BRIGHT + Fore.GREEN
 
+
 # default theme = dark bg
 theme = Theme()
 
 
-def _validator(cast_func, raw, default, sequence=False):
+def _validator(cast_func: typing.Callable,
+               raw: typing.Any,
+               default: typing.Any,
+               sequence: bool = False) -> typing.Any:
+    """
+
+    :param cast_func: the function which will cast the raw value
+    :param raw: the raw value
+    :param default: the default value
+    :param sequence: True if the value is a sequence, False otherwise
+    :return: The cast Value
+    :raise MacsypyError: if the raw value cannot be cast
+    """
     if raw == '':
         if default is None:
             raise MacsypyError('Please enter some value')
@@ -126,12 +144,12 @@ def _validator(cast_func, raw, default, sequence=False):
     return value
 
 
-def check_exe(raw, default, expected, sequence=False):
+def check_exe(raw: str, default: str, expected, sequence: bool = False) -> str:
     """
     Check if value point to an executable
 
-    :param str raw: the value return by the user
-    :param str default: the default value for the option
+    :param raw: the value return by the user
+    :param default: the default value for the option
     :param expected: not used here to have the same signature for all check_xxx functions
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
@@ -145,12 +163,12 @@ def check_exe(raw, default, expected, sequence=False):
     return _validator(exe, raw, default, sequence=sequence)
 
 
-def check_positive_int(raw, default, expected, sequence=False):
+def check_positive_int(raw: str, default: int, expected, sequence: bool = False) -> int:
     """
     Check if value can be cast in integer >=0
 
-    :param str raw: the value return by the user
-    :param int default: the default value for the option
+    :param raw: the value return by the user
+    :param default: the default value for the option
     :param expected: not used here to have the same signature for all check_xxx functions
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
@@ -163,12 +181,12 @@ def check_positive_int(raw, default, expected, sequence=False):
     return _validator(positive_int, raw, default, sequence=sequence)
 
 
-def check_float(raw, default, expected, sequence=False):
+def check_float(raw: str, default: float, expected, sequence: bool = False) -> float:
     """
     Check if value can be cast in float
 
-    :param str raw: the value return by the user
-    :param float default: the default value for the option
+    :param raw: the value return by the user
+    :param default: the default value for the option
     :param expected: not used here to have the same signature for all check_xxx functions
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
@@ -176,12 +194,12 @@ def check_float(raw, default, expected, sequence=False):
     return _validator(float, raw, default, sequence=sequence)
 
 
-def check_str(raw, default, expected, sequence=False):
+def check_str(raw: str, default: str, expected, sequence: bool = False) -> str:
     """
     Check if value can be cast in str
 
-    :param str raw: the value return by the user
-    :param str default: the default value for the option
+    :param raw: the value return by the user
+    :param default: the default value for the option
     :param expected: not used here to have the same signature for all check_xxx functions
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
@@ -189,17 +207,17 @@ def check_str(raw, default, expected, sequence=False):
     return _validator(str, raw, default, sequence=sequence)
 
 
-def check_bool(raw, default, expected, sequence=False):
+def check_bool(raw: str, default: bool, expected, sequence: bool = False) -> bool:
     """
     Check if value can be cast in str
 
-    :param str raw: the value return by the user
-    :param str default: the default value for the option
+    :param raw: the value return by the user
+    :param default: the default value for the option
     :param expected: not used here to have the same signature for all check_xxx functions
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
     """
-    def bool_cast(raw):
+    def bool_cast(raw: str) -> bool:
         raw = str(raw).lower()
         if raw in ('false', 'no', '0'):
             casted = False
@@ -211,17 +229,17 @@ def check_bool(raw, default, expected, sequence=False):
     return _validator(bool_cast, raw, default, sequence=sequence)
 
 
-def check_dir(raw, default, expected, sequence=False):
+def check_dir(raw: str, default: str, expected, sequence: bool = False) -> str:
     """
     Check if value point to a directory
 
-    :param str raw: the value return by the user
-    :param str default: the default value for the option
+    :param raw: the value return by the user
+    :param default: the default value for the option
     :param expected: not used here to have the same signature for all check_xxx functions
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
     """
-    def path(value):
+    def path(value: str) -> str:
         if os.path.exists(value):
             if os.path.isdir(value):
                 return value
@@ -232,12 +250,12 @@ def check_dir(raw, default, expected, sequence=False):
     return _validator(path, raw, default, sequence=sequence)
 
 
-def check_file(raw, default, expected, sequence=False):
+def check_file(raw: str, default: str, expected, sequence: bool = False) -> str:
     """
     Check if value point to a file
 
-    :param str raw: the value return by the user
-    :param str default: the default value for the option
+    :param raw: the value return by the user
+    :param default: the default value for the option
     :param expected: not used here to have the same signature for all check_xxx functions
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
@@ -255,17 +273,18 @@ def check_file(raw, default, expected, sequence=False):
     return _validator(path, raw, default, sequence=sequence)
 
 
-def check_choice(raw, default, expected, sequence=False):
+def check_choice(raw: str, default: str, expected: list[str], sequence: bool = False) -> str:
     """
     Check if value is in list of expected values
 
-    :param str raw: the value return by the user
-    :param str default: the default value for the option
-    :param expected: the allowed vlaues for this option
+    :param raw: the value return by the user
+    :param default: the default value for the option
+    :param expected: the allowed values for this option
+    :param sequence: True if parameter accept a sequence of value, False otherwise
     :return: value
     :raise MacsypyError: if the value cannot be cast in right type
     """
-    def isin(value):
+    def isin(value: str):
         if value not in expected:
             raise ValueError(f"Authorized values are {expected}.")
         if value.lower() == 'none':
@@ -274,25 +293,26 @@ def check_choice(raw, default, expected, sequence=False):
     return _validator(isin, raw, default, sequence=sequence)
 
 
-def ask(question, validator, default=None, expected=None,
-        explanation='',
-        sequence=False,
-        question_color=None,
-        retry=2):
+def ask(question: str,
+        validator: typing.Callable,
+        default: typing.Any = None,
+        expected: typing.Any = None,
+        explanation: str = '',
+        sequence: bool = False,
+        question_color: str | None = None,
+        retry: int = 2):
     """
     ask a question on the terminal and return the user response
     check if the user response is allowed (right type, among allowed values, ...)
 
-    :param str question: The question to prompt to the user on the terminal
+    :param question: The question to prompt to the user on the terminal
     :param validator: what validator to be used to check the user response
-    :type validator: a function define in this module starting by check\_
     :param default: the default value
     :param expected: the values allowed (can be a list of value
-    :param str explanation: some explanation about the option
-    :param bool sequence: True if the parameter accept a sequence of value (comma separated values)
+    :param explanation: some explanation about the option
+    :param sequence: True if the parameter accept a sequence of value (comma separated values)
     :param question_color: the color of the question display to the user
-    :type question_color: an attribute of :class:`macsypy.scripts.macsyconfig.Theme`
-    :param int retry: The number of time to repeat the question if the response is rejected
+    :param retry: The number of time to repeat the question if the response is rejected
     :return: the value casted in right type
     """
     if question_color is None:
@@ -328,26 +348,28 @@ def ask(question, validator, default=None, expected=None,
         print(err)
         if retry > 0:
             print(f"{theme.RETRY}* {err}{theme.RESET}")
-            return ask(question, validator, default=default, expected=expected, retry=retry -1)
+            return ask(question, validator, default=default, expected=expected, retry=retry - 1)
         else:
             raise RuntimeError(f'{theme.ERROR}Too many error. Exiting{theme.RESET}') from None
     return val
 
 
-def set_section(sec_name, options, config, defaults, use_defaults=False):
+def set_section(sec_name: str,
+                options: dict[str: typing.Any],
+                config: ConfigParserWithComments,
+                defaults: macsypy.config.MacsyDefaults,
+                use_defaults: bool = False) -> ConfigParserWithComments:
     """
     iter over options of a section
     ask question for each option
     and set this option in the config
 
-    :param str sec_name: the name of the section
-    :param dict options: a dictionnary with the options to set up for this section
+    :param sec_name: the name of the section
+    :param options: a dictionnary with the options to set up for this section
     :param config: The config to fill in.
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
-    :param bool use_defaults: The user skip this section so use defaults to set in config object
-    :return:
+    :param use_defaults: The user skip this section so use defaults to set in config object
+    :return: configuration
     """
 
     config.add_section(sec_name)
@@ -377,7 +399,8 @@ def set_section(sec_name, options, config, defaults, use_defaults=False):
         if value == defaults[opt_name]:
             if isinstance(value, type([])):
                 value = ', '.join([str(item) for item in value])
-            config.add_comment(sec_name, opt_name, f"{opt_name} = {value}", add_space_before=False, add_space_after=True)
+            config.add_comment(sec_name, opt_name, f"{opt_name} = {value}",
+                               add_space_before=False, add_space_after=True)
         else:
             if isinstance(value, type([])):
                 config.set(sec_name, opt_name, ', '.join([str(item) for item in value]))
@@ -388,14 +411,14 @@ def set_section(sec_name, options, config, defaults, use_defaults=False):
     return config
 
 
-def set_path_options(config, defaults, use_defaults=False):
+def set_path_options(config: ConfigParserWithComments,
+                     defaults: MacsyDefaults,
+                     use_defaults: bool = False) -> None:
     """
     Options for directories section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'system_models_dir': {'question': "The directory where to store the models",
@@ -447,14 +470,12 @@ this option specify where to create these directories."""},
     set_section('directories', options, config, defaults, use_defaults=use_defaults)
 
 
-def set_hmmer_options(config, defaults, use_defaults=False):
+def set_hmmer_options(config: ConfigParserWithComments, defaults: MacsyDefaults, use_defaults: bool = False) -> None:
     """
     Options for hmmer section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'hmmer': {'question': "The binary used to search the data bank with the profiles.",
@@ -505,14 +526,12 @@ with the profile to allow the hit selection for systems detection."""}
     set_section('hmmer', options, config, defaults, use_defaults=use_defaults)
 
 
-def set_general_options(config, defaults, use_defaults=False):
+def set_general_options(config: ConfigParserWithComments, defaults: MacsyDefaults, use_defaults: bool = False) -> None:
     """
     Options for general section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'log_level': {'question': "The verbosity of the output",
@@ -545,14 +564,12 @@ def set_general_options(config, defaults, use_defaults=False):
     set_section('general', options, config, defaults, use_defaults=use_defaults)
 
 
-def set_score_options(config, defaults, use_defaults=False):
+def set_score_options(config: ConfigParserWithComments, defaults: MacsyDefaults, use_defaults: bool = False) -> None:
     """
     Options for scoring section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'mandatory_weight': {'question': "The weight of a mandatory component in cluster scoring.",
@@ -592,14 +609,12 @@ def set_score_options(config, defaults, use_defaults=False):
     set_section('score_opt', options, config, defaults, use_defaults=use_defaults)
 
 
-def set_base_options(config, defaults, use_defaults=False):
+def set_base_options(config: ConfigParserWithComments, defaults: MacsyDefaults, use_defaults: bool = False) -> None:
     """
     Options for base section
 
     :param config: The config to setup
-    :type config: :class:`ConfigParserWithComments` object
     :param defaults: the macsyfinder defaults values
-    :type defaults: :class:`macsypy.config.MacsyDefaults` object
     :param bool use_defaults: If True do not ask any question use the defaults values
     """
     options = {'db_type': {'question': "The type sequence to analyze",
@@ -631,8 +646,10 @@ But you can still specify another sequence file with --sequence-db option."""}
     set_section('base', options, config, defaults, use_defaults=use_defaults)
 
 
-def prolog():
-    """return the text displayed to the user when the configuration file is generated"""
+def prolog() -> str:
+    """
+    :return: the text displayed to the user when the configuration file is generated
+    """
     rep = f"""{theme.EMPHASIZE}Welcome to the MacSyFinder {msf_vers} configuration utility.{theme.RESET}
 
 Please enter values for the following settings (just press Enter to
@@ -641,8 +658,10 @@ accept a default value, if one is given in brackets).
     return rep
 
 
-def epilog(path):
-    """return the text to the user before to start the configuration"""
+def epilog(path: str) -> str:
+    """
+    :return: the text to the user before to start the configuration
+    """
     rep = f"""A configuration file '{theme.EMPHASIZE}{path}{theme.RESET}' has been generated..
 Place it in canonical location
  {theme.QUESTION}*{theme.RESET} in /etc/macsyfinder for system wide configuration {theme.WARN}(must named macsyfinder.conf){theme.RESET}
@@ -657,26 +676,23 @@ Place it in canonical location
     return rep
 
 
-def serialize(config, path):
+def serialize(config: ConfigParserWithComments, path: str) -> None:
     """
     save the configuration on file
 
     :param config: the config to save
-    :type config: :class:`ConfigParserWithComments` object
     :param str path: where to store the configuration
     """
     with open(path, 'w') as file:
         config.write(file)
 
 
-def parse_args(args):
+def parse_args(args: list[str]) -> argparse.Namespace:
     """
     parse command line
 
     :param args: the command line arguments
-    :type args: list of string
     :return:
-    :rtype: :class:`argparse.Namespace` object
     """
     parser = argparse.ArgumentParser()
     theme_option = parser.add_mutually_exclusive_group()
@@ -697,11 +713,11 @@ def parse_args(args):
     return parsed_args
 
 
-def main(args=None) -> None:
+def main(args: list[str] | None = None) -> None:
     """
     The main entrypoint of the script
 
-    :param args:
+    :param args: the command line arguments.
     """
     args = sys.argv[1:] if args is None else args
     parsed_args = parse_args(args)

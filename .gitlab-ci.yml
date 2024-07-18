@@ -1,4 +1,5 @@
 stages:
+  - linting
   - test
   - coverage
   - pages
@@ -6,13 +7,19 @@ stages:
 variables:
   MACSY_VERSION: ${CI_COMMIT_REF_NAME}
 
-testing38:
+ruff:
+  stage: linting
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
+  script:
+    - python3 -m pip install .[dev]
+    - ruff check --output-format=gitlab macsypy/ tests/
+
+testing:
   stage: test
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
-
   script:
-    - python3.8 -m pip install .
-    - python3.8 tests/run_tests.py -vvv
+    - python3 -m pip install .[model]
+    - python3 tests/run_tests.py -vvv
   except:
     - /^feat.*$/
     - /^fix.*$/
@@ -21,7 +28,7 @@ coverage:
   stage: coverage
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/coverage
   script:
-    - python3.8 -m pip install .
+    - python3 -m pip install .[model]
     - coverage run --source=macsypy tests/run_tests.py -vv
     - coverage html
     - coverage report
@@ -39,7 +46,7 @@ pages:
   dependencies:
     - coverage
   script:
-    - python3.8 -m pip install .
+    - python3 -m pip install .
     - cd ${CI_PROJECT_DIR}/doc/
     - make html
     - cd ${CI_PROJECT_DIR}

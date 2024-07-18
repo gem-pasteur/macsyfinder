@@ -2,7 +2,7 @@
 #  MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #                using systems modelling and similarity search.          #
 #  Authors: Sophie Abby, Bertrand Neron                                  #
-#  Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
+#  Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 #  See the COPYRIGHT file for details                                    #
 #                                                                        #
 #  This file is part of MacSyFinder package.                             #
@@ -324,7 +324,7 @@ class TestMacsyconfig(MacsyTest):
                    }
         defaults = MacsyDefaults()
 
-        with self.catch_io(out=True) as out:
+        with self.catch_io(out=True):
             msf_cfg.set_section(sec_name, options, cp, defaults, use_defaults=False)
             stdout = sys.stdout.getvalue().strip()
         self.assertTrue(cp.has_section(sec_name))

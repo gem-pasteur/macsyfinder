@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -24,9 +24,10 @@
 
 import os
 import sys
+
 import macsypy
 import argparse
-from typing import List
+from typing import Literal, Callable
 
 import colorlog
 import pandas as pd
@@ -34,7 +35,7 @@ import pandas as pd
 from macsypy.config import MacsyDefaults
 
 
-def get_warning(path):
+def get_warning(path: str) -> list[str]:
     """
 
     :param path: the path of the result file to parse
@@ -55,22 +56,26 @@ def get_warning(path):
     return warn_to_report
 
 
-def merge_files(files: List[str], out: str, header: str,
-                ignore: str = None, keep_first: str = None, skip_until=None) -> None:
+def merge_files(files: list[str],
+                out: str,
+                header: str,
+                ignore: str | None = None,
+                keep_first: str | None = None,
+                skip_until: Callable | None = None) -> None:
     """
 
     :param files: the list of files to merge
     :type files: list of str
-    :param str out: the path to the merged file
-    :param str ignore: a string which start the lines to ignore
-    :param str keep_first: a string which start the line which must be keep
+    :param out: the path to the merged file
+    :param ignore: a string which start the lines to ignore
+    :param keep_first: a string which start the line which must be keep
                        only the first time
     :param skip_until: skip all lines until the condition is True
     :type skip_until: a fonction which test the line
-    :param str header: The header of the merged file
+    :param header: The header of the merged file
     :return:
     """
-    def get_header(result: bool, warnings):
+    def get_header(result: bool, warnings: list[str]):
         res_or_not = header if result else f"No {header}"
         header_str = f"""# parallel_msf {macsypy.__version__}
 # merged {os.path.basename(files[0])}
@@ -116,16 +121,20 @@ def merge_files(files: List[str], out: str, header: str,
             f_out.write(get_header(False, warnings) + '\n')
 
 
-def merge_and_reindex(files: List[str], out: str,  header: str,
-                      comment: str = None,  skip_until=None) -> None:
+def merge_and_reindex(files: list[str],
+                      out: str,
+                      header: str,
+                      comment: str | None = None,
+                      skip_until: Callable | None = None) -> None:
     """
     merge all_best_solutions and reindex the sol_id column
 
     :param files: the list of files to merge
     :type files: list of str
-    :param str out: the path to the merged file
-    :param str ignore: a string which start the lines to ignore
-    :param str header: The header of the merged file
+    :param out: the path to the merged file
+    :param header: The header of the merged file
+    :param comment: the char that indicate that is a comment line
+    :param skip_until: skip the parsing from the first line until the callable become False
     """
     def get_header(result: bool, warnings):
         res_or_not = header if result else f"No {header}"
@@ -188,12 +197,12 @@ def merge_and_reindex(files: List[str], out: str,  header: str,
             f_out.write(get_header(False, warnings) + '\n')
 
 
-def merge_summary(files: List[str], out: str, header: str = "") -> None:
+def merge_summary(files: list[str], out: str, header: str = "") -> None:
     """
 
     :param files: the list of files to merge
-    :param str out: the path to the merged file
-    :param str header: The header of the merged file
+    :param out: the path to the merged file
+    :param header: The header of the merged file
     :return:
     """
     warnings = []
@@ -217,12 +226,11 @@ def merge_summary(files: List[str], out: str, header: str = "") -> None:
         merged.to_csv(f_out, sep="\t")
 
 
-def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
+def merge_results(results_dirs: list[str], out_dir: str = '.') -> None:
     """
 
     :param results_dirs: The list of macsyfinder results directories to merge
-    :type results_dirs: list of str
-    :param str out_dir: the path to the directory where to store the merged files
+    :param out_dir: the path to the directory where to store the merged files
     """
     filename_to_merge, ext = 'all_best_solutions', 'tsv'
     out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
@@ -230,20 +238,20 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
     all_best_solutions_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
     header = "Systems"
     merge_and_reindex(all_best_solutions_files, out_file, header,
-                      skip_until=lambda l: l.startswith('sol_id'),
+                      skip_until=lambda line: line.startswith('sol_id'),
                       comment='#')
 
     for filename_to_merge, ext, header, first_col in [('best_solution', 'tsv', 'Systems', 'replicon'),
-                                           ('all_systems', 'tsv', 'Systems', 'replicon'),
-                                           ('best_solution_multisystems', 'tsv', 'Multisystems', 'replicon'),
-                                           ('best_solution_loners', 'tsv', 'Loners', 'replicon'),
-                                           ('rejected_candidates', 'tsv', 'Rejected', 'candidate_id'),
-                                           ]:
+                                                      ('all_systems', 'tsv', 'Systems', 'replicon'),
+                                                      ('best_solution_multisystems', 'tsv', 'Multisystems', 'replicon'),
+                                                      ('best_solution_loners', 'tsv', 'Loners', 'replicon'),
+                                                      ('rejected_candidates', 'tsv', 'Rejected', 'candidate_id'),
+                                                      ]:
         out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
         _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
         best_solution_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
         merge_files(best_solution_files, out_file, header,
-                    skip_until=lambda l: l.startswith(first_col),
+                    skip_until=lambda line: line.startswith(first_col),
                     keep_first=first_col)
 
     filename_to_merge = 'all_systems'
@@ -252,7 +260,7 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
     _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
     filename_to_merge = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
     merge_files(filename_to_merge, out_file, 'Systems',
-                skip_until=lambda l: l.startswith('system id'),
+                skip_until=lambda line: line.startswith('system id'),
                 keep_first='system id')
 
     filename_to_merge = 'rejected_candidates'
@@ -261,7 +269,7 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
     _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
     filename_to_merge = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
     merge_files(filename_to_merge, out_file, 'Rejected candidates',
-                skip_until=lambda l: l.startswith('Cluster:'),
+                skip_until=lambda line: line.startswith('Cluster:'),
                 keep_first='Cluster:')
 
     filename_to_merge, ext = 'best_solution_summary', 'tsv'
@@ -271,16 +279,14 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
     merge_summary(all_summary_files, out_file, header='Best Solution Summary')
 
 
-def parse_args(args:  List[str]) -> argparse.Namespace:
+def parse_args(args: list[str]) -> argparse.Namespace:
     """
 
     :param args: the arguments passed on the command line without the first elemnet
-    :type args: list of str
     :return: the command line and options arguments parsed
-    :rtype: :class:`argparse.Namespace` object
     """
     description = """Merge the different files from several macsyfinder results in one.
-    
+
     - merge the 'best_solution.tsv' in to 'merged_best_solution.tsv'
     - merge the 'best_multisystems.tsv' in to 'merged_best_multisystems.tsv'
     - merge the 'best_loners.tsv' in to 'merged_best_loners.tsv'
@@ -292,8 +298,8 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description=description)
     parser.add_argument('results_dirs',
-                         nargs='+',
-                         help='Path to the macsyfinder results directories to merge eg : path/to/macsyfinder-date-hour')
+                        nargs='+',
+                        help='Path to the macsyfinder results directories to merge eg : path/to/macsyfinder-date-hour')
     parser.add_argument('-o', '--out-dir',
                         default='.',
                         help='The path to the directory where to write merged files.')
@@ -317,12 +323,12 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
     return parsed_args
 
 
-def main(args=None, log_level=None) -> None:
+def main(args: list[str] | None = None,
+         log_level: Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int | None = None) -> None:
     """
     main entry point to macsy_merge_results
 
     :param args: the arguments passed on the command line
-    :type args: list of str
     :param log_level: the output verbosity
     :type log_level: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """

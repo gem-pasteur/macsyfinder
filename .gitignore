@@ -62,6 +62,7 @@ macsyfinder-*/
 data/
 sandbox/
 !/tests/data
+!/macsypy/data
 
 ######################################
 # Singularity/Apptainer def and simg #
@@ -92,3 +93,8 @@ macsyfinder.egg-info/
 .nextflow/
 .nextflow.log*
 work/
+
+########
+# ruff #
+########
+.ruff_cache/

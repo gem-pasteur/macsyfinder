@@ -2,3 +2,37 @@
 requires = ["setuptools"]
 
 build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".eggs",
+    ".git",
+    ".ipynb_checkpoints",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "build",
+    "dist",
+    "site-packages",
+    "venv",
+]
+
+# Same as Black.
+line-length = 120
+indent-width = 4
+
+src = ['macsypy', 'tetsts']
+[tool.ruff.format]
+indent-style = "space"
+
+
+[tool.ruff.lint.per-file-ignores]
+
+#F841 Local variable `xxx` is assigned to but never used
+"tests/test_System.py" = ["F841"]
+

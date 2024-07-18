@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2023  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -34,19 +34,19 @@ import logging
 import itertools
 import signal
 import time
+import typing
 
 from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
 
 import colorlog
 
-_log = colorlog.getLogger('macsypy')
 import pandas as pd
 
 import macsypy
 from macsypy.config import MacsyDefaults, Config
 from macsypy.cluster import Cluster
-from macsypy.registries import ModelRegistry, scan_models_dir
+from macsypy.registries import ModelRegistry, scan_models_dir, DefinitionLocation
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
@@ -54,17 +54,27 @@ from macsypy.error import OptionError, Timeout, EmptyFileError
 from macsypy import cluster
 from macsypy.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
     sort_model_hits, compute_best_MSHit
-from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, HitSystemTracker
+from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, \
+                            HitSystemTracker, RejectedCandidate
 from macsypy.utils import get_def_to_detect, get_replicon_names, parse_time
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
-from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
-    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCandidatesSerializer
+from macsypy.serialization import (TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer,
+                                   TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer,
+                                   TsvSpecialHitSerializer, TsvRejectedCandidatesSerializer)
+
+_log = colorlog.getLogger('macsypy')
 
 
-def alarm_handler(signum, frame):
+def alarm_handler(signum: signal.Signals, frame) -> None:
+    """
+    Handle signal alarm flush loggers
+    :param signum:
+    :param frame:
+    :raise: Timeout
+    """
     _log.critical("Timeout is over. Aborting")
     for h in _log.handlers:
         h.flush()
@@ -74,14 +84,14 @@ def alarm_handler(signum, frame):
     raise Timeout()
 
 
-def get_version_message():
+def get_version_message() -> str:
     """
     :return: the long description of the macsyfinder version
-    :rtype: str
     """
     version = macsypy.__version__
+    commit = macsypy.__commit__
     py_vers = sys.version.replace('\n', ' ')
-    vers_msg = f"""Macsyfinder {version}
+    vers_msg = f"""Macsyfinder {version} {commit}
 using:
 - Python {py_vers}
 - NetworkX {macsypy.solution.nx.__version__}
@@ -98,12 +108,10 @@ macsydata cite <model>
     return vers_msg
 
 
-def list_models(args):
+def list_models(args: argparse.Namespace) -> str:
     """
     :param args: The command line argument once parsed
-    :type args: :class:`argparse.Namespace` object
     :return: a string representation of all models and submodels installed.
-    :rtype: str
     """
     defaults = MacsyDefaults()
     config = Config(defaults, args)
@@ -118,13 +126,11 @@ def list_models(args):
     return str(registry)
 
 
-def parse_args(args):
+def parse_args(args: list[str]) -> tuple[argparse.ArgumentParser, argparse.Namespace]:
     """
 
     :param args: The arguments provided on the command line
-    :type args: List of strings [without the program name]
     :return: The arguments parsed
-    :rtype: :class:`argparse.Namespace` object.
     """
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
@@ -148,8 +154,8 @@ def parse_args(args):
                  *                           *  *           *     *
 
 
-    MacSyFinder (MSF) - Detection of macromolecular systems in protein datasets 
-    using systems modelling and similarity search.  
+    MacSyFinder (MSF) - Detection of macromolecular systems in protein datasets
+    using systems modelling and similarity search.
     '''))
 
     msf_def = MacsyDefaults()
@@ -161,11 +167,11 @@ def parse_args(args):
                         help="""The models to search.
 The first element must be the name of family models, followed by the name of the models to search.
 If the name 'all' is in the list of models, all models from the family will be searched.
-'--models TXSS Flagellum T2SS' 
+'--models TXSS Flagellum T2SS'
           means MSF will search for the models TXSS/Flagellum and TXSS/T2SS
-'--models TXSS all' 
+'--models TXSS all'
           means MSF will search for all models found in the model package TXSS
-'--models CRISPRcas/subtyping all' 
+'--models CRISPRcas/subtyping all'
           means MSF will search for all models described in the CRISPRCas/subtyping subfamily.
 (required unless --previous-run is set)
 """)
@@ -201,7 +207,7 @@ If the name 'all' is in the list of models, all models from the family will be s
     genome_options.add_argument("--topology-file",
                                 default=None,
                                 help="""Topology file path. The topology file allows to specify a topology
-(linear or circular) for each replicon (this option is meaningful only if the db_type is 
+(linear or circular) for each replicon (this option is meaningful only if the db_type is
 'ordered_replicon' or 'gembase'.
 A topology file is a tabular file with two columns:
 	the 1st is the replicon name, and the 2nd the corresponding topology:
@@ -279,10 +285,10 @@ If not specified, rely on the environment variable PATH
                                type=float,
                                default=None,
                                help=f"""Maximal e-value for hits to be reported during hmmsearch search.
-By default MSF set per profile threshold for hmmsearch run (hmmsearch --cut_ga option) 
+By default MSF set per profile threshold for hmmsearch run (hmmsearch --cut_ga option)
 for profiles containing the GA bit score threshold.
 If a profile does not contains the GA bit score the --e-value-search (-E in hmmsearch) is applied to this profile.
-To applied the --e-value-search to all profiles use the --no-cut-ga option. 
+To applied the --e-value-search to all profiles use the --no-cut-ga option.
 (default: {msf_def['e_value_search']})
 """)
     cut_ga_group = hmmer_options.add_mutually_exclusive_group()
@@ -290,17 +296,17 @@ To applied the --e-value-search to all profiles use the --no-cut-ga option.
                                action='store_true',
                                default=None,
                                help=f"""By default the MSF try to applied a threshold per profile by using the
-hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
-MF switch to use the --e-value-search (-E in hmmsearch). 
-If this option is set the --e-value-search option is used for all profiles regardless the presence of 
+hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise
+MF switch to use the --e-value-search (-E in hmmsearch).
+If this option is set the --e-value-search option is used for all profiles regardless the presence of
 the a GA bit score in the profiles.
 (default: {not msf_def['cut_ga']})""")
     cut_ga_group.add_argument('--cut-ga',
                                action='store_true',
                                default=None,
                                help=f"""By default the MSF try to applied a threshold per profile by using the
-hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
-MSF switch to use the --e-value-search (-E in hmmsearch). 
+hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise
+MSF switch to use the --e-value-search (-E in hmmsearch).
 But the modeler can override this default behavior to do not use cut_ga but --e-value-search instead (-E in hmmsearch).
 The user can reestablish the general MSF behavior, be sure the profiles contain the GA bit score.
 (default: {msf_def['cut_ga']})""")
@@ -316,7 +322,7 @@ The user can reestablish the general MSF behavior, be sure the profiles contain 
                                type=float,
                                default=None,
                                help=f"""Minimal profile coverage required for the hit alignment  with the profile to allow
-the hit selection for systems detection. 
+the hit selection for systems detection.
 (default: {msf_def['coverage_profile']})""")
     score_options = parser.add_argument_group(title="Score options",
                                               description="Options for cluster and systems scoring")
@@ -367,7 +373,7 @@ clusters (default:{msf_def['redundancy_penalty']})""")
                                default=None,
                                help=f"""the weight modifier for a hit which is a
  - true loner (not in cluster)
- - or multi-system (from an other system) 
+ - or multi-system (from an other system)
 (default:{msf_def['out_of_cluster_weight']})""")
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
@@ -457,7 +463,7 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
 It allows to skip the Hmmer search step on a same dataset,
 as it uses previous run results and thus parameters regarding Hmmer detection.
 The configuration file from this previous run will be used.
-Conflicts with options:  
+Conflicts with options:
     --cfg-file, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
     general_options.add_argument("--relative-path",
                                  action='store_true',
@@ -490,14 +496,17 @@ for instance 1h2m3s means 1 hour 2 min 3 sec. NUMBER must be an integer.
     return parser, parsed_args
 
 
-def search_systems(config, model_registry, models_def_to_detect, logger):
+def search_systems(config: Config,
+                   model_registry: ModelRegistry,
+                   models_def_to_detect: list[DefinitionLocation],
+                   logger: logging.Logger) -> tuple[list[System | LikelySystem], list[RejectedCandidate] | list[UnlikelySystem]]:
     """
     Do the job, this function is the orchestrator of all the macsyfinder mechanics
     at the end several files are produced containing the results
 
       - macsyfinder.conf: The set of variables used to runt this job
       - macsyfinder.systems: The list of the potential systems
-      - macsyfinder.rejected_cluster: The list of all clusters and clustrs combination
+      - macsyfinder.rejected_cluster: The list of all clusters and clusters combination
                                       which has been rejected and the reason
       - macsyfinder.log: the copy of the standard output
 
@@ -511,7 +520,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
                    It must be initialized. see :func:`macsypy.init_logger`
     :type logger: :class:`colorlog.Logger` object
     :return: the systems and rejected clusters found
-    :rtype: ([:class:`macsypy.system.System`, ...], [:class:`macsypy.cluster.RejectedCAndidate`, ...])
+    :rtype: ([:class:`macsypy.system.System`, ...], [:class:`macsypy.cluster.RejectedCandidate`, ...])
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
@@ -550,7 +559,6 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         all_reports = search_genes(all_genes, config)
     except Exception as err:
         raise err
-        sys.exit(str(err))
     #############################################
     # end of parallel code
     #############################################
@@ -578,9 +586,9 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
                                                                                        config, logger)
             return systems, rejected_candidates
         elif db_type == "unordered":
-            likely_systems, rejected_hits = _search_in_unordered_replicon(hits_by_replicon, models_to_detect,
+            likely_systems, unlikely_systems = _search_in_unordered_replicon(hits_by_replicon, models_to_detect,
                                                                           logger)
-            return likely_systems, rejected_hits
+            return likely_systems, unlikely_systems
         else:
             assert False, f"dbtype have an invalid value {db_type}"
     else:
@@ -588,19 +596,21 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         return [], []
 
 
-def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logger):
+def _search_in_ordered_replicon(hits_by_replicon: dict[str: list[macsypy.hit.CoreHit]],
+                                models_to_detect: list[macsypy.model.Model],
+                                config: Config,
+                                logger: logging.Logger) -> tuple[list[System], list[RejectedCandidate]]:
     """
 
-    :param hits_by_replicon:
-    :param models_to_detect:
-    :param config:
-    :param logger:
-    :return:
+    :param hits_by_replicon: the hits sort by replicon and position
+    :param models_to_detect: the models to search
+    :param config: MSF configuration
+    :param logger: the logger
     """
     all_systems = []
     all_rejected_candidates = []
     rep_db = RepliconDB(config)
-    
+
     for rep_name in hits_by_replicon:
         logger.info(f"\n{f' Hits analysis for replicon {rep_name} ':#^60}")
         rep_info = rep_db[rep_name]
@@ -676,13 +686,14 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
     return all_systems, all_rejected_candidates
 
 
-def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
+def _search_in_unordered_replicon(hits_by_replicon: dict[str: list[macsypy.hit.CoreHit]],
+                                  models_to_detect: list[macsypy.model.Model],
+                                  logger: logging.Logger) -> tuple[list[LikelySystem], list[UnlikelySystem]]:
     """
 
-    :param hits_by_replicon:
-    :param models_to_detect:
-    :param logger:
-    :return:
+    :param hits_by_replicon: the hits sort by replicon and position
+    :param models_to_detect: the models to search
+    :param logger: the logger
     """
     likely_systems = []
     rejected_hits = []
@@ -713,12 +724,11 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
     return likely_systems, rejected_hits
 
 
-def _outfile_header(models_fam_name, models_version, skipped_replicons=None):
+def _outfile_header(models_fam_name: str, models_version: str, skipped_replicons: list[str] | None = None) -> str:
     """
     :return: The 2 first lines of each result file
-    :rtype: str
     """
-    header = f"""# macsyfinder {macsypy.__version__}
+    header = f"""# macsyfinder {macsypy.__version__} {macsypy.__commit__}
 # models : {models_fam_name}-{models_version}
 # {' '.join(sys.argv)}"""
     if skipped_replicons:
@@ -729,18 +739,18 @@ def _outfile_header(models_fam_name, models_version, skipped_replicons=None):
     return header
 
 
-def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker, sys_file, skipped_replicons=None):
+def systems_to_tsv(models_fam_name: str, models_version: str, systems: list[System],
+                   hit_system_tracker: HitSystemTracker, sys_file: typing.IO,
+                   skipped_replicons: list[str] | None = None) -> None:
     """
     print systems occurrences in a file in tabulated  format
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param systems: list of systems found
-    :type systems: list of :class:`macsypy.system.System` objects
     :param hit_system_tracker: a filled HitSystemTracker.
-    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
-    :type sys_file: file object
     :param skipped_replicons: the replicons name for which msf reach the timeout
-    :type skipped_replicons: list of str
     :return: None
     """
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
@@ -759,18 +769,19 @@ def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker,
         print("# No Systems found", file=sys_file)
 
 
-def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker, sys_file, skipped_replicons=None):
+def systems_to_txt(models_fam_name: str, models_version: str,
+                   systems: list[System],
+                   hit_system_tracker: HitSystemTracker,
+                   sys_file: typing.IO, skipped_replicons: list[str] | None = None) -> None:
     """
-    print systems occurrences in a file in human readable format
+    print systems occurrences in a file in human-readable format
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param systems: list of systems found
-    :type systems: list of :class:`macsypy.system.System` objects
     :param hit_system_tracker: a filled HitSystemTracker.
-    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
-    :type sys_file: file object
     :param skipped_replicons: the replicons name for which msf reach the timeout
-    :type skipped_replicons: list of str
     :return: None
     """
 
@@ -791,20 +802,22 @@ def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker,
         print("# No Systems found", file=sys_file)
 
 
-def solutions_to_tsv(models_fam_name, models_version, solutions, hit_system_tracker, sys_file, skipped_replicons=None):
+def solutions_to_tsv(models_fam_name: str,
+                     models_version: str,
+                     solutions: list[macsypy.solution.Solution],
+                     hit_system_tracker: HitSystemTracker,
+                     sys_file: typing.IO, skipped_replicons: list[str] | None = None) -> None:
     """
     print solution in a file in tabulated format
     A solution is a set of systems which represents an optimal combination of
     systems to maximize the score.
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param solutions: list of systems found
-    :type solutions: list of list of :class:`macsypy.system.System` objects
     :param hit_system_tracker: a filled HitSystemTracker.
-    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
-    :type sys_file: file object
     :param skipped_replicons: the replicons name for which msf reach the timeout
-    :type skipped_replicons: list of str
     :return: None
     """
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
@@ -823,12 +836,11 @@ def solutions_to_tsv(models_fam_name, models_version, solutions, hit_system_trac
         print("# No Systems found", file=sys_file)
 
 
-def _loner_warning(systems):
+def _loner_warning(systems: list[System]) -> list[str]:
     """
     :param systems: sequence of systems
     :return: warning for loner which have less occurrences than systems occurrences in which this lone is used
              except if the loner is also multi system
-    :rtype: list of string
     """
     warnings = []
     loner_tracker = {}
@@ -851,11 +863,17 @@ def _loner_warning(systems):
     return warnings
 
 
-def summary_best_solution(models_fam_name, models_version, best_solution_path, sys_file, models_fqn, replicon_names,
-                          skipped_replicons=None):
+def summary_best_solution(models_fam_name: str,
+                          models_version: str,
+                          best_solution_path: str,
+                          sys_file: typing.IO,
+                          models_fqn: list[str],
+                          replicon_names: list[str],
+                          skipped_replicons: list[str] | None = None) -> None:
     """
     do a summary of best_solution in best_solution_path and write it on out_path
     a summary compute the number of system occurrence for each model and each replicon
+
     .. code-block:: text
 
         replicon        model_fqn_1  model_fqn_2  ....
@@ -864,44 +882,41 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
 
     columns are separated by \t character
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param str best_solution_path: the path to the best_solution file in tsv format
     :param sys_file: the file where to save the summary
     :param models_fqn: the fully qualified names of the models
-    :type models_fqn: list of string
-    :param replicon_names: the name of the replicons used
-    :type replicon_names: list of string
+    :param replicon_names: the names of the replicons used
     :param skipped_replicons: the replicons name for which msf reach the timeout
-    :type skipped_replicons: list of str
     """
     skipped_replicons = skipped_replicons if skipped_replicons else set()
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=sys_file)
 
-    def fill_replicon(summary):
+    def fill_replicon(summary: pd.DataFrame) -> pd.DataFrame:
         """
         add row with 0 for all models for lacking replicons
 
         :param summary: the
-        :type summary: :class:`pandas.DataFrame` object
         :return:
-        :rtype: :class:`pandas.DataFrame` object
         """
         index_name = summary.index.name
         computed_replicons = set(summary.index)
         lacking_replicons = set(replicon_names) - computed_replicons - set(skipped_replicons)
         lacking_replicons = sorted(lacking_replicons)
-        rows = pd.DataFrame({models: [0 * len(lacking_replicons)] for models in summary.columns}, index=lacking_replicons)
-        summary = pd.concat([summary, rows], ignore_index=False)
+        if lacking_replicons:
+            rows = pd.DataFrame({models: [0 * len(lacking_replicons)] for models in summary.columns}, index=lacking_replicons)
+            summary = pd.concat([summary, rows], ignore_index=False)
         summary.index.name = index_name
         return summary
 
-    def fill_models(summary):
+
+    def fill_models(summary: pd.DataFrame) -> pd.DataFrame:
         """
         add columns for lacking models (it means no occurence found)
 
-        :param summary:
-        :type summary: :class:`pandas.DataFrame` object
-        :return:
-        :rtype: :class:`pandas.DataFrame` object
+        :param summary: the dataframe whic summary the results
+        :return: a summary with lacking models set to 0 occurrence
         """
         computed_models = set(summary.columns)
         lacking_models = set(models_fqn) - computed_models
@@ -931,14 +946,14 @@ def summary_best_solution(models_fam_name, models_version, best_solution_path, s
     summary.to_csv(sys_file, sep='\t')
 
 
-def loners_to_tsv(models_fam_name, models_version, systems, sys_file):
+def loners_to_tsv(models_fam_name: str, models_version: str, systems:list[System], sys_file:typing.IO):
     """
     get loners from valid systems and save them on file
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param systems: the systems from which the loners are extract
-    :type systems: list of :class:`macsypy.system.System` object
     :param sys_file: the file where loners are saved
-    :type sys_file: file object open in write mode
     """
     print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if systems:
@@ -956,14 +971,14 @@ def loners_to_tsv(models_fam_name, models_version, systems, sys_file):
         print("# No Loners found", file=sys_file)
 
 
-def multisystems_to_tsv(models_fam_name, models_version, systems, sys_file):
+def multisystems_to_tsv(models_fam_name:str, models_version:str, systems:list[System], sys_file:typing.IO):
     """
     get multisystems from valid systems and save them on file
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param systems: the systems from which the loners are extract
-    :type systems: list of :class:`macsypy.system.System` object
     :param sys_file: the file where multisystems are saved
-    :type sys_file: file object open in write mode
     """
     print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if systems:
@@ -981,17 +996,18 @@ def multisystems_to_tsv(models_fam_name, models_version, systems, sys_file):
         print("# No Multisystems found", file=sys_file)
 
 
-def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candidates, cand_file,
-                               skipped_replicons=None):
+def rejected_candidates_to_txt(models_fam_name: str, models_version: str,
+                               rejected_candidates: list[macsypy.system.RejectedCandidate],
+                               cand_file: typing.IO,
+                               skipped_replicons: list[str] | None = None):
     """
     print rejected clusters in a file
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param rejected_candidates: list of candidates which does not contitute a system
-    :type rejected_candidates: list of :class:`macsypy.system.RejectedCandidate` objects
     :param cand_file: The file where to write down the rejected candidates
-    :type cand_file: file object
     :param skipped_replicons: the replicons name for which msf reach the timeout
-    :type skipped_replicons: list of str
     :return: None
     """
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=cand_file)
@@ -1006,17 +1022,18 @@ def rejected_candidates_to_txt(models_fam_name, models_version, rejected_candida
         print("# No Rejected candidates", file=cand_file)
 
 
-def rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candidates, cand_file,
-                               skipped_replicons=None):
+def rejected_candidates_to_tsv(models_fam_name: str, models_version: str,
+                               rejected_candidates: list[macsypy.system.RejectedCandidate],
+                               cand_file: typing.IO,
+                               skipped_replicons: list[str] | None = None):
     """
     print rejected clusters in a file
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param rejected_candidates: list of candidates which does not contitute a system
-    :type rejected_candidates: list of :class:`macsypy.system.RejectedCandidate` objects
     :param cand_file: The file where to write down the rejected candidates
-    :type cand_file: file object
     :param skipped_replicons: the replicons name for which msf reach the timeout
-    :type skipped_replicons: list of str
     :return: None
     """
     print(_outfile_header(models_fam_name, models_version, skipped_replicons=skipped_replicons), file=cand_file)
@@ -1031,14 +1048,18 @@ def rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candida
         print("# No Rejected candidates", file=cand_file)
 
 
-def likely_systems_to_txt(models_fam_name, models_version, likely_systems, hit_system_tracker, sys_file):
+def likely_systems_to_txt(models_fam_name: str, models_version: str,
+                          likely_systems: list[macsypy.system.LikelySystem],
+                          hit_system_tracker: HitSystemTracker,
+                          sys_file: typing.IO):
     """
     print likely systems occurrences (from unordered replicon)
     in a file in text human readable format
+
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param likely_systems: list of systems found
-    :type likely_systems: list of :class:`macsypy.system.LikelySystem` objects
     :param hit_system_tracker: a filled HitSystemTracker.
-    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: file object
     :return: None
     """
@@ -1052,17 +1073,19 @@ def likely_systems_to_txt(models_fam_name, models_version, likely_systems, hit_s
         print("# No Likely Systems found", file=sys_file)
 
 
-def likely_systems_to_tsv(models_fam_name, models_version, likely_systems, hit_system_tracker, sys_file):
+def likely_systems_to_tsv(models_fam_name : str, models_version: str,
+                          likely_systems: list[macsypy.system.LikelySystem],
+                          hit_system_tracker: HitSystemTracker,
+                          sys_file: typing.IO) -> None:
     """
     print likely systems occurrences (from unordered replicon)
     in a file in tabulated separeted value (tsv) format
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param likely_systems: list of systems found
-    :type likely_systems: list of :class:`macsypy.system.LikelySystem` objects
     :param hit_system_tracker: a filled HitSystemTracker.
-    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
-    :type sys_file: file object
     :return: None
     """
     print(_outfile_header(models_fam_name, models_version), file=sys_file)
@@ -1076,14 +1099,17 @@ def likely_systems_to_tsv(models_fam_name, models_version, likely_systems, hit_s
         print("# No Likely Systems found", file=sys_file)
 
 
-def unlikely_systems_to_txt(models_fam_name, models_version, unlikely_systems, sys_file):
+def unlikely_systems_to_txt(models_fam_name: str, models_version: str,
+                            unlikely_systems: list[macsypy.system.UnlikelySystem],
+                            sys_file: typing.IO):
     """
     print hits (from unordered replicon) which probably does not make a system occurrences
     in a file in human readable format
 
+    :param models_fam_name: the family name of the models (Conj, CrisprCAS, ...)
+    :param models_version: the version of the models
     :param unlikely_systems: list of :class:`macsypy.system.UnLikelySystem` objects
     :param sys_file: The file where to write down the systems occurrences
-    :type sys_file: file object
     :return: None
     """
     print(_outfile_header(models_fam_name, models_version), file=sys_file)
@@ -1097,15 +1123,14 @@ def unlikely_systems_to_txt(models_fam_name, models_version, unlikely_systems, s
         print("# No Unlikely Systems found", file=sys_file)
 
 
-def main(args=None, loglevel=None):
+def main(args: list[str] | None = None,
+         loglevel: typing.Literal['NOTSET', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] | int | None = None):
     """
     main entry point to MacSyFinder do some check before to launch :func:`main_search_systems` which is
     the real function that perform a search
 
     :param args: the arguments passed on the command line without the program name
-    :type args: List of string
     :param loglevel: the output verbosity
-    :type loglevel: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """
     args = sys.argv[1:] if args is None else args
     parser, parsed_args = parse_args(args)
@@ -1188,7 +1213,7 @@ def main(args=None, loglevel=None):
     except KeyError as err:
         sys.exit(f"macsyfinder: {err}")
     _log.info(f"\nmodels used: {models_fam_name}-{models_version}")
-    logger.info(f"\n{f' Searching systems ':#^70}")
+    logger.info("\n{f' Searching systems ':#^70}")
     try:
         all_systems, rejected_candidates = search_systems(config, model_registry, models_def_to_detect, logger)
     except EmptyFileError as err:
@@ -1196,7 +1221,7 @@ def main(args=None, loglevel=None):
         sys.exit(f"macsyfinder: {err} Run Aborted.")
     track_multi_systems_hit = HitSystemTracker(all_systems)
     skipped_replicons = []
-    
+
     if config.db_type() in ('gembase', 'ordered_replicon'):
         #############################
         # Ordered/Gembase replicons #
@@ -1205,7 +1230,7 @@ def main(args=None, loglevel=None):
         ###########################
         # select the best systems #
         ###########################
-        logger.info(f"\n{f' Computing best solutions ':#^70}")
+        logger.info("\n{f' Computing best solutions ':#^70}")
         all_best_solutions = []
         one_best_solution = []
 
