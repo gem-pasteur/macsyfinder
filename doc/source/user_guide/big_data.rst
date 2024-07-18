@@ -59,7 +59,7 @@ This mean that
 
 The workflow use the `nextflow <https://www.nextflow.io/>`_ framework and can be run on a single machine or a cluster.
 
-First, you have to install `nextflow <https://www.nextflow.io/>`_ first, and  :ref:`macsyfinder <installation>`.
+First, you have to install `nextflow <https://www.nextflow.io/>`_ first, and  :ref:`macsyfinder <user_installation>`.
 Then we provide 2 files (you need to download them from the MacSyFinder github repo.)
 
 - `parallel_macsyfinder.nf` which is the workflow itself in nextflow syntax

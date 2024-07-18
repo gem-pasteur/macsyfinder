@@ -38,7 +38,7 @@ For modelers
 For developers
 --------------
 
-* all the *msf* code (macsypy and tests) pass the `ruff<https://docs.astral.sh/ruff/>`_ linter
+* all the *msf* code (macsypy and tests) pass the `ruff <https://docs.astral.sh/ruff/>`_ linter
 * all the code use type hints (required python >3.10) see (https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTING.md)
 
 

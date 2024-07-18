@@ -26,7 +26,7 @@ MacSyFinder Quick Start
             This page is still under construction
 
 
-1. We recommend to install MacSyFinder using `pip` in a virtual environment (for further details see :ref:`installation`).
+1. We recommend to install MacSyFinder using `pip` in a virtual environment (for further details see :ref:`user_installation`).
 
    .. code-block:: bash
 
