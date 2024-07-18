@@ -101,14 +101,14 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
                 abs_target = os.path.abspath(target)
                 prefix = os.path.commonprefix([abs_directory, abs_target])
                 return prefix == abs_directory
-            
+
             def safe_extract(tar: tarfile.TarFile, path: str = ".", members=None, *, numeric_owner=False):
                 for member in tar.getmembers():
                     member_path = os.path.join(path, member.name)
                     if not is_within_directory(path, member_path):
                         raise Exception("Attempted Path Traversal in Tar File")
                 tar.extractall(path, members, numeric_owner=numeric_owner)
-            
+
             safe_extract(tar, path=dest_dir)
 
         # github prefix the archive root directory with the organization name

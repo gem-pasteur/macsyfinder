@@ -401,7 +401,7 @@ class RepliconDB:
         for replicon in replicons:
             genes = []
             seq_id, seq_length, _min = next(replicon)
-            
+
             replicon_name, seq_name = parse_seq_id(seq_id)
             genes.append((seq_name, seq_length))
             for seq_id, seq_length, rank in replicon:

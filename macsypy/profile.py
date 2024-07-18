@@ -164,7 +164,7 @@ class Profile:
         :return: an object storing information on the results of the HMM search (HMMReport)
         """
         with self._lock:
-            # the results of HMM is cached 
+            # the results of HMM is cached
             # so HMMsearch is executed only once per run
             # if this method is called several times,
             # the first call induce the execution of HMMsearch and generate a report

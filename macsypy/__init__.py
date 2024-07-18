@@ -37,8 +37,8 @@ from typing import Literal
 __version__ = f'{strftime("%Y%m%d", localtime())}.dev'
 
 
-__citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S. 
-MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. 
+__citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
+MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes.
 Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjournal.250.
 https://peercommunityjournal.org/articles/10.24072/pcjournal.250/"""
 

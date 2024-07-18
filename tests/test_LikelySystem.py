@@ -256,4 +256,3 @@ class UnlikelySystemTest(MacsyTest):
         expected_str = """(hit_1, gspD, 1), (hit_2, sctJ, 2), (hit_3, sctN, 3): These hits does not probably constitute a system because:
 reason"""
         self.assertEqual(str(uls_1), expected_str)
-

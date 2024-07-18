@@ -58,8 +58,8 @@ class TestModelParser(MacsyTest):
             self.model_registry.add(ml)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.model_registry, self.profile_factory)
-        
-        
+
+
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir())

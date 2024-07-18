@@ -120,7 +120,7 @@ class Solution:
     def __iter__(self) -> Generator:
         """
         Solution allow to iterate over the systems
-        
+
         :return: generator
         """
         return (s for s in self.systems)

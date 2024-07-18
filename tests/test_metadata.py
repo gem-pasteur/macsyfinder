@@ -161,4 +161,3 @@ class TestMetadata(MacsyTest):
                 with open(meta_path) as ref_file:
                     ref_yaml = yaml.safe_load(ref_file)
                 self.assertDictEqual(ref_yaml, saved_yaml)
-

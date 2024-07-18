@@ -383,4 +383,3 @@ class MatchMakerTest(MacsyTest):
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(allowed_hits + forbidden_hits)
         self.assertIsNone(res)
-

@@ -63,7 +63,7 @@ class TestMerge(MacsyTest):
 # merged best_solution.tsv
 # Systems found:
 """
-        warning ="""# 
+        warning ="""#
 # WARNING: The replicon 'GCF_000006765' has been SKIPPED. Cannot be solved before timeout.
 #
 """

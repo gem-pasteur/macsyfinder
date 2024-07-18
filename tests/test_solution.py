@@ -37,9 +37,9 @@ from macsypy.system import System, RejectedCandidate
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems, Solution
 from tests import MacsyTest
 
-    
+
 def _build_clusters(cfg, profile_factory):
-    
+
     model_name = 'foo'
     model_location = ModelLocation(path=os.path.join(cfg.models_dir()[0], model_name))
 

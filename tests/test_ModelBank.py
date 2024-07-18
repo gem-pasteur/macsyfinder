@@ -33,7 +33,7 @@ from tests import MacsyTest
 
 
 class Test(MacsyTest):
-    
+
     def setUp(self):
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_1.fasta")

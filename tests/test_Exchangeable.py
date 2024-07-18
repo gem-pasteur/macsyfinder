@@ -145,4 +145,3 @@ class TestExchangeable(MacsyTest):
 
         self.assertFalse(homolog_1.multi_system)
         self.assertTrue(homolog_2.multi_system)
-

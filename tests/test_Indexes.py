@@ -478,4 +478,3 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
                                  f"The sequence-db file '{args.sequence_db}' does not contains sequences.")
 
                 self.assertFalse(os.path.exists(f"{args.sequence_db}.idx"))
-

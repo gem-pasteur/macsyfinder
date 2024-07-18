@@ -466,8 +466,8 @@ _ bla bla
 
 To cite MacSyFinder:
 
-- Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S. 
-  MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes. 
+- Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
+  MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes.
   Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjournal.250.
   https://peercommunityjournal.org/articles/10.24072/pcjournal.250/"""
         self.assertEqual(expected_citation, citation)
@@ -1879,4 +1879,3 @@ Maybe you can use --user option to install in your HOME.""")
             stdout = sys.stdout.getvalue().strip()
         self.assertEqual(stdout,
                          out.getvalue().strip())
-
