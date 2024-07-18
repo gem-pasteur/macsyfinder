@@ -1,11 +1,11 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _model_package:
 
 **************
@@ -13,18 +13,18 @@ Models Package
 **************
 
 
-MacSyFinder relies on the definition of models of macromolecular systems as a **set of models' components** 
-to be searched by similarity search, and a **set of rules** regarding their genomic organization and 
-their requirement level to make a complete system (mandatory, accessory components, number of components required). 
+MacSyFinder relies on the definition of models of macromolecular systems as a **set of models' components**
+to be searched by similarity search, and a **set of rules** regarding their genomic organization and
+their requirement level to make a complete system (mandatory, accessory components, number of components required).
 
-See the section :ref:`model-definition-grammar-label` for more details on MacSyFinder's modelling scheme and the section 
+See the section :ref:`model-definition-grammar-label` for more details on MacSyFinder's modelling scheme and the section
 on :ref:`Functioning <functioning>` for the principles of the MacSyFinder's search engine.
 
 
 A **MacSyFinder model** (macsy-model for short) is the association of several elements:
 
     * a **definition** which describes the system to detect with a specific **XML grammar** that is :ref:`described here<model-definition-grammar-label>`.
-    
+
     * a set of :ref:`HMM profiles <provide-hmm_label>`  (one per component/gene in the model) to enable the similarity search of the systems' components with the HMMER program.
 
 The models are grouped by *family* possibly gathering *sub-families* (multiple levels allowed), for instance *Secretion*, *Cas-proteins*...
@@ -178,8 +178,8 @@ For example:
 Model configuration
 -------------------
 
-The modeler has the possibility to specify some options that are specific to their package, 
-different than the MacSyFinder defaults in the `model_conf.xml` file. ``NEW in v2`` 
+The modeler has the possibility to specify some options that are specific to their package,
+different than the MacSyFinder defaults in the `model_conf.xml` file. ``NEW in v2``
 
 These options can be grouped in two families: the scoring weights and filtering options.
 
@@ -215,7 +215,7 @@ The precedence rules between the different levels of configuration are:
 * **previous-run**: the `macsyfinder.conf` file found in the results directory of the previous run (conflicts with the `--cfg-file` option)
 * **command line**: any option specified directly in the command line
 
-The model_conf.xml configuration file is in xml format and must have the following structure: 
+The model_conf.xml configuration file is in xml format and must have the following structure:
 
 .. code-block:: xml
 

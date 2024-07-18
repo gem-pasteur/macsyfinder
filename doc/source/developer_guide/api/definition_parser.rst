@@ -5,7 +5,7 @@
     See the COPYRIGHT file for details
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
     See the COPYING file for details.
-    
+
 .. _definition_parser:
 
 *****************
@@ -16,23 +16,23 @@ The model definition parser object "DefinitionParser" instantiates Models and Ge
 XML model definitions (see :ref:`model_definition`).
 The parsing consists in three phases.
 
-Phase 1. 
+Phase 1.
 
    * For each model to parse
-   
+
      * create the Model
      * add this Model to the model_bank
      * findall genes defined in this model what are the level in the model definition.
      * create the CoreGene (a Gene which is not bind to a model).
        For each gene name there is only one instance of CoreGene
      * add these CoreGene in the gene_bank
-    
+
 Phase 2.
 
    * For each model to search
-   
+
      * For each Gene defined in this System:
-     
+
          * link the gene to the model. Create a ModelGene by encapsulating CoreGene from the gene_bank
            It can exists at each run several ModelGene for one CoreGene
          * If a gene has exhangeables create them (an Exchangeable inherits from ModeleGene)
@@ -49,7 +49,7 @@ For instance::
             </exchangeables>
         </gene>
     <system>
-    
+
     Syst_2
     <system inter_gene_max_space="15">
         <gene name=”B” mandatory=”1”>
@@ -58,7 +58,7 @@ For instance::
             </exchangeables>
         </gene>
     <system>
-    
+
     Syst_3
     <system inter_gene_max_space="20">
         <gene name=”c” mandatory=”1” />
@@ -90,5 +90,3 @@ DefinitionParser
    :members:
    :private-members:
    :special-members:
-
-

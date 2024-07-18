@@ -13,15 +13,15 @@ A clear and concise description of your problem.
 **To Reproduce**
 Steps to reproduce the behavior:
 
-1. The exact command lines you use 
+1. The exact command lines you use
 
 **Screenshots / outputs**
-If applicable, add **screenshots**, **outputs** or **error traceback** 
+If applicable, add **screenshots**, **outputs** or **error traceback**
 to help explain your problem.
 
 **Please complete the following information):**
 
-***OS:*** 
+***OS:***
 
  - [ ] Linux
  - [ ] Windows
@@ -33,4 +33,3 @@ to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
-

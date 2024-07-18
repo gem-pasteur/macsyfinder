@@ -1,6 +1,6 @@
 ---
 # How to cite macsyfinder
-# below the citation informations in yaml format 
+# below the citation informations in yaml format
 
 authors:
     - Néron Bertrand
@@ -12,7 +12,7 @@ authors:
     -
 date: 2023
 title: "MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes."
-journal: 
+journal:
     title: Peer Community Journal
     volume: 3
     enumber: e28
@@ -20,8 +20,8 @@ doi: 10.24072/pcjournal.250
 url: https://peercommunityjournal.org/articles/10.24072/pcjournal.250/
 
 
-# below a more human readable and traditional version 
- 
+# below a more human readable and traditional version
+
 # Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
 # MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes.
 # Peer Community Journal, Volume 3 (2023), article no. e28.

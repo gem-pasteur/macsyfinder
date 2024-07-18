@@ -286,7 +286,7 @@ def parse_args(args: list[str]) -> argparse.Namespace:
     :return: the command line and options arguments parsed
     """
     description = """Merge the different files from several macsyfinder results in one.
-    
+
     - merge the 'best_solution.tsv' in to 'merged_best_solution.tsv'
     - merge the 'best_multisystems.tsv' in to 'merged_best_multisystems.tsv'
     - merge the 'best_loners.tsv' in to 'merged_best_loners.tsv'

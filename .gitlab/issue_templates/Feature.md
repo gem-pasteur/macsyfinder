@@ -13,9 +13,7 @@ What is the expected behavior?
 Relevant screenshots
 ---------------------
 
-(Paste any relevant code/output/screenshots - 
+(Paste any relevant code/output/screenshots -
 
-please use code blocks (```) to format console 
+please use code blocks (```) to format console
 and code as it's very hard to read otherwise.)
-
-

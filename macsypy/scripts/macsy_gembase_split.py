@@ -164,7 +164,7 @@ def main(args: list[str] | None = None, log_level: int | str | None = None):
 
         1. index the gembase file to identify start/end of each replicon
         2. use this information to split gembase in several files one per replicon
-     
+
     :param args: the arguments passed on the command line
     :type args: list of str
     :param log_level: the output verbosity

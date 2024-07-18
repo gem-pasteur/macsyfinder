@@ -154,8 +154,8 @@ def parse_args(args: list[str]) -> tuple[argparse.ArgumentParser, argparse.Names
                  *                           *  *           *     *
 
 
-    MacSyFinder (MSF) - Detection of macromolecular systems in protein datasets 
-    using systems modelling and similarity search.  
+    MacSyFinder (MSF) - Detection of macromolecular systems in protein datasets
+    using systems modelling and similarity search.
     '''))
 
     msf_def = MacsyDefaults()
@@ -167,11 +167,11 @@ def parse_args(args: list[str]) -> tuple[argparse.ArgumentParser, argparse.Names
                         help="""The models to search.
 The first element must be the name of family models, followed by the name of the models to search.
 If the name 'all' is in the list of models, all models from the family will be searched.
-'--models TXSS Flagellum T2SS' 
+'--models TXSS Flagellum T2SS'
           means MSF will search for the models TXSS/Flagellum and TXSS/T2SS
-'--models TXSS all' 
+'--models TXSS all'
           means MSF will search for all models found in the model package TXSS
-'--models CRISPRcas/subtyping all' 
+'--models CRISPRcas/subtyping all'
           means MSF will search for all models described in the CRISPRCas/subtyping subfamily.
 (required unless --previous-run is set)
 """)
@@ -207,7 +207,7 @@ If the name 'all' is in the list of models, all models from the family will be s
     genome_options.add_argument("--topology-file",
                                 default=None,
                                 help="""Topology file path. The topology file allows to specify a topology
-(linear or circular) for each replicon (this option is meaningful only if the db_type is 
+(linear or circular) for each replicon (this option is meaningful only if the db_type is
 'ordered_replicon' or 'gembase'.
 A topology file is a tabular file with two columns:
 	the 1st is the replicon name, and the 2nd the corresponding topology:
@@ -285,10 +285,10 @@ If not specified, rely on the environment variable PATH
                                type=float,
                                default=None,
                                help=f"""Maximal e-value for hits to be reported during hmmsearch search.
-By default MSF set per profile threshold for hmmsearch run (hmmsearch --cut_ga option) 
+By default MSF set per profile threshold for hmmsearch run (hmmsearch --cut_ga option)
 for profiles containing the GA bit score threshold.
 If a profile does not contains the GA bit score the --e-value-search (-E in hmmsearch) is applied to this profile.
-To applied the --e-value-search to all profiles use the --no-cut-ga option. 
+To applied the --e-value-search to all profiles use the --no-cut-ga option.
 (default: {msf_def['e_value_search']})
 """)
     cut_ga_group = hmmer_options.add_mutually_exclusive_group()
@@ -296,17 +296,17 @@ To applied the --e-value-search to all profiles use the --no-cut-ga option.
                                action='store_true',
                                default=None,
                                help=f"""By default the MSF try to applied a threshold per profile by using the
-hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
-MF switch to use the --e-value-search (-E in hmmsearch). 
-If this option is set the --e-value-search option is used for all profiles regardless the presence of 
+hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise
+MF switch to use the --e-value-search (-E in hmmsearch).
+If this option is set the --e-value-search option is used for all profiles regardless the presence of
 the a GA bit score in the profiles.
 (default: {not msf_def['cut_ga']})""")
     cut_ga_group.add_argument('--cut-ga',
                                action='store_true',
                                default=None,
                                help=f"""By default the MSF try to applied a threshold per profile by using the
-hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
-MSF switch to use the --e-value-search (-E in hmmsearch). 
+hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise
+MSF switch to use the --e-value-search (-E in hmmsearch).
 But the modeler can override this default behavior to do not use cut_ga but --e-value-search instead (-E in hmmsearch).
 The user can reestablish the general MSF behavior, be sure the profiles contain the GA bit score.
 (default: {msf_def['cut_ga']})""")
@@ -322,7 +322,7 @@ The user can reestablish the general MSF behavior, be sure the profiles contain 
                                type=float,
                                default=None,
                                help=f"""Minimal profile coverage required for the hit alignment  with the profile to allow
-the hit selection for systems detection. 
+the hit selection for systems detection.
 (default: {msf_def['coverage_profile']})""")
     score_options = parser.add_argument_group(title="Score options",
                                               description="Options for cluster and systems scoring")
@@ -373,7 +373,7 @@ clusters (default:{msf_def['redundancy_penalty']})""")
                                default=None,
                                help=f"""the weight modifier for a hit which is a
  - true loner (not in cluster)
- - or multi-system (from an other system) 
+ - or multi-system (from an other system)
 (default:{msf_def['out_of_cluster_weight']})""")
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
@@ -463,7 +463,7 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
 It allows to skip the Hmmer search step on a same dataset,
 as it uses previous run results and thus parameters regarding Hmmer detection.
 The configuration file from this previous run will be used.
-Conflicts with options:  
+Conflicts with options:
     --cfg-file, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
     general_options.add_argument("--relative-path",
                                  action='store_true',
@@ -610,7 +610,7 @@ def _search_in_ordered_replicon(hits_by_replicon: dict[str: list[macsypy.hit.Cor
     all_systems = []
     all_rejected_candidates = []
     rep_db = RepliconDB(config)
-    
+
     for rep_name in hits_by_replicon:
         logger.info(f"\n{f' Hits analysis for replicon {rep_name} ':#^60}")
         rep_info = rep_db[rep_name]
@@ -1221,7 +1221,7 @@ def main(args: list[str] | None = None,
         sys.exit(f"macsyfinder: {err} Run Aborted.")
     track_multi_systems_hit = HitSystemTracker(all_systems)
     skipped_replicons = []
-    
+
     if config.db_type() in ('gembase', 'ordered_replicon'):
         #############################
         # Ordered/Gembase replicons #

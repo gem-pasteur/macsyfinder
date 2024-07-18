@@ -20,13 +20,13 @@ A ``ModelGene`` encapsulate a CoreGene and is linked to a Model.
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several models,
     each gene must be instantiated only once, and stored in gene_bank.
-    gene_bank is a :class:`macsypy.gene.GeneBank` object. 
+    gene_bank is a :class:`macsypy.gene.GeneBank` object.
     The gene_bank and model_bank (:class:`macsypy.model.ModelBank` object)
     are instantiated in :func:`macsypy.scripts.macsyfinder.main` function
     and filled by a definition_parser (:class:`macsypy.defintion_parser.DefinitionParser`)
 
 Example to get a CoreGene object: ::
-  
+
     # get a model object
     model_a = model_bank("TXSS/model_a")
     model_b = model_bank("TXSS/model_b")
