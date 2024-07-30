@@ -595,9 +595,12 @@ class TestMacsyconfig(MacsyTest):
                     msf_cfg.parse_args(args.split()[1:])
                 stderr = sys.stderr.getvalue().strip()
             self.assertEqual(str(ctx.exception), "2")  # test the return code
+            # if the tests are ran from cmd line python tests/run_tes.py ... the bin name is run_test.py
+            # if the tests are ran from setup python setup.py test the bin name is setup.py
+            bin_name = os.path.split(sys.argv[0])[-1]
             self.assertEqual(stderr,
-                             """usage: run_tests.py [-h] [--no-color | --white-bg | --dark-bg] [--defaults]
-run_tests.py: error: argument --dark-bg: not allowed with argument --white-bg""")
+                             f"""usage: {bin_name} [-h] [--no-color | --white-bg | --dark-bg] [--defaults]
+{bin_name}: error: argument --dark-bg: not allowed with argument --white-bg""")
 
         finally:
             argparse._sys.exit = real_sys_exit
