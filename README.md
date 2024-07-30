@@ -79,11 +79,11 @@ where `x.x` is the version number
 
 #### for modelers
 
-    https://macsyfinder.readthedocs.io/en/latest/modeler_guide/installation.html
+https://macsyfinder.readthedocs.io/en/latest/modeler_guide/installation.html
 
 #### for developers
 
-    https://macsyfinder.readthedocs.io/en/latest/developer_guide/installation.html
+https://macsyfinder.readthedocs.io/en/latest/developer_guide/installation.html
 
 ## Unit tests
 
