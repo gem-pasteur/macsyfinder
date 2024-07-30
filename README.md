@@ -39,8 +39,9 @@ https://macsyfinder.readthedocs.io/en/latest/user_guide/new_v2.html
 ## Installation
 
 > [!IMPORTANT]
-> MacSYFinder requires hmmer >= 3.1 (http://hmmer.org/).
+> MacSyFinder requires hmmer >= 3.1 (http://hmmer.org/).
 > You need to install hmmer by yourself (except if you install macsyfinder via *conda/mamba*).
+> If you are a modeler, you will need also `git`
 > The other dependencies are managed by the python package manager *pip*.
 
 ### MacSyFinder is available on pypi
