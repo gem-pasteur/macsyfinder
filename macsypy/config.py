@@ -41,7 +41,7 @@ Module to manage both default values and configuration needed by macsyfinder
 _log = logging.getLogger(__name__)
 
 DBType: TypeAlias = Literal['gembase', 'ordered_replicon', 'unordered']
-Topology: TypeAlias = Literal['linear', 'ciircular']
+Topology: TypeAlias = Literal['linear', 'circular']
 
 
 class MacsyDefaults(dict):
