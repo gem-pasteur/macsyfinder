@@ -57,7 +57,8 @@ def get_git_revision_short_hash() -> str:
     return short_hash
 
 
-__commit__ = f'{get_git_revision_short_hash()}'
+# do not display the commit for the MSF tagged versions
+__commit__ = f'{get_git_revision_short_hash()}' if 'dev' in __version__ else ''
 
 
 def init_logger(log_file: str = None, out: bool = True) -> list[logging.Handler]:
