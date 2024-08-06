@@ -40,7 +40,7 @@ RUN apt-get update -y &&\
     apt-get install -y --no-install-recommends hmmer git
 RUN apt-get clean -y
 
-RUN pip3 install macsyfinder==2.1.4[model]
+RUN pip3 install macsyfinder[model]==2.1.4
 
 COPY --chmod=755 macsyfinder-entrypoint.sh /usr/local/bin/macsyfinder-entrypoint.sh
 
