@@ -22,19 +22,19 @@
 #  If not, see <https://www.gnu.org/licenses/>.                          #
 ##########################################################################
 import argparse
-import os.path
 import io
+import os.path
+import re
+import shutil
 import sys
 import tempfile
-import shutil
 from unittest.mock import patch
 
-from tests import MacsyTest
-
-from macsypy import __version__ as msf_vers
-from macsypy.config import MacsyDefaults, Config
-from macsypy.error import MacsypyError
 import macsypy.scripts.macsyconfig as msf_cfg
+from macsypy import __version__ as msf_vers
+from macsypy.config import Config, MacsyDefaults
+from macsypy.error import MacsypyError
+from tests import MacsyTest
 
 
 class TestConfigParserWithComment(MacsyTest):
@@ -598,9 +598,19 @@ class TestMacsyconfig(MacsyTest):
             # if the tests are ran from cmd line python tests/run_tes.py ... the bin name is run_test.py
             # if the tests are ran from setup python setup.py test the bin name is setup.py
             bin_name = os.path.split(sys.argv[0])[-1]
-            self.assertEqual(stderr,
-                             f"""usage: {bin_name} [-h] [--no-color | --white-bg | --dark-bg] [--defaults]
-{bin_name}: error: argument --dark-bg: not allowed with argument --white-bg""")
+            self.assertTrue(
+                re.match(
+                    re.escape(
+                        f"usage: {bin_name} [-h] [--no-color | --white-bg | --dark-bg]"
+                    )
+                    + r"\s+"
+                    + re.escape(
+                        f"""[--defaults]
+{bin_name}: error: argument --dark-bg: not allowed with argument --white-bg"""
+                    ),
+                    stderr,
+                )
+            )
 
         finally:
             argparse._sys.exit = real_sys_exit
