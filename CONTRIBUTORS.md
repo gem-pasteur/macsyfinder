@@ -34,3 +34,4 @@ This is a list of people who have made contributions to Macsyfinder.
 * Nilesh Patra <https://github.com/nileshpatra> :bug: :computer:
 * Antônio Camargo <https://github.com/apcamargo> :bug:
 * TrellixVulnTeam <https://github.com/TrellixVulnTeam> :computer:
+* Michael R. Crusoe <https://github.com/mr-c> :white_check_mark:
