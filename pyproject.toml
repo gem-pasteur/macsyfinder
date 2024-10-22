@@ -26,7 +26,7 @@ exclude = [
 line-length = 120
 indent-width = 4
 
-src = ['macsypy', 'tetsts']
+src = ['macsypy', 'tests']
 [tool.ruff.format]
 indent-style = "space"
 
