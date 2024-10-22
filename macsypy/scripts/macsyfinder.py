@@ -1213,7 +1213,7 @@ def main(args: list[str] | None = None,
     except KeyError as err:
         sys.exit(f"macsyfinder: {err}")
     _log.info(f"\nmodels used: {models_fam_name}-{models_version}")
-    logger.info("\n{f' Searching systems ':#^70}")
+    logger.info(f"\n{' Searching systems ':#^70}")
     try:
         all_systems, rejected_candidates = search_systems(config, model_registry, models_def_to_detect, logger)
     except EmptyFileError as err:
@@ -1230,7 +1230,7 @@ def main(args: list[str] | None = None,
         ###########################
         # select the best systems #
         ###########################
-        logger.info("\n{f' Computing best solutions ':#^70}")
+        logger.info(f"\n{' Computing best solutions ':#^70}")
         all_best_solutions = []
         one_best_solution = []
 
