@@ -304,6 +304,7 @@ In this example, the described System consists of three mandatory and one access
       (see :ref:`below <provide-hmm_label>`).
 
 
+
 .. _provide-hmm_label:
 
 Providing HMM profiles
@@ -318,6 +319,10 @@ such as `TIGRFAM <https://dx.doi.org/10.1093%2Fnar%2Fgkg128>`_ or `PFAM <https:/
 This profile *MUST* have the same name as the name of the gene mentioned in the definition.
 For instance, a component named "GeneA" in the macsy-model would correspond by default to a HMM profile "GeneA.hmm" enclosed in the macsy-model package.
 The names are **case-sensitive**. All HMM profiles must be placed in the `profiles` directory of the macsy-model package.
+
+.. warning::
+
+    * MacSyFinder does not support several profiles per file. Each hmm file **must** contains only one profile.
 
 .. note::
 
