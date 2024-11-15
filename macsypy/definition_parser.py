@@ -77,7 +77,7 @@ class DefinitionParser:
         :param models_2_detect: a list of model definition to parse.
         """
         models_2_check = []
-        _log.info("Models Parsing")
+        _log.info(f"Parsing Models: {', '.join([_def.name for _def in models_2_detect])}")
         for def_loc in models_2_detect:
             path = def_loc.path
             if path is None:
