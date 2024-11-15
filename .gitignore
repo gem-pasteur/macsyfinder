@@ -46,13 +46,8 @@ coverage_html/
 ###################################
 # MacsyFinder results directories #
 ###################################
-bin/macsyfinder-*
-bin/log*
-bin/prru_psae_acav.*
-bin/script.csh
 log*
 test/datatest/DEF_svg/
-bin/formatdb.err
 macsypy/*_svg
 macsyfinder-*/
 
@@ -73,19 +68,11 @@ Singularity/
 # MacsyFinder generated file #
 ##############################
 MANIFEST
-
 uninstall.cfg
 uninstall_files
 macsyfinder.egg-info/
-
 *\.idx
-*\.phr
-*\.pin
-*\.pog
-*\.psd
-*\.psi
-*\.psq
-*\formatdb\.err
+
 
 #############
 # nextflow  #
@@ -98,3 +85,13 @@ work/
 # ruff #
 ########
 .ruff_cache/
+
+#########
+# stuff #
+#########
+.ipynb_checkpoints
+benchmark/
+Conda/
+Sandbox/
+perf/
+score_analysis/
