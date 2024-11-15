@@ -13,6 +13,7 @@
 [![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/gem-pasteur/macsyfinder/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/gem-pasteur/macsyfinder)
 [![SWH](https://archive.softwareheritage.org/badge/swh:1:dir:561bfe6698ca9e58b552b4eb4e56132cac41c6f9/)](https://archive.softwareheritage.org/swh:1:dir:561bfe6698ca9e58b552b4eb4e56132cac41c6f9;origin=https://github.com/gem-pasteur/macsyfinder;visit=swh:1:snp:1bde3cb370766b10132c4e004c7cb377979928d1;anchor=swh:1:rev:868637fce184865d8e0436338af66a2648e8f6e1)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6010/badge)](https://bestpractices.coreinfrastructure.org/projects/6010)
+[![FAIR checklist badge](https://fairsoftwarechecklist.net/badge.svg)](https://fairsoftwarechecklist.net/v0.2?f=31&a=32113&i=32321&r=133)
 
 MacSyFinder - Detection of macromolecular systems in protein datasets using systems modelling and similarity search.
 
