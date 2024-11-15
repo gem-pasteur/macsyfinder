@@ -322,7 +322,7 @@ class Package:
 
         :param str path: The of the package root directory
         """
-        self.path: str = os.path.realpath(path)
+        self.path: str = os.path.realpath(path)  # the path of the package root directory
         self.metadata_path: str = os.path.join(self.path, Metadata.name)
         self._metadata: Metadata | None = None
         self.name: str = os.path.basename(self.path)
@@ -367,7 +367,8 @@ class Package:
         """
         all_warnings = []
         all_errors = []
-        for meth in self._check_structure, self._check_metadata, self._check_model_consistency, self._check_model_conf:
+        for meth in (self._check_structure, self._check_metadata, self._check_model_consistency,
+                     self._check_profiles, self._check_model_conf):
             errors, warnings = meth()
             all_errors.extend(errors)
             all_warnings.extend(warnings)
@@ -454,6 +455,48 @@ class Package:
             del config.models_dir
         _log.info("Definitions are consistent")
         # to respect same api as _check_metadata and _check_structure
+        return errors, warnings
+
+    def _check_profiles(self, profile_suffix='.hmm'):
+        """
+        check if there is only one profile per hmm file
+
+        :return:
+        :rtype:
+        """
+        _log.info(f"Checking '{self.name}' Profiles")
+        errors = []
+        warnings = []
+
+        profiles_dir = os.path.join(self.path, 'profiles')
+        for item in os.listdir(profiles_dir):
+            path = os.path.realpath(os.path.join(profiles_dir, item))
+            if os.path.isfile(path):
+                _log.debug(f"Check profile {path}")
+                if path.endswith(profile_suffix):
+                    if os.path.getsize(path) == 0:
+                        errors.append(f"Profile {path} seems empty: Check this file.")
+                    else:
+                        with open(path) as hmm_file:
+                            profiles_name = []
+                            header = next(hmm_file)
+                            if header.startswith('HMMER3'):
+                                for line in open(path):
+                                    if line.startswith('NAME '):
+                                        profiles_name.append(line.split()[-1])
+                                if len(profiles_name) > 1:
+                                    profiles_name = '\n - '.join(profiles_name)
+                                    errors.append(f"\nThere are several profiles {profiles_name}\nin {path}:\n "
+                                                  f"Split this file to have one profile per file.")
+                            else:
+                                errors.append(f"The file {path} does not seems to be HMMER 3 profile:"
+                                              f" check it or remove it.")
+                else:
+                    warnings.append(f"The file '{path}' does not ends with '{profile_suffix}'. Skip it.")
+            elif os.path.isdir(path):
+                warnings.append(f"found directory '{path}' in profiles dir: subdirectories are not supported in profiles. "
+                                f"This directory will be IGNORED.")
+
         return errors, warnings
 
 

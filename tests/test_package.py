@@ -64,7 +64,7 @@ class TestPackageFunc(MacsyTest):
                          f"{pack} does not seem to not be versioned.")
 
 
-class TestModelIndex(MacsyTest):
+# class TestModelIndex(MacsyTest):
 
     def test_init(self):
         with self.assertRaises(TypeError):
@@ -460,8 +460,16 @@ ligne 3 et bbbbb
         del logger.manager.loggerDict['macsypy']
 
 
-    def create_fake_package(self, model, definitions=True, bad_definitions=False, profiles=True, skip_hmm=None,
-                            metadata='good_metadata.yml', readme=True, license=True, conf=True, vers=True,
+    def create_fake_package(self, model,
+                            definitions=True,
+                            bad_definitions=False,
+                            profiles=True,
+                            skip_hmm=None,
+                            metadata='good_metadata.yml',
+                            readme=True,
+                            license=True,
+                            conf=True,
+                            vers=True,
                             bad_conf=False):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
@@ -491,7 +499,9 @@ ligne 3 et bbbbb
             for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC'):
                 if skip_hmm and name in skip_hmm:
                     continue
-                open(os.path.join(profile_dir, f"{name}.hmm"), 'w').close()
+                shutil.copyfile(self.find_data('models', 'foo', 'profiles', f'{name}.hmm'),
+                                os.path.join(profile_dir, f"{name}.hmm")
+                                )
         if metadata:
             meta_path = self.find_data('pack_metadata', metadata)
             meta_dest = os.path.join(pack_path, package.Metadata.name)
@@ -841,6 +851,75 @@ ligne 3 et bbbbb
                               f"It's better if the field 'doc' is setup in '{fake_pack_path}/metadata.yml' file.",
                               f"It's better if the field 'license' is setup in '{fake_pack_path}/metadata.yml' file.",
                               f"It's better if the field 'copyright' is setup in '{fake_pack_path}/metadata.yml' file."])
+
+    def test_check_several_profile_per_file(self):
+        fake_pack_path = self.create_fake_package('fake_model', profiles=False)
+        profiles_dir = os.path.join(fake_pack_path, 'profiles')
+        os.mkdir(profiles_dir)
+        shutil.copyfile(self.find_data('hmm', 'one_profile.hmm'), os.path.join(profiles_dir, 'one_profile.hmm'))
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_profiles()
+        self.assertListEqual(errors, [])
+        self.assertListEqual(warnings, [])
+
+        shutil.copyfile(self.find_data('hmm', 'several_profiles.hmm'), os.path.join(profiles_dir, 'several_profiles.hmm'))
+        errors, warnings = pack._check_profiles()
+        self.assertListEqual(errors, [
+            '\nThere are several profiles RM_Type_II__Type_II_REases___Type_II_REase01\n'
+            ' - RM_Type_II__Type_II_REases___Type_II_REase02\n'
+            'in /tmp/macsy_test_package/fake_model/profiles/several_profiles.hmm:\n'
+            ' Split this file to have one profile per file.'
+        ])
+        self.assertListEqual(warnings, [])
+
+
+    def test_check_empty_profile(self):
+        fake_pack_path = self.create_fake_package('fake_model', profiles=False)
+        profiles_dir = os.path.join(fake_pack_path, 'profiles')
+        os.mkdir(profiles_dir)
+        fake_profile = os.path.join(profiles_dir, 'flgB.hmm')
+        open(fake_profile, 'w').close()
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_profiles()
+        self.assertListEqual(errors, [f"Profile {fake_profile} seems empty: Check this file."])
+        self.assertListEqual(warnings, [])
+
+
+    def test_check_old_profile(self):
+        fake_pack_path = self.create_fake_package('fake_model', profiles=False)
+        profiles_dir = os.path.join(fake_pack_path, 'profiles')
+        os.mkdir(profiles_dir)
+        old_profile = os.path.join(profiles_dir, 'old_profile.hmm')
+        shutil.copyfile(self.find_data('hmm', 'old_profile.hmm'), old_profile)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_profiles()
+        self.assertListEqual(errors, [f"The file {old_profile} does not seems to be HMMER 3 profile: "
+                                      f"check it or remove it."])
+        self.assertListEqual(warnings, [])
+
+
+    def test_check_dir_in_profile(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        profiles_dir = os.path.join(fake_pack_path, 'profiles')
+        dir_in_profiles = os.path.join(profiles_dir, 'nimportnaoik')
+        os.makedirs(dir_in_profiles)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_profiles()
+        self.assertListEqual(errors, [])
+        self.assertListEqual(warnings,
+                             [f"found directory '{dir_in_profiles}' in profiles dir: subdirectories are not supported in profiles. "
+                              f"This directory will be IGNORED."])
+
+    def test_profile_with_bad_ext(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        profiles_dir = os.path.join(fake_pack_path, 'profiles')
+        bad_profile = os.path.join(profiles_dir, 'flgB.bad_ext')
+        open(bad_profile, 'w').close()
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_profiles()
+        self.assertListEqual(errors, [])
+        self.assertListEqual(warnings,
+                             [f"The file '{bad_profile}' does not ends with '.hmm'. Skip it."])
 
     def test_help(self):
         fake_pack_path = self.create_fake_package('fake_model', license=False)

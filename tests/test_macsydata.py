@@ -122,7 +122,9 @@ class TestMacsydata(MacsyTest):
             profile_dir = os.path.join(pack_path, 'profiles')
             os.mkdir(profile_dir)
             for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC', 'abc'):
-                open(os.path.join(profile_dir, f"{name}.hmm"), 'w').close()
+                shutil.copyfile(self.find_data('models', 'foo', 'profiles', f'{name}.hmm'),
+                                os.path.join(profile_dir, f"{name}.hmm")
+                                )
         if metadata:
             meta_path = self.find_data('pack_metadata', 'good_metadata.yml')
             meta_dest = os.path.join(pack_path, package.Metadata.name)
@@ -644,6 +646,7 @@ for instance if you want to add the models to 'macsy-models'
 \tgit remote add origin https://github.com/macsy-models/
 \tgit tag -a <tag vers>  # check https://macsyfinder.readthedocs.io/en/latest/modeler_guide/publish_package.html#sharing-your-models
 \tgit push origin <tag vers>"""
+
         self.assertEqual(expected_msg, log_msg)
 
 
@@ -662,6 +665,7 @@ The field 'vers' is not required anymore.
 macsydata says: You're only giving me a partial QA payment?
 I'll take it this time, but I'm not happy.
 I'll be really happy, if you fix warnings above, before to publish these models."""
+
         self.assertEqual(expected_msg, log_msg)
 
 
