@@ -12,6 +12,22 @@
 What's new in MacSyFinder v2?
 *****************************
 
+Master
+======
+
+For modelers
+------------
+
+* `macsydata check` now check profiles
+
+    * if hmm file is not empty
+    * if there is only one profile per hmm file
+
+  Use `macsydata check`  before to publish your models.
+  Also consider to add a pre-push git hook that run `macsydata check` when you push a tag.
+  This hook is automatically installed when you run `macsydata init` to create a package skeleton (from V 2.1.4)
+
+
 V 2.1.4
 =======
 
