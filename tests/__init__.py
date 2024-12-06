@@ -97,6 +97,11 @@ class MacsyTest(unittest.TestCase):
             yield sys.stdout, sys.stderr
         finally:
             sys.stdout, sys.stderr = old_out, old_err
+            if out:
+                new_out.close()
+            if err:
+                new_err.close()
+
 
     @staticmethod
     def fake_exit(*args, **kwargs):
@@ -301,7 +306,9 @@ class MacsyTest(unittest.TestCase):
             logger.handlers = [fake_handler]
             yield LoggerWrapper(logger)
         finally:
+            fake_handler.close()
             logger.handlers = handlers_ori
+
 
 
 class LoggerWrapper(object):
