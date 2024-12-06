@@ -102,6 +102,7 @@ See the COPYING file for details.
 
 If you use this software please cite:
 {macsypy.__citation__}
+
 and don't forget to cite models used:
 macsydata cite <model>
 """
