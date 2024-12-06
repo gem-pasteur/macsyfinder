@@ -48,7 +48,7 @@ dev = [
     "sphinx_rtd_theme",
     "sphinx-autodoc-typehints",
     "sphinxcontrib-svg2pdfconverter",
-    "coverage",
+    "coverage[toml]",
     "build",
     "ruff",
     "GitPython",
