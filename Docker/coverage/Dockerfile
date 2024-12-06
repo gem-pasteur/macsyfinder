@@ -4,6 +4,6 @@ MAINTAINER Bertrand Neron <bneron@pasteur.fr>
 
 USER root
 
-RUN python3 -m pip install coverage
+RUN python3 -m pip install coverage[toml]
 
 CMD ["/bin/bash"]
