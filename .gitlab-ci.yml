@@ -19,7 +19,7 @@ testing:
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
   script:
     - python3 -m pip install .[model]
-    - python3 tests/run_tests.py -vvv
+    - python3 -m unittest discover -vv
   except:
     - /^feat.*$/
     - /^fix.*$/
@@ -29,7 +29,7 @@ coverage:
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/coverage
   script:
     - python3 -m pip install .[model]
-    - coverage run --source=macsypy tests/run_tests.py -vv
+    - coverage run -vv
     - coverage html
     - coverage report
 
