@@ -51,7 +51,7 @@ pages:
     - make html
     - cd ${CI_PROJECT_DIR}
     - mv ${CI_PROJECT_DIR}/doc/build/html/ public
-    - mv coverage_html public/coverage
+    - mv htmlcov public/coverage
   artifacts:
     paths:
       - public
