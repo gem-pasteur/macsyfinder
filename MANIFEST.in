@@ -12,7 +12,6 @@ recursive-exclude tests/__pycache__/ *
 exclude tests/__init__.pyc
 
 exclude .coverage
-exclude coverage_html/
 exclude .gitignore
 exclude .travis.yml
 exclude .github/
@@ -23,5 +22,4 @@ include COPYRIGHT
 include CONTRIBUTING.md
 include CONTRIBUTORS
 include CITATION.yml
-include CITATION.cff
 
