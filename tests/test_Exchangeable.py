@@ -23,7 +23,6 @@
 #########################################################################
 
 import os
-import shutil
 import tempfile
 import argparse
 
@@ -44,7 +43,8 @@ class TestExchangeable(MacsyTest):
         args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.res_search_dir = tempfile.gettempdir()
+        self.tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_Exchangeable_')
+        args.res_search_dir = os.path.join(self.tmp_dir.name, 'res_search_dir')
         args.log_level = 30
         self.cfg = Config(MacsyDefaults(), args)
 
@@ -54,10 +54,7 @@ class TestExchangeable(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir)
-        except Exception:
-            pass
+        self.tmp_dir.cleanup()
 
 
     def test_alternate_of(self):

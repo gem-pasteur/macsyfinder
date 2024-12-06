@@ -21,7 +21,6 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
 import tempfile
 import shutil
 import os
@@ -37,25 +36,30 @@ from macsypy.scripts import macsy_merge_results
 
 class TestMerge(MacsyTest):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.logger = colorlog.getLogger('macsypy.merge')
+
+
     def setUp(self):
-        self.tmpdir = tempfile.mkdtemp()
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_Merge_')
+        self.tmpdir = self._tmp_dir.name
         self.test_dir = os.path.join(self.tmpdir, 'macsyfinder_test_merge')
         os.mkdir(self.test_dir)
-
         self.args = argparse.Namespace()
 
+
     def tearDown(self):
-        try:
-            shutil.rmtree(self.tmpdir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
         # some function in macsydata script suppress the traceback
         # but without traceback it's hard to debug test :-(
         sys.tracebacklimit = 1000  # the default value
 
-        logger = colorlog.getLogger('macsypy')
-        for h in logger.handlers[:]:
-            logger.removeHandler(h)
+        #logger = colorlog.getLogger('macsypy.merge')
+        for h in self.logger.handlers[:]:
+            self.logger.removeHandler(h)
+        #logging.shutdown()
+
 
     def test_get_warning(self):
 
@@ -190,7 +194,7 @@ class TestMerge(MacsyTest):
         ###########################
         open(merge_dir, 'w').close()
         cmd = f"macsy_merge_results -o {merge_dir} {dest_res_1} {dest_res_2}"
-        with self.catch_io(out=True):
+        with self.catch_io(out=True, err=True):
             # we cannot test the log message here
             # because the logger are init when main is called
             # after that the context is establish
@@ -218,7 +222,7 @@ class TestMerge(MacsyTest):
         os.mkdir(merge_dir, mode=0o444)
         cmd = f"macsy_merge_results -o {merge_dir} {dest_res_1} {dest_res_2}"
         try:
-            with self.catch_io(out=True):
+            with self.catch_io(out=True, err=True):
                 with self.assertRaises(IOError):
                     macsy_merge_results.main(args=cmd.split()[1:], log_level='WARNING')
                 stdout = sys.stdout.getvalue().strip()
@@ -231,7 +235,7 @@ class TestMerge(MacsyTest):
         # the -o option parent is NOT writable
         ######################################
         os.chmod(self.test_dir, mode=0o444)
-        with self.catch_io(out=True):
+        with self.catch_io(out=True, err=True):
             with self.assertRaises(IOError):
                 macsy_merge_results.main(args=cmd.split()[1:], log_level='WARNING')
             stdout = sys.stdout.getvalue().strip()
@@ -245,9 +249,11 @@ class TestMerge(MacsyTest):
         merge_dir = os.path.join(self.test_dir, 'merged_results')
 
         with self.assertRaises(ValueError) as ctx:
-            macsy_merge_results.merge_and_reindex([res1, res2], merge_dir, "Systems",
-                                                  skip_until=lambda line: line.startswith('sol_id'),
-                                                  comment='#')
+            with self.catch_io(out=False):
+
+                macsy_merge_results.merge_and_reindex([res1, res2], merge_dir, "Systems",
+                                                      skip_until=lambda line: line.startswith('sol_id'),
+                                                      comment='#')
         self.assertEqual(str(ctx.exception),
                          "Cannot reindex int(GCF_000006845) + 1:"
                          " invalid literal for int() with base 10: 'GCF_000006845'")

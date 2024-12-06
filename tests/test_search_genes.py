@@ -44,12 +44,8 @@ from tests import MacsyTest
 class TestSearchGenes(MacsyTest):
 
     def setUp(self):
-        self.tmp_dir = os.path.join(tempfile.gettempdir(),
-                                    'test_macsyfinder_search_genes')
-        if os.path.exists(self.tmp_dir):
-            shutil.rmtree(self.tmp_dir)
-        os.mkdir(self.tmp_dir)
-
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_search_genes_')
+        self.tmp_dir = self._tmp_dir.name
         macsypy.init_logger()
         macsypy.logger_set_level(30)
 
@@ -74,12 +70,7 @@ class TestSearchGenes(MacsyTest):
         self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.tmp_dir)
-            #pass
-        except Exception:
-            pass
-
+        self._tmp_dir.cleanup()
 
     def test_worker_cpu(self):
         worker_meth = self.cfg.worker

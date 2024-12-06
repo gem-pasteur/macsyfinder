@@ -34,10 +34,10 @@ from macsypy.database import RepliconDB, Indexes, RepliconInfo
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestRepliconDB(MacsyTest):
 
     def __init__(self, methodName = 'runTest'):
-        super(Test, self).__init__(methodName)
+        super().__init__(methodName)
 
         def fake_init(obj, cfg):
             obj.cfg = cfg
@@ -51,15 +51,14 @@ class Test(MacsyTest):
 
 
     def setUp(self):
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_RepliconDB_')
         self.args = argparse.Namespace()
         self.args.db_type = 'gembase'
         self.args.models_dir = self.find_data('models')
-        self.args.res_search_dir = tempfile.gettempdir()
+        self.args.res_search_dir = self._tmp_dir.name
         self.args.log_level = 30
         self.args.out_dir = os.path.join(self.args.res_search_dir,
                                          'test_macsyfinder_repliconDB')
-        if os.path.exists(self.args.out_dir):
-            shutil.rmtree(self.args.out_dir)
         os.mkdir(self.args.out_dir)
 
         seq_db = self.find_data("base", "test_base.fa")
@@ -104,10 +103,7 @@ class Test(MacsyTest):
         self.idx.build()
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir())
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
         RepliconDB.__init__ = self.real_init
 
 

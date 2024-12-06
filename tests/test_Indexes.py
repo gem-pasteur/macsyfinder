@@ -45,16 +45,13 @@ class TestFastaIter(MacsyTest):
             ('seq1', 'comment 1', 'ATGCATGC' ),
             ('seq2', 'comment 2', 'GGGGCCCCTT')
         ]
-        self.tmpdir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_fasta_iter')
-        if os.path.exists(self.tmpdir):
-            shutil.rmtree(self.tmpdir)
-        os.makedirs(self.tmpdir)
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_FastaIter_')
+        self.tmpdir = self._tmp_dir.name
+
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.tmpdir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
+
 
     def test_fasta_iter(self):
         fasta_path = os.path.join(self.tmpdir, "sequence.fa")
@@ -96,13 +93,10 @@ class TestIndex(MacsyTest):
         args = argparse.Namespace()
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
-        if os.path.exists(args.out_dir):
-            shutil.rmtree(args.out_dir)
-        os.makedirs(args.out_dir)
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_Index_')
+        args.out_dir = self._tmp_dir.name
         seq_db = self.find_data("base", "test_1.fasta")
         shutil.copy(seq_db, args.out_dir)
-
         args.index_dir = args.out_dir
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db))
 
@@ -110,10 +104,7 @@ class TestIndex(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir())
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
 
 
     def test_find_my_indexes(self):
@@ -134,7 +125,8 @@ class TestIndex(MacsyTest):
         args = argparse.Namespace()
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+        args.out_dir = os.path.join(self._tmp_dir.name, 'test_msf_indexes')
+        os.mkdir(args.out_dir)
         seq_db_ori = self.find_data("base", "test_1.fasta")
         seq_db_gz = os.path.join(args.out_dir, os.path.basename(seq_db_ori)) + ".gz"
         with open(seq_db_ori, 'rb') as f_in:
@@ -303,8 +295,6 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
         self.assertEqual(data, new_content)
 
 
-
-
     def test_build_force(self):
         idx = Indexes(self.cfg)
         idx.build(force=True)
@@ -334,8 +324,9 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
         args = argparse.Namespace()
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+        args.out_dir = self._tmp_dir.name
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(self.cfg.sequence_db()))
+
         cfg = Config(MacsyDefaults(), args)
         idx = Indexes(cfg)
         index_dir = idx._index_dir(build=False)
@@ -351,12 +342,14 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
             os.chmod(index_dir, 0o777)
 
 
+    def test_index_dir_does_not_exists(self):
         args = argparse.Namespace()
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+        args.out_dir = self._tmp_dir.name
         args.index_dir = os.path.join(args.out_dir, 'index_dir')
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(self.cfg.sequence_db()))
+
         cfg = Config(MacsyDefaults(), args)
         idx = Indexes(cfg)
 
@@ -366,7 +359,17 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
         self.assertEqual(str(ctx.exception),
                          f"No such directory: {args.index_dir}")
 
+    def test_index_dir_not_writable(self):
         # case --index-dir is not writable
+        args = argparse.Namespace()
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.out_dir = self._tmp_dir.name
+        args.index_dir = os.path.join(args.out_dir, 'index_dir')
+        args.sequence_db = os.path.join(args.out_dir, os.path.basename(self.cfg.sequence_db()))
+
+        cfg = Config(MacsyDefaults(), args)
+        idx = Indexes(cfg)
         os.makedirs(args.index_dir)
         os.chmod(args.index_dir, 0000)
         try:
@@ -382,14 +385,16 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
         finally:
             os.chmod(args.index_dir, 0o777)
 
+
+    def test_index_dir_seqdb_is_not_path(self):
         # case the sequence_db value is just a filename not a path
         current_dir = os.getcwd()
         try:
-            os.chdir(args.out_dir)
             args = argparse.Namespace()
             args.db_type = 'gembase'
             args.models_dir = self.find_data('models')
-            args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+            args.out_dir = self._tmp_dir.name
+            os.chdir(args.out_dir)
             args.sequence_db = os.path.basename(self.cfg.sequence_db())
             cfg = Config(MacsyDefaults(), args)
             idx = Indexes(cfg)
@@ -398,14 +403,12 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
         finally:
             os.chdir(current_dir)
 
+
     def test_build_my_indexes(self):
         args = argparse.Namespace()
         args.db_type = 'gembase'
 
-        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
-        if os.path.exists(args.out_dir):
-            shutil.rmtree(os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes'))
-        os.makedirs(args.out_dir)
+        args.out_dir = self._tmp_dir.name
         seq_db = self.find_data("base", "test_base_with_errors.fa")
         shutil.copy(seq_db, args.out_dir)
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db))
@@ -460,7 +463,7 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
     def test_empty_fasta(self):
         args = argparse.Namespace()
         args.models_dir = self.find_data('models')
-        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+        args.out_dir = self._tmp_dir.name
         args.index_dir = args.out_dir
 
         seq_db = "empty.fasta"

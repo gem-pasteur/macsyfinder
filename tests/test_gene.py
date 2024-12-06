@@ -23,7 +23,6 @@
 #########################################################################
 
 import os
-import shutil
 import tempfile
 import argparse
 
@@ -43,7 +42,8 @@ class TestCoreGene(MacsyTest):
         args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.res_search_dir = tempfile.gettempdir()
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_CoreGene_')
+        args.res_search_dir = self._tmp_dir.name
         args.log_level = 30
         self.cfg = Config(MacsyDefaults(), args)
         self.model_name = 'foo'
@@ -52,10 +52,8 @@ class TestCoreGene(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir())
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
+
 
     def test_core_gene(self):
         model_fqn = "foo/bar"
@@ -80,7 +78,8 @@ class TestModelGene(MacsyTest):
         args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.res_search_dir = tempfile.gettempdir()
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_CoreGene_')
+        args.res_search_dir = self._tmp_dir.name
         args.log_level = 30
         self.cfg = Config(MacsyDefaults(), args)
         self.model_name = 'foo'
@@ -89,10 +88,8 @@ class TestModelGene(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir())
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
+
 
     def test_init(self):
         model_foo = Model("foo", 10)

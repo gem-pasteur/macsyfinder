@@ -24,7 +24,6 @@
 
 
 import os
-import shutil
 import tempfile
 import argparse
 import colorlog
@@ -87,7 +86,8 @@ class ModelLocationTest(MacsyTest):
         macsypy.init_logger()
         logger = colorlog.getLogger('macsypy.registries')
         registries._log = logger
-        self.tmp_dir = tempfile.mkdtemp()
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_ModelLocation_')
+        self.tmp_dir = self._tmp_dir.name
         self.root_models_dir = os.path.join(self.tmp_dir, 'models')
         os.mkdir(self.root_models_dir)
 
@@ -128,10 +128,7 @@ class ModelLocationTest(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.tmp_dir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
         logger = colorlog.getLogger('macsypy.registries')
         del logger.manager.loggerDict['macsypy.registries']
         del logger.manager.loggerDict['macsypy']
@@ -470,8 +467,15 @@ class DefinitionLocationTest(MacsyTest):
 
 class ModelRegistryTest(MacsyTest):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.cwd = os.getcwd()
+
+
     def setUp(self):
-        self.tmp_dir = tempfile.mkdtemp()
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_Modelregistry_')
+        self.tmp_dir = self._tmp_dir.name
+        os.chdir(self.tmp_dir)
         registries._prefix_data = self.tmp_dir
         self.root_models_dir = os.path.join(self.tmp_dir, 'macsyfinder', 'models')
         self.cfg = Config(MacsyDefaults(models_dir=self.root_models_dir),
@@ -507,14 +511,9 @@ class ModelRegistryTest(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir)
-        except Exception:
-            pass
-        try:
-            shutil.rmtree(self.tmp_dir)
-        except Exception:
-            pass
+        os.chdir(self.cwd)
+        self._tmp_dir.cleanup()
+
 
     def test_scan_models_dir(self):
         models_location = scan_models_dir(self.cfg.models_dir())

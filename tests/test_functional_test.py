@@ -21,8 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
-
+import logging
 import shutil
 import tempfile
 import os
@@ -31,7 +30,6 @@ import inspect
 import unittest
 import itertools
 
-import colorlog
 import pandas as pd
 
 from tests import MacsyTest
@@ -40,22 +38,15 @@ from macsypy.error import OptionError
 from macsypy.system import System, AbstractUnordered, RejectedCandidate
 
 
-class Test(MacsyTest):
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls._index_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_index')
-        if not os.path.exists(cls._index_dir):
-            os.makedirs(cls._index_dir)
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        if os.path.exists(cls._index_dir):
-            shutil.rmtree(cls._index_dir)
+class TestFunctional(MacsyTest):
 
 
     def setUp(self):
-        self.tmp_dir = tempfile.gettempdir()
+        # self._index_dir = tempfile.TemporaryDirectory(prefix='test_msf_index_')
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_functional_')
+        self.tmp_dir = self._tmp_dir.name
+        self.index_dir = os.path.join(self.tmp_dir, 'index_dir')
+        os.mkdir(self.index_dir)
         # reset System, AbstractUnordered internal id to have predictable results (Systems, ...) id
         # it's works only if there is only one replicon
         # for gembase the order is not guarantee
@@ -76,18 +67,17 @@ class Test(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            pass
-            # self.out_dir is set in self._macsyfinder_run
-            shutil.rmtree(self.out_dir)
-        except Exception:
-            pass
-        # remove handlers
-        # otherwise at each test init_logger is called
-        # and the handlers are accumulated and produce multiple values
-        logger = colorlog.getLogger('macsypy')
-        for h in logger.handlers[:]:
-            logger.removeHandler(h)
+        self._tmp_dir.cleanup()
+        logger = macsyfinder._log
+        # need to clean logger
+        # as it is a singleton
+        # otherwise to each cal macsyfinder the init logger is called
+        # then handlers are added (duplicated over and over)
+        if logger:
+            for handler in logger.handlers[:]:
+                logger.removeHandler(handler)
+        logging.shutdown()
+
 
     @unittest.skipIf(not shutil.which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_gembase(self):
@@ -99,7 +89,7 @@ class Test(MacsyTest):
                f"--models-dir={self.find_data('models')} " \
                "--models TFF-SF all " \
                "--out-dir={out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -138,7 +128,7 @@ class Test(MacsyTest):
                f"--models-dir={self.find_data('models')} " \
                "--models TFF-SF all " \
                "--out-dir={out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path " \
                "--timeout 2 "
@@ -188,7 +178,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m test_loners MOB_cf_T5SS " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -224,7 +214,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -262,7 +252,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional_gzip T12SS-simple-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -298,7 +288,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -336,7 +326,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -373,7 +363,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -411,7 +401,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -450,7 +440,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -487,7 +477,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -524,7 +514,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -562,7 +552,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -600,7 +590,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                "--multi-loci functional/T12SS-simple-exch " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
@@ -638,7 +628,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -681,7 +671,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-multisystem " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -720,7 +710,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-multisystem " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -760,7 +750,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional  C_multi_model D_multi_model " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -801,7 +791,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional  C_no_multi_model D_multi_model " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -838,7 +828,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional degenerated_systems " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -874,7 +864,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional  uncomplete_degenerated_systems " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -915,7 +905,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional  A B " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -948,7 +938,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -973,7 +963,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-forbidden " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -999,7 +989,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-forbidden " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -1022,11 +1012,12 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                "--relative-path"
         with self.assertRaises(SystemExit):
-            with self.catch_io(out=True):
-                self._macsyfinder_run(args)
+                with self.catch_io(out=True):
+                    self._macsyfinder_run(args)
+
         with open(os.path.join(self.out_dir, 'macsyfinder.log')) as log_file:
             log = log_file.readlines()[-1].strip()
         self.assertEqual(log,
@@ -1048,11 +1039,11 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
-        self.assertTrue(os.path.exists(os.path.join(self._index_dir, "test_3.fasta.idx")))
+        self.assertTrue(os.path.exists(os.path.join(self.index_dir, "test_3.fasta.idx")))
 
 
     def test_working_dir_exists(self):
@@ -1110,7 +1101,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                f"-o {self.out_dir} " \
-               f"--index-dir {self._index_dir} " \
+               f"--index-dir {self.index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -1251,4 +1242,4 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
                 if i > 20:
                     break
             shutil.copytree(self.out_dir, new_name)
-            shutil.copytree(self._index_dir, os.path.join(new_name, os.path.basename(self._index_dir)))
+            shutil.copytree(self.index_dir, os.path.join(new_name, os.path.basename(self.index_dir)))

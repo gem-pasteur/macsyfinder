@@ -35,17 +35,15 @@ from tests import MacsyTest
 class TestMetadata(MacsyTest):
 
     def setUp(self) -> None:
-        self.tmpdir = os.path.join(tempfile.gettempdir(), 'macsy_test_metadata')
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_metadata_')
+        self.tmpdir = self._tmp_dir.name
         if os.path.exists(self.tmpdir) and os.path.isdir(self.tmpdir):
             shutil.rmtree(self.tmpdir)
         os.makedirs(self.tmpdir)
 
 
     def tearDown(self) -> None:
-        try:
-            shutil.rmtree(self.tmpdir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
 
 
     def test_init(self):

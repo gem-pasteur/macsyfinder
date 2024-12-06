@@ -40,11 +40,12 @@ from tests import MacsyTest
 class TestModel(MacsyTest):
 
     def setUp(self):
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_Model_')
         self.args = argparse.Namespace()
         self.args.sequence_db = self.find_data("base", "test_1.fasta")
         self.args.db_type = 'gembase'
         self.args.models_dir = self.find_data('models')
-        self.args.res_search_dir = tempfile.gettempdir()
+        self.args.res_search_dir = self._tmp_dir.name
         self.args.log_level = 30
         self.args.out_dir = os.path.join(self.args.res_search_dir,
                                          'test_macsyfinder_Model')
@@ -59,13 +60,8 @@ class TestModel(MacsyTest):
 
 
     def tearDown(self):
-        self.clean_working_dir()
+        self._tmp_dir.cleanup()
 
-    def clean_working_dir(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir())
-        except Exception:
-            pass
 
     def test_fqn(self):
         fqn = 'foo/bla'
@@ -82,8 +78,6 @@ class TestModel(MacsyTest):
         model = Model(model_fqn, inter_gene_max_space_xml)
         self.assertEqual(model.inter_gene_max_space, inter_gene_max_space_xml)
 
-        self.clean_working_dir()
-
 
     def test_min_genes_required(self):
         model_fqn = 'foo/model_1'
@@ -96,8 +90,6 @@ class TestModel(MacsyTest):
         self.assertEqual(model.min_genes_required, min_genes_required_xml)
         model = Model(model_fqn, 10)
         self.assertEqual(model.min_genes_required, len(model.mandatory_genes))
-
-        self.clean_working_dir()
 
 
     def test_min_mandatory_genes_required(self):
@@ -112,8 +104,6 @@ class TestModel(MacsyTest):
 
         system = Model(model_fqn, 10)
         self.assertEqual(system.min_mandatory_genes_required, len(system.mandatory_genes))
-
-        self.clean_working_dir()
 
 
     def test_max_nb_genes(self):
@@ -135,7 +125,6 @@ class TestModel(MacsyTest):
         model.add_mandatory_gene(gene_sctc)
         model.add_accessory_gene(gene_abc)
         self.assertEqual(model.max_nb_genes, 2)
-        self.clean_working_dir()
 
 
     def test_multi_loci(self):
@@ -148,10 +137,7 @@ class TestModel(MacsyTest):
         model = Model(model_fqn, inter_gene_max_space)
         self.assertFalse(model.multi_loci)
 
-        self.clean_working_dir()
-
         self.args.multi_loci = 'foo/False'
-
         model_fqn = 'foo/False'
         inter_gene_max_space = 40
         model = Model(model_fqn, inter_gene_max_space, multi_loci=False)

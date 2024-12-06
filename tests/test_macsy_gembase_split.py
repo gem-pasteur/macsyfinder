@@ -21,7 +21,6 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
 import tempfile
 import shutil
 import os
@@ -38,8 +37,14 @@ from macsypy.scripts import macsy_gembase_split
 
 class TestSplit(MacsyTest):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.logger = colorlog.getLogger('macsypy.split')
+
+
     def setUp(self):
-        self.tmpdir = tempfile.mkdtemp()
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_Split_')
+        self.tmpdir = self._tmp_dir.name
         self.test_dir = os.path.join(self.tmpdir, 'macsyfinder_test_split')
         os.mkdir(self.test_dir)
 
@@ -47,17 +52,15 @@ class TestSplit(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.tmpdir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
         # some function in macsydata script suppress the traceback
         # but without traceback it's hard to debug test :-(
         sys.tracebacklimit = 1000  # the default value
 
-        logger = colorlog.getLogger('macsypy')
-        for h in logger.handlers[:]:
-            logger.removeHandler(h)
+        # logger = colorlog.getLogger('macsypy.split')
+        for h in self.logger.handlers[:]:
+            self.logger.removeHandler(h)
+
 
 
     def test_functional_split(self):
@@ -116,7 +119,7 @@ class TestSplit(MacsyTest):
         os.mkdir(seq_dir, mode=0o444)
         cmd = f"macsy_gembase_split -o {seq_dir} {gembase}"
         try:
-            with self.catch_io(out=True):
+            with self.catch_io(out=True, err=True):
                 with self.assertRaises(IOError):
                     macsy_gembase_split.main(args=cmd.split()[1:], log_level='WARNING')
                 stdout = sys.stdout.getvalue().strip()
@@ -129,7 +132,7 @@ class TestSplit(MacsyTest):
         # the -o option parent is NOT writable
         ######################################
         os.chmod(self.test_dir, mode=0o444)
-        with self.catch_io(out=True):
+        with self.catch_io(out=True, err=True):
             with self.assertRaises(IOError):
                 macsy_gembase_split.main(args=cmd.split()[1:], log_level='WARNING')
             stdout = sys.stdout.getvalue().strip()

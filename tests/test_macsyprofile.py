@@ -41,16 +41,14 @@ from macsypy.scripts import macsyprofile
 class TestMacsyprofile(MacsyTest):
 
     def setUp(self):
-        self.tmpdir = tempfile.mkdtemp()
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_macsyprofile_')
+        self.tmpdir = self._tmp_dir.name
 
         self.args = argparse.Namespace()
         self.previous_run = self.find_data('functional_test_gembase')
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.tmpdir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
         # some function in macsyprofile script suppress the traceback
         # but without traceback it's hard to debug test :-(
         sys.tracebacklimit = 1000  # the default value

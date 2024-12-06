@@ -37,24 +37,19 @@ from tests import MacsyTest
 
 class TestConfig(MacsyTest):
 
+
     def setUp(self):
         self._current_dir = os.getcwd()
-        self.tmp_dir = os.path.join(tempfile.gettempdir(),
-                                    'test_macsyfinder_Config')
-        if os.path.exists(self.tmp_dir):
-            shutil.rmtree(self.tmp_dir)
-        os.mkdir(self.tmp_dir)
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_Config_')
+        self.tmp_dir = self._tmp_dir.name
         self.defaults = MacsyDefaults()
         self.parsed_args = Namespace()
 
 
     def tearDown(self):
         os.chdir(self._current_dir)
-        try:
-            shutil.rmtree(self.tmp_dir)
-            #pass
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
+
 
     def test_str_2_tuple(self):
         s = 'set_1/Flagellum 12 set_1/t4ss 13'

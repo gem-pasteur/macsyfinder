@@ -21,6 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+
 import logging
 import colorlog
 import tempfile
@@ -49,10 +50,14 @@ class Test(MacsyTest):
         self.assertTrue(isinstance(handlers[0], logging.NullHandler))
 
     def test_init_logger_logfile(self):
-        with tempfile.NamedTemporaryFile() as fp:
-            handlers = macsypy.init_logger(log_file=fp.name)
+        with tempfile.NamedTemporaryFile() as log_file:
+            handlers = macsypy.init_logger(log_file=log_file.name)
+        try:
             self.assertEqual(len(handlers), 2)
             self.assertTrue(isinstance(handlers[1], logging.FileHandler))
+        finally:
+            for h in handlers:
+                h.close()
 
     def test_logger_set_level_default(self):
         macsypy.init_logger()

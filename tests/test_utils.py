@@ -23,8 +23,6 @@
 #########################################################################
 
 import os
-import shutil
-import tempfile
 import argparse
 
 from macsypy.registries import ModelRegistry, scan_models_dir
@@ -35,16 +33,6 @@ from tests import MacsyTest
 
 
 class TestUtils(MacsyTest):
-
-    def setUp(self):
-        self.tmp_dir = tempfile.mkdtemp()
-
-
-    def tearDown(self):
-        try:
-            shutil.rmtree(self.tmp_dir)
-        except Exception:
-            pass
 
 
     def test_get_def_to_detect(self):

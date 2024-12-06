@@ -55,16 +55,14 @@ from tests import MacsyTest
 class TestMacsyfinder(MacsyTest):
 
     def setUp(self):
-        self.tmp_dir = tempfile.mkdtemp()
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_macsyfinder_')
+        self.tmp_dir = self._tmp_dir.name
         self._reset_id()
         AbstractUnordered._id = itertools.count(1)
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.tmp_dir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
 
 
     def _fill_model_registry(self, config):

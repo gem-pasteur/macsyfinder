@@ -44,11 +44,12 @@ from tests import MacsyTest
 class TestProfile(MacsyTest):
 
     def setUp(self):
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_Profile_')
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.res_search_dir = tempfile.gettempdir()
+        args.res_search_dir = self._tmp_dir.name
         args.log_level = 50
         self.cfg = Config(MacsyDefaults(), args)
 
@@ -62,10 +63,7 @@ class TestProfile(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir())
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
 
 
     def test_len(self):
@@ -267,7 +265,7 @@ class TestProfile(MacsyTest):
             args.sequence_db = self.find_data("base", "test_1.fasta")
             args.db_type = 'gembase'
             args.models_dir = self.find_data('models')
-            args.res_search_dir = tempfile.gettempdir()
+            args.res_search_dir = self._tmp_dir.name
             args.log_level = 0
             args.e_value_search = 0.5
             args.no_cut_ga = True
@@ -334,7 +332,7 @@ class TestProfile(MacsyTest):
 
 
     def test_execute_hmmer_failed(self):
-        fake_hmmer = os.path.join(tempfile.gettempdir(), 'hmmer_failed')
+        fake_hmmer = os.path.join(self._tmp_dir.name, 'hmmer_failed')
         with open(fake_hmmer, 'w') as hmmer:
             hmmer.write("""#! {}
 import sys

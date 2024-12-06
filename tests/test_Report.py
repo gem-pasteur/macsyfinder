@@ -43,17 +43,21 @@ from tests import MacsyTest
 
 class TestReport(MacsyTest):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.cwd = os.getcwd()
+
 
     def setUp(self):
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_Report_')
+        os.chdir(self._tmp_dir.name)
         args = argparse.Namespace()
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.res_search_dir = tempfile.gettempdir()
+        args.res_search_dir = self._tmp_dir.name
         args.log_level = 30
         args.out_dir = os.path.join(args.res_search_dir,
                                     'test_macsyfinder_Report')
-        if os.path.exists(args.out_dir):
-            shutil.rmtree(args.out_dir)
         os.mkdir(args.out_dir)
 
         self.seq_db = self.find_data("base", "test_base.fa")
@@ -77,10 +81,8 @@ class TestReport(MacsyTest):
 
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir())
-        except Exception:
-            pass
+        os.chdir(self.cwd)
+        self._tmp_dir.cleanup()
 
 
 class TestHMMReport(TestReport):
@@ -366,7 +368,7 @@ class TestGembaseHMMReport(TestReport):
         for report in reports:
             t = threading.Thread(target=worker, args=(report,))
             t.start()
-        main_thread = threading.currentThread()
+        main_thread = threading.current_thread()
         for t in threading.enumerate():
             if t is main_thread:
                 continue
@@ -458,7 +460,7 @@ class TestOrderedHMMReport(TestReport):
         for report in reports:
             t = threading.Thread(target=worker, args=(report,))
             t.start()
-        main_thread = threading.currentThread()
+        main_thread = threading.current_thread()
         for t in threading.enumerate():
             if t is main_thread:
                 continue
@@ -538,7 +540,7 @@ class TestGeneralHMMReport(TestReport):
         for report in reports:
             t = threading.Thread(target=worker, args=(report,))
             t.start()
-        main_thread = threading.currentThread()
+        main_thread = threading.current_thread()
         for t in threading.enumerate():
             if t is main_thread:
                 continue

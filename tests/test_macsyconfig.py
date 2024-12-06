@@ -618,10 +618,8 @@ class TestMacsyconfig(MacsyTest):
 
     def test_functional_dark_theme(self):
         cur_dir = os.getcwd()
-        tmpdir = os.path.join(tempfile.gettempdir(), 'tmp-macsyconfig')
-        if os.path.exists(tmpdir):
-            shutil.rmtree(tmpdir)
-        os.mkdir(tmpdir)
+        _temp_dir = tempfile.TemporaryDirectory(prefix='test_msf_macsyconfig_')
+        tmpdir =  _temp_dir.name
         os.chdir(tmpdir)
         cf_default = MacsyDefaults(system_models_dir='')
         cf_args = argparse.Namespace(cfg_file="macsyfinder.conf")
@@ -690,7 +688,7 @@ Place it in canonical location
                                   })
         finally:
             os.chdir(cur_dir)
-            shutil.rmtree(tmpdir)
+            _temp_dir.cleanup()
 
 
     def test_functional_file_already_exists(self):

@@ -64,8 +64,6 @@ class TestPackageFunc(MacsyTest):
                          f"{pack} does not seem to not be versioned.")
 
 
-# class TestModelIndex(MacsyTest):
-
     def test_init(self):
         with self.assertRaises(TypeError):
             package.AbstractModelIndex()
@@ -87,16 +85,13 @@ class TestLocalModelIndex(MacsyTest):
 class TestRemoteModelIndex(MacsyTest):
 
     def setUp(self) -> None:
-        self.tmpdir = os.path.join(tempfile.gettempdir(), 'macsy_test_package')
-        if os.path.exists(self.tmpdir) and os.path.isdir(self.tmpdir):
-            shutil.rmtree(self.tmpdir)
-        os.makedirs(self.tmpdir)
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_package_')
+        self.tmpdir = self._tmp_dir.name
+
 
     def tearDown(self) -> None:
-        try:
-            shutil.rmtree(self.tmpdir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
+
 
     def mocked_requests_get(url: str, context:None=None):
         # cannot type the return value the class is defined inside de method
@@ -422,10 +417,8 @@ Please wait before to try again.""")
 class TestPackage(MacsyTest):
 
     def setUp(self) -> None:
-        self.tmpdir = os.path.join(tempfile.gettempdir(), 'macsy_test_package')
-        if os.path.exists(self.tmpdir) and os.path.isdir(self.tmpdir):
-            shutil.rmtree(self.tmpdir)
-        os.makedirs(self.tmpdir)
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_package_')
+        self.tmpdir = self._tmp_dir.name
 
         macsypy.init_logger()
         macsypy.logger_set_level(30)
@@ -450,10 +443,7 @@ ligne 3 et bbbbb
 
 
     def tearDown(self) -> None:
-        try:
-            shutil.rmtree(self.tmpdir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
         logger = colorlog.getLogger('macsypy.package')
         del logger.manager.loggerDict['macsypy.package']
         del logger.manager.loggerDict['macsypy.model_conf_parser']
@@ -637,7 +627,7 @@ ligne 3 et bbbbb
 
         open(os.path.join(pack.path, 'definitions'), 'w').close()
         errors, warnings = pack._check_structure()
-        self.assertListEqual(errors, ["'/tmp/macsy_test_package/fake_model/definitions' is not a directory."])
+        self.assertListEqual(errors, [f"'{os.path.join(self.tmpdir, 'fake_model', 'definitions')}' is not a directory."])
         self.assertListEqual(warnings, [])
 
 
@@ -651,7 +641,7 @@ ligne 3 et bbbbb
 
         open(os.path.join(pack.path, 'profiles'), 'w').close()
         errors, warnings = pack._check_structure()
-        self.assertListEqual(errors, ["'/tmp/macsy_test_package/fake_model/profiles' is not a directory."])
+        self.assertListEqual(errors, [f"'{os.path.join(self.tmpdir, 'fake_model', 'profiles')}' is not a directory."])
         self.assertListEqual(warnings, [])
 
 
@@ -867,7 +857,7 @@ ligne 3 et bbbbb
         self.assertListEqual(errors, [
             '\nThere are several profiles RM_Type_II__Type_II_REases___Type_II_REase01\n'
             ' - RM_Type_II__Type_II_REases___Type_II_REase02\n'
-            'in /tmp/macsy_test_package/fake_model/profiles/several_profiles.hmm:\n'
+            f"in {os.path.join(self.tmpdir, 'fake_model', 'profiles', 'several_profiles')}.hmm:\n"
             ' Split this file to have one profile per file.'
         ])
         self.assertListEqual(warnings, [])

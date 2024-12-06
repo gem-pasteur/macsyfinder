@@ -24,7 +24,6 @@
 
 
 import os
-import shutil
 import tempfile
 import argparse
 
@@ -39,11 +38,12 @@ from tests import MacsyTest
 class TestProfileFactory(MacsyTest):
 
     def setUp(self):
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_ProfileFactory_')
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.res_search_dir = tempfile.gettempdir()
+        args.res_search_dir = self._tmp_dir.name
         args.log_level = 30
         self.cfg = Config(MacsyDefaults(), args)
 
@@ -52,10 +52,7 @@ class TestProfileFactory(MacsyTest):
         self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir)
-        except Exception:
-            pass
+        self._tmp_dir.cleanup()
 
 
     def test_get_profile(self):
