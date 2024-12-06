@@ -50,7 +50,9 @@ def get_git_revision_short_hash() -> str:
     """
     try:
         short_hash = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],
-                                             cwd=os.path.dirname(os.path.abspath(__file__)))
+                                             cwd=os.path.dirname(os.path.abspath(__file__)),
+                                             stderr=os.devnull
+                                             )
         short_hash = str(short_hash, "utf-8").strip()
     except Exception:
         short_hash = ''
