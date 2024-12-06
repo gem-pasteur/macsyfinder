@@ -359,6 +359,8 @@ VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
         self.assertEqual(str(ctx.exception),
                          f"No such directory: {args.index_dir}")
 
+
+    @unittest.skipIf(platform.system() == 'Windows' or os.getuid() == 0, 'Skip test on Windows or if run as root')
     def test_index_dir_not_writable(self):
         # case --index-dir is not writable
         args = argparse.Namespace()
