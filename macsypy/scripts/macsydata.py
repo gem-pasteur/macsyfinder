@@ -649,7 +649,9 @@ def do_show_definition(args: argparse.Namespace) -> None:
     :param args: the arguments passed on the command line
     """
     def display_definition(path):
-        return open(path, 'r').read()
+        with open(path, 'r') as def_file:
+            def_txt = def_file.read()
+        return def_txt
 
     model_family, *models = args.model
     pack_name, *sub_family = model_family.split('/')

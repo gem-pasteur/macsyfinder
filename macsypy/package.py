@@ -481,7 +481,7 @@ class Package:
                             profiles_name = []
                             header = next(hmm_file)
                             if header.startswith('HMMER3'):
-                                for line in open(path):
+                                for line in hmm_file:
                                     if line.startswith('NAME '):
                                         profiles_name.append(line.split()[-1])
                                 if len(profiles_name) > 1:
