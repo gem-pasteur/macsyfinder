@@ -29,7 +29,7 @@ coverage:
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/coverage
   script:
     - python3 -m pip install .[model]
-    - coverage run -vv
+    - coverage run
     - coverage html
     - coverage report
 
