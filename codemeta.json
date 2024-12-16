@@ -4,7 +4,7 @@
     "applicationCategory": "Biology",
     "author": [
         {
-            "id": "https://orcid.org/ 0000-0002-0220-0482",
+            "id": "https://orcid.org/0000-0002-0220-0482",
             "type": "Person",
             "affiliation": {
                 "type": "Organization",
@@ -15,7 +15,7 @@
             "givenName": "Bertrand"
         },
         {
-            "id": "https://orcid.org/ 0000-0002-5231-3346",
+            "id": "https://orcid.org/0000-0002-5231-3346",
             "type": "Person",
             "affiliation": {
                 "type": "Organization",
@@ -26,7 +26,7 @@
             "givenName": "Sophie"
         },
         {
-            "id": "https://orcid.org/ 0000-0001-7704-822X",
+            "id": "https://orcid.org/0000-0001-7704-822X",
             "type": "Person",
             "affiliation": {
                 "type": "Organization",
@@ -40,7 +40,7 @@
     "codeRepository": "https://github.com/gem-pasteur/macsyfinder",
     "contributor": [
         {
-            "id": "https://orcid.org/ 0000-0002-7552-1009",
+            "id": "https://orcid.org/0000-0002-7552-1009",
             "type": "Person",
             "affiliation": {
                 "type": "Organization",
@@ -72,7 +72,7 @@
             "givenName": "Rémi"
         },
         {
-            "id": "https://orcid.org/ 0000-0001-7389-447X",
+            "id": "https://orcid.org/0000-0001-7389-447X",
             "type": "Person",
             "affiliation": {
                 "type": "Organization",
@@ -83,7 +83,7 @@
             "givenName": "Marie"
         },
         {
-            "id": "https://orcid.org/ 0000-0003-4797-6185",
+            "id": "https://orcid.org/0000-0003-4797-6185",
             "type": "Person",
             "affiliation": {
                 "type": "Organization",
@@ -94,7 +94,7 @@
             "givenName": "Amandine"
         },
         {
-            "id": "https://orcid.org/ 0000-0002-0930-8920",
+            "id": "https://orcid.org/0000-0002-0930-8920",
             "type": "Person",
             "affiliation": {
                 "type": "Organization",
