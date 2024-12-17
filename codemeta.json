@@ -109,6 +109,13 @@
             "type": "Person",
             "email": "charles.mcfarland@trellix.com",
             "givenName": "TrellixVulnTeam"
+        },
+        {
+            "id": "https://orcid.org/0000-0002-2961-9670",
+            "type": "Person",
+            "email": "crusoe@debian.org",
+            "familyName": "Crusoe",
+            "givenName": "Michael R."
         }
     ],
     "dateCreated": "2013-11-04",
