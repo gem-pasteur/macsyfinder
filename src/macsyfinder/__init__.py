@@ -21,55 +21,33 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+import os
+import subprocess
+from time import strftime, localtime
 
-"""
-Manage MacSyFinder specific errors
-"""
+__version__ = f'{strftime("%Y%m%d", localtime())}.dev'
 
 
-class MacsypyError(Exception):
+__citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
+MacSyFinder v2: Improved modelling and search engine to identify molecular systems in genomes.
+Peer Community Journal, Volume 3 (2023), article no. e28. doi : 10.24072/pcjournal.250.
+https://peercommunityjournal.org/articles/10.24072/pcjournal.250/"""
+
+
+def get_git_revision_short_hash() -> str:
     """
-    The base class for MacSyFinder specific exceptions.
+    :return: the git commit number (short version) or empty string if this not a git repository
+    :rtype: str
     """
+    try:
+        short_hash = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'],
+                                             cwd=os.path.dirname(os.path.abspath(__file__)),
+                                             stderr=subprocess.DEVNULL)
 
+        short_hash = str(short_hash, "utf-8").strip()
+    except Exception as err:
+        short_hash = ''
+    return short_hash
 
-class MacsydataError(MacsypyError):
-    """
-    Raised when error is encounter during model package handling
-    """
-
-
-class MacsyDataLimitError(MacsydataError):
-    """
-    Raised when the maximum number of GitHub api call is reached
-    """
-
-
-class OptionError(MacsypyError):
-    """
-    Raised when command line option is not set properly
-    """
-
-
-class ModelInconsistencyError(MacsypyError):
-    """
-    Raised when a definition model is not consistent.
-    """
-
-
-class SystemDetectionError(MacsypyError):
-    """
-    Raised when the detection of systems from Hits encountered a problem.
-    """
-
-
-class Timeout(MacsypyError):
-    """
-    Raised when best solution reach the timeout
-    """
-
-
-class EmptyFileError(MacsypyError):
-    """
-    Raised when fasta file does not contains sequences
-    """
+#  do not display the commit for the MSF tagged versions
+__commit__ = f'{get_git_revision_short_hash()}' if 'dev' in __version__ else ''

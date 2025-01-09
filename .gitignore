@@ -6,13 +6,6 @@
 *\.log
 .DS_Store
 
-####################
-# Eclipse metadata_path #
-####################
-\.project
-\.pydevproject
-\.settings/
-
 #############
 # vim files #
 #############
@@ -46,7 +39,6 @@ coverage_html/
 ###################################
 # MacsyFinder results directories #
 ###################################
-log*
 test/datatest/DEF_svg/
 macsypy/*_svg
 macsyfinder-*/
@@ -72,7 +64,6 @@ uninstall.cfg
 uninstall_files
 macsyfinder.egg-info/
 *\.idx
-
 
 #############
 # nextflow  #

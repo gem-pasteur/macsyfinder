@@ -105,6 +105,8 @@ Then run `macsyfinder` or `macsydata`.
     please read `CONTRIBUTING.md <https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTING.md>`_ guide lines.
 
 
+.. dev_testing:
+
 Testing
 =======
 

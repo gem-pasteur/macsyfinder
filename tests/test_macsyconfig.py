@@ -30,8 +30,8 @@ import sys
 import tempfile
 from unittest.mock import patch
 
-import macsypy.scripts.macsyconfig as msf_cfg
-from macsypy import __version__ as msf_vers
+import macsyfinder.scripts.macsyconfig as msf_cfg
+from macsyfinder import __version__ as msf_vers
 from macsypy.config import Config, MacsyDefaults
 from macsypy.error import MacsypyError
 from tests import MacsyTest
@@ -228,7 +228,7 @@ class TestMacsyconfig(MacsyTest):
 
     def test_check_file(self):
         test_file = __file__
-        sibling = os.path.join(os.path.dirname(test_file), 'test_hit.py')
+        sibling = os.path.join(os.path.dirname(test_file), 'test_macsyfinder.py')
         val = msf_cfg.check_file(test_file, None, None)
         self.assertEqual(val, test_file)
 
@@ -702,7 +702,7 @@ Place it in canonical location
         real_exit = sys.exit
         sys.exit = self.fake_exit
         open('macsyfinder.conf', 'w').close()
-        conf_template = self.find_data("conf_files", "macsyfinder_default.conf")
+        conf_template = self.find_data("macsyfinder_default.conf")
         with open(conf_template) as conf_file:
             lines = conf_file.readlines()
         # we nned to hak this line

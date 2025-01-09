@@ -89,16 +89,9 @@ https://macsyfinder.readthedocs.io/en/latest/developer_guide/installation.html
 
 ## Unit tests
 
-    python3 setup.py test
+    python3 -m unittest discover -vv test
 
-or
-
-    python3 tests/run_tests.py -vv
-
-or to run a specific test
-
-    python3 tests/run_tests.py -vv tests/test_xxx.py
-
+for more details read https://macsyfinder.readthedocs.io/en/latest/developer_guide/installation.html#macsyfinder-installation-and-testing-procedures
 
 ### with github actions / coverage / codecov
 

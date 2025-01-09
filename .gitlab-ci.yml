@@ -12,7 +12,7 @@ ruff:
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
   script:
     - python3 -m pip install .[dev]
-    - ruff check --output-format=gitlab macsypy/ tests/
+    - ruff check --output-format=gitlab
 
 testing:
   stage: test

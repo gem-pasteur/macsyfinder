@@ -43,10 +43,10 @@ from macsypy.solution import Solution
 from macsypy.cluster import Cluster
 from macsypy.utils import get_def_to_detect
 
-from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_candidates_to_txt, solutions_to_tsv, \
+from macsyfinder.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_candidates_to_txt, solutions_to_tsv, \
      summary_best_solution, likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt, \
      loners_to_tsv, multisystems_to_tsv, rejected_candidates_to_tsv
-from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
+from macsyfinder.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
 from tests import MacsyTest

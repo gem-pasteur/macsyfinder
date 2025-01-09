@@ -31,7 +31,7 @@ import unittest
 import platform
 
 from tests import MacsyTest
-from macsypy.scripts import macsy_merge_results
+from macsyfinder.scripts import macsy_merge_results
 
 
 class TestMerge(MacsyTest):

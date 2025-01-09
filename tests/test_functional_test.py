@@ -33,7 +33,7 @@ import itertools
 import pandas as pd
 
 from tests import MacsyTest
-from macsypy.scripts import macsyfinder
+from macsyfinder.scripts import macsyfinder
 from macsypy.error import OptionError
 from macsypy.system import System, AbstractUnordered, RejectedCandidate
 

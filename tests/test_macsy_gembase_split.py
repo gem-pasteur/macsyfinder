@@ -32,7 +32,7 @@ import unittest
 import platform
 
 from tests import MacsyTest
-from macsypy.scripts import macsy_gembase_split
+from macsyfinder.scripts import macsy_gembase_split
 
 
 class TestSplit(MacsyTest):

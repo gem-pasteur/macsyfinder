@@ -43,6 +43,7 @@ import colorlog
 
 import pandas as pd
 
+import macsyfinder
 import macsypy
 from macsypy.config import MacsyDefaults, Config
 from macsypy.cluster import Cluster
@@ -88,8 +89,8 @@ def get_version_message() -> str:
     """
     :return: the long description of the macsyfinder version
     """
-    version = macsypy.__version__
-    commit = macsypy.__commit__
+    version = macsyfinder.__version__
+    commit = macsyfinder.__commit__
     py_vers = sys.version.replace('\n', ' ')
     vers_msg = f"""Macsyfinder {version} {commit}
 using:
