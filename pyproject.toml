@@ -13,8 +13,10 @@ maintainers = [
     {name="Bertrand Neron", email='bneron@pasteur.fr'}
     ]
 description = 'MacSyFinder: Detection of macromolecular systems in protein datasets using systems modelling and similarity search'
+keywords = ['science', 'research', 'bioinformatic', 'microbiology', 'genomic', 'prokaryote', 'functional gene annotation']
 readme = "README.md"
-license = {file="COPYING"}
+icense = "GPL-3.0-or-later"
+license-files = ["COPYING"]
 
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -89,7 +91,6 @@ command_line = "-m unittest discover -vv"
 
 
 [tool.ruff]
-
 target-version = "py310"
 
 # Exclude a variety of commonly ignored directories.
