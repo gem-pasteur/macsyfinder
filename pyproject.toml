@@ -15,7 +15,7 @@ maintainers = [
 description = 'MacSyFinder: Detection of macromolecular systems in protein datasets using systems modelling and similarity search'
 keywords = ['science', 'research', 'bioinformatic', 'microbiology', 'genomic', 'prokaryote', 'functional gene annotation']
 readme = "README.md"
-icense = "GPL-3.0-or-later"
+license = "GPL-3.0-or-later"
 license-files = ["COPYING"]
 
 classifiers = [
