@@ -89,7 +89,11 @@ https://macsyfinder.readthedocs.io/en/latest/developer_guide/installation.html
 
 ## Unit tests
 
-    python3 -m unittest discover -vv test
+    python3 -m unittest discover -vv
+
+
+for more details about running tests please refer to documentation
+https://macsyfinder.readthedocs.io/en/latest/developer_guide/installation.html#testing
 
 for more details read https://macsyfinder.readthedocs.io/en/latest/developer_guide/installation.html#macsyfinder-installation-and-testing-procedures
 
