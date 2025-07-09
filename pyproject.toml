@@ -51,7 +51,6 @@ dev = [
 ]
 
 model = [
-    "GitPython",
     "macsylib[model]"
 ]
 
@@ -114,3 +113,10 @@ indent-style = "space"
 
 [tool.ruff.lint.per-file-ignores]
 
+[tool.pylint]
+py-version = 3.11
+max-line-length = 120
+
+[tool.pylint.design]
+max-args = 10
+max-positional-arguments = 8
