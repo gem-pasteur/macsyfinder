@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2025  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -32,8 +32,8 @@ import colorlog
 from collections import OrderedDict
 
 
-import macsypy
-from macsypy.config import MacsyDefaults
+import macsylib
+from macsylib.config import MacsyDefaults
 
 
 def copy_chunk(fh_in: typing.IO, out: str, start: int, stop: int) -> None:
@@ -201,18 +201,19 @@ def main(args: list[str] | None = None, log_level: int | str | None = None):
         sys.tracebacklimit = 0
         raise IOError() from None
 
-    macsypy.init_logger(log_file=os.path.join(parsed_args.outdir, 'macsy_gembase_split.out'),
+    macsylib.init_logger(log_file=os.path.join(parsed_args.outdir, 'macsy_gembase_split.out'),
                         out=not parsed_args.mute)
-    _log = colorlog.getLogger('macsypy.split')
+    log_name = 'macsylib.macsyfinder.split'
+    _log = colorlog.getLogger(log_name)
 
     if not log_level:
         # logs are specify from args options
-        config = MacsyDefaults()
+        config = MacsyDefaults(prog_name='macsyfinder')
         log_level = max(config.log_level - (10 * parsed_args.verbose) + (10 * parsed_args.quiet), 1)
-        macsypy.logger_set_level(log_level)
+        macsylib.logger_set_level(log_name, log_level)
     else:
         # used by unit tests to mute or unmute logs
-        macsypy.logger_set_level(log_level)
+        macsylib.logger_set_level(log_name, log_level)
 
     idx = index_seq(parsed_args.genome_path)
     replicon_names = split(idx, parsed_args.genome_path, outdir=parsed_args.outdir)
