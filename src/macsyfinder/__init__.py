@@ -45,7 +45,7 @@ def get_git_revision_short_hash() -> str:
                                              stderr=subprocess.DEVNULL)
 
         short_hash = str(short_hash, "utf-8").strip()
-    except Exception as err:
+    except Exception:
         short_hash = ''
     return short_hash
 
