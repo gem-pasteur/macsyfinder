@@ -82,6 +82,7 @@ def get_version_message() -> str:
     vers_msg = f"""Macsyfinder {version} {commit}
 using:
 - Python {py_vers}
+- MacSyLib {macsylib.__version__} {macsylib.__commit__}
 - NetworkX {macsylib.solution.nx.__version__}
 - Pandas {pd.__version__}
 
@@ -89,7 +90,7 @@ MacsyFinder is distributed under the terms of the GNU General Public License (GP
 See the COPYING file for details.
 
 If you use this software please cite:
-{macsylib.__citation__}
+{macsyfinder.__citation__}
 
 and don't forget to cite models used:
 macsydata cite <model>
