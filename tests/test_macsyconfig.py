@@ -2,7 +2,7 @@
 #  MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #                using systems modelling and similarity search.          #
 #  Authors: Sophie Abby, Bertrand Neron                                  #
-#  Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
+#  Copyright (c) 2014-2025  Institut Pasteur (Paris) and CNRS.           #
 #  See the COPYRIGHT file for details                                    #
 #                                                                        #
 #  This file is part of MacSyFinder package.                             #
@@ -32,8 +32,8 @@ from unittest.mock import patch
 
 import macsyfinder.scripts.macsyconfig as msf_cfg
 from macsyfinder import __version__ as msf_vers
-from macsypy.config import Config, MacsyDefaults
-from macsypy.error import MacsypyError
+from macsylib.config import Config, MacsyDefaults
+from macsylib.error import MacsylibError
 from tests import MacsyTest
 
 
@@ -89,7 +89,7 @@ class TestMacsyconfig(MacsyTest):
         exe = msf_cfg.check_exe('', '/bin/sh', None)
         self.assertEqual(exe, '/bin/sh')
 
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_exe('nimportnaoik', None, None)
         self.assertEqual(str(ctx.exception),
                          "Invalid value: 'nimportnaoik' NO executable found")
@@ -105,22 +105,22 @@ class TestMacsyconfig(MacsyTest):
         val = msf_cfg.check_positive_int('1', None, None)
         self.assertEqual(val, 1)
 
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_positive_int('', None, None)
         self.assertEqual(str(ctx.exception),
                          'Please enter some value')
 
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_positive_int('-2', None, None)
         self.assertEqual(str(ctx.exception),
                          "Invalid value: '-2' is not >=0")
 
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_positive_int('2.3', None, None)
         self.assertEqual(str(ctx.exception),
                          "Invalid value: invalid literal for int() with base 10: '2.3'")
 
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_positive_int('nimportnaoik', None, None)
         self.assertEqual(str(ctx.exception),
                          "Invalid value: invalid literal for int() with base 10: 'nimportnaoik'")
@@ -151,12 +151,12 @@ class TestMacsyconfig(MacsyTest):
         self.assertEqual(val, [2.1, 3.2])
 
         # no value, no default
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_float('', None, None)
         self.assertEqual(str(ctx.exception),
                          'Please enter some value')
         # bad value
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_float('nimportnaoik', None, None)
         self.assertEqual(str(ctx.exception),
                          "Invalid value: could not convert string to float: 'nimportnaoik'")
@@ -194,7 +194,7 @@ class TestMacsyconfig(MacsyTest):
         val = msf_cfg.check_bool('', 'Yes', None)
         self.assertTrue(val)
 
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_bool('nimportnaoik', None, None)
         self.assertEqual(str(ctx.exception),
                          "Invalid value: Authorized values ['True'/False/0/1]")
@@ -210,12 +210,12 @@ class TestMacsyconfig(MacsyTest):
         self.assertEqual(val, test_dir)
 
         test_dir = __file__
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_dir(test_dir, None, None)
         self.assertEqual(str(ctx.exception),
                          f"Invalid value: '{test_dir}' is not a directory.")
 
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_dir('nimportnaoik', None, None)
         self.assertEqual(str(ctx.exception),
                          "Invalid value: 'nimportnaoik' no such file or directory.")
@@ -242,12 +242,12 @@ class TestMacsyconfig(MacsyTest):
         self.assertEqual(val, [test_file, sibling])
 
         test_file = os.path.dirname(__file__)
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_file(test_file, None, None)
         self.assertEqual(str(ctx.exception),
                          f"Invalid value: '{test_file}' is not a file.")
 
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_file('nimportnaoik', None, None)
         self.assertEqual(str(ctx.exception),
                          "Invalid value: 'nimportnaoik' no such file or directory.")
@@ -261,7 +261,7 @@ class TestMacsyconfig(MacsyTest):
         val = msf_cfg.check_choice('', 'in', choice)
         self.assertEqual(val, 'in')
 
-        with self.assertRaises(MacsypyError) as ctx:
+        with self.assertRaises(MacsylibError) as ctx:
             msf_cfg.check_choice('Out', None, choice)
         self.assertEqual(str(ctx.exception),
                          "Invalid value: Authorized values are ['in', 'Yes'].")
