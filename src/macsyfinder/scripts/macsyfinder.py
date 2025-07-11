@@ -52,7 +52,7 @@ from macsylib.search_systems import search_systems
 from macsylib.system import HitSystemTracker
 from macsylib.utils import get_def_to_detect, get_replicon_names, parse_time
 from macsylib.solution import find_best_solutions
-
+from macsyfinder.io import outfile_header
 _log = colorlog.getLogger('macsylib')
 
 
@@ -641,7 +641,8 @@ def main(args: list[str] | None = None,
 
         with open(system_filename, "w") as sys_file:
             systems_to_txt(models_fam_name, models_version, all_systems, track_multi_systems_hit, sys_file,
-                           skipped_replicons=skipped_replicons)
+                           skipped_replicons=skipped_replicons,
+                           header=outfile_header)
 
         with open(tsv_filename, "w") as tsv_file:
             systems_to_tsv(models_fam_name, models_version, all_systems, track_multi_systems_hit, tsv_file,
