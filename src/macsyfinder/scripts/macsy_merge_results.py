@@ -25,14 +25,15 @@
 import os
 import sys
 
-import macsypy
 import argparse
 from typing import Literal, Callable
 
 import colorlog
 import pandas as pd
 
-from macsypy.config import MacsyDefaults
+import macsylib
+from macsylib.config import MacsyDefaults
+import macsyfinder
 
 
 def get_warning(path: str) -> list[str]:
@@ -77,7 +78,7 @@ def merge_files(files: list[str],
     """
     def get_header(result: bool, warnings: list[str]):
         res_or_not = header if result else f"No {header}"
-        header_str = f"""# parallel_msf {macsypy.__version__}
+        header_str = f"""# parallel_msf {macsyfinder.__version__}
 # merged {os.path.basename(files[0])}
 # {res_or_not} found:
 """
@@ -138,7 +139,7 @@ def merge_and_reindex(files: list[str],
     """
     def get_header(result: bool, warnings):
         res_or_not = header if result else f"No {header}"
-        header_str = f"""# parallel_msf {macsypy.__version__}
+        header_str = f"""# parallel_msf {macsyfinder.__version__}
 # merged {os.path.basename(files[0])}
 # {res_or_not} found:
 """
@@ -214,7 +215,7 @@ def merge_summary(files: list[str], out: str, header: str = "") -> None:
     merged = pd.concat(data, axis=0)
     with open(out, 'w') as f_out:
         res_or_not = f"# {header}:" if not merged.empty else "# No Systems found:"
-        header_str = f"""# parallel_msf {macsypy.__version__}
+        header_str = f"""# parallel_msf {macsyfinder.__version__}
 # merged {os.path.basename(files[0])}
 {res_or_not}
 """
@@ -336,7 +337,7 @@ def main(args: list[str] | None = None,
 
     args = sys.argv[1:] if args is None else args
     parsed_args = parse_args(args)
-
+    log_name = 'macsylib.macsyfinder.merge'
     outdir_err = None
     if not os.path.exists(parsed_args.out_dir):
         try:
@@ -348,7 +349,7 @@ def main(args: list[str] | None = None,
     elif not os.access(parsed_args.out_dir, os.W_OK):
         outdir_err = f"{parsed_args.out_dir} is not writable"
     if outdir_err:
-        log = colorlog.getLogger('macsypy.merge')
+        log = colorlog.getLogger(log_name)
         stdout_handler = colorlog.StreamHandler(sys.stdout)
         stdout_formatter = colorlog.ColoredFormatter("%(log_color)s%(message)s",
                                                      datefmt=None,
@@ -363,18 +364,18 @@ def main(args: list[str] | None = None,
         sys.tracebacklimit = 0
         raise IOError() from None
 
-    macsypy.init_logger(log_file=os.path.join(parsed_args.out_dir, 'macsy_merge_results.out'),
+    macsylib.init_logger(log_file=os.path.join(parsed_args.out_dir, 'macsy_merge_results.out'),
                         out=not parsed_args.mute)
-    _log = colorlog.getLogger('macsypy.merge')
+    _log = colorlog.getLogger(log_name)
 
     if not log_level:
         # logs are specify from args options
-        config = MacsyDefaults()
+        config = MacsyDefaults(prog_name='macsyfinder')
         log_level = max(config.log_level - (10 * parsed_args.verbose) + (10 * parsed_args.quiet), 1)
-        macsypy.logger_set_level(log_level)
+        macsylib.logger_set_level(log_name, log_level)
     else:
         # used by unit tests to mute or unmute logs
-        macsypy.logger_set_level(log_level)
+        macsylib.logger_set_level(log_name, log_level)
 
     merge_results(parsed_args.results_dirs, out_dir=parsed_args.out_dir)
 
