@@ -646,47 +646,57 @@ def main(args: list[str] | None = None,
 
         with open(tsv_filename, "w") as tsv_file:
             systems_to_tsv(models_fam_name, models_version, all_systems, track_multi_systems_hit, tsv_file,
-                           skipped_replicons=skipped_replicons)
+                           skipped_replicons=skipped_replicons,
+                           header=outfile_header)
 
         cluster_filename = os.path.join(config.working_dir(), "rejected_candidates.txt")
         with open(cluster_filename, "w") as clst_file:
             rejected_candidates.sort(key=lambda clst: (clst.replicon_name, clst.model, clst.hits))
             rejected_candidates_to_txt(models_fam_name, models_version, rejected_candidates, clst_file,
-                                       skipped_replicons=skipped_replicons)
+                                       skipped_replicons=skipped_replicons,
+                                       header=outfile_header)
         if not (all_systems or rejected_candidates):
             logger.info("No Systems found in this dataset.")
 
         cluster_filename = os.path.join(config.working_dir(), "rejected_candidates.tsv")
         with open(cluster_filename, "w") as clst_file:
             rejected_candidates_to_tsv(models_fam_name, models_version, rejected_candidates, clst_file,
-                                       skipped_replicons=skipped_replicons)
+                                       skipped_replicons=skipped_replicons,
+                                       header=outfile_header)
 
         tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
         with open(tsv_filename, "w") as tsv_file:
             solutions_to_tsv(models_fam_name, models_version, all_best_solutions, track_multi_systems_hit, tsv_file,
-                             skipped_replicons=skipped_replicons)
+                             skipped_replicons=skipped_replicons,
+                             header=outfile_header)
 
         best_solution_filename = os.path.join(config.working_dir(), "best_solution.tsv")
         with open(best_solution_filename, "w") as best_solution_file:
             one_best_solution = [syst for sol in one_best_solution for syst in sol]
             one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
             systems_to_tsv(models_fam_name, models_version, one_best_solution, track_multi_systems_hit, best_solution_file,
-                           skipped_replicons=skipped_replicons)
+                           skipped_replicons=skipped_replicons,
+                           header=outfile_header)
 
         loners_filename = os.path.join(config.working_dir(), "best_solution_loners.tsv")
         with open(loners_filename, "w") as loners_file:
-            loners_to_tsv(models_fam_name, models_version, one_best_solution, loners_file)
+            loners_to_tsv(models_fam_name, models_version, one_best_solution,
+                          loners_file,
+                           header=outfile_header)
 
         multisystems_filename = os.path.join(config.working_dir(), "best_solution_multisystems.tsv")
         with open(multisystems_filename, "w") as multisystems_file:
-            multisystems_to_tsv(models_fam_name, models_version, one_best_solution, multisystems_file)
+            multisystems_to_tsv(models_fam_name, models_version, one_best_solution,
+                                multisystems_file,
+                                header=outfile_header)
 
         summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
         with open(summary_filename, "w") as summary_file:
             models_fqn = [m.fqn for m in models_def_to_detect]
             replicons_names = get_replicon_names(config.sequence_db(), config.db_type())
             summary_best_solution(models_fam_name, models_version, best_solution_filename, summary_file, models_fqn, replicons_names,
-                                  skipped_replicons=skipped_replicons)
+                                  skipped_replicons=skipped_replicons,
+                                  header=outfile_header)
 
     else:
         #######################
@@ -709,11 +719,15 @@ def main(args: list[str] | None = None,
 
         system_filename = os.path.join(config.working_dir(), "all_systems.tsv")
         with open(system_filename, "w") as sys_file:
-            likely_systems_to_tsv(models_fam_name, models_version, all_systems, track_multi_systems_hit, sys_file)
+            likely_systems_to_tsv(models_fam_name, models_version, all_systems, track_multi_systems_hit,
+                                  sys_file,
+                                  header=outfile_header)
 
         cluster_filename = os.path.join(config.working_dir(), "uncomplete_systems.txt")
         with open(cluster_filename, "w") as clst_file:
-            unlikely_systems_to_txt(models_fam_name, models_version, rejected_candidates, clst_file)
+            unlikely_systems_to_txt(models_fam_name, models_version, rejected_candidates,
+                                    clst_file,
+                                    header=outfile_header)
 
         if not (all_systems or rejected_candidates):
             logger.info("No Systems found in this dataset.")
