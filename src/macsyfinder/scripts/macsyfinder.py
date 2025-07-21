@@ -501,7 +501,6 @@ def main(args: list[str] | None = None,
 
     defaults = MacsyDefaults(prog_name='macsyfinder')
     config = Config(defaults, parsed_args)
-
     if parsed_args.list_models:
         print(list_models(parsed_args), file=sys.stdout)
         sys.exit(0)
