@@ -36,7 +36,6 @@ import signal
 import time
 import typing
 from textwrap import dedent
-# from operator import attrgetter  # To be used with "sorted"
 
 import colorlog
 import pandas as pd
@@ -44,30 +43,15 @@ import pandas as pd
 import macsyfinder
 import macsylib
 from macsylib.config import MacsyDefaults, Config
-# from macsylib.cluster import Cluster
 from macsylib.io import unlikely_systems_to_txt, likely_systems_to_tsv, likely_systems_to_txt, summary_best_solution, \
     multisystems_to_tsv, loners_to_tsv, systems_to_tsv, solutions_to_tsv, rejected_candidates_to_tsv, \
     rejected_candidates_to_txt, systems_to_txt
-from macsylib.registries import ModelRegistry, scan_models_dir # , DefinitionLocation
-# from macsylib.definition_parser import DefinitionParser
-# from macsylib.search_genes import search_genes
-# from macsylib.database import Indexes, RepliconDB
+from macsylib.registries import ModelRegistry, scan_models_dir
 from macsylib.error import OptionError, Timeout, EmptyFileError
-# from macsylib import cluster
-# from macsylib.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
-#     sort_model_hits, compute_best_MSHit
 from macsylib.search_systems import search_systems
-# from macsylib.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, \
-#                             HitSystemTracker, RejectedCandidate
 from macsylib.system import HitSystemTracker
 from macsylib.utils import get_def_to_detect, get_replicon_names, parse_time
-# from macsylib.profile import ProfileFactory
-# from macsylib.model import ModelBank
-# from macsylib.gene import GeneBank
-from macsylib.solution import find_best_solutions  #, combine_clusters, combine_multisystems
-# from macsylib.serialization import (TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer,
-#                                    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer,
-#                                    TsvSpecialHitSerializer, TsvRejectedCandidatesSerializer)
+from macsylib.solution import find_best_solutions
 
 _log = colorlog.getLogger('macsypy')
 
