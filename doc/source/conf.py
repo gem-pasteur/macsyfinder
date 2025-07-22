@@ -16,12 +16,12 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
 
-from  macsypy import __version__ as msf_version
+from  macsyfinder import __version__ as msf_version
 
 # -- Project information -----------------------------------------------------
 
 project = 'MacSyFinder'
-copyright = "2014-2024, 'Institut Pasteur (Paris), CNRS'"
+copyright = "2014-2025, 'Institut Pasteur (Paris), CNRS'"
 author = u"Sophie Abby, Bertrand Néron"
 
 # The full version, including alpha/beta/rc tags
