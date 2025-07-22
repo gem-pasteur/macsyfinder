@@ -103,7 +103,7 @@ def list_models(args: argparse.Namespace) -> str:
     :param args: The command line argument once parsed
     :return: a string representation of all models and submodels installed.
     """
-    defaults = MacsyDefaults()
+    defaults = MacsyDefaults(pack_name='macsyfinder', tool_name='macsyfinder')
     config = Config(defaults, args)
     model_dirs = config.models_dir()
     registry = ModelRegistry()
@@ -148,7 +148,7 @@ def parse_args(args: list[str]) -> tuple[argparse.ArgumentParser, argparse.Names
     using systems modelling and similarity search.
     '''))
 
-    msf_def = MacsyDefaults(prog_name='macsyfinder')
+    msf_def = MacsyDefaults(pack_name='macsyfinder', tool_name='macsyfinder')
     # , formatter_class=argparse.RawDescriptionHelpFormatter)
     # , formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-m", "--models",
@@ -499,7 +499,7 @@ def main(args: list[str] | None = None,
     args = sys.argv[1:] if args is None else args
     parser, parsed_args = parse_args(args)
 
-    defaults = MacsyDefaults(prog_name='macsyfinder')
+    defaults = MacsyDefaults(pack_name='macsyfinder', tool_name='macsyfinder')
     config = Config(defaults, parsed_args)
     if parsed_args.list_models:
         print(list_models(parsed_args), file=sys.stdout)
