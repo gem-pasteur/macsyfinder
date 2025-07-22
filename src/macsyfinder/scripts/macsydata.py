@@ -26,11 +26,48 @@
 wrapper to macsylib.macsydata
 """
 
+import warnings
+import textwrap
 from macsylib.scripts.macsydata import main as msl_main
 
 
+def _cmde_line_header():
+    return textwrap.dedent(r'''
+
+         *            *               *
+    *           *               *   *   *  *    **
+    **       *      __   *     _   *   _     *
+     _ __ ___  ___ / _|     __| | __ _| |_ __ _
+    | '_ ` _ \/ __| |_     / _` |/ _` | __/ _` |
+    | | | | | \__ \  _|   | (_| | (_| | || (_| |
+    |_| |_| |_|___/_|______\__,_|\__,_|\__\__,_|
+         *     *    |______|      *
+     *      *   * *     *   **         *   *  *
+      *      *         *        *    *
+    *                           *  *           *
+
+    msf_data - Model Management Tool
+    ''')
+
+
+def deprecated_main(args: list[str] = None) -> None:
+    warnings.warn(r"""
+       __        __               _
+       \ \      / /_ _ _ __ _ __ (_)_ __   __ _
+        \ \ /\ / / _` | '__| '_ \| | '_ \ / _` |
+         \ V  V / (_| | |  | | | | | | | | (_| |
+          \_/\_/ \__,_|_|  |_| |_|_|_| |_|\__, |
+                                          |___/
+
+'macsydata' has been renamed.  Use 'msf_data' instead.
+macsydata will be removed in future versions.
+
+""", DeprecationWarning, stacklevel=2)
+    msl_main(args=args, header=_cmde_line_header(), package_name='macsyfinder', tool_name='msf_data')
+
+
 def main(args: list[str] = None) -> None:
-    msl_main(args=args, prog_name='macsyfinder')
+    msl_main(args=args, header=_cmde_line_header(), package_name='macsyfinder', tool_name='msf_data')
 
 if __name__ == "__main__":
-    main(prog_name='macsyfinder')
+    main()
