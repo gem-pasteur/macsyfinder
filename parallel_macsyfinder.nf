@@ -164,7 +164,7 @@ process split{
         path "split_gembase/*.fasta"
     script:
         """
-        macsysplit --mute --outdir split_gembase ${gembase}
+        msf_split --mute --outdir split_gembase ${gembase}
         """
 }
 
@@ -226,7 +226,7 @@ process merge_results{
 
     script:
         """
-        macsymerge --mute ${all_results_dirs}
+        msf_merge --mute ${all_results_dirs}
         """
 }
 
