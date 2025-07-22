@@ -2,7 +2,7 @@
 #  MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #                using systems modelling and similarity search.          #
 #  Authors: Sophie Abby, Bertrand Neron                                  #
-#  Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
+#  Copyright (c) 2014-2025  Institut Pasteur (Paris) and CNRS.           #
 #  See the COPYRIGHT file for details                                    #
 #                                                                        #
 #  This file is part of MacSyFinder package.                             #
@@ -40,10 +40,10 @@ from configparser import ConfigParser
 from colorama import Fore, Style
 from colorama import init as col_init
 
-import macsypy.config
-from macsypy import __version__ as msf_vers
-from macsypy.config import MacsyDefaults
-from macsypy.error import MacsypyError
+import macsylib.config
+from macsylib.config import MacsyDefaults
+from macsylib.error import MacsylibError
+from macsyfinder import __version__ as msf_vers
 
 
 class ConfigParserWithComments(ConfigParser):
@@ -128,7 +128,7 @@ def _validator(cast_func: typing.Callable,
     """
     if raw == '':
         if default is None:
-            raise MacsypyError('Please enter some value')
+            raise MacsylibError('Please enter some value')
         else:
             raw = default
     elif sequence:
@@ -140,7 +140,7 @@ def _validator(cast_func: typing.Callable,
         else:
             value = cast_func(raw)
     except ValueError as err:
-        raise MacsypyError(f'Invalid value: {err}') from err
+        raise MacsylibError(f'Invalid value: {err}') from err
     return value
 
 
@@ -344,7 +344,7 @@ def ask(question: str,
 
     try:
         val = validator(raw, default, expected, sequence=sequence)
-    except MacsypyError as err:
+    except MacsylibError as err:
         print(err)
         if retry > 0:
             print(f"{theme.RETRY}* {err}{theme.RESET}")
@@ -357,7 +357,7 @@ def ask(question: str,
 def set_section(sec_name: str,
                 options: dict[str: typing.Any],
                 config: ConfigParserWithComments,
-                defaults: macsypy.config.MacsyDefaults,
+                defaults: macsylib.config.MacsyDefaults,
                 use_defaults: bool = False) -> ConfigParserWithComments:
     """
     iter over options of a section

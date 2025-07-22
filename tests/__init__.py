@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2025  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -36,8 +36,8 @@ import colorlog
 import json
 import re
 
-import macsypy
-import macsypy.config
+import macsylib
+import macsylib.config
 
 
 def path_to_modulename(p):
@@ -55,8 +55,8 @@ class MacsyTest(unittest.TestCase):
     _data_dir = os.path.join(_tests_dir, "data")
 
     def __init__(self, *args, **kwargs):
-        macsypy.__MACSY_DATA__ = self._tests_dir
-        macsypy.config.__MACSY_DATA__ = self._tests_dir
+        macsylib.__MACSY_DATA__ = self._tests_dir
+        macsylib.config.__MACSY_DATA__ = self._tests_dir
         super().__init__(*args, **kwargs)
 
     @staticmethod
@@ -169,50 +169,52 @@ class MacsyTest(unittest.TestCase):
             header = None
             for i, grp in enumerate(zip_longest(fh1, fh2), 1):
                 l1, l2 = grp
-                if l1.startswith(comment) and l2.startswith(comment):
-                    continue
-                fields_1 = l1.split()
-                fields_2 = l2.split()
-                if not fields_1 and not fields_2:
-                    # skip empty line
-                    continue
+                if l1 and l2:
+                    if l1.startswith(comment) and l2.startswith(comment):
+                        continue
+                    fields_1 = l1.split()
+                    fields_2 = l2.split()
+                    if not fields_1 and not fields_2:
+                        # skip empty line
+                        continue
 
-                # the system_id may change from one run to another
-                # So I have to remove them before to compare each row
-                if header is None:
-                    header = fields_1[:]
+                    # the system_id may change from one run to another
+                    # So I have to remove them before to compare each row
+                    if header is None:
+                        header = fields_1[:]
 
-                    if tsv_type in ('all_systems.tsv', 'best_solution.tsv', 'all_best_solutions.tsv'):
-                        sys_id_idx = header.index('sys_id')
-                        header.pop(sys_id_idx)
-                    elif tsv_type in ('best_solution_loners.tsv', 'best_solution_multisystems.tsv', 'best_solution_summary.tsv'):
-                        pass
-                    elif tsv_type == 'rejected_candidates.tsv':
-                        candidate_id_idx = header.index('candidate_id')
-                        header.pop(candidate_id_idx)
-                        cluster_id_idx = header.index('cluster_id')
-                        header.pop(cluster_id_idx)
+                        if tsv_type in ('all_systems.tsv', 'best_solution.tsv', 'all_best_solutions.tsv'):
+                            sys_id_idx = header.index('sys_id')
+                            header.pop(sys_id_idx)
+                        elif tsv_type in ('best_solution_loners.tsv', 'best_solution_multisystems.tsv', 'best_solution_summary.tsv'):
+                            pass
+                        elif tsv_type == 'rejected_candidates.tsv':
+                            candidate_id_idx = header.index('candidate_id')
+                            header.pop(candidate_id_idx)
+                            cluster_id_idx = header.index('cluster_id')
+                            header.pop(cluster_id_idx)
+                        else:
+                            raise RuntimeError(f"unknown '{tsv_type}' tsv type file in assertTsvEqual")
                     else:
-                        raise RuntimeError(f"unknown '{tsv_type}' tsv type file in assertTsvEqual")
-                else:
-                    if tsv_type in ('all_systems.tsv', 'best_solution.tsv', 'all_best_solutions.tsv'):
-                        fields_1.pop(sys_id_idx)
-                        fields_2.pop(sys_id_idx)
-                        if len(fields_1) == len(header):
-                            # remove used_in field if present
-                            fields_1.pop(-1)
-                            fields_2.pop(-1)
-                    elif tsv_type == 'rejected_candidates.tsv':
-                        fields_1.pop(candidate_id_idx)
-                        fields_1.pop(cluster_id_idx)
-                        fields_2.pop(candidate_id_idx)
-                        fields_2.pop(cluster_id_idx)
+                        if tsv_type in ('all_systems.tsv', 'best_solution.tsv', 'all_best_solutions.tsv'):
+                            fields_1.pop(sys_id_idx)
+                            fields_2.pop(sys_id_idx)
+                            if len(fields_1) == len(header):
+                                # remove used_in field if present
+                                fields_1.pop(-1)
+                                fields_2.pop(-1)
+                        elif tsv_type == 'rejected_candidates.tsv':
+                            fields_1.pop(candidate_id_idx)
+                            fields_1.pop(cluster_id_idx)
+                            fields_2.pop(candidate_id_idx)
+                            fields_2.pop(cluster_id_idx)
 
-                # counterpart order does not matter
-                fields_1[-1] = set(fields_1[-1].split(','))
-                fields_2[-1] = set(fields_2[-1].split(','))
-                self.assertEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
-
+                    # counterpart order does not matter
+                    fields_1[-1] = set(fields_1[-1].split(','))
+                    fields_2[-1] = set(fields_2[-1].split(','))
+                    self.assertEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
+                elif l1 or l2:
+                    self.assertEqual(l1,l2)
 
     def assertSeqRecordEqual(self, s1, s2):
         for attr in ('id', 'name', 'seq'):
@@ -298,7 +300,7 @@ class MacsyTest(unittest.TestCase):
 
 
     @contextmanager
-    def catch_log(self, log_name='macsypy'):
+    def catch_log(self, log_name='macsylib'):
         logger = colorlog.getLogger(log_name)
         handlers_ori = logger.handlers
         fake_handler = colorlog.StreamHandler(StringIO())

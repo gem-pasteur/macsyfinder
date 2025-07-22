@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2024  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2025  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -38,7 +38,7 @@ class TestMerge(MacsyTest):
 
     @classmethod
     def setUpClass(cls):
-        cls.logger = colorlog.getLogger('macsypy.merge')
+        cls.logger = colorlog.getLogger('macsylib.macsyfinder.merge')
 
 
     def setUp(self):
