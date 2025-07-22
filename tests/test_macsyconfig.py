@@ -629,7 +629,15 @@ class TestMacsyconfig(MacsyTest):
                 msf_cfg.main(macsyconfig_args.split()[1:])
                 stdout = sys.stdout.getvalue()
 
-            expected_stdout = f"""Welcome to the MacSyFinder {msf_vers} configuration utility.
+            expected_stdout = fr"""
+                      __                      __ _
+       _ __ ___  ___ / _|     ___ ___  _ __  / _(_) __ _
+      | '_ ` _ \/ __| |_     / __/ _ \| '_ \| |_| |/ _` |
+      | | | | | \__ \  _|   | (_| (_) | | | |  _| | (_| |
+      |_| |_| |_|___/_|______\___\___/|_| |_|_| |_|\__, |
+                     |________|                    |___/
+
+Welcome to the MacSyFinder {msf_vers} configuration utility.
 
 Please enter values for the following settings (just press Enter to
 accept a default value, if one is given in brackets).

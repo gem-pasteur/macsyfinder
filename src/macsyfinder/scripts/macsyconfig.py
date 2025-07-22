@@ -27,7 +27,7 @@ Entrypoint for macsyconfig command
 which generate a MacSyFinder config file
 """
 
-
+import warnings
 import itertools
 import sys
 import os.path
@@ -650,7 +650,15 @@ def prolog() -> str:
     """
     :return: the text displayed to the user when the configuration file is generated
     """
-    rep = f"""{theme.EMPHASIZE}Welcome to the MacSyFinder {msf_vers} configuration utility.{theme.RESET}
+    rep = fr"""
+                      __                      __ _
+       _ __ ___  ___ / _|     ___ ___  _ __  / _(_) __ _
+      | '_ ` _ \/ __| |_     / __/ _ \| '_ \| |_| |/ _` |
+      | | | | | \__ \  _|   | (_| (_) | | | |  _| | (_| |
+      |_| |_| |_|___/_|______\___\___/|_| |_|_| |_|\__, |
+                     |________|                    |___/
+
+{theme.EMPHASIZE}Welcome to the MacSyFinder {msf_vers} configuration utility.{theme.RESET}
 
 Please enter values for the following settings (just press Enter to
 accept a default value, if one is given in brackets).
@@ -772,6 +780,22 @@ def main(args: list[str] | None = None) -> None:
     set_base_options(config, defaults, use_defaults=parsed_args.defaults)
     serialize(config, conf_path)
     print(epilog(conf_path))
+
+
+def deprecated_main(args: list[str] = None) -> None:
+    warnings.warn(r"""
+       __        __               _
+       \ \      / /_ _ _ __ _ __ (_)_ __   __ _
+        \ \ /\ / / _` | '__| '_ \| | '_ \ / _` |
+         \ V  V / (_| | |  | | | | | | | | (_| |
+          \_/\_/ \__,_|_|  |_| |_|_|_| |_|\__, |
+                                          |___/
+
+'macsyconfig' has been renamed.  Use 'msf_config' instead.
+macsyconfig will be removed in future versions.
+
+""", DeprecationWarning, stacklevel=2)
+    main(args=args)
 
 
 if __name__ == "__main__":
