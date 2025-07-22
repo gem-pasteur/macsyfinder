@@ -625,7 +625,7 @@ class TestMacsyconfig(MacsyTest):
         cf_args = argparse.Namespace(cfg_file="macsyfinder.conf")
         try:
             with self.catch_io(out=True):
-                macsyconfig_args = "macsyconfig --defaults"
+                macsyconfig_args = "msf_config --defaults"
                 msf_cfg.main(macsyconfig_args.split()[1:])
                 stdout = sys.stdout.getvalue()
 
@@ -723,7 +723,7 @@ Place it in canonical location
         try:
             with self.catch_io(out=True):
                 # test Abort
-                macsyconfig_args = "macsyconfig --defaults"
+                macsyconfig_args = "msf_config --defaults"
                 msf_cfg.ask = lambda *args, **kwargs: "a"
                 with self.assertRaises(TypeError) as ctx:
                     msf_cfg.main(macsyconfig_args.split()[1:])
@@ -731,7 +731,7 @@ Place it in canonical location
                 self.assertEqual(os.path.getsize('macsyfinder.conf'), 0)
 
                 # test Overwrite
-                macsyconfig_args = "macsyconfig --defaults"
+                macsyconfig_args = "msf_config --defaults"
                 msf_cfg.ask = lambda *args, **kwargs: "O"
                 msf_cfg.main(macsyconfig_args.split()[1:])
                 # check that the produced file is equal as file in data
