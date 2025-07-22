@@ -56,10 +56,19 @@ model = [
 
 [project.scripts]
 macsyfinder = "macsyfinder.scripts.macsyfinder:main"
+
 msf_data = "macsyfinder.scripts.macsydata:main"
+macsydata = "macsyfinder.scripts.macsydata:deprecated_main"
+
+msf_profile = "macsyfinder.scripts.macsyprofile:main"
+macsyprofile = "macsyfinder.scripts.macsyprofile:deprecated_main"
+
 msf_config = "macsyfinder.scripts.macsyconfig:main"
+macsyconfig = "macsyfinder.scripts.macsyconfig:deprecated_main"
+
 msf_split = "macsyfinder.scripts.macsy_gembase_split:main"
 msf_merge = "macsyfinder.scripts.macsy_merge_results:main"
+
 
 [project.urls]
 Homepage = "https://github.com/gem-pasteur/macsyfinder/"
