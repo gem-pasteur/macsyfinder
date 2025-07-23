@@ -31,6 +31,7 @@ def outfile_header(models_fam_name: str,
                    models_version: str,
                    skipped_replicons: list[str] | None = None) -> str:
     """
+
     :return: The first lines of each result file
     """
     header = f"""# macsyfinder {msf_vers} {msf_commit} (using MacSyLib {msl_vers} {msl_commit})
