@@ -50,6 +50,7 @@ from macsylib.search_systems import search_systems
 from macsylib.system import HitSystemTracker
 from macsylib.utils import get_def_to_detect, get_replicon_names, parse_time
 from macsylib.solution import find_best_solutions
+
 from macsyfinder import get_version_message
 from macsyfinder.io import outfile_header
 _log = colorlog.getLogger('macsylib')
