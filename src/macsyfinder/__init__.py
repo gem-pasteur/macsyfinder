@@ -24,13 +24,14 @@
 import os
 import sys
 import subprocess
-from time import strftime, localtime
+#from time import strftime, localtime
 
 import pandas as pd
 import macsylib.solution
 
 
-__version__ = f'{strftime("%Y%m%d", localtime())}.dev'
+# __version__ = f'{strftime("%Y%m%d", localtime())}.dev'
+__version__ = '12'
 
 
 __citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
