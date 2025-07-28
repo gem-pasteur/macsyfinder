@@ -55,7 +55,7 @@ model = [
 ]
 
 [project.scripts]
-macsyfinder = "macsyfinder.scripts.macsyfinder:main"
+macsyfinder = "macsyfinder.scripts.msf:main"
 
 msf_data = "macsyfinder.scripts.macsydata:main"
 macsydata = "macsyfinder.scripts.macsydata:deprecated_main"
