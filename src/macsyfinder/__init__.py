@@ -21,17 +21,18 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+"""
+MacSyFinder package contains mainly variable used in library as __version__, __citation__
+and helper functions
+"""
+
+from time import strftime, localtime
 import os
 import sys
 import subprocess
-#from time import strftime, localtime
-
-import pandas as pd
-import macsylib.solution
 
 
-# __version__ = f'{strftime("%Y%m%d", localtime())}.dev'
-__version__ = '12'
+__version__ = f'{strftime("%Y%m%d", localtime())}.dev'
 
 
 __citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
@@ -63,14 +64,24 @@ def get_version_message() -> str:
     """
     :return: the long description of the macsyfinder version
     """
+    # I do not understand why
+    # BUT if i do the import at the top level
+    # pip cannot install macsyfinder with an obscured error
+    # ValueError: malformed node or string on line 30: <ast.JoinedStr object at 0x7fe8cc127c10>
+    # ...
+    # AttributeError: macsyfinder has no attribute __version__
+    from macsylib import __version__ as msl_version, __commit__ as msl_commit  # pylint: disable=import-outside-toplevel
+    from macsylib import solution  # pylint: disable=import-outside-toplevel
+    import pandas as pd  # pylint: disable=import-outside-toplevel
+
     version = __version__
     commit = __commit__
     py_vers = sys.version.replace('\n', ' ')
     vers_msg = f"""MacSyFinder {version} {commit}
 using:
 - Python {py_vers}
-- MacSyLib {macsylib.__version__} {macsylib.__commit__}
-- NetworkX {macsylib.solution.nx.__version__}
+- MacSyLib {msl_version} {msl_commit}
+- NetworkX {solution.nx.__version__}
 - Pandas {pd.__version__}
 
 MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
