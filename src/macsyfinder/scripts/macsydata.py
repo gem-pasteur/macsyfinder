@@ -28,8 +28,10 @@ wrapper to macsylib.macsydata
 
 import warnings
 import textwrap
+
 from macsylib.scripts.macsydata import main as msl_main
 
+from macsyfinder import get_version_message
 
 def _cmde_line_header():
     return textwrap.dedent(r'''
@@ -67,7 +69,10 @@ macsydata will be removed in future versions.
 
 
 def main(args: list[str] = None) -> None:
-    msl_main(args=args, header=_cmde_line_header(), package_name='macsyfinder', tool_name='msf_data')
+    msl_main(args=args,
+             header=_cmde_line_header(),
+             version=get_version_message(),
+             package_name='macsyfinder', tool_name='msf_data')
 
 if __name__ == "__main__":
     main()

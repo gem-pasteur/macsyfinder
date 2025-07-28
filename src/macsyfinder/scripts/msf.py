@@ -38,9 +38,7 @@ import typing
 from textwrap import dedent
 
 import colorlog
-import pandas as pd
 
-import macsyfinder
 import macsylib
 from macsylib.config import MacsyDefaults, Config
 from macsylib.io import unlikely_systems_to_txt, likely_systems_to_tsv, likely_systems_to_txt, summary_best_solution, \
@@ -52,6 +50,7 @@ from macsylib.search_systems import search_systems
 from macsylib.system import HitSystemTracker
 from macsylib.utils import get_def_to_detect, get_replicon_names, parse_time
 from macsylib.solution import find_best_solutions
+from macsyfinder import get_version_message
 from macsyfinder.io import outfile_header
 _log = colorlog.getLogger('macsylib')
 
@@ -70,32 +69,6 @@ def alarm_handler(signum: signal.Signals, frame) -> None:
     # on an other machine. we don't want that.
     #sys.exit(0)
     raise Timeout()
-
-
-def get_version_message() -> str:
-    """
-    :return: the long description of the macsyfinder version
-    """
-    version = macsyfinder.__version__
-    commit = macsyfinder.__commit__
-    py_vers = sys.version.replace('\n', ' ')
-    vers_msg = f"""Macsyfinder {version} {commit}
-using:
-- Python {py_vers}
-- MacSyLib {macsylib.__version__} {macsylib.__commit__}
-- NetworkX {macsylib.solution.nx.__version__}
-- Pandas {pd.__version__}
-
-MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
-See the COPYING file for details.
-
-If you use this software please cite:
-{macsyfinder.__citation__}
-
-and don't forget to cite models used:
-macsydata cite <model>
-"""
-    return vers_msg
 
 
 def list_models(args: argparse.Namespace) -> str:

@@ -22,8 +22,13 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 import os
+import sys
 import subprocess
 from time import strftime, localtime
+
+import pandas as pd
+import macsylib.solution
+
 
 __version__ = f'{strftime("%Y%m%d", localtime())}.dev'
 
@@ -51,3 +56,29 @@ def get_git_revision_short_hash() -> str:
 
 #  do not display the commit for the MSF tagged versions
 __commit__ = f'{get_git_revision_short_hash()}' if 'dev' in __version__ else ''
+
+
+def get_version_message() -> str:
+    """
+    :return: the long description of the macsyfinder version
+    """
+    version = __version__
+    commit = __commit__
+    py_vers = sys.version.replace('\n', ' ')
+    vers_msg = f"""MacSyFinder {version} {commit}
+using:
+- Python {py_vers}
+- MacSyLib {macsylib.__version__} {macsylib.__commit__}
+- NetworkX {macsylib.solution.nx.__version__}
+- Pandas {pd.__version__}
+
+MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+See the COPYING file for details.
+
+If you use this software please cite:
+{__citation__}
+
+and don't forget to cite the used models:
+msl_data cite <model>
+"""
+    return vers_msg
