@@ -131,7 +131,7 @@ Systems detection options:
                         This option can be repeated several times:
                             "--min-mandatory-genes-required TXSS/T2SS 15 --min-mandatory-genes-required TXSS/Flagellum 10"
   --min-genes-required MIN_GENES_REQUIRED MIN_GENES_REQUIRED
-                        The minimal number of genes required for model assessment "
+                        The minimal number of genes required for model assessment
                         (includes both 'mandatory' and 'accessory' components).
                         The first value must correspond to a model fully qualified name, the second value to an integer.
                         This option can be repeated several times:
