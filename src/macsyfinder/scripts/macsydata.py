@@ -62,7 +62,7 @@ def deprecated_main(args: list[str] = None) -> None:
                                           |___/
 
 'macsydata' has been renamed.  Use 'msf_data' instead.
-macsydata will be removed in future versions.
+'macsydata' will be removed in future versions.
 
 """, DeprecationWarning, stacklevel=2)
     msl_main(args=args, header=_cmde_line_header(), package_name='macsyfinder', tool_name='msf_data')
