@@ -91,6 +91,6 @@ If you use this software please cite:
 {__citation__}
 
 and don't forget to cite the used models:
-msl_data cite <model>
+msf_data cite <model>
 """
     return vers_msg
