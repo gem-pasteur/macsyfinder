@@ -27,6 +27,7 @@ wrapper to macsylib.macsyprofile
 """
 import warnings
 import textwrap
+
 from macsylib.scripts.macsyprofile import main as msl_main
 
 def _cmde_line_header():
@@ -57,13 +58,15 @@ def deprecated_main(args: list[str] = None) -> None:
                                           |___/
 
 'macsyprofile' has been renamed. Use 'msf_profile' instead.
-`macsyprofile` will be removed in future versions.
+'macsyprofile' will be removed in future versions.
 """, DeprecationWarning, stacklevel=2)
     msl_main(args=args, package_name='macsyfinder', tool_name='msf_profile')
 
 
 def main(args: list[str] = None) -> None:
-    msl_main(args=args, package_name='macsyfinder', tool_name='msf_profile')
+    msl_main(args=args,
+             header=_cmde_line_header(),
+             package_name='macsyfinder', tool_name='msf_profile')
 
 
 if __name__ == "__main__":
