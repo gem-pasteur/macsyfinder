@@ -33,7 +33,7 @@ import itertools
 import pandas as pd
 
 from tests import MacsyTest
-from macsyfinder.scripts import macsyfinder
+from macsyfinder.scripts import msf
 from macsylib.error import OptionError
 from macsylib.system import System, AbstractUnordered, RejectedCandidate
 
@@ -68,7 +68,7 @@ class TestFunctional(MacsyTest):
 
     def tearDown(self):
         self._tmp_dir.cleanup()
-        logger = macsyfinder._log
+        logger = msf._log
         # need to clean logger
         # as it is a singleton
         # otherwise to each cal macsyfinder the init logger is called
@@ -1061,7 +1061,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
 
         args = args.format(out_dir=self.out_dir)
         with self.assertRaises(ValueError) as ctx:
-            macsyfinder.main(args=args.split(), loglevel='ERROR')
+            msf.main(args=args.split(), loglevel='ERROR')
         self.assertEqual(str(ctx.exception),
                          f"'{self.out_dir}' already exists and is not a empty")
 
@@ -1078,7 +1078,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
 
             args = args.format(out_dir=self.out_dir)
             with self.assertRaises(ValueError) as ctx:
-                macsyfinder.main(args=args.split(), loglevel='ERROR')
+                msf.main(args=args.split(), loglevel='ERROR')
             self.assertEqual(str(ctx.exception),
                              f"'{self.out_dir}' already exists and is not a directory")
         finally:
@@ -1113,12 +1113,12 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
 
         # msf should complain about out dir
         with self.assertRaises(ValueError):
-            macsyfinder.main(args=args.split(), loglevel='ERROR')
+            msf.main(args=args.split(), loglevel='ERROR')
 
         args += " --force"
 
         # msf should run without complain
-        macsyfinder.main(args=args.split(), loglevel='ERROR')
+        msf.main(args=args.split(), loglevel='ERROR')
 
         for file_name in (self.all_systems_tsv,
                           self.all_best_solutions,
@@ -1145,7 +1145,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
         args = args.format(out_dir=self.out_dir)
         with self.catch_io(out=True):
             with self.assertRaises(OptionError) as ctx:
-                macsyfinder.main(args=args.split(), loglevel='ERROR')
+                msf.main(args=args.split(), loglevel='ERROR')
         self.assertEqual(str(ctx.exception),
                          "argument --models or --previous-run is required.")
 
@@ -1160,7 +1160,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
         args = args.format(out_dir=self.out_dir)
         with self.catch_io(out=True):
             with self.assertRaises(OptionError) as ctx:
-                macsyfinder.main(args=args.split(), loglevel='ERROR')
+                msf.main(args=args.split(), loglevel='ERROR')
         self.assertEqual(str(ctx.exception),
                          "argument --sequence-db or --previous-run is required.")
 
@@ -1174,7 +1174,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
         args = args.format(out_dir=self.out_dir)
         with self.catch_io(out=True):
             with self.assertRaises(OptionError) as ctx:
-                macsyfinder.main(args=args.split(), loglevel='ERROR')
+                msf.main(args=args.split(), loglevel='ERROR')
         self.assertEqual(str(ctx.exception),
                          "argument --db-type or --previous-run is required.")
 
@@ -1191,7 +1191,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
 
         args = args.format(out_dir=self.out_dir)
         with self.assertRaises(ValueError) as ctx:
-            macsyfinder.main(args=args.split(), loglevel='ERROR')
+            msf.main(args=args.split(), loglevel='ERROR')
         self.assertEqual(str(ctx.exception),
                          "Unknown_model does not match with any definitions")
 
@@ -1210,7 +1210,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
         try:
             with self.catch_io(out=True):
                 with self.assertRaises(TypeError) as ctx:
-                    macsyfinder.main(args=args.split(), loglevel='ERROR')
+                    msf.main(args=args.split(), loglevel='ERROR')
             self.assertEqual(str(ctx.exception), '2')
         finally:
             sys.exit = real_exit
@@ -1228,7 +1228,7 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
             # print("##############################################")
             System._id = itertools.count(1)
             RejectedCandidate._id = itertools.count(1)
-            macsyfinder.main(args=args.split(),
+            msf.main(args=args.split(),
                              loglevel='ERROR'
                              )
         except Exception as err:
