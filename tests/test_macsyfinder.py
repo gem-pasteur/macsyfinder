@@ -38,7 +38,7 @@ from macsylib.registries import ModelRegistry, scan_models_dir
 from macsylib.system import System, RejectedCandidate, AbstractUnordered
 from macsylib.utils import get_def_to_detect
 
-from macsyfinder.scripts.macsyfinder import list_models, parse_args, search_systems, get_version_message
+from macsyfinder.scripts.msf import list_models, parse_args, search_systems, get_version_message
 from macsyfinder import __version__ as msf_vers, __commit__ as msf_commit, __citation__ as msf_citation
 from tests import MacsyTest
 
@@ -99,22 +99,23 @@ set_2
 
     def test_get_version_message(self):
         py_vers = sys.version.replace('\n', ' ')
-        exp_vers_msg = f"""Macsyfinder {msf_vers} {msf_commit}
+        exp_vers_msg = f"""MacSyFinder {msf_vers} {msf_commit}
 using:
 - Python {py_vers}
 - MacSyLib {macsylib.__version__} {macsylib.__commit__}
 - NetworkX {macsylib.solution.nx.__version__}
 - Pandas {pd_vers}
 
-MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
 See the COPYING file for details.
 
 If you use this software please cite:
 {msf_citation}
 
-and don't forget to cite models used:
-macsydata cite <model>
+and don't forget to cite the used models:
+msf_data cite <model>
 """
+        self.maxDiff = None
         self.assertEqual(exp_vers_msg, get_version_message())
 
 
