@@ -97,6 +97,22 @@ set_2
         self.assertEqual(exp_list_models, rcv_list_models)
 
 
+    def test_list_models_no_permissions(self):
+        cmd_args = argparse.Namespace()
+        cmd_args.models_dir = os.path.join(self._data_dir, 'fake_model_dir')
+        cmd_args.list_models = True
+        models_dir_perm = os.stat(cmd_args.models_dir).st_mode
+        try:
+            os.chmod(cmd_args.models_dir, 0o110)
+            with self.catch_log(log_name='macsylib') as log:
+                rcv_list_models = list_models(cmd_args)
+                log_msg = log.get_value().strip()
+            self.assertEqual(rcv_list_models, '')
+            self.assertEqual(log_msg, f"{cmd_args.models_dir} is not readable: [Errno 13] Permission denied: '{cmd_args.models_dir}' : skip it.")
+        finally:
+            os.chmod(cmd_args.models_dir, models_dir_perm)
+
+
     def test_get_version_message(self):
         py_vers = sys.version.replace('\n', ' ')
         exp_vers_msg = f"""MacSyFinder {msf_vers} {msf_commit}
