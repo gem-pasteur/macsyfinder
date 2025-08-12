@@ -1,10 +1,10 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.
-    Authors: Sophie Abby, Bertrand Néron
-    Copyright © 2014-2024 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
-    See the COPYING file for details.
+   using systems modelling and similarity search.
+   Authors: Sophie Abby, Bertrand Néron
+   Copyright © 2014-2024 Institut Pasteur (Paris) and CNRS.
+   See the COPYRIGHT file for details
+   MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+   See the COPYING file for details.
 
 
 .. _user_installation:
@@ -14,7 +14,7 @@ Installation
 ************
 
 MacSyFinder works with models for macromolecular systems that are not shipped with it,
-you have to install them separately. See the :ref:`macsydata section <macsydata>` below.
+you have to install them separately. See the :ref:`msf_data section <msf_data>` below.
 We also provide container so you can use macsyfinder directly.
 
 .. _user_dependencies:
@@ -123,7 +123,7 @@ To run `macsyfinder`, you need to activate the virtualenv:
 
     source macsyfinder/bin/activate
 
-Then run `macsyfinder` or `macsydata`.
+Then run `macsyfinder` or `msf_data`.
 
 
 .. note::
@@ -184,12 +184,12 @@ The shared directory must be writable by the *msf* user or overwrite the user in
 
 Furthermore the models are no longer packaged along macsyfinder.
 So you have to install them by yourself.
-For that we provide a command line tool macsydata which is inspired by pip.
+For that we provide a command line tool msf_data which is inspired by pip.
 
 .. code-block:: text
 
-    macsydata search PACKNAME
-    macsydata install PACKNAME== or >=, or ... VERSION
+    msf_data search PACKNAME
+    msf_data install PACKNAME== or >=, or ... VERSION
 
 To work with Docker you have to install models in a directory which will be mounted in the image at run time
 
@@ -202,7 +202,7 @@ install desired models in my_models directory
 
 .. code-block:: bash
 
-    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:<tag> macsydata install --target /home/msf/my_models <MODELS_PACK>
+    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:<tag> msf_data install --target /home/msf/my_models <MODELS_PACK>
 
 run msf against all models contains in <MODELS_PACK>
 
@@ -221,7 +221,7 @@ Unlike docker you have not to worry about shared directory, your HOME and /tmp a
 .. code-block:: bash
 
     # install desired models in my_models directory
-    apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsydata install --target my_models <MODELS_PACK>
+    apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> msf_data install --target my_models <MODELS_PACK>
 
     # run msf against all models contains in <MODELS_PACK>
     apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsyfinder --db-type unordered_replicon --models-dir=my_models --models <MODELS_PACK> all --sequence-db my_genome.fasta -w 12
@@ -240,81 +240,116 @@ you have to
     apptainer run -H ${HOME} msf-<tag>.simg macsyfinder --db-type unordered_replicon --models-dir=my_models --models <MODELS_PACK> all --sequence-db my_genome.fasta -w 12
 
 
-.. _macsydata:
+.. _msf_data:
 
 ====================================
-Models installation with `macsydata`
+Models installation with `msf_data`
 ====================================
 
-Once MacSyFinder is installed you have access to an utility program to manage the models: `macsydata`
+Once MacSyFinder is installed you have access to an utility program to manage the models: `msf_data`
 
 This script allows to search, download, install and get information from MacSyFinder models stored on
-github (https://github.com/macsy-models) or locally installed. The general syntax for `macsydata` is::
+github (https://github.com/macsy-models) or locally installed. The general syntax for `msf_data` is::
 
-    macsydata <general options> <subcommand> <sub command options> <arguments>
+    msf_data <general options> <subcommand> <sub command options> <arguments>
 
 
 To list all models available on *macsy-models*::
 
-    macsydata available
+    msf_data available
 
 To search for models on *macsy-models*::
 
-    macsydata search TXSS
+    msf_data search TXSS
 
 you can also search in models description::
 
-    macsydata search -S secretion
+    msf_data search -S secretion
 
 To install a model package::
 
-    macsydata install <model name>
+    msf_data install <model name>
 
 To install a model when you have not the right to install it system-wide
 
 To install it in your home (*./macsyfinder/data*)::
 
-    macsydata install --user <model name>
+    msf_data install --user <model name>
 
 To install it in any directory::
 
-    macsydata install --target <model dir> <model_name>
+    msf_data install --target <model dir> <model_name>
 
 To know how to cite a model package::
 
-    macsydata cite <model name>
+    msf_data cite <model name>
+
+To show the name of the models and the structure of installed model package::
+
+   msf_data show <model package name>
+
+for instance :code:`msf_data show TXSScan`
+
+.. code-block:: text
+
+   TXSScan
+       ├-archaea
+       │   └-Archaeal-T4P
+       └-bacteria
+            ├-diderm
+            │   ├-Flagellum
+            │   ├-MSH
+            │   ├-T1SS
+            │   ├-T2SS
+            │   ├-T3SS
+            │   ├-T4aP
+            │   ├-T4bP
+            │   ├-T5aSS
+            │   ├-T5bSS
+            │   ├-T5cSS
+            │   ├-T6SSi
+            │   ├-T6SSii
+            │   ├-T6SSiii
+            │   ├-T9SS
+            │   ├-Tad
+            │   ├-pT4SSi
+            │   └-pT4SSt
+            └-monoderm
+                 └-ComM
+
+   TXSScan (1.1.3) : 19 models
 
 To show the model definition::
 
-    macsydata definition <package or subpackage> model1 [model2, ...]
+    msf_data definition <package or subpackage> model1 [model2, ...]
 
 for instance to show model definitions T6SSii and T6SSiii in TXSS+/bacterial subpackage::
 
-    macsydata definition TXSS+/bacterial T6SSii T6SSiii
+    msf_data definition TXSS+/bacterial T6SSii T6SSiii
 
 To show all models definitions in TXSS+/bacterial subpackage::
 
-    macsydata definition TXSS+/bacterial
+    msf_data definition TXSS+/bacterial
 
 To create a skeleton for your own model package (to access init subcommand check modeler installation)::
 
-    macsydata init --pack-name <MY_PACK_NAME> --maintainer <"mantainer name"> --email <maintainer email> --authors <"author1, author2, ..">
+    msf_data init --pack-name <MY_PACK_NAME> --maintainer <"mantainer name"> --email <maintainer email> --authors <"author1, author2, ..">
 
-above macsydata with required options. Below I add optioanl but recommended options. ::
+above msf_data with required options. Below I add optioanl but recommended options. ::
 
-    macsydata init --pack-name <MY_PACK_NAME> --maintainer <mantainer name> --email <maintainer email> --authors <"author1, author2, .."> \
+    msf_data init --pack-name <MY_PACK_NAME> --maintainer <mantainer name> --email <maintainer email> --authors <"author1, author2, .."> \
     --license cc-by-nc-sa --holders <"the copyright holders"> --desc <"one line package description">
 
-To list all `macsydata` subcommands::
+To list all `msf_data` subcommands::
 
-    macsydata --help
+    msf_data --help
 
 To list all available options for a subcommand::
 
-    macsydata <subcommand> --help
+    msf_data <subcommand> --help
 
 For models not stored in *macsy-models* the commands *available*, *search*,
 *installation* from remote or *upgrade* from remote are **NOT** available.
 
 For models **NOT** stored in *macsy-models*, you have to manage them semi-manually.
-Download the archive (do not unarchive it), then use *macsydata* to install the archive.
+Download the archive (do not unarchive it), then use *msf_data* to install the archive.

@@ -3,7 +3,7 @@
     Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2023  Institut Pasteur (Paris), and CNRS.
     See the COPYRIGHT file for details
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
     See the COPYING file for details.
 
 .. _scripts:
@@ -14,10 +14,10 @@ scripts
 
 The are 4 entry points.
 
-    * macsyfinder: which is the main scripts
-    * macsydata: which allow to manage the models
-    * macsyconfig: an interactive conversational utility to generate macsyfinder configuration file
-    * macsyprofile: an utility dedicated to modelers which gather information about hmmer output
+    * macsyfinder: which is the main script
+    * macsydata: which allow to manage the models (command name msf_data)
+    * macsyconfig: an interactive conversational utility to generate macsyfinder configuration file (command name msf_config)
+    * macsyprofile: an utility dedicated to modelers which gather information about hmmer output (command name msf_profile)
 
 .. _scripts_api:
 
@@ -26,28 +26,28 @@ API reference
 
 macsyfinder
 ===========
-.. automodule:: macsypy.scripts.macsyfinder
+.. automodule:: macsyfinder.scripts.msf
    :members:
    :private-members:
    :special-members:
 
 macsydata
 =========
-.. automodule:: macsypy.scripts.macsydata
+.. automodule:: macsyfinder.scripts.macsydata
    :members:
    :private-members:
    :special-members:
 
 macsyconfig
 ===========
-.. automodule:: macsypy.scripts.macsyconfig
+.. automodule:: macsyfinder.scripts.macsyconfig
    :members:
    :private-members:
    :special-members:
 
 macsyprofile
 ============
-.. automodule:: macsypy.scripts.macsyprofile
+.. automodule:: macsyfinder.scripts.macsyprofile
    :members:
    :private-members:
    :special-members:

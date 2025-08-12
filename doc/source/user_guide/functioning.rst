@@ -48,9 +48,9 @@ For each system, the list can include:
 See :ref:`here for more details on writing MacSyFinder's models. <writing-models>`
 
 2. HMMER is run on the corresponding set of components' HMM profiles, and the hits are filtered according to the criteria defined
-by the user or by default (see :ref:`Hmmer options <hmmer-options>` and for more, the API :ref:`HMMReport` object page).
+by the user or by default.
 This step, and the extraction of significant hits can be performed in parallel (`-w` command-line option).
-See the :ref:`command-line-label`, and the :ref:`search_genes API <search_genes>` for more details.
+See the :ref:`command-line-label`, and the `MacSyLib documentation <https://macsylib.readthedocs.io/en/latest/user_guide/functioning.html#a-searching-for-systems-components>`_ for more details.
 
    .. image:: ../_static/msf_functionning_step1.*
      :height: 500px

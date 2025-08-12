@@ -1,10 +1,10 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.
-    Authors: Sophie Abby, Bertrand Néron
-    Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
-    See the COPYING file for details.
+   using systems modelling and similarity search.
+   Authors: Sophie Abby, Bertrand Néron
+   Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
+   See the COPYRIGHT file for details
+   MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+   See the COPYING file for details.
 
 .. _FAQ:
 
@@ -66,7 +66,7 @@ To browse interactive help:
  :code:`macsyfinder -h`
 
 
-The minimal command line, to search all systems with models from the "TFF-SF" set of models (installed with `macsydata`):
+The minimal command line, to search all systems with models from the "TFF-SF" set of models (installed with `msf_data`):
 
  :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all`
 
@@ -216,9 +216,9 @@ We thus propose several kind of :ref:`output files <ordered_outputs>`.
 Where to find MacSyFinder models?
 ---------------------------------
 
-Since version 2, there is a tool to enable the download and installation of published models from a repository: the `macsydata` tool.
+Since version 2, there is a tool to enable the download and installation of published models from a repository: the `msf_data` tool.
 
-See :ref:`here for details <macsydata>` on how to use it.
+See :ref:`here for details <msf_data>` on how to use it.
 
 
 

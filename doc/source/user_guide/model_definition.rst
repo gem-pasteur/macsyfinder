@@ -3,7 +3,7 @@
     Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
     See the COPYING file for details.
 
 .. _model_definition:
@@ -45,22 +45,22 @@ How to install new models
 =========================
 
 MacSyFinder does not provide models. You must install models before using it.
-The ``macsydata`` utility tool is shipped with `MacSyFinder` to deal with macsy-models:
+The ``msf_data`` utility tool is shipped with `MacSyFinder` to deal with macsy-models:
 
 
-macsydata <subcommand> [options]
+msf_data <subcommand> [options]
 
 The main sub-commands are
 
-* ``macsydata available`` to get the list of macsy-models available
-* ``macsydata search`` to search a model given its name or a pattern in its description
-* ``macsydata install`` to install a macsy-model package (the installed version can be set see --help)
-* ``macsydata cite`` to retrieve information on how to cite the model
-* ``macsydata definition`` to display one or a set of model defintion
-* ``macsydata --help`` to get the extended list of available subcommands
-* ``macsydata <subcommand> --help`` to get help about the specified subcommand
+* ``msf_data available`` to get the list of macsy-models available
+* ``msf_data search`` to search a model given its name or a pattern in its description
+* ``msf_data install`` to install a macsy-model package (the installed version can be set see --help)
+* ``msf_data cite`` to retrieve information on how to cite the model
+* ``msf_data definition`` to display one or a set of model defintion
+* ``msf_data --help`` to get the extended list of available subcommands
+* ``msf_data <subcommand> --help`` to get help about the specified subcommand
 
-*macsydata* is ``NEW in V2``
+*msf_data* is ``NEW in V2``
 
 
 Where the models are located
@@ -71,7 +71,7 @@ MacSyFinder looks at several locations to find macsy-models.
 system-wide installation
 ------------------------
 
-By default *macsydata* installs models in a shared location (set by --install-data option) that is
+By default *msf_data* installs models in a shared location (set by --install-data option) that is
 `/usr/share/macsyfinder/` or `/usr/local/share/macsyfinder` depending on your Operating System distribution.
 If you use a *virtualenv*, the shared resources are located in the `<virtualenv>/share/macsyfinder` directory.
 
@@ -81,7 +81,7 @@ user-wide installation
 
 If you don't own rights to install system-wide, you can install models in the MacSyFinder's cache
 located in your home: `$HOME/.macsyfinder/data/`.
-*macsydata* installs packages in this location when you use the `--user` option.
+*msf_data* installs packages in this location when you use the `--user` option.
 The packages installed in user land is added to the system-wide packages.
 
 
@@ -95,7 +95,7 @@ project-wide installation
 If you cannot install macsy-model packages in system or user land locations,
 you can install models in specific directory with the `--target` option.
 
-    macsydata install --target <my_models>
+    msf_data install --target <my_models>
 
 The specify this specific location with the ``--models-dir`` :ref:`command-line option <path-options>`.
 

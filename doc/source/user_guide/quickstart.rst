@@ -1,10 +1,10 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.
-    Authors: Sophie Abby, Bertrand Néron
-    Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
-    See the COPYING file for details.
+   using systems modelling and similarity search.
+   Authors: Sophie Abby, Bertrand Néron
+   Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
+   See the COPYRIGHT file for details
+   MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+   See the COPYING file for details.
 
 .. _quickstart:
 
@@ -46,7 +46,7 @@ MacSyFinder Quick Start
 3. You need to install, or make available to MacSyFinder the models to search in your input genome data.
    Please refer to :ref:`model_definition` to create your own package of models.
    Otherwise, macsy-models contributed by the community are available here: https://github.com/macsy-models
-   and can be retrieved and installed using the :ref:`macsydata <macsydata>` command, installed as part of the MacSyFinder suite.
+   and can be retrieved and installed using the :ref:`msf_data <msf_data>` command, installed as part of the MacSyFinder suite.
 
 
 4. Command lines:
@@ -61,7 +61,7 @@ MacSyFinder Quick Start
 
     - Install the macsy-models of interest from the `Macsy Models repository <https://github.com/macsy-models>`_:
 
-      :code:`macsydata install some-public-models`
+      :code:`msf_data install some-public-models`
 
 
     - On a "unordered" genome dataset:
@@ -79,7 +79,7 @@ MacSyFinder Quick Start
       in a complete genome from the *"ModelA.xml"* and *"ModelB.xml"*
       definition files placed in the folder *"my-models/model_family/definitions"*.
 
-    - If you want to run the same analysis as above but with local macsy-models not installed by macsydata:
+    - If you want to run the same analysis as above but with local macsy-models not installed by msf_data:
 
       :code:`macsyfinder --db-type ordered_replicon --sequence-db mygenome.fasta --models-dir my-models --models model_family ModelA ModelB`
 
@@ -115,7 +115,7 @@ An example data set
 	2. The TXSScan models for annotation of secretion systems are installed.
 	The command line is the following:
 
-	:code:`macsydata install TXSScan`
+	:code:`msf_data install TXSScan`
 	`# Installs the latest version of TXSScan`
 
 	3. MacSyFinder is run on the genome, here using 8 workers for the HMM search ("-w 8" option):

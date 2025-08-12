@@ -1,10 +1,10 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.
-    Authors: Sophie Abby, Bertrand Néron
-    Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
-    See the COPYING file for details.
+   using systems modelling and similarity search.
+   Authors: Sophie Abby, Bertrand Néron
+   Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
+   See the COPYRIGHT file for details
+   MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+   See the COPYING file for details.
 
 .. _input:
 
@@ -286,12 +286,12 @@ Configuration file
 
 Options to run MacSyFinder can be specified in a configuration file.
 
-A macsyfinder utility is provided to generate macsyfinder config file: *macsyconfig*
+A macsyfinder utility is provided to generate macsyfinder config file: *msf_config*
 
-*macsyconfig* is a conversation menu which guide you and generate a file *macsyfinder.conf* in ini format.
+*msf_config* is a conversation menu which guide you and generate a file *macsyfinder.conf* in ini format.
 Once generated put this file in specific locations (see below) to be take in account by MacSyFinder.
 
-The :ref:`Config object <configuration>` handles all configuration options for MacSyFinder.
+The Config object handles all configuration options for MacSyFinder (for more details read `Config object in MacSyLib documentation <https://macsylib.readthedocs.io/en/latest/user_guide/input.html#configuration-file>`_).
 There kind of locations where to put configuration file:
 
  #. System wide configuration (this configuration is used for all macsyfinder run)
@@ -320,7 +320,7 @@ options altering the definition of systems found in the command-line or the conf
 overwhelm values from systems' :ref:`XML definition files <model-definition-grammar-label>`.
 
 The configuration files must follow the Python "ini" file syntax.
-The :ref:`Config object <configuration>` provides some default values and performs some validations of the values.
+The Config object provides some default values and performs some validations of the values.
 
 
 In MacSyFinder, six sections are defined and stored by default in the configuration file:

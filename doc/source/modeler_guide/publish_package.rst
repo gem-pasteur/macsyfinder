@@ -1,10 +1,10 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.
-    Authors: Sophie Abby, Bertrand Néron
-    Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
-    See the COPYING file for details.
+   using systems modelling and similarity search.
+   Authors: Sophie Abby, Bertrand Néron
+   Copyright © 2014-2023 Institut Pasteur (Paris) and CNRS.
+   See the COPYRIGHT file for details
+   MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+   See the COPYING file for details.
 
 .. _publish_package:
 
@@ -29,7 +29,7 @@ types of files to be complete:
 * macsy-models definition(s) within a `definitions` folder (mandatory)
 * HMM profiles within a `profiles` folder (mandatory)
 
-You can create a template for your package by using `macsydata init`.
+You can create a template for your package by using `msf_data init`.
 It will create for you:
 
 * the git repository with the data package with the right structure.
@@ -48,11 +48,11 @@ Sharing your models
 If you want to share your models you can create a :ref:`macsy-model package <model_package>` in your github repository.
 Several steps are needed to publish your model:
 
-1. Check the **validity** of your package with the ``macsydata check`` command.
+1. Check the **validity** of your package with the ``msf_data check`` command.
    You have to run it from within the folder containing your package files.
    It will report:
 
-   * everything is clear: `macsydata` displays the next step to take to publish the package
+   * everything is clear: `msf_data` displays the next step to take to publish the package
 
    * warning: it means that the package could be improved.
 
@@ -62,7 +62,7 @@ Several steps are needed to publish your model:
 
 2. Create a **tag**, and submit a **pull request** to the https://github.com/macsy-models organization.
    This step is **very important**: without a tag, there is no package.
-   `macsydata check` only tagged packages.
+   `msf_data check` only tagged packages.
    It is **Mandatory** to follow a versioning scheme described here:
 
         * https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
@@ -75,12 +75,12 @@ Several steps are needed to publish your model:
 
    .. warning::
 
-        To avoid making an inconsistent model visible by macsydata install/search (by pushing a tag),
-        a pre-push hook has been setup in the git repository by `macsydata init` command.
-        If you do not used `macsydata init` to create the model, It is a good idea to set up the hook by yourself.
+        To avoid making an inconsistent model visible by msf_data install/search (by pushing a tag),
+        a pre-push hook has been setup in the git repository by `msf_data init` command.
+        If you do not used `msf_data init` to create the model, It is a good idea to set up the hook by yourself.
 
         Check that the hook is well named pre-push and it is executable (`chmod 755 .git/hooks/pre-push`)
-        This script run `macsydata check` if you push a tag and it prevent the push if some error are found.
+        This script run `msf_data check` if you push a tag and it prevent the push if some error are found.
 
         .. literalinclude:: ../_static/code/pre-push
            :language: shell
@@ -88,27 +88,27 @@ Several steps are needed to publish your model:
         :download:`pre-push <../_static/code/pre-push>` .
 
 
-3. When your pull request (PR) is accepted, the model package becomes automatically available to the community through the `macsydata` tool.
+3. When your pull request (PR) is accepted, the model package becomes automatically available to the community through the `msf_data` tool.
 
 If you don't want to submit a PR you can provide the tag release tarball (tar.gz) as is to your collaborators.
-This archive will also be usable with the `macsydata` tool.
+This archive will also be usable with the `msf_data` tool.
 
 .. note::
 
-    ``macsydata check``
+    ``msf_data check``
     checks the syntax of the package, but it does not publish anything.
     It just warns you if something is wrong with the package.
     Every model provider should check its own package before publishing it.
     The package publication is done by the `git push` and the `pull request`.
 
-Examples of ``macsydata check`` outputs:
+Examples of ``msf_data check`` outputs:
 
 
 Your package is syntactically correct:
 
 .. code-block:: text
 
-    macsydata check tests/data/models/test_model_package/
+    msf_data check tests/data/models/test_model_package/
     Checking 'test_model_package' package structure
     Checking 'test_model_package' metadata_path
     Checking 'test_model_package' Model definitions
@@ -134,7 +134,7 @@ You received some warnings:
 
 .. code-block:: text
 
-    macsydata check tests/data/models/Model_w_conf/
+    msf_data check tests/data/models/Model_w_conf/
     Checking 'Model_w_conf' package structure
     Checking 'Model_w_conf' metadata_path
     Checking 'Model_w_conf' Model definitions
@@ -143,7 +143,7 @@ You received some warnings:
     Checking 'Model_w_conf' model configuration
     The package 'Model_w_conf' have not any LICENSE file. May be you have not right to use it.
     The package 'Model_w_conf' have not any README file.
-    macsydata says: You're only giving me a partial QA payment?
+    msf_data says: You're only giving me a partial QA payment?
     I'll take it this time, but I'm not happy.
     I'll be really happy, if you fix warnings above, before to publish these models.
 
@@ -151,7 +151,7 @@ You received some errors:
 
 .. code-block:: text
 
-    macsydata check tests/data/models/TFF-SF/
+    msf_data check tests/data/models/TFF-SF/
     Checking 'TFF-SF' package structure
     The package 'TFF-SF' have no 'metadata.yml'.
     Please fix issues above, before publishing these models.

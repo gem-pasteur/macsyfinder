@@ -12,12 +12,12 @@
 Helper Tool
 ***********
 
-.. _macsyprofile:
+.. _msf_profile:
 
-macsyprofile
-============
+msf_profile
+===========
 
-To help develop new models we provide the tool `macsyprofile` which is to be used as post treatement.
+To help develop new models we provide the tool `msf_profile` which is to be used as post treatement.
 
 It is ran over a previous macsyfinder analysis:
 
@@ -27,66 +27,56 @@ It is ran over a previous macsyfinder analysis:
 
 .. code-block:: text
 
-    usage: macsyprofile [-h] [--coverage-profile COVERAGE_PROFILE]
-                        [--i-evalue-sel I_EVALUE_SEL]
-                        [--best-hits {score,i_eval,profile_coverage}] [-p PATTERN]
-                        [-o OUT] [-f] [-V] [-v] [--mute]
-                        previous_run
+    usage: msf_profile [-h] [--coverage-profile COVERAGE_PROFILE] [--i-evalue-sel I_EVALUE_SEL] [--best-hits {score,i_eval,profile_coverage}]
+                   [-p PATTERN] [-o OUT] [--index-dir INDEX_DIR] [-f] [-V] [-v] [--mute]
+                       previous_run
 
-         *            *               *                   * *       *
-    *           *               *   *   *  *    **                *
-      **     *    *   *  *     *                    *               *
-         __  __    *       ____ *      ____        **   __ _ _  *
-        |  \/  | __ _  ___/ ___| _   _|  _ \ _ __ ___  / _(_) | ___
-        | |\/| |/ _` |/ __\___ \| | | | |_) | '__/ _ \| |_| | |/ _ \
-        | |  | | (_| | (__ ___) | |_| |  __/| | | (_) |  _| | |  __/
-        |_|  |_|\__,_|\___|____/ \__, |_|   |_|  \___/|_| |_|_|\___|
-                *                |___/    *                   *
-     *      *   * *     *   **         *   *  *           *
+         *            *                 *              *
+    *           *                 *   *   *  *    **
+       *   *         __       *         **    __ _ _     *
+      _ __ ___  ___ / _|     _ __  _ __ ___  / _(_) | ___
+     | '_ ` _ \/ __| |_     | '_ \| '__/ _ \| |_| | |/ _ \
+     | | | | | \__ \  _|    | |_) | | | (_) |  _| | |  __/
+     |_| |_| |_|___/_|______| .__/|_|  \___/|_| |_|_|\___|
+          *    *    |_______|_|     *               **
+     *      *   * *     *   **         *   *  *
       *      *         *        *    *              *
-                 *                           *  *           *     *
+    *                           *  *           *        *
 
-    MacSyProfile - MacSyFinder profile helper tool
+    msf_profile - Profile Helper Tool
 
     positional arguments:
       previous_run          The path to a macsyfinder results directory.
 
-    optional arguments:
+    options:
       -h, --help            show this help message and exit
       --coverage-profile COVERAGE_PROFILE
-                            Minimal profile coverage required for the hit
-                            alignment with the profile to allow the hit selection
-                            for systems detection. (default no threshold)
+                            Minimal profile coverage required for the hit alignment with the profile to allow the hit selection for systems
+                            detection. (default no threshold)
       --i-evalue-sel I_EVALUE_SEL
-                            Maximal independent e-value for Hmmer hits to be
-                            selected for systems detection. (default: no selection
-                            based on i-evalue)
+                            Maximal independent e-value for Hmmer hits to be selected for systems detection. (default: no selection based on
+                            i-evalue)
       --best-hits {score,i_eval,profile_coverage}
-                            If several hits match the same replicon, same gene.
-                            Select only the best one (based on best 'score' or
-                            'i_evalue' or 'profile_coverage')
-      -p PATTERN, --pattern PATTERN
+                            If several hits match the same replicon, same gene. Select only the best one (based on best 'score' or 'i_evalue'
+                            or 'profile_coverage')
+      -p, --pattern PATTERN
                             pattern to filter the hmm files to analyse.
-      -o OUT, --out OUT     the path to a file to write results.
+      -o, --out OUT         the path to a file to write results.
       --index-dir INDEX_DIR
-                            Specifies the path to a directory to store/read the sequence index
-                            when the sequence-db dir is not writable.
-      -f, --force           force to write output even the file already exists
-                            (overwrite it).
+                            Specifies the path to a directory to store/read the sequence index when the sequence-db dir is not writable.
+      -f, --force           force to write output even the file already exists (overwrite it).
       -V, --version         show program's version number and exit
-      -v, --verbosity       Increases the verbosity level. There are 4 levels:
-                            Error messages (default), Warning (-v), Info (-vv) and
+      -v, --verbosity       Increases the verbosity level. There are 4 levels: Error messages (default), Warning (-v), Info (-vv) and
                             Debug.(-vvv)
-      --mute                Mute the log on stdout. (continue to log on
-                            macsyfinder.log) (default: False)
+      --mute                Mute the log on stdout. (continue to log on macsyfinder.log) (default: False)
 
-    For more details, visit the MacSyFinder website and see the MacSyFinder documentation.
+    For more details, visit the MacSyLib website and see the MacSyLib documentation.
 
 For instance:
 
 .. code-block:: shell
 
-    >macsyprofile  macsyfinder-2021XXXX_XX-XX-XX
+    >msf_profile  macsyfinder-2021XXXX_XX-XX-XX
 
 will analyse the HMMER raw outputs stored in `macsyfinder-2021XXXX_XX-XX-XX/hmmer_results` directory
 and the results will be stored in `macsyfinder-2021XXXX_XX-XX-XX/hmm_coverage.tsv` file
@@ -136,7 +126,7 @@ For instance:
 
 .. code-block:: text
 
-    >macsyprofile --pattern 'ComM*'  macsyfinder-2021XXXX_XX-XX-XX
+    >msf_profile --pattern 'ComM*'  macsyfinder-2021XXXX_XX-XX-XX
     parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comB.search_hmm.out
     parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comC.search_hmm.out
     parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comEA.search_hmm.out
@@ -156,7 +146,7 @@ For instance:
 
     .. code-block:: text
 
-        >macsyprofile --pattern 'ComM_com?C' -f macsyfinder-2021XXXX_XX-XX-XX
+        >msf_profile --pattern 'ComM_com?C' -f macsyfinder-2021XXXX_XX-XX-XX
         parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comEC.search_hmm.out
         parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comGC.search_hmm.out
         found 16 hits
@@ -168,7 +158,7 @@ A useful example for modellers?
 
 .. code-block:: text
 
-    >macsyprofile --best-hits i_eval --i-evalue-sel 0.001 --coverage-profile 0.5 -o msf_GCF_003149495.1_ASM314949v1_tff-sf/hmm_coverage_best-hits_ieval_default_filter_MSF.tsv msf_GCF_003149495.1_ASM314949v1_tff-sf
+    >msf_profile --best-hits i_eval --i-evalue-sel 0.001 --coverage-profile 0.5 -o msf_GCF_003149495.1_ASM314949v1_tff-sf/hmm_coverage_best-hits_ieval_default_filter_MSF.tsv msf_GCF_003149495.1_ASM314949v1_tff-sf
     found 221 hits
     result is in 'msf_GCF_003149495.1_ASM314949v1_tff-sf/hmm_coverage_best-hits_ieval_default_filter_MSF.tsv'
 
@@ -186,18 +176,18 @@ is it because it does not comply to the co-localization rules defined in the sys
 
 
 
-Parsing macsyprofile outputs
+Parsing msf_profile outputs
 ----------------------------
 
-The `macsyprofile` output is a tabulated separated values (`.tsv`) files
+The `msf_profile` output is a tabulated separated values (`.tsv`) files
 The first lines which are comments (starting with '#') display the tool version
 and the complete command line used. Then follow the results.
 The first line of results is a header line.
 
 .. code-block:: text
 
-    # macsyprofile 2.0rc1
-    # macsyprofile --pattern ComM* --coverage-profile 0.5 macsyfinder-20201202_15-17-46/
+    # msf_profile 2.1.5
+    # msf_profile --pattern ComM* --coverage-profile 0.5 macsyfinder-20201202_15-17-46/
     hit_id  replicon_name   position_hit    hit_sequence_length     gene_name       i_eval  score   profile_coverage        sequence_coverage       begin   end
     GCF_000006745_021980    GCF_000006745   2198    291     ComM_comC       2.500e-40       136.400 0.942   0.708   62      267
     GCF_000006745_007650    GCF_000006745   765     253     ComM_comC       9.600e-31       105.100 0.937   0.798   43      244
@@ -216,7 +206,7 @@ The first line of results is a header line.
 
 .. warning::
 
-    The `macsyprofile` tool is not compliant with results produced with `macsyfinder v1`.
+    The `msf_profile` tool is not compliant with results produced with `macsyfinder v1`.
     If you get ``Cannot find models in conf file XXX. May be these results have been generated with an old version of macsyfinder.``
     Check the configuration file, if `[models]` section contains ``models_1 = XXX YYY`` remove the `_1` from models
     ``models = XXX YYY``

@@ -12,22 +12,5 @@ MacSyFinder API documentation
 .. toctree::
     :maxdepth: 2
 
-    config
-    model_conf_parser
-    registries
-    definition_parser
-    model
-    gene
-    profile
-    hit
-    cluster
-    system
-    report
-    search_genes
-    solution
-    serialization
-    database
-    error
-    utils
-    package
+    io
     scripts

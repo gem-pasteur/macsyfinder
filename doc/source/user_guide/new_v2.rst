@@ -12,20 +12,69 @@
 What's new in MacSyFinder v2?
 *****************************
 
-Master
-======
+V 2.1.5
+=======
+
+MacSyFinder code as been refactored. Now there is a library MacSyLib that hold the most of the code.
+MacSyFinder hold only specific code, and rely on MacSyLib for the rest.
+
+For users
+---------
+
+The scripts have been renamed :
+
+* `macsyprofile` become `msf_profile` (macsyprofile is deprecated and will be removed in future version)
+* `macsydata` become `msf_data` (macsyprofile is deprecated and will be removed in future version)
+* `macsy_merge` become `msf_merge` (macsy_merge is deprecated and will be removed in future version)
+* `macsy_split` become `msf_split` (macsy_split is deprecated and will be removed in future version)
+* `macsyfinder` stay unchanged.
+
+`msf_data` have new subcommand `show`
+
+It show the structure of models available in an installed package of models.
+for instance:
+
+.. code-block:: text
+
+    $msf_data show TXSScan
+    TXSScan
+        ├-archaea
+        │   └-Archaeal-T4P
+        └-bacteria
+             ├-diderm
+             │   ├-Flagellum
+             │   ├-MSH
+             │   ├-T1SS
+             │   ├-T2SS
+             │   ├-T3SS
+             │   ├-T4aP
+             │   ├-T4bP
+             │   ├-T5aSS
+             │   ├-T5bSS
+             │   ├-T5cSS
+             │   ├-T6SSi
+             │   ├-T6SSii
+             │   ├-T6SSiii
+             │   ├-T9SS
+             │   ├-Tad
+             │   ├-pT4SSi
+             │   └-pT4SSt
+             └-monoderm
+                  └-ComM
+
+    TXSScan (1.1.3) : 19 models
 
 For modelers
 ------------
 
-* `macsydata check` now check profiles
+* `msf_data check` now check profiles
 
     * if hmm file is not empty
     * if there is only one profile per hmm file
 
-  Use `macsydata check`  before to publish your models.
-  Also consider to add a pre-push git hook that run `macsydata check` when you push a tag.
-  This hook is automatically installed when you run `macsydata init` to create a package skeleton (from V 2.1.4)
+  Use `msf_data check`  before to publish your models.
+  Also consider to add a pre-push git hook that run `msf_data check` when you push a tag.
+  This hook is automatically installed when you run `msf_data init` to create a package skeleton (from V 2.1.4)
 
 
 V 2.1.4
@@ -182,7 +231,7 @@ Several **new features** were added, including:
 - a **new component feature** was introduced: "multi-model", that corresponds to components that are allowed to participate in occurrences of systems from different models. :ref:`See here <multi-model-label>` for more.
 - more flexibility was introduced in the **search for systems' components using HMMER**. It is now possible to use the `cut_ga` threshold when provided in the HMM profiles used for components' similarity search. This enables to have a search tailored for each HMM profile, and thus component. :ref:`See here <hmmer-options>` for more details.
 - a **new file structure** was created to better organize MacSyFinder's packages (i.e. that include systems' models and corresponding HMMER profiles). :ref:`See here <package_structure>` for details.
-- a **tool** to easily install and distribute MacSyFinder's packages was created. :ref:`See here <macsydata>` for more details on *macsydata*.
+- a **tool** to easily install and distribute MacSyFinder's packages was created. :ref:`See here <msf_data>` for more details on *macsydata*.
 - the **format for MacSyFinder's models** has slightly changed, in order to offer more possibilities, and more readibility. To see **how to carry models from v1 to v2**, :ref:`visit here <models_v1_v2>`.
 
 
@@ -214,7 +263,7 @@ If you intend to model new systems please refer to the :ref:`modeler_guide`.
 Models installation
 -------------------
 
-We now provide a new tool to manage the models. See :ref:`macsydata`.
+We now provide a new tool to manage the models. See :ref:`msf_data`.
 
 
 Models configuration
@@ -227,9 +276,9 @@ Modeller helper tool
 --------------------
 
 To help modellers create new models we provide a new helper tool `macsyprofile`, which analyses HMMER raw output files from
-results of a previous MacSyFinder run, to provide information on all hits even if filtered out. See :ref:`macsyprofile`.
+results of a previous MacSyFinder run, to provide information on all hits even if filtered out. See :ref:`msf_profile`.
 
-:ref:`macsydata` provide also some options to help the modeller as
+:ref:`msf_data` provide also some options to help the modeller as
 
 * **macsydata init** to init a new model package.
 * **macsydata check** to check the integrity of a model package, before to use/publish it.
