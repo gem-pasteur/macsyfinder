@@ -29,6 +29,7 @@ import tempfile
 import argparse
 import logging
 import unittest
+import platform
 import itertools
 
 from pandas import __version__ as pd_vers
@@ -96,7 +97,7 @@ set_2
 """
         self.assertEqual(exp_list_models, rcv_list_models)
 
-
+    @unittest.skipIf(platform.system() == 'Windows' or os.getuid() == 0, 'Skip test on Windows or if run as root')
     def test_list_models_no_permissions(self):
         cmd_args = argparse.Namespace()
         cmd_args.models_dir = os.path.join(self._data_dir, 'fake_model_dir')
