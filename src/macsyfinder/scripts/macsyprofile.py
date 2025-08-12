@@ -58,8 +58,7 @@ def deprecated_main(args: list[str] = None) -> None:
                                           |___/
 
 'macsyprofile' has been renamed. Use 'msf_profile' instead.
-'macsyprofile' will be removed in future versions.
-""", DeprecationWarning, stacklevel=2)
+'macsyprofile' will be removed in future versions.""", DeprecationWarning, stacklevel=2)
     msl_main(args=args, package_name='macsyfinder', tool_name='msf_profile')
 
 
