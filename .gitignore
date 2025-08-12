@@ -49,7 +49,7 @@ macsyfinder-*/
 data/
 sandbox/
 !/tests/data
-!/macsypy/data
+!/macsylib/data
 
 ######################################
 # Singularity/Apptainer def and simg #
