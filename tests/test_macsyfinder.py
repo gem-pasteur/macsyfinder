@@ -97,10 +97,22 @@ set_2
 """
         self.assertEqual(exp_list_models, rcv_list_models)
 
+
     @unittest.skipIf(platform.system() == 'Windows' or os.getuid() == 0, 'Skip test on Windows or if run as root')
     def test_list_models_no_permissions(self):
+        # on gitlab it is not allowed to change the permission of a directory
+        # located in tests/data
+        # So I need to copy it in /tmp
+        tmp_dir = tempfile.TemporaryDirectory(prefix='test_msl_Config_')
+        model_dir_name = 'fake_model_dir'
+        src_model_dir = self.find_data(model_dir_name)
+        dst_model_dir = os.path.join(tmp_dir.name, 'fake_model_dir')
+        shutil.copytree(src_model_dir, dst_model_dir)
+
+        log = logging.getLogger('macsylib')
+        log.setLevel(logging.WARNING)
         cmd_args = argparse.Namespace()
-        cmd_args.models_dir = os.path.join(self._data_dir, 'fake_model_dir')
+        cmd_args.models_dir = dst_model_dir
         cmd_args.list_models = True
         models_dir_perm = os.stat(cmd_args.models_dir).st_mode
         try:
@@ -112,6 +124,7 @@ set_2
             self.assertEqual(log_msg, f"{cmd_args.models_dir} is not readable: [Errno 13] Permission denied: '{cmd_args.models_dir}' : skip it.")
         finally:
             os.chmod(cmd_args.models_dir, models_dir_perm)
+            tmp_dir.cleanup()
 
 
     def test_get_version_message(self):
