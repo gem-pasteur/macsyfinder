@@ -186,7 +186,7 @@ def main(args: list[str] | None = None, log_level: int | str | None = None):
     elif not os.access(parsed_args.outdir, os.W_OK):
         outdir_err = f"{parsed_args.outdir} is not writable"
     if outdir_err:
-        log = colorlog.getLogger('macsypy.split')
+        log = colorlog.getLogger('macsylib.macsyfinder.split')
         stdout_handler = colorlog.StreamHandler(sys.stdout)
         stdout_formatter = colorlog.ColoredFormatter("%(log_color)s%(message)s",
                                                      datefmt=None,
