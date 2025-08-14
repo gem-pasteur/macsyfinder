@@ -47,7 +47,6 @@ dev = [
     "coverage[toml]",
     "build",
     "ruff",
-    "GitPython",
     "pre-commit",
 ]
 
