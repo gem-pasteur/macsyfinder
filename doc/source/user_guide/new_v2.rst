@@ -76,10 +76,13 @@ For modelers
   Also consider to add a pre-push git hook that run `msf_data check` when you push a tag.
   This hook is automatically installed when you run `msf_data init` to create a package skeleton (from V 2.1.4)
 
-For developper
---------------
+For developer
+-------------
 
 Rename the default branch from `master` to `main`
+
+Most of the code has been moved in the MacSyLib package (https://pypi.org/project/MacSyLib/, https://github.com/gem-pasteur/macsylib).
+In MacSyFinder there is only the specific code and the entrypoints left.
 
 V 2.1.4
 =======
