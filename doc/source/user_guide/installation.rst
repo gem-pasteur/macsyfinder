@@ -48,7 +48,7 @@ These dependencies will be automatically retrieved and installed when using `pip
     If you intend to build and distribute new models you will need some other dependencies see modeler guide for installation.
 
 .. note::
-    If you want to contribute to the *MacSyFinder* code, check the guide lines (`CONTRIBUTING <https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTING.md>`_)
+    If you want to contribute to the *MacSyFinder* code, check the guide lines (`CONTRIBUTING <https://github.com/gem-pasteur/macsyfinder/blob/main/CONTRIBUTING.md>`_)
     and specific procedure for :ref:`developer installation <dev_installation>`.
 
 
