@@ -85,5 +85,6 @@ benchmark/
 Conda/
 Sandbox/
 perf/
-score_analysis/
+score_analysis*
 Notebooks/
+fix_copyright.sh
