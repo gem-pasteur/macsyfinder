@@ -34,12 +34,12 @@ classifiers = [
 requires-python = ">=3.10"
 
 dependencies = [
-  "macsylib"
+  "macsylib >= 1.0.1, < 1.5"
 ]
 
 [project.optional-dependencies]
 dev = [
-    "macsylib[dev]",
+    "macsylib[dev] >= 1.0.1, < 1.5",
     "sphinx",
     "sphinx_rtd_theme",
     "sphinx-autodoc-typehints",
@@ -51,7 +51,7 @@ dev = [
 ]
 
 model = [
-    "macsylib[model]"
+    "macsylib[model] >= 1.0.1, < 1.5"
 ]
 
 [project.scripts]
