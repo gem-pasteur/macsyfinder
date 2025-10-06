@@ -35,3 +35,4 @@ This is a list of people who have made contributions to Macsyfinder.
 * Antônio Camargo <https://github.com/apcamargo> :bug:
 * TrellixVulnTeam <https://github.com/TrellixVulnTeam> :computer:
 * Michael R. Crusoe <https://github.com/mr-c> :white_check_mark:
+* Magnus G. Jespersen <https://github.com/milnus> 🐛 💻
