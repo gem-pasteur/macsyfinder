@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
    using systems modelling and similarity search.
    Authors: Sophie Abby, Bertrand Néron
-   Copyright © 2014-2024 Institut Pasteur (Paris) and CNRS.
+   Copyright © 2014-2025 Institut Pasteur (Paris) and CNRS.
    See the COPYRIGHT file for details
    MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
    See the COPYING file for details.
@@ -48,7 +48,7 @@ These dependencies will be automatically retrieved and installed when using `pip
     If you intend to build and distribute new models you will need some other dependencies see modeler guide for installation.
 
 .. note::
-    If you want to contribute to the *MacSyFinder* code, check the guide lines (`CONTRIBUTING <https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTING.md>`_)
+    If you want to contribute to the *MacSyFinder* code, check the guide lines (`CONTRIBUTING <https://github.com/gem-pasteur/macsyfinder/blob/main/CONTRIBUTING.md>`_)
     and specific procedure for :ref:`developer installation <dev_installation>`.
 
 

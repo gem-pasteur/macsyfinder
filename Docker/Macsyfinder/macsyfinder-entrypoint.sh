@@ -7,12 +7,12 @@ ARGS=${@}
 case ${CMD} in
 	macsyfinder )
 		exec /usr/local/bin/macsyfinder ${ARGS} ;;
-	macsydata )
-		exec /usr/local/bin/macsydata ${ARGS} ;;
-  macsyprofile)
-    exec /usr/local/bin/macsyprofile ${ARGS} ;;
+	msf_data )
+		exec /usr/local/bin/msf_data ${ARGS} ;;
+  msf_profile)
+    exec /usr/local/bin/msf_profile ${ARGS} ;;
 	* )
-		echo -e "command \"${CMD}\" is not supported.\nAvailable commands: macsyfinder | macsydata | macsyprofile"
+		echo -e "command \"${CMD}\" is not supported.\nAvailable commands: macsyfinder | msf_data | msf_profile"
     exit 127
     ;;
 esac

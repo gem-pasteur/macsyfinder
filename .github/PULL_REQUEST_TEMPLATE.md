@@ -21,7 +21,7 @@ fixing or enhancing.
 
 ### Checkoff for all PRs:
 
-- [ ] I have read the [Guidelines for Contributing](https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTING.md), and this PR conforms to the stated requirements.
+- [ ] I have read the [Guidelines for Contributing](https://github.com/gem-pasteur/macsyfinder/blob/main/CONTRIBUTING.md), and this PR conforms to the stated requirements.
 - [ ] I have tested this PR locally with a `python tests/run_tests.py`
-- [ ] I have added myself as a contributor to the [contributors's file](https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTORS.md)
+- [ ] I have added myself as a contributor to the [contributors's file](https://github.com/gem-pasteur/macsyfinder/blob/main/CONTRIBUTORS.md)
 - [ ] This PR is ready for review and/or merge

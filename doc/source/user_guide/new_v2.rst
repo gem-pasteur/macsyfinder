@@ -1,9 +1,9 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.
     Authors: Sophie Abby, Bertrand Néron
-    Copyright © 2014-2024 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2025 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    MacSyFinder is distributed under the terms of the GNU General Public License (GPLv3).
     See the COPYING file for details.
 
 .. _new_v2:
@@ -76,6 +76,13 @@ For modelers
   Also consider to add a pre-push git hook that run `msf_data check` when you push a tag.
   This hook is automatically installed when you run `msf_data init` to create a package skeleton (from V 2.1.4)
 
+For developer
+-------------
+
+Rename the default branch from `master` to `main`
+
+Most of the code has been moved in the MacSyLib package (https://pypi.org/project/MacSyLib/, https://github.com/gem-pasteur/macsylib).
+In MacSyFinder there is only the specific code and the entrypoints left.
 
 V 2.1.4
 =======
@@ -104,7 +111,7 @@ For developers
 --------------
 
 * all the *msf* code (macsypy and tests) pass the `ruff <https://docs.astral.sh/ruff/>`_ linter
-* all the code use type hints (required python >3.10) see (https://github.com/gem-pasteur/macsyfinder/blob/master/CONTRIBUTING.md)
+* all the code use type hints (required python >3.10) see (https://github.com/gem-pasteur/macsyfinder/blob/main/CONTRIBUTING.md)
 
 
 V 2.1.3
