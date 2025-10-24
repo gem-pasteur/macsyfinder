@@ -234,6 +234,78 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
         self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
                              os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
 
+    def test_ordered_circular_small(self):
+        # genetic organization of test_16.fasta
+        # replicon size 7 genes
+        # gene      T4SS_MOBQ  T4SS_MOBQ
+        # gene id     gene_4    gene_7
+        # pos           4         7
+        # clst         [           ]
+        # syst [(T4SS_MOBQ,4)] , [(T4SS_MOBQ, 7)] 1 system T4SS_MOBQ, 7 wich is in fact a loner only with counterpart T4SS_MOBQ,4
+        # T4SS_MOBQ is a loner
+
+        expected_result_dir = self.find_data("functional_test_ordered_circular_small")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology circular " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional MOB_light " \
+               "-o {out_dir} " \
+               f"--index-dir {self.index_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary,
+                          self.rejected_candidates_tsv):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
+
+    def test_ordered_circular_small_2(self):
+        # genetic organization of test_16.fasta
+        # replicon size 7 genes
+        # gene      T4SS_MOBQ  T4SS_MOBQ
+        # gene id     gene_4    gene_7
+        # pos           4         7
+        # clst         [           ]
+        # syst [(T4SS_MOBQ,4), (T4SS_MOBQ, 7)] 1 system with 2 hits
+        # T4SS_MOBQ is NOT a loner
+
+        expected_result_dir = self.find_data("functional_test_ordered_circular_small_2")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology circular " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional MOB_light_no_loner " \
+               "-o {out_dir} " \
+               f"--index-dir {self.index_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary,
+                          self.rejected_candidates_tsv):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_candidates_txt),
+                             os.path.join(self.out_dir, self.rejected_candidates_txt), comment="#")
+
 
     def test_gzip(self):
         # genetic organization of test_3.fasta.gz
