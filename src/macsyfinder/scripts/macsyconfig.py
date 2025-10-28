@@ -695,14 +695,17 @@ def serialize(config: ConfigParserWithComments, path: str) -> None:
         config.write(file)
 
 
-def parse_args(args: list[str]) -> argparse.Namespace:
+def parse_args(args: list[str], color:bool=True) -> argparse.Namespace:
     """
     parse command line
 
     :param args: the command line arguments
     :return:
     """
-    parser = argparse.ArgumentParser()
+    if sys.version_info.minor >= 14:
+        parser = argparse.ArgumentParser(color=color)
+    else:
+        parser = argparse.ArgumentParser()
     theme_option = parser.add_mutually_exclusive_group()
     theme_option.add_argument("--no-color",
                               action='store_true',
