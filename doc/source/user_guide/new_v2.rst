@@ -12,6 +12,12 @@
 What's new in MacSyFinder v2?
 *****************************
 
+V 2.1.6
+=======
+
+- Use MacSyLib 1.0.5 `check what's new <https://macsylib.readthedocs.io/en/latest/user_guide/new.html>`_
+- Test MacSyFinder with python 3.14
+
 V 2.1.5
 =======
 
