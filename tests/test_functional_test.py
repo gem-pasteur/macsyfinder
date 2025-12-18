@@ -1301,7 +1301,8 @@ The replicon THHY002.0321.00001.C001 cannot be solved before timeout. SKIP IT.""
             System._id = itertools.count(1)
             RejectedCandidate._id = itertools.count(1)
             msf.main(args=args.split(),
-                             loglevel='ERROR'
+                             loglevel='ERROR',
+
                              )
         except Exception as err:
             import traceback
