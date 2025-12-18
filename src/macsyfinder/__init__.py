@@ -26,13 +26,12 @@ MacSyFinder package contains mainly variable used in library as __version__, __c
 and helper functions
 """
 
-from time import strftime, localtime
 import os
 import sys
 import subprocess
 
 
-__version__ = f'{strftime("%Y%m%d", localtime())}.dev'
+__version__ = '2.1.5'
 
 
 __citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
