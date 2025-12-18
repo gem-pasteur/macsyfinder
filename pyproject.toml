@@ -40,7 +40,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "macsylib[dev] > 1.0.4, < 3",
+    "macsylib[dev] >= 1.0.4, < 3",
     "sphinx",
     "sphinx_rtd_theme",
     "sphinx-autodoc-typehints",
