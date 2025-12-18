@@ -21,7 +21,10 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
+import shutil
+import tempfile
+import os.path
+import sys
 
 import subprocess
 from tests import MacsyTest
@@ -48,10 +51,37 @@ class Test_msf_data(MacsyTest):
 
 class Test_msf_profile(MacsyTest):
 
+    def setUp(self):
+        self._tmp_dir = tempfile.TemporaryDirectory(prefix='test_msf_scripts_')
+        self.tmp_dir = self._tmp_dir.name
+
+    def tearDown(self):
+        self._tmp_dir.cleanup()
+
+
     def test_cmde(self):
         # just test if the command msf_profile is available (there is no error in the pyproject.toml and generated wrapper
         p = subprocess.run("msf_profile --help", shell=True, check=True, capture_output=True, text=True, encoding='utf8')
         self.assertEqual(p.returncode, 0)
+
+
+    def test_previous_run(self):
+        # test if the command msf_profile on a previous run
+        run_name = 'functional_test_ordered_single_loci'
+        prev_run = shutil.copytree(self.find_data(run_name),
+                    os.path.join(self.tmp_dir, 'functional_test_ordered_single_loci'))
+
+        try:
+            p = subprocess.run(f"msf_profile {prev_run}",
+                               shell=True,
+                               check=True,
+                               capture_output=True,
+                               text=True,
+                               encoding='utf8')
+        except subprocess.CalledProcessError as err:
+            print(err.stderr, sys.stderr)
+            raise err
+        self.assertEqual(p.returncode, 0, p.stdout)
 
 
 class Test_msf_config(MacsyTest):
