@@ -148,7 +148,7 @@
         "Python >= 3.10",
         "hmmer >= 3.1"
     ],
-    "version": "2.1.5",
+    "version": "2.1.6",
     "codemeta:contIntegration": {
         "id": "https://github.com/gem-pasteur/macsyfinder/actions"
     },
