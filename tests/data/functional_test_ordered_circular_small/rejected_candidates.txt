@@ -1,0 +1,4 @@
+# macsyfinder 20251024.dev 1c7b9ec8 (using MacSyLib 20251024.dev 16375ec)
+# models : functional-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py313_msf/bin/macsyfinder -vvv --replicon-topology circular --db-type ordered_replicon --models functional MOB_light --models-dir tests/data/models/ --sequence-db tests/data/base/test_16.faa -w 15 --relative-path -o functional_test_ordered_circular_small
+# No Rejected candidates

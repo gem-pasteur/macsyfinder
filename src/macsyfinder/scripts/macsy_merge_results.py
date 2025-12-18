@@ -370,7 +370,7 @@ def main(args: list[str] | None = None,
 
     if not log_level:
         # logs are specify from args options
-        config = MacsyDefaults(prog_name='macsyfinder')
+        config = MacsyDefaults(package_name='macsyfinder', tool_name='macsyfinder')
         log_level = max(config.log_level - (10 * parsed_args.verbose) + (10 * parsed_args.quiet), 1)
         macsylib.logger_set_level(log_name, log_level)
     else:

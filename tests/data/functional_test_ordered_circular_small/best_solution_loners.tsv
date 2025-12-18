@@ -1,0 +1,8 @@
+# macsyfinder 20251024.dev 1c7b9ec8 (using MacSyLib 20251024.dev 16375ec)
+# models : functional-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py313_msf/bin/macsyfinder -vvv --replicon-topology circular --db-type ordered_replicon --models functional MOB_light --models-dir tests/data/models/ --sequence-db tests/data/base/test_16.faa -w 15 --relative-path -o functional_test_ordered_circular_small
+# Loners found:
+replicon	model_fqn	function	gene_name	hit_id	hit_pos	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
+test_16	functional/MOB_light	T4SS_MOBB	T4SS_MOBQ	gene_4	4	mandatory	748	8.300e-83	266.200	1.000	0.270	30	231
+test_16	functional/MOB_light	T4SS_MOBB	T4SS_MOBQ	gene_7	7	mandatory	719	7.700e-83	266.300	1.000	0.281	30	231
+

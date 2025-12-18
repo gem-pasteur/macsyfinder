@@ -1,0 +1,82 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.4 (Aug 2023); http://hmmer.org/
+# Copyright (C) 2023 Howard Hughes Medical Institute.
+# Freely distributed under the BSD open source license.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/models/functional/profiles/T4SS_MOBQ.hmm
+# target sequence database:        tests/data/base/test_16.faa
+# output directed to file:         functional_test_ordered_circular_small/hmmer_results/T4SS_MOBQ.search_hmm.out
+# model-specific thresholding:     GA cutoffs
+# number of worker threads:        3
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       MOBQ  [M=217]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence Description
+    ------- ------ -----    ------- ------ -----   ---- --  -------- -----------
+    7.7e-83  266.3   1.9    7.7e-83  266.3   1.9    2.6  1  gene_7    T4SS_MOBQ
+    8.3e-83  266.2   1.9    8.3e-83  266.2   1.9    2.7  1  gene_4    T4SS_MOBQ
+
+
+Domain annotation for each sequence (and alignments):
+>> gene_7  T4SS_MOBQ
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  266.3   1.9   2.2e-83   7.7e-83       1     217 []      30     231 ..      30     231 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 266.3 bits;  conditional E-value: 2.2e-83
+    MOBQ   1 mAiyhlsvkvisrgaGrsavaaaaYrsgeklederegethdysrkegveeseillPenapewakdreelWnaveaaEkrkdaqlareleiALPrELseeerie 103
+             mAiyhls+k+isr++G sava+aaYrsg+ + der+g thdy+rk+gv+e+ il+P++ap+w+++r+elWnave+aE+rk++qlare+e+A+PrEL ++  +e
+  gene_7  30 MAIYHLSMKIISRNSGYSAVASAAYRSGSLMLDERTGLTHDYTRKSGVAEAVILTPATAPAWCTNRAELWNAVEKAERRKNSQLAREIELAIPRELPQDAARE 132
+             9****************************************************************************************************** PP
+
+    MOBQ 104 lvrefvkeevvskglaadvaiHapkkddernpHaHillttRkldeegefgkkkkrelskdkekgkakkkkeeleelReeWaelaNralekaglderidhrSle 206
+              v +fv+e++vs+g++adva+H+    d++npHaHi+lttR + + g fg  k+r++          +++ + e++R++Wa++aNral++ag++e+idhrS+e
+  gene_7 133 TVLAFVRENFVSQGMIADVAFHH---MDKTNPHAHIMLTTRAVGPAG-FGG-KVRDW----------NDRTHAETWRASWADHANRALANAGYQEEIDHRSYE 220
+             **********************9...789******************.**8.9****..........899********************************* PP
+
+    MOBQ 207 eqgidrepteh 217
+             +qg++++p +h
+  gene_7 221 RQGLEKTPGIH 231
+             ********988 PP
+
+>> gene_4  T4SS_MOBQ
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  266.2   1.9   2.4e-83   8.3e-83       1     217 []      30     231 ..      30     231 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 266.2 bits;  conditional E-value: 2.4e-83
+    MOBQ   1 mAiyhlsvkvisrgaGrsavaaaaYrsgeklederegethdysrkegveeseillPenapewakdreelWnaveaaEkrkdaqlareleiALPrELseeerie 103
+             mAiyhls+k+isr++G sava+aaYrsg+ + der+g thdy+rk+gv+e+ il+P++ap+w+++r+elWnave+aE+rk++qlare+e+A+PrEL ++  +e
+  gene_4  30 MAIYHLSMKIISRNSGYSAVASAAYRSGSLMLDERTGLTHDYTRKSGVAEAVILTPATAPAWCTNRAELWNAVEKAERRKNSQLAREIELAIPRELPQDAARE 132
+             9****************************************************************************************************** PP
+
+    MOBQ 104 lvrefvkeevvskglaadvaiHapkkddernpHaHillttRkldeegefgkkkkrelskdkekgkakkkkeeleelReeWaelaNralekaglderidhrSle 206
+              v +fv+e++vs+g++adva+H+    d++npHaHi+lttR + + g fg  k+r++          +++ + e++R++Wa++aNral++ag++e+idhrS+e
+  gene_4 133 TVLAFVRENFVSQGMIADVAFHH---MDKTNPHAHIMLTTRAVGPAG-FGG-KVRDW----------NDRTHAETWRASWADHANRALANAGYQEEIDHRSYE 220
+             **********************9...789******************.**8.9****..........899********************************* PP
+
+    MOBQ 207 eqgidrepteh 217
+             +qg++++p +h
+  gene_4 221 RQGLEKTPGIH 231
+             ********988 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (217 nodes)
+Target sequences:                          7  (2111 residues searched)
+Passed MSV filter:                         2  (0.285714); expected 0.1 (0.02)
+Passed bias filter:                        2  (0.285714); expected 0.1 (0.02)
+Passed Vit filter:                         2  (0.285714); expected 0.0 (0.001)
+Passed Fwd filter:                         2  (0.285714); expected 0.0 (1e-05)
+Initial search space (Z):                  7  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: 153.16
+//
+[ok]

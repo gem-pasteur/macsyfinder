@@ -101,16 +101,20 @@ in terms of Gene content and genomic architecture criteria.
 
 * The element root of a System's model is "model".
 
-  * It has a mandatory attribute: "inter_gene_max_space", an integer representing the maximal number of components
-    without a match between two components with a match for a component profile in order to consider them contiguous (part of a same *Cluster*).
-  * The version of the XML grammar (the actual version is "2.0")
+  * It has a mandatory attributes:
+
+     * *inter_gene_max_space*: an integer representing the maximal number of components
+       without a match between two components with a match for a component profile in order to consider them contiguous (part of a same *Cluster*).
+     * *vers*: The version of the XML grammar (the current version is "2.1", supported version: "2.0", "2.1")
+
   * The element "model" may have attributes:
 
      * **min_mandatory_genes_required**: an *integer* representing the minimal number of mandatory genes required
        to infer the system's presence.
      * **min_genes_required**: an *integer* representing the minimal number of mandatory or accessory genes
        (whose corresponding proteins match a profile of the model) required to infer the system's presence.
-     * **multi_loci**: a *boolean* set to True ("1", "true" or "True") to allow the definition of "scattered" systems
+     * **multi_loci**: a *boolean* set to 'true' (``boolean values must be in lower case.
+       'True' and 'False' are not allowed in grammar vers=2.1``) to allow the definition of "scattered" systems
        (i.e., systems encoded at different genomic loci or by different gene *clusters*).
        If not specified, *default value is false*.
      * **max_nb_genes** define how many genes is necessary to consider a system as full.
@@ -123,7 +127,7 @@ in terms of Gene content and genomic architecture criteria.
 * The element "gene" has several mandatory attributes:
 
    * **name**: a *string* representing the name of the component/gene which must match that of a profile enclosed in the profile directory of
-     the macsy-model package (see :ref:`below <provide-hmm_label>`).
+     the macsy-model package (see :ref:`below <provide-hmm_label>`). ``It's not allowed to have several gene element at the model level with the same attribute name.``
    * **presence**: a *string* representing the status of the gene's presence in the system.
      It can take four values among "mandatory", "accessory", "neutral", "forbidden" (see above).
 
@@ -143,7 +147,7 @@ in terms of Gene content and genomic architecture criteria.
         **D**) There are 2 clusters with one loner, but this loner is also *multi_system*. So the 2 clusters can be filled up with the loner.
 
 
-   * **multi_system**: a *boolean*. If a gene has the feature "multi_system" (value set to "1", "true" or "True"),
+   * **multi_system**: a *boolean*. If a gene has the feature "multi_system" (value set to "true"),
      it means that it can be used to fill multiple system occurrences (from a same model) -
      and thus be considered as part of several systems ( *default false* ).
 
@@ -160,7 +164,7 @@ in terms of Gene content and genomic architecture criteria.
 
 .. _multi-model-label:
 
-   * **multi_model**: a *boolean*. If a gene has the feature "multi_model" (value set to "1", "true" or "True"),
+   * **multi_model**: a *boolean*. If a gene has the feature "multi_model" (value set to "true"),
      it means that two systems from different models can coexist in the best solution (they are said "compatible") even if they share a component.
      The gene must be tagged as multi_model in both model definitions.
 
@@ -178,6 +182,9 @@ in terms of Gene content and genomic architecture criteria.
    * **inter_gene_max_space**: an *integer* that defines gene-wise value of system's "inter_gene_max_space" parameter (see above).
      It supersedes the system-wise parameter to give the gene a specific co-localization parameter.
 
+.. warning::
+
+    It not allowd to hav several element gene with th
 .. _exchangeables_label:
 
 The element "gene" may have one "exchangeables" child element:
@@ -193,7 +200,7 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
 
     .. code-block:: XML
 
-        <gene name="A" presence="mandatory" multi_model="True">
+        <gene name="A" presence="mandatory" multi_model="true">
             <exchangeables>
                 <gene name="B" />
                 <gene name="C" />
@@ -206,7 +213,7 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
 
         <gene name="A" presence="mandatory">
             <exchangeables>
-                <gene name="B" multi_model="True"/>
+                <gene name="B" multi_model="true"/>
                 <gene name="C" />
             </exchangeables>
         </gene>
@@ -215,7 +222,7 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
 
     .. code-block:: XML
 
-        <gene name="A" presence="mandatory" loner="True" multi_system="True">
+        <gene name="A" presence="mandatory" loner="true" multi_system="true">
             <exchangeables>
                 <gene name="B" />
                 <gene name="C" multi_system="False"/>
@@ -250,7 +257,7 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
   If not specified by the user, several features will have their values assigned **by default**:
 
   * the **genomic architecture** of the System being searched will consist in a **single locus**.
-    If a System may be made of Genes from multiple loci, consider setting the `multi_loci` parameter to `True`.
+    If a System may be made of Genes from multiple loci, consider setting the `multi_loci` parameter to `true`.
   * the **quorum parameters** `min_mandatory_genes_required` and `min_genes_required` will be set to
     the number of mandatory Genes listed - the `accessory` Genes being deemed not required to infer a complete System.
 
@@ -286,7 +293,7 @@ In this example, the described System consists of three mandatory and one access
   * To be considered as part of such System, the components should be co-localized in loci (Clusters of Genes),
     which in this case would amount to being located from each other at a distance of 5-Genes maximum,
     except for the Gene "sctN_FLG" that is allowed to be located "alone" in the genome being investigated,
-    by a `loner` parameter being set to True. As the `multi_loci` parameter is not set,
+    by a `loner` parameter being set to 'true'. As the `multi_loci` parameter is not set,
     by default the System should be made of a single locus (Cluster of co-localized Genes -
     except for the ones listed as `loners`).
   * To be considered a complete System, the quorum of Genes should be reached.
@@ -303,6 +310,11 @@ In this example, the described System consists of three mandatory and one access
     * a HMM profile with a gene-based name must exist in the `profiles` directory of the macsy-model package
       (see :ref:`below <provide-hmm_label>`).
 
+.. warning::
+
+   From MacSyLib >= 1.0.4 "True" or "False" then MacSyFnder >= 2.1.6 are not any longer supported as valid boolean values.
+   Use the lower case notation "true" or "false" for boolean attributes as
+   `multi_loci`, `loner`, `multi_models`, `multi_systems`, ...
 
 
 .. _provide-hmm_label:

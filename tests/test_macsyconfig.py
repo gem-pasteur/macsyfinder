@@ -558,28 +558,28 @@ class TestMacsyconfig(MacsyTest):
 
     def test_parse_args(self):
         args = "macsyconfig --defaults"
-        parsed_args = msf_cfg.parse_args(args.split()[1:])
+        parsed_args = msf_cfg.parse_args(args.split()[1:], color=False)
         self.assertFalse(parsed_args.no_color)
         self.assertFalse(parsed_args.white_bg)
         self.assertTrue(parsed_args.dark_bg)
         self.assertTrue(parsed_args.defaults)
 
         args = "macsyconfig"
-        parsed_args = msf_cfg.parse_args(args.split()[1:])
+        parsed_args = msf_cfg.parse_args(args.split()[1:], color=False)
         self.assertFalse(parsed_args.no_color)
         self.assertFalse(parsed_args.white_bg)
         self.assertTrue(parsed_args.dark_bg)
         self.assertFalse(parsed_args.defaults)
 
         args = "macsyconfig --no-color"
-        parsed_args = msf_cfg.parse_args(args.split()[1:])
+        parsed_args = msf_cfg.parse_args(args.split()[1:], color=False)
         self.assertTrue(parsed_args.no_color)
         self.assertFalse(parsed_args.white_bg)
         self.assertTrue(parsed_args.dark_bg)
         self.assertFalse(parsed_args.defaults)
 
         args = "macsyconfig --white-bg"
-        parsed_args = msf_cfg.parse_args(args.split()[1:])
+        parsed_args = msf_cfg.parse_args(args.split()[1:], color=False)
         self.assertFalse(parsed_args.no_color)
         self.assertTrue(parsed_args.white_bg)
         self.assertTrue(parsed_args.dark_bg)
@@ -592,7 +592,7 @@ class TestMacsyconfig(MacsyTest):
         try:
             with self.catch_io(err=True):
                 with self.assertRaises(TypeError) as ctx:
-                    msf_cfg.parse_args(args.split()[1:])
+                    msf_cfg.parse_args(args.split()[1:], color=False)
                 stderr = sys.stderr.getvalue().strip()
             self.assertEqual(str(ctx.exception), "2")  # test the return code
             # if the tests are ran from cmd line python tests/run_tes.py ... the bin name is run_test.py
