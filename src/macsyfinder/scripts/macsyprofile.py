@@ -63,6 +63,13 @@ def deprecated_main(args: list[str] = None) -> None:
 
 
 def main(args: list[str] = None) -> None:
+    ############## WORKAROUND #####################
+    # due to a bug in macsylib 1.0.4
+    # I need to monkey patch MacsyDefaults
+    import macsylib.scripts.macsyprofile
+    # I override the default values of MacsyDefaults.__init__
+    macsylib.scripts.macsyprofile.MacsyDefaults.__init__.__defaults__ = (None, 'macsyfinder')
+    ###########  END of WORKAROUND  ###############
     msl_main(args=args,
              header=_cmde_line_header(),
              package_name='macsyfinder', tool_name='msf_profile')
