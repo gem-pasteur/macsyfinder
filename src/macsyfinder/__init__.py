@@ -31,7 +31,7 @@ import sys
 import subprocess
 
 
-__version__ = '2.1.5'
+__version__ = '2.1.6'
 
 
 __citation__ = """Néron, Bertrand; Denise, Rémi; Coluzzi, Charles; Touchon, Marie; Rocha, Eduardo P.C.; Abby, Sophie S.
